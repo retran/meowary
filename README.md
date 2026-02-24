@@ -1,6 +1,8 @@
 # Meowary
 
-A personal journal managed as Markdown files, designed for use with an AI coding agent ([OpenCode](https://opencode.ai)). No code to build or run — just plain Markdown and conventions that let the agent plan your days, track projects, record notes, and maintain a knowledge base.
+A personal journal managed as Markdown files, designed for use with AI coding agents. No code to build or run — just plain Markdown and conventions that let the agent plan your days, track projects, record notes, and maintain a knowledge base.
+
+Supports [OpenCode](https://opencode.ai) and [Gemini CLI](https://github.com/google-gemini/gemini-cli) out of the box.
 
 ## Variants
 
@@ -14,11 +16,15 @@ Meowary ships two variants (templates). Pick the one that fits your use case, co
 ## Quick Start
 
 1. Copy the contents of `work/` or `personal/` into a new directory (this becomes your journal)
-2. Install [OpenCode](https://opencode.ai) and open that directory as the workspace
+2. Open that directory with your agent of choice:
+   - **OpenCode:** install [OpenCode](https://opencode.ai) and open the directory as workspace
+   - **Gemini CLI:** install [Gemini CLI](https://github.com/google-gemini/gemini-cli) and run `gemini` from the directory
 3. Run `/bootstrap` to set up your personal context
 4. Run `/morning` (work) or `/today` (personal) to start your first day
 
 The `/bootstrap` command is idempotent — run it again any time to update your context.
+
+Both agents read the same `AGENTS.md` for conventions. Commands are available as OpenCode slash commands (`.opencode/commands/`) and Gemini CLI commands (`.gemini/commands/`).
 
 ## Slash Commands
 
@@ -77,8 +83,10 @@ work/
 │   ├── recurring-events.md
 │   ├── tags.md
 │   └── reading-list.md
-├── .opencode/commands/        # 7 slash commands
-├── AGENTS.md
+├── .opencode/commands/        # 7 slash commands (OpenCode)
+├── .gemini/commands/          # 7 slash commands (Gemini CLI)
+├── AGENTS.md                  # Agent instructions (shared by both agents)
+├── GEMINI.md                  # Gemini CLI context file (imports AGENTS.md)
 ├── opencode.json              # MCP integrations (Atlassian placeholder)
 └── .gitignore
 ```
@@ -106,8 +114,10 @@ personal/
 │   ├── recurring-events.md
 │   ├── tags.md
 │   └── reading-list.md
-├── .opencode/commands/        # 6 slash commands
-├── AGENTS.md
+├── .opencode/commands/        # 6 slash commands (OpenCode)
+├── .gemini/commands/          # 6 slash commands (Gemini CLI)
+├── AGENTS.md                  # Agent instructions (shared by both agents)
+├── GEMINI.md                  # Gemini CLI context file (imports AGENTS.md)
 ├── opencode.json
 └── .gitignore
 ```
@@ -118,10 +128,11 @@ Both variants use a daily branch workflow. Each day gets its own `daily/YYYY-MM-
 
 ## Configuration
 
-Both variants include `opencode.json` for MCP integrations.
+Both variants include `opencode.json` for OpenCode MCP integrations and `GEMINI.md` for Gemini CLI context.
 
-- **Work variant** has a placeholder Atlassian (Jira/Confluence) integration. Replace `YOUR_INSTANCE` with your Atlassian domain and set `ATLASSIAN_USERNAME` / `ATLASSIAN_API_TOKEN` environment variables. Remove the section if unused.
+- **Work variant** has a placeholder Atlassian (Jira/Confluence) integration in `opencode.json`. Replace `YOUR_INSTANCE` with your Atlassian domain and set `ATLASSIAN_USERNAME` / `ATLASSIAN_API_TOKEN` environment variables. Remove the section if unused.
 - **Personal variant** ships with a minimal config. Add MCP integrations (GitHub, Todoist, calendar, etc.) as needed.
+- **Gemini CLI** reads `GEMINI.md`, which imports `AGENTS.md`. No additional configuration needed — commands work out of the box.
 
 ## Personalisation
 

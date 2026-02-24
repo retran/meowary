@@ -1,0 +1,68 @@
+description = "Friday weekly wrap-up and evening routine"
+
+prompt = """
+Run the Friday weekly wrap-up session. This is an interactive process -- ask questions at each step before moving on.
+
+## Step 1: Daily Evening Wrap-Up
+
+First, run the standard evening routine for today (Friday):
+
+- Open today's daily note from daily/.
+- Present all tasks from Tasks and ask the user one by one:
+  - Is this done? (mark as `- [x]`)
+  - Still in progress? (leave as `- [ ]`)
+  - Blocked? (mark as `- [ ] text *(blocked: reason)*`)
+  - Dropped? (mark as `- [ ] ~~text~~ *(dropped: reason)*` -- do NOT use `- [x]`)
+  - Moving to next week? (mark as `- [ ] ~~text~~ → [date](link)`)
+- Ask about notable events for the Log & Notes section. Write plain bullet items -- only add timestamps if the user provides specific times. Tag each entry.
+
+## Step 2: Weekly Accomplishments
+
+- Open this week's weekly note from weekly/.
+- Read through all daily notes from this week (Monday to Friday).
+- Compile a list of accomplishments. Keep each item to one short line -- weekly notes are summaries, not logs. Details stay in the daily notes.
+- Present the list and ask the user to confirm, edit, or add items.
+- Write into the Accomplishments section. Tag each item.
+
+## Step 3: Failures & Setbacks
+
+- Identify tasks that were planned but not completed across the week's daily notes.
+- Identify weekly goals that were not met.
+- Present these and ask the user which ones count as failures or setbacks, and which are just deferred.
+- Write the confirmed items into the Failures & Setbacks section.
+
+## Step 4: Carry-Over
+
+- Collect all incomplete tasks from this week's daily notes and unmet weekly goals.
+- Present them and ask the user:
+  - Which should carry over to next week?
+  - Which should be dropped?
+- Write carry-over items into the Carry-Over section. Tag each item.
+- These will seed next Monday's Weekly Goals during `/week-plan`.
+
+## Step 5: Reflections
+
+- Ask the user if they have any notes or reflections on the week -- what went well, what could improve, anything on their mind.
+- Write responses into the Notes & Reflections section.
+
+## Step 6: Project Updates
+
+- For projects that had progress this week, update the project dashboards: add dev log entries, mark completed tasks, update status.
+- Flag any active projects with no activity this week -- ask the user if they should be paused.
+
+## Step 7: Knowledge Base Updates
+
+- If new information was learned during the week, ask the user if any knowledge base entries should be created or updated.
+- Remember to append changelog entries to any KB articles that are edited.
+
+## Step 8: Squash Merge to Main
+
+- Commit any remaining uncommitted changes on the daily branch.
+- Switch to `main`: `git checkout main`.
+- Squash-merge the daily branch: `git merge --squash daily/YYYY-MM-DD`.
+- Commit with the message `journal: YYYY-MM-DD`.
+- Delete the daily branch: `git branch -d daily/YYYY-MM-DD`.
+- Push `main` if a remote is configured.
+
+{{args}}
+"""

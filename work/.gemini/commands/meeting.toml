@@ -1,0 +1,52 @@
+description = "Record meeting notes interactively"
+
+prompt = """
+Record notes for a meeting. This is an interactive process -- ask questions at each step before moving on.
+
+Arguments: if a project slug is provided, notes are appended to that project's `meetings.md`. Otherwise, ask the user.
+
+## Step 1: Meeting Details
+
+Ask the user for (skip any already provided via arguments):
+
+- **Title:** What is this meeting about? (e.g. "Sprint planning", "1-on-1 with manager")
+- **Project:** Is this tied to a project? If yes, which one? (List active projects from `projects/` for the user to pick.) If no project, the meeting goes into the `meetings/` folder.
+- **Attendees:** Who attended? Use `#person-` tags and link to KB people entries where they exist.
+- **Duration:** How long was the meeting? (e.g. "30 min", "1h")
+
+## Step 2: Note-Taking
+
+Present the meeting template structure and ask the user to provide content for each section:
+
+1. **Discussion** -- main topics covered. Ask: "What was discussed?" Write as bullet points.
+2. **Decisions** -- anything decided. Ask: "Were any decisions made?" Write as bullet points. If none, write `*(none)*`.
+3. **Action Items** -- tasks assigned. Ask: "Any action items or follow-ups?" Write as checkboxes (`- [ ]`). Tag each with the responsible person (`#person-`) and project (`#p-`) if applicable.
+
+## Step 3: Write the Notes
+
+**If project meeting** (project slug was provided or chosen):
+- Check if `projects/<slug>/meetings.md` exists. If not, create it with an H1 heading: `# <Project Name> -- Meetings`.
+- Append the meeting entry using the format from `meta/templates/meeting-template.md`. The entry starts with an H2 heading: `## YYYY-MM-DD: <Title>`.
+- Entries are in reverse chronological order (newest first, right after the H1 heading).
+
+**If general meeting** (no project):
+- Create a standalone file: `meetings/YYYY-MM-DD-<slug>.md` where `<slug>` is a kebab-case version of the title.
+- Use a standalone format with an H1 heading: `# YYYY-MM-DD: <Title>`, followed by metadata (Attendees, Duration, Tags) and the same Discussion/Decisions/Action Items sections.
+
+## Step 4: Cross-Link
+
+- If today's daily note exists, add or update the **Events & Meetings** section with a link to the meeting notes and a one-line summary.
+- Tag the daily note entry with relevant `#p-` and `#person-` tags.
+- If action items reference specific projects, add them as tasks in those projects' Open Tasks sections.
+
+## Step 5: Knowledge Base Updates
+
+- If durable facts were learned during the meeting (team changes, role updates, process decisions, architecture choices), update the relevant knowledge base entries. Create new entries if needed.
+- Append a changelog entry to any KB article that is edited.
+
+## Step 6: Commit
+
+- Once the user confirms the notes are complete, commit with a message like "Add meeting notes: <title> (YYYY-MM-DD)".
+
+{{args}}
+"""
