@@ -218,7 +218,7 @@ The specific integrations depend on what the user configures. The key principles
 ### Templates (`meta/templates/`)
 
 - `daily-template.md` — placeholders: `{{DATE}}`, `{{DAY}}`, `{{PREV_DATE}}`, `{{NEXT_DATE}}`, `{{WEEK_NUMBER}}`, `{{WEEK_FILE}}`.
-- `weekly-template.md` — placeholders: `{{WEEK_NUMBER}}` (zero-padded number, e.g. `09`), `{{WEEK_START}}`, `{{WEEK_END}}`, `{{PREV_WEEK_NUMBER}}`, `{{PREV_WEEK_FILE}}`, `{{NEXT_WEEK_NUMBER}}`, `{{NEXT_WEEK_FILE}}`, `{{MON_DATE}}` through `{{SUN_DATE}}`.
+- `weekly-template.md` — placeholders: `{{WEEK_NUMBER}}` (zero-padded number, e.g. `09`), `{{WEEK_START}}`, `{{WEEK_END}}`, `{{PREV_WEEK_NUMBER}}`, `{{PREV_WEEK_FILE}}`, `{{NEXT_WEEK_NUMBER}}`, `{{NEXT_WEEK_FILE}}`. The Daily Notes section is initially empty — link only to days that have notes.
 - `project-template.md` — placeholders: `{{PROJECT_NAME}}`, `{{PROJECT_SLUG}}` (kebab-case), `{{DEADLINE}}`, `{{DATE}}`.
 - `person-template.md` — placeholders: `{{PERSON_NAME}}`, `{{PERSON_SLUG}}`, `{{RELATIONSHIP}}`, `{{DATE}}`.
 - `kb-template.md` — placeholders: `{{TITLE}}`, `{{TAGS}}`, `{{OVERVIEW}}`, `{{DATE}}`. Generic template for knowledge base articles. Add topic-specific sections between Overview and Related Docs as needed.

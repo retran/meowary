@@ -3,7 +3,7 @@ description = "Morning review and daily planning"
 prompt = """
 Run the morning review and planning session. This is an interactive process -- ask questions at each step before moving on.
 
-**Important:** If today is Monday, tell the user to run `/morning` instead of proceeding -- Mondays should use `/week-plan` which includes the full morning flow plus weekly planning. Do not proceed with this command on Mondays.
+**Important:** If today is Monday, tell the user to run `/week-plan` instead of proceeding -- Mondays should use `/week-plan` which includes the full morning flow plus weekly planning. Do not proceed with this command on Mondays.
 
 ## Step 1: Daily Branch
 
