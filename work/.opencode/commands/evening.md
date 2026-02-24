@@ -1,0 +1,53 @@
+---
+description: Evening wrap-up and day summary
+---
+
+Run the evening wrap-up session. This is an interactive process -- ask questions at each step before moving on.
+
+**Important:** If today is Friday, tell the user to run `/week-wrap` instead -- it includes the full evening flow plus weekly wrap-up. Do not proceed with this command on Fridays.
+
+## Step 1: Task Review
+
+- Open today's daily note from daily/.
+- Present all tasks from Tasks and ask the user one by one:
+  - Is this done? (mark as `- [x]`)
+  - Still in progress? (leave as `- [ ]`)
+  - Blocked? (mark as `- [ ] text *(blocked: reason)*`)
+  - Dropped? (mark as `- [ ] ~~text~~ *(dropped: reason)*` -- do NOT use `- [x]`)
+  - Moving to another day? (mark as `- [ ] ~~text~~ → [date](link)` and add the task to the target day's Tasks section)
+
+## Step 2: Log Entries
+
+- Ask the user what notable things happened today that should be recorded in the Log & Notes section.
+- Write plain bullet items. Only add timestamps if the user provides specific times.
+- Tag each entry with relevant `#p-`, `#t-`, `#person-`, or topic tags.
+- Link to project READMEs or KB articles where relevant.
+
+## Step 3: Project Updates
+
+- For each task that was completed or progressed, check if it relates to a project under projects/.
+- Update the relevant project README.md files: add dev log entries, mark completed tasks, update status if needed.
+
+## Step 4: Weekly Note Update
+
+- Open this week's weekly note from weekly/.
+- Ensure the Daily Notes section has correct links for this week's days so far.
+- Do NOT fill in Accomplishments, Failures & Setbacks, Carry-Over, or Notes & Reflections -- those are for Friday wrap-up only (use `/week-wrap`).
+
+## Step 5: Knowledge Base Updates
+
+- If new information was learned during the day (new people, team changes, process updates, codebase discoveries), ask the user if any knowledge base entries should be created or updated.
+- Remember to append a changelog entry to any KB article that is edited.
+
+## Step 6: Day Summary
+
+- Write a brief summary in the **Day Summary** section of today's daily note.
+- Content: 1-2 sentences on how the day went (main themes, where time went), then a bold-text line with task stats (done/total, blocked, moved, dropped).
+- Keep it concise -- details are in the Log & Notes section above.
+- Present the summary to the user and ask if anything needs adjusting.
+
+## Step 7: Commit
+
+- Once the user confirms everything looks good, commit all changes with a message like "Evening wrap-up for YYYY-MM-DD".
+
+$ARGUMENTS

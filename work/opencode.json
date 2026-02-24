@@ -1,0 +1,29 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md"
+  ],
+  "mcp": {
+    "atlassian": {
+      "type": "local",
+      "command": ["uvx", "mcp-atlassian"],
+      "environment": {
+        "CONFLUENCE_URL": "https://YOUR_INSTANCE.atlassian.net/wiki",
+        "CONFLUENCE_USERNAME": "{env:ATLASSIAN_USERNAME}",
+        "CONFLUENCE_API_TOKEN": "{env:ATLASSIAN_API_TOKEN}",
+        "JIRA_URL": "https://YOUR_INSTANCE.atlassian.net",
+        "JIRA_USERNAME": "{env:ATLASSIAN_USERNAME}",
+        "JIRA_API_TOKEN": "{env:ATLASSIAN_API_TOKEN}"
+      }
+    }
+  },
+  "permission": {
+    "bash": "allow",
+    "external_directory": {
+      "~/workspace/**": "allow"
+    },
+    "edit": {
+      "~/workspace/**": "deny"
+    }
+  }
+}
