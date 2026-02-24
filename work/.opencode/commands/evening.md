@@ -46,8 +46,13 @@ Run the evening wrap-up session. This is an interactive process -- ask questions
 - Keep it concise -- details are in the Log & Notes section above.
 - Present the summary to the user and ask if anything needs adjusting.
 
-## Step 7: Commit
+## Step 7: Squash Merge to Main
 
-- Once the user confirms everything looks good, commit all changes with a message like "Evening wrap-up for YYYY-MM-DD".
+- Commit any remaining uncommitted changes on the daily branch.
+- Switch to `main`: `git checkout main`.
+- Squash-merge the daily branch: `git merge --squash daily/YYYY-MM-DD`.
+- Commit with the message `journal: YYYY-MM-DD`.
+- Delete the daily branch: `git branch -d daily/YYYY-MM-DD`.
+- Push `main` if a remote is configured.
 
 $ARGUMENTS

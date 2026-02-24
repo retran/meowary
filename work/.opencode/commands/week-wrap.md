@@ -56,8 +56,13 @@ First, run the standard evening routine for today (Friday):
 - If new information was learned during the week, ask the user if any knowledge base entries should be created or updated.
 - Remember to append changelog entries to any KB articles that are edited.
 
-## Step 8: Commit
+## Step 8: Squash Merge to Main
 
-- Once the user confirms everything looks good, commit all changes with a message like "Weekly wrap-up W09 and evening notes for YYYY-MM-DD".
+- Commit any remaining uncommitted changes on the daily branch.
+- Switch to `main`: `git checkout main`.
+- Squash-merge the daily branch: `git merge --squash daily/YYYY-MM-DD`.
+- Commit with the message `journal: YYYY-MM-DD`.
+- Delete the daily branch: `git branch -d daily/YYYY-MM-DD`.
+- Push `main` if a remote is configured.
 
 $ARGUMENTS

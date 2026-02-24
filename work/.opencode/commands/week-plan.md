@@ -4,14 +4,21 @@ description: Monday weekly planning and morning routine
 
 Run the Monday weekly planning session. This is an interactive process -- ask questions at each step before moving on.
 
-## Step 1: Last Week Review
+## Step 1: Daily Branch
+
+- Switch to `main` and pull if a remote is configured.
+- Check if a branch `daily/YYYY-MM-DD` already exists.
+  - **Exists:** switch to it and tell the user "Resuming today's branch."
+  - **Does not exist:** create and switch to `daily/YYYY-MM-DD`.
+
+## Step 2: Last Week Review
 
 - Find last week's weekly note in weekly/ (if it exists).
 - Summarize what was accomplished, what failed, and what was carried over.
 - Find Friday's daily note (or the last daily note of the previous week) and check for incomplete tasks.
 - Present the summary to the user and ask if anything was missed.
 
-## Step 2: Create Weekly Note
+## Step 3: Create Weekly Note
 
 - Create this week's weekly note from meta/templates/weekly-template.md.
 - File name uses ISO week numbering: weekly/YYYY-WNN.md.
@@ -23,13 +30,13 @@ Run the Monday weekly planning session. This is an interactive process -- ask qu
   - {{MON_DATE}} through {{FRI_DATE}} with the actual dates for each day.
 - In the Daily Notes section, mark any days that will not have notes (e.g. holidays) as `*(no note)*`.
 
-## Step 3: Set Weekly Focus
+## Step 4: Set Weekly Focus
 
 - Based on the last week review, active projects, and carry-over items, ask the user: "What is the one main focus for this week?"
 - This should be a single theme or priority that guides the week (e.g. "Ship the v2.1 bugfix release", "Finalize the authentication ADR").
 - Write it into the Weekly Focus section. Tag with relevant project/team tags.
 
-## Step 4: Set Weekly Goals
+## Step 5: Set Weekly Goals
 
 - Review all active projects under projects/ (exclude _archive/). Summarize each project's status, deadline, and open tasks.
 - If Jira is configured (check meta/context.md), query the user's assigned issues, current sprint goals, and upcoming deadlines. Surface items not reflected in local projects.
@@ -39,7 +46,7 @@ Run the Monday weekly planning session. This is an interactive process -- ask qu
 - Goals should be concrete and achievable within the week. Tag each with relevant `#p-`, `#t-`, or topic tags.
 - Write the goals into the Weekly Goals section.
 
-## Step 5: Daily Morning Flow
+## Step 6: Daily Morning Flow
 
 Now run the standard morning routine for today (Monday):
 
@@ -51,8 +58,8 @@ Now run the standard morning routine for today (Monday):
 - Ask the user to set today's Tasks, informed by the weekly goals just established. Tag each task.
 - Write tasks into today's daily note.
 
-## Step 6: Commit
+## Step 7: Commit
 
-- Once the user confirms both the weekly note and today's daily note are ready, commit all changes with a message like "Weekly planning W09 and daily note for YYYY-MM-DD".
+- Once the user confirms both the weekly note and today's daily note are ready, commit all changes on the daily branch.
 
 $ARGUMENTS

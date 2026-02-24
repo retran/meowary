@@ -238,7 +238,38 @@ When creating a new daily note, consult [`meta/recurring-events.md`](meta/recurr
 9. **When creating a new daily note**, use today's date and the correct weekday. Copy from `meta/templates/daily-template.md`. Replace all placeholders including `{{WEEK_NUMBER}}` (zero-padded, e.g. `09`), `{{WEEK_FILE}}` (e.g. `2026-W09.md`), `{{PREV_DATE}}`, and `{{NEXT_DATE}}`. Consult `meta/recurring-events.md` to populate Events & Meetings.
 10. **When creating a new weekly note**, use ISO week numbering. Copy from `meta/templates/weekly-template.md`. Replace `{{WEEK_NUMBER}}` with the zero-padded week number (e.g. `09`, not `W09`). Replace all day-of-week date placeholders (`{{MON_DATE}}` through `{{FRI_DATE}}`). Created on Monday, finalized on Friday.
 11. **When creating a new project**, create a folder under `projects/`, copy from `meta/templates/project-template.md` into `README.md`, and fill in all placeholders including `{{PROJECT_SLUG}}`.
-12. **Commits** should be descriptive (e.g. "Add daily note for 2026-02-25", "Update Project Alpha tasks").
+12. **Commits** during the day are free-form. The squash merge at day's end produces the single `main` commit (see Git Workflow below).
+
+## Git Workflow
+
+Each day lives on its own branch. At the end of the day the branch is squash-merged into `main`, producing one commit per day.
+
+### Start of day (`/morning` or `/week-plan`)
+
+1. Make sure `main` is up to date: `git checkout main && git pull` (if a remote is configured).
+2. Check if a branch `daily/YYYY-MM-DD` already exists.
+   - **Exists:** switch to it (`git checkout daily/YYYY-MM-DD`). Continue the day.
+   - **Does not exist:** create and switch (`git checkout -b daily/YYYY-MM-DD`).
+
+### During the day
+
+- Commit freely on the daily branch. No special message format required.
+- All `/morning`, `/evening`, `/meeting`, `/new-project`, and ad-hoc changes are committed here.
+
+### End of day (`/evening` or `/week-wrap`)
+
+1. Commit any remaining uncommitted changes on the daily branch.
+2. Switch to `main`: `git checkout main`.
+3. Squash-merge the daily branch: `git merge --squash daily/YYYY-MM-DD`.
+4. Commit with the message `journal: YYYY-MM-DD`.
+5. Delete the daily branch: `git branch -d daily/YYYY-MM-DD`.
+6. Push `main` if a remote is configured.
+
+### Edge cases
+
+- If the user runs `/evening` but there are no changes on the daily branch beyond what's already on `main`, skip the merge — there's nothing to squash.
+- If the daily branch has merge conflicts with `main`, resolve them interactively with the user before completing the merge.
+- Weekend or multi-day gaps are fine — the branch is named after the day it was created, and a new branch starts the next active day.
 
 ## Updating the Daily Note
 
