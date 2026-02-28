@@ -1,0 +1,28 @@
+# markdownlint configuration for the journal repository
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+default: false
+
+# MD009 - No trailing spaces
+MD009: true
+
+# MD010 - No hard tabs
+MD010: true
+
+# MD012 - No multiple consecutive blank lines (max 2 → we want max 1 between sections, but allow 2 max)
+MD012:
+  maximum: 2
+
+# MD022 - Headings should be surrounded by blank lines
+MD022:
+  lines_above: 1
+  lines_below: 1
+
+# MD031 - Fenced code blocks should be surrounded by blank lines
+MD031: true
+
+# MD032 - Lists should be surrounded by blank lines
+MD032: true
+
+# MD047 - Files should end with a single newline character
+MD047: true

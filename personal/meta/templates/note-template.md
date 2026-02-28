@@ -4,10 +4,13 @@
 **Tags:** {{TAGS}}
 
 ### Details
-- 
+
+-
 
 ### Takeaways
-- 
+
+-
 
 ### Action Items
-- [ ] 
+
+- [ ]

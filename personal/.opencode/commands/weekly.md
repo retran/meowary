@@ -25,7 +25,7 @@ Create or update the weekly note for the current week. Can be run any day. This 
 
 ## Step 3: Set Goals
 
-- Review all active projects under projects/ (exclude _archive/). Summarize each project's status, deadline, and open tasks.
+- Review all active projects under projects/ (exclude \_archive/). Summarize each project's status, deadline, and open tasks.
 - If external integrations are configured (check meta/context.md), query for open tasks and upcoming deadlines.
 - Seed the initial list from the previous week's Carry-Over items.
 - Ask the user to define this week's goals — what are the key things to accomplish?

@@ -8,10 +8,10 @@ Supports [OpenCode](https://opencode.ai) and [Gemini CLI](https://github.com/goo
 
 Meowary ships two variants (templates). Pick the one that fits your use case, copy it into a new directory, and start journaling.
 
-| Variant | Use case | Week structure | Key features |
-|---------|----------|----------------|--------------|
-| [`work/`](work/) | Professional work journal | Mon–Fri | Meeting notes, team/codebase KB, Jira/Confluence integration, Monday/Friday planning rhythm |
-| [`personal/`](personal/) | Personal life journal | Mon–Sun (full week) | Habit tracking, flexible schedule, generic notes, health/finance/pets KB folders |
+| Variant                  | Use case                  | Week structure      | Key features                                                                                |
+| ------------------------ | ------------------------- | ------------------- | ------------------------------------------------------------------------------------------- |
+| [`work/`](work/)         | Professional work journal | Mon–Fri             | Meeting notes, team/codebase KB, Jira/Confluence integration, Monday/Friday planning rhythm |
+| [`personal/`](personal/) | Personal life journal     | Mon–Sun (full week) | Habit tracking, flexible schedule, generic notes, health/finance/pets KB folders            |
 
 ## Quick Start
 
@@ -30,32 +30,33 @@ Both agents read the same `AGENTS.md` for conventions. Commands are available as
 
 ### Work variant
 
-| Command | When to use |
-|---------|-------------|
-| `/bootstrap` | First-time setup or update personal context |
-| `/morning` | Start of day: create today's note, review yesterday, set tasks |
-| `/evening` | End of day: update log, mark tasks, summarize |
-| `/week-plan` | Monday: weekly planning (includes morning flow) |
-| `/week-wrap` | Friday: retrospective, carry-over, reflections |
-| `/meeting` | Record a meeting (project-specific or general) |
-| `/new-project` | Create a new project folder from template |
+| Command        | When to use                                                    |
+| -------------- | -------------------------------------------------------------- |
+| `/bootstrap`   | First-time setup or update personal context                    |
+| `/morning`     | Start of day: create today's note, review yesterday, set tasks |
+| `/evening`     | End of day: update log, mark tasks, summarize                  |
+| `/week-plan`   | Monday: weekly planning (includes morning flow)                |
+| `/week-wrap`   | Friday: retrospective, carry-over, reflections                 |
+| `/meeting`     | Record a meeting (project-specific or general)                 |
+| `/new-project` | Create a new project folder from template                      |
 
 ### Personal variant
 
-| Command | When to use |
-|---------|-------------|
-| `/bootstrap` | First-time setup or update personal context |
-| `/today` | Create or open today's note (any day, populates habit scorecard) |
-| `/wrap-up` | End of day or week: review tasks, habits, update projects. Optionally does weekly summary |
-| `/weekly` | Create or update the weekly note (any day) |
-| `/note` | Record any kind of note (conversation, idea, research, appointment) |
-| `/new-project` | Create a new project folder from template |
+| Command        | When to use                                                                               |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| `/bootstrap`   | First-time setup or update personal context                                               |
+| `/today`       | Create or open today's note (any day, populates habit scorecard)                          |
+| `/wrap-up`     | End of day or week: review tasks, habits, update projects. Optionally does weekly summary |
+| `/weekly`      | Create or update the weekly note (any day)                                                |
+| `/note`        | Record any kind of note (conversation, idea, research, appointment)                       |
+| `/new-project` | Create a new project folder from template                                                 |
 
 ## How It Works
 
 The agent reads `AGENTS.md` for conventions and `meta/context.md` for your personal details. Together, these tell it how to structure notes, which tags to use, when to consult external sources, and how to maintain the knowledge base.
 
 Key principles:
+
 - **Daily notes are append-only.** Never delete past content — mark tasks as done, moved, dropped, or blocked.
 - **Tags** use prefixes: `#p-` for projects, `#person-` for people. The work variant also uses `#t-` for teams.
 - **Knowledge base** is the agent's long-term memory. It reads KB articles for context and updates them when new facts surface.

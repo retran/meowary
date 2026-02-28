@@ -5,10 +5,13 @@
 **Tags:** {{TAGS}}
 
 ### Discussion
-- 
+
+-
 
 ### Decisions
-- 
+
+-
 
 ### Action Items
-- [ ] 
+
+- [ ]

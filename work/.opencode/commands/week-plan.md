@@ -38,7 +38,7 @@ Run the Monday weekly planning session. This is an interactive process -- ask qu
 
 ## Step 5: Set Weekly Goals
 
-- Review all active projects under projects/ (exclude _archive/). Summarize each project's status, deadline, and open tasks.
+- Review all active projects under projects/ (exclude \_archive/). Summarize each project's status, deadline, and open tasks.
 - If Jira is configured (check meta/context.md), query the user's assigned issues, current sprint goals, and upcoming deadlines. Surface items not reflected in local projects.
 - If Confluence is configured, check for relevant team documentation or decisions that may affect the week's plan.
 - Seed the initial list from the previous week's Carry-Over items.

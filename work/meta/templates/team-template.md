@@ -1,3 +1,10 @@
+---
+type: team
+full_name: "{{FULL_NAME}}"
+department: "{{DEPARTMENT}}"
+tags: [t-{{TEAM_SLUG}}]
+---
+
 # {{TEAM_NAME}}
 
 **Full Name:** {{FULL_NAME}}
@@ -7,6 +14,7 @@
 ## About
 
 ## Members
+
 - (link to knowledge-base/people/ entries)
 
 ## Notes

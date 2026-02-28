@@ -1,3 +1,8 @@
+---
+type: person
+tags: [person-{{PERSON_SLUG}}]
+---
+
 # {{PERSON_NAME}}
 
 **Relationship:** {{RELATIONSHIP}}
@@ -5,9 +10,7 @@
 
 ## Contact
 
-
 ## Notes
-
 
 ## Changelog
 

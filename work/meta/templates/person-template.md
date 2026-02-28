@@ -1,3 +1,11 @@
+---
+type: person
+role: "{{ROLE}}"
+team: "{{TEAM}}"
+department: "{{DEPARTMENT}}"
+tags: [person-{{PERSON_SLUG}}]
+---
+
 # {{PERSON_NAME}}
 
 **Role:** {{ROLE}}

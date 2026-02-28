@@ -167,7 +167,7 @@ Notes live in two places depending on scope:
 | `people/`  | One file per person (family, friends, contacts) | `person-template.md` |
 | `topics/`  | Interests, hobbies, skills, subjects            | `kb-template.md`     |
 | `health/`  | Health, fitness, medical notes                  | `kb-template.md`     |
-| `places/`  | Restaurants, travel destinations, locations      | `kb-template.md`     |
+| `places/`  | Restaurants, travel destinations, locations     | `kb-template.md`     |
 | `finance/` | Budgets, subscriptions, financial notes         | `kb-template.md`     |
 | `pets/`    | Pet care, vet visits, routines                  | `kb-template.md`     |
 
@@ -251,13 +251,13 @@ When creating a new daily note, consult [`meta/habits.md`](meta/habits.md) and p
 6. **Dev Log entries in project files** use bold dates (`**YYYY-MM-DD:**`) and are listed in reverse chronological order (newest first).
 7. **Task states** in daily/weekly tasks and project tasks:
 
-   | State   | Format                               | Example                                                              |
-   | ------- | ------------------------------------ | -------------------------------------------------------------------- |
-   | Open    | `- [ ] text`                         | `- [ ] Buy potting soil`                                             |
-   | Done    | `- [x] text`                         | `- [x] Schedule dentist appointment`                                 |
-   | Moved   | `- [ ] ~~text~~ → [date](link)`      | `- [ ] ~~Call plumber~~ → [2026-02-25](2026-02-25.md)`               |
-   | Dropped | `- [ ] ~~text~~ *(dropped: reason)*` | `- [ ] ~~Buy new lamp~~ *(dropped: found one in storage)*`           |
-   | Blocked | `- [ ] text *(blocked: reason)*`     | `- [ ] Fix fence *(blocked: waiting for lumber delivery)*`           |
+   | State   | Format                               | Example                                                    |
+   | ------- | ------------------------------------ | ---------------------------------------------------------- |
+   | Open    | `- [ ] text`                         | `- [ ] Buy potting soil`                                   |
+   | Done    | `- [x] text`                         | `- [x] Schedule dentist appointment`                       |
+   | Moved   | `- [ ] ~~text~~ → [date](link)`      | `- [ ] ~~Call plumber~~ → [2026-02-25](2026-02-25.md)`     |
+   | Dropped | `- [ ] ~~text~~ *(dropped: reason)*` | `- [ ] ~~Buy new lamp~~ *(dropped: found one in storage)*` |
+   | Blocked | `- [ ] text *(blocked: reason)*`     | `- [ ] Fix fence *(blocked: waiting for lumber delivery)*` |
 
    Rules:
    - Moved tasks must link to the target date. The target daily note should include the task in its Tasks section.

@@ -31,7 +31,7 @@ Run the morning review and planning session. This is an interactive process -- a
 
 ## Step 4: Project and External Check-In
 
-- Scan all active projects under projects/ (exclude _archive/).
+- Scan all active projects under projects/ (exclude \_archive/).
 - Summarize each project's status and open tasks.
 - Flag any projects that look stale (no dev log entry for 2+ weeks) and ask the user if they should be paused.
 - If Jira is configured (check meta/context.md), query the user's assigned issues and current sprint. Surface issues not yet reflected in local projects or tasks.

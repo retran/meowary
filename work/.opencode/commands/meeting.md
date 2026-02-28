@@ -28,11 +28,13 @@ Present the meeting template structure and ask the user to provide content for e
 ## Step 3: Write the Notes
 
 **If project meeting** (project slug was provided or chosen):
+
 - Check if `projects/<slug>/meetings.md` exists. If not, create it with an H1 heading: `# <Project Name> -- Meetings`.
 - Append the meeting entry using the format from `meta/templates/meeting-template.md`. The entry starts with an H2 heading: `## YYYY-MM-DD: <Title>`.
 - Entries are in reverse chronological order (newest first, right after the H1 heading).
 
 **If general meeting** (no project):
+
 - Create a standalone file: `meetings/YYYY-MM-DD-<slug>.md` where `<slug>` is a kebab-case version of the title.
 - Use a standalone format with an H1 heading: `# YYYY-MM-DD: <Title>`, followed by metadata (Attendees, Duration, Tags) and the same Discussion/Decisions/Action Items sections.
 

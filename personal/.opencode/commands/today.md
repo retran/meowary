@@ -33,7 +33,7 @@ Works any day of the week. No special Monday behavior -- use `/weekly` separatel
 
 ## Step 4: Project Check-In
 
-- Scan all active projects under projects/ (exclude _archive/).
+- Scan all active projects under projects/ (exclude \_archive/).
 - Summarize each project's status and open tasks.
 - Flag any projects that look stale (no dev log entry for 2+ weeks) and ask the user if they should be paused.
 - If external integrations are configured (check meta/context.md), query for open tasks or upcoming deadlines. Surface items not yet reflected in local projects or tasks.

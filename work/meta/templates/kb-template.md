@@ -1,3 +1,8 @@
+---
+type: kb
+tags: [{ { TAGS } }]
+---
+
 # {{TITLE}}
 
 **Tags:** {{TAGS}}
