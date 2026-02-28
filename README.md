@@ -11,7 +11,7 @@ Meowary ships two variants (templates). Pick the one that fits your use case, co
 | Variant                  | Use case                  | Week structure      | Key features                                                                                |
 | ------------------------ | ------------------------- | ------------------- | ------------------------------------------------------------------------------------------- |
 | [`work/`](work/)         | Professional work journal | Mon–Fri             | Meeting notes, team/codebase KB, Jira/Confluence integration, Monday/Friday planning rhythm |
-| [`personal/`](personal/) | Personal life journal     | Mon–Sun (full week) | Habit tracking, flexible schedule, generic notes, health/finance/pets KB folders            |
+| [`personal/`](personal/) | Personal knowledge base and project journal | Session-based (no daily rhythm) | Projects (hobby, learning, game, family), notes by topic, knowledge base |
 
 ## Quick Start
 
@@ -20,7 +20,8 @@ Meowary ships two variants (templates). Pick the one that fits your use case, co
    - **OpenCode:** install [OpenCode](https://opencode.ai) and open the directory as workspace
    - **Gemini CLI:** install [Gemini CLI](https://github.com/google-gemini/gemini-cli) and run `gemini` from the directory
 3. Run `/bootstrap` to set up your personal context
-4. Run `/morning` (work) or `/today` (personal) to start your first day
+4. For the personal variant: use `/note`, `/project`, or `/kb` to start capturing. No daily ritual required.
+4. For the work variant: run `/morning` (or `/week-plan` on Mondays) to start your first day.
 
 The `/bootstrap` command is idempotent — run it again any time to update your context.
 
@@ -42,14 +43,12 @@ Both agents read the same `AGENTS.md` for conventions. Commands are available as
 
 ### Personal variant
 
-| Command        | When to use                                                                               |
-| -------------- | ----------------------------------------------------------------------------------------- |
-| `/bootstrap`   | First-time setup or update personal context                                               |
-| `/today`       | Create or open today's note (any day, populates habit scorecard)                          |
-| `/wrap-up`     | End of day or week: review tasks, habits, update projects. Optionally does weekly summary |
-| `/weekly`      | Create or update the weekly note (any day)                                                |
-| `/note`        | Record any kind of note (conversation, idea, research, appointment)                       |
-| `/new-project` | Create a new project folder from template                                                 |
+| Command      | When to use                                              |
+| ------------ | -------------------------------------------------------- |
+| `/bootstrap` | First-time setup or update personal context              |
+| `/note`      | Capture a note — agent routes it to the right place      |
+| `/project`   | Create a new project (hobby, dev, learning, game, family)|
+| `/kb`        | Add or update a knowledge base entry                     |
 
 ## How It Works
 
@@ -57,10 +56,10 @@ The agent reads `AGENTS.md` for conventions and `meta/context.md` for your perso
 
 Key principles:
 
-- **Daily notes are append-only.** Never delete past content — mark tasks as done, moved, dropped, or blocked.
+- **Session-based (personal).** No daily ritual — open when you're working on something, record what you learned or did, close.
 - **Tags** use prefixes: `#p-` for projects, `#person-` for people. The work variant also uses `#t-` for teams.
 - **Knowledge base** is the agent's long-term memory. It reads KB articles for context and updates them when new facts surface.
-- **External sources** are consulted alongside local files when MCP integrations are configured. The work variant includes Jira/Confluence placeholders; the personal variant suggests GitHub and general-purpose tools.
+- **External sources** (calendar, task managers, GitHub) are consulted via MCP integrations configured in `meta/context.md`.
 
 ## What's Inside
 
@@ -96,11 +95,16 @@ work/
 
 ```
 personal/
-├── daily/                     # One file per day (YYYY-MM-DD.md), includes habit scorecard
-├── weekly/                    # One file per week (YYYY-WNN.md), Mon–Sun
-├── projects/                  # One folder per active project
+├── projects/                  # One folder per project (hobby, learning, game, family)
+│   ├── <name>/
+│   │   ├── README.md          # Overview and dev log
+│   │   ├── notes.md           # Accumulated knowledge, concepts (optional)
+│   │   ├── resources.md       # Links, references (optional)
+│   │   ├── sessions.md        # Session log — game projects (optional)
+│   │   └── docs.md            # Documents checklist — family projects (optional)
 │   └── _archive/
-├── notes/                     # General notes (conversations, ideas, research)
+├── notes/                     # Standalone notes, organised by topic
+│   └── <topic>/               # e.g. notes/glsl/, notes/cooking/
 ├── knowledge-base/
 │   ├── people/
 │   ├── topics/
@@ -109,16 +113,12 @@ personal/
 │   ├── finance/
 │   └── pets/
 ├── meta/
-│   ├── templates/             # 6 templates (daily, weekly, project, person, KB, note)
-│   ├── context.md             # Personal context (name, tooling)
-│   ├── habits.md              # Habit definitions (good habits, bad habits)
-│   ├── recurring-events.md
+│   ├── templates/             # 4 templates (project, note, KB, person)
+│   ├── context.md             # Personal context (name, tooling, MCP integrations)
 │   ├── tags.md
 │   └── reading-list.md
-├── .opencode/commands/        # 6 slash commands (OpenCode)
-├── .gemini/commands/          # 6 slash commands (Gemini CLI)
-├── AGENTS.md                  # Agent instructions (shared by both agents)
-├── GEMINI.md                  # Gemini CLI context file (imports AGENTS.md)
+├── .opencode/commands/        # 4 slash commands (OpenCode)
+├── AGENTS.md
 ├── opencode.json
 └── .gitignore
 ```

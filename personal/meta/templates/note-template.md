@@ -1,16 +1,11 @@
-## {{DATE}}: {{NOTE_TITLE}}
+# {{DATE}}: {{NOTE_TITLE}}
 
-**People:** {{PEOPLE}}
 **Tags:** {{TAGS}}
 
-### Details
+## Notes
 
 -
 
-### Takeaways
+## Takeaways
 
 -
-
-### Action Items
-
-- [ ]

@@ -1,21 +1,45 @@
 ---
-description: Create a new project folder from template
+description: Create a new project or learning topic
 ---
 
-Create a new project under projects/. Follow these steps:
+Create a new project under `projects/`. Works for both regular projects and learning topics.
 
-1. Create the folder `projects/$1/`.
-2. Copy from `meta/templates/project-template.md` into `projects/$1/README.md`.
+Arguments: `/project <slug> [name]`
+
+## Step 1: Gather Info
+
+If not supplied via arguments or clear from context, ask the user **once** for all of the following:
+
+- **Name** — readable project name.
+- **Type** — Project / Dev / Learning / Game / Family. (Offer a one-line description of each if the user seems unsure.)
+- **Overview** — what is this, what do you want from it? One or two sentences.
+- **Companion files** — which optional files to create: `notes.md`, `resources.md`, `sessions.md` (Game), `docs.md` (Family). Default: none.
+- **Dev only:** repo URL and tech stack.
+
+If the type is clear from context (e.g. "new learning project about GLSL"), infer it and skip asking. Only ask about what isn't obvious.
+
+## Step 2: Create the Folder
+
+1. Create `projects/<slug>/`.
+2. Copy `meta/templates/project-template.md` into `projects/<slug>/README.md`.
 3. Replace placeholders:
-   - {{PROJECT_NAME}} with: $2 (if not provided, derive a readable name from the folder name)
-   - {{PROJECT_SLUG}} with: $1
-   - {{DEADLINE}} with: $3 (if not provided, use TBD)
-   - {{DATE}} with today's date (YYYY-MM-DD)
-4. Ask the user for a brief overview of the project (what it is, what the goals are). Write it into the Overview section. Do not leave the overview as a placeholder -- every project needs a real description (see "No stubs" rule in AGENTS.md).
-5. Ask the user for initial open tasks and write them into the Open Tasks section. At least one concrete task is required.
-6. Add the appropriate tags. Register the new `#p-$1` tag in `meta/tags.md`.
-7. If today's daily note exists, add a log entry mentioning the new project.
-8. If a weekly note exists for this week, ask the user if a goal should be added for this project.
-9. Commit with a message like "Add project $1".
+   - `{{PROJECT_NAME}}` — readable name
+   - `{{PROJECT_SLUG}}` — the slug
+   - `{{DATE}}` — today's date
+   - `{{TYPE}}` — the project type (lowercase)
+4. Write the Overview from the info gathered in Step 1. Do not leave it as a placeholder.
+5. For **Dev** projects: add repo URL and tech stack under the Overview.
+
+## Step 3: Create Companion Files
+
+Create only the files requested in Step 1. Do not create files that weren't asked for.
+
+## Step 4: Register Tag
+
+Add the `#p-<slug>` tag to `meta/tags.md`.
+
+## Step 5: Commit
+
+Commit with message: `project: add <slug>`.
 
 $ARGUMENTS

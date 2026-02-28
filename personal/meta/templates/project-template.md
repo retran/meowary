@@ -1,24 +1,18 @@
 ---
-type: project
+type: {{TYPE}}
 status: Active
-deadline: "{{DEADLINE}}"
 tags: [p-{{PROJECT_SLUG}}]
 ---
 
 # {{PROJECT_NAME}}
 
 **Status:** Active
-**Deadline:** {{DEADLINE}}
 **Tags:** #p-{{PROJECT_SLUG}}
 
 ## Overview
 
-Brief description of the project and its main goals.
-
-## Open Tasks
-
-- [ ]
+Brief description of the project and its goals.
 
 ## Dev Log
 
-- **{{DATE}}:** Project kicked off.
+- **{{DATE}}:** Project started.

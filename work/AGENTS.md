@@ -8,6 +8,8 @@ Author identity, team, tooling, and other instance-specific details live in [`me
 
 **On first use:** If `meta/context.md` is empty or missing, direct the user to run `/bootstrap` before proceeding with any task that needs this context.
 
+**Language:** Write all journal content in the language specified in `meta/context.md` → Conventions → Language. Apply this to daily notes, weekly notes, project files, meeting notes, KB entries, and commit messages. If no language is set, default to English.
+
 ## Writing Style
 
 Write plainly. The journal is a working tool, not a publication. Follow these principles (drawn from _Слово живое и мёртвое_ by Nora Gal and _Пиши, сокращай_ by Maxim Ilyakhov):
@@ -24,7 +26,7 @@ Write plainly. The journal is a working tool, not a publication. Follow these pr
 ## Repository Structure
 
 ```
-meowary/
+work/
 ├── daily/                     # One file per day, named YYYY-MM-DD.md
 ├── weekly/                    # One file per week, named YYYY-WNN.md
 ├── meetings/                  # General meeting notes (not tied to a project)
@@ -34,6 +36,11 @@ meowary/
 │   │   ├── meetings.md        # Project-specific meeting notes (optional)
 │   │   └── resources.md       # Links, snippets, references (optional)
 │   └── _archive/              # Completed projects are moved here
+├── lists/                     # Reading, talks, tools, and other backlogs
+│   ├── reading.md
+│   ├── talks.md
+│   ├── tools.md
+│   └── <anything>.md          # Add more as needed
 ├── knowledge-base/            # Persistent reference notes (teams, tools, glossary, etc.)
 │   ├── codebases/             # Repos, workspaces, packages, code architecture
 │   ├── processes/             # Workflows, release process, CI/CD, review flows
@@ -51,7 +58,6 @@ meowary/
 │   │   └── meeting-template.md
 │   ├── context.md
 │   ├── recurring-events.md
-│   ├── reading-list.md
 │   └── tags.md
 ├── .opencode/                 # OpenCode configuration
 │   └── commands/              # Custom slash commands
@@ -134,6 +140,32 @@ Meeting notes live in two places depending on scope:
 - If action items belong to specific projects, add them to those projects' **Open Tasks** sections.
 - If durable facts were learned (team changes, process updates, architecture decisions), update the knowledge base.
 
+### Lists (`lists/`)
+
+Backlogs for reading, talks to watch, tools to explore, and anything else worth tracking at work.
+
+Each list is a separate file. Existing files: `lists/reading.md`, `lists/talks.md`, `lists/tools.md`. Create new files as needed.
+
+**Structure of each list:**
+
+```markdown
+# Reading
+
+## Backlog
+
+- *Title* — Author/Source (optional note: why it's relevant)
+
+## Done
+
+- *Title* — Author/Source — YYYY-MM — one-line takeaway
+```
+
+Rules:
+- **Backlog** is unread/unwatched. Order doesn't matter.
+- **Done** is reverse chronological — most recent first. Include month (YYYY-MM).
+- One-line impression max. If you want to write more, create a note and link with `→`.
+- When moving an item from Backlog to Done, add the date and impression. Don't leave it blank.
+
 ### Knowledge Base (`knowledge-base/`)
 
 - Persistent reference notes about teams, tools, processes, glossary, and other context not tied to a single day or project.
@@ -186,7 +218,6 @@ When MCP integrations are configured (check `meta/context.md` for details), use 
 - `meta/templates/` — boilerplate files for new entries.
 - `meta/recurring-events.md` — schedule of recurring events (used when creating daily notes).
 - `meta/tags.md` — canonical registry of all tags used in the journal.
-- `meta/reading-list.md` — books and articles to read.
 
 ### Templates (`meta/templates/`)
 

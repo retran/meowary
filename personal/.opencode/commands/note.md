@@ -1,53 +1,57 @@
 ---
-description: Record a note (conversation, idea, research, appointment)
+description: Record a note or capture knowledge
 ---
 
-Record a note. This can be anything: a conversation, an idea, research findings, an appointment summary, or any other freeform note. This is an interactive process -- ask questions at each step before moving on.
+Record a note or capture knowledge. Use this whenever you want to write something down — an idea, a discovery, research findings, observations during a learning session, anything worth keeping.
 
-Arguments: `/note [project-slug]` -- if a project slug is provided, the note is appended to that project's `notes.md`. Otherwise, ask the user.
+Arguments: `/note [project-slug]` — if a project slug is provided, the note goes into that project's `notes.md`. Otherwise, the agent figures out the best place.
 
-## Step 1: Note Details
+## Step 1: Understand What This Is
 
-Ask the user for (skip any already provided via arguments):
+Read what the user has shared (via arguments or conversation context). Determine the destination — in order of priority:
 
-- **Title:** What is this note about? (e.g. "Sourdough starter experiment", "Call with doctor", "Bike route research")
-- **Project:** Is this tied to a project? If yes, which one? (List active projects from `projects/` for the user to pick.) If no project, the note goes into the `notes/` folder.
-- **People:** Anyone involved? Use `#person-` tags and link to KB people entries where they exist. Skip if not applicable.
+1. **Explicit project slug in arguments** → route to that project.
+2. **Content clearly references an existing project** (mentions its name, is a session log, references its codebase or subject) → route to that project. Check `projects/` for active projects.
+   - For **Learning** projects: also check whether the content contains durable knowledge (concepts, rules, API facts) that should go into `knowledge-base/topics/<slug>.md`. It may need to go to *both* places — session context to `notes.md`, distilled facts to KB.
+3. **Content is a durable fact** about a person, place, health, finance, etc. → route to `knowledge-base/`.
+4. **Everything else** → standalone topic note at `notes/<topic>/YYYY-MM-DD-<slug>.md`. Derive the topic from the content.
 
-## Step 2: Note-Taking
+Do not ask the user where to route. Pick the best fit and proceed. If the routing turns out to be wrong, the user can move the file.
 
-Present the note template structure and ask the user to provide content for each section:
+## Step 2: Take the Note
 
-1. **Details** -- the substance of the note. Ask: "What are the details?" Write as bullet points.
-2. **Takeaways** -- key insights or conclusions. Ask: "Any takeaways or key points?" Write as bullet points. If none, write `*(none)*`.
-3. **Action Items** -- things to do as a result. Ask: "Any action items or follow-ups?" Write as checkboxes (`- [ ]`). Tag each with the responsible person (`#person-`) and project (`#p-`) if applicable.
+Ask the user to share the content if they haven't already. Then write it using the structure from `meta/templates/note-template.md`:
 
-## Step 3: Write the Note
+- **Notes** — the substance: what was learned, observed, or decided. Bullet points.
+- **Takeaways** — key insights worth highlighting. Omit if there are none.
 
-**If project note** (project slug was provided or chosen):
+For **Learning** project content, after writing the session note, identify durable facts in the material (concepts, rules, patterns, API behaviour). Extract these into `knowledge-base/topics/<slug>.md` — write or update the relevant sections. Don't ask the user to separate them; do it yourself.
 
-- Check if `projects/<slug>/notes.md` exists. If not, create it with an H1 heading: `# <Project Name> -- Notes`.
-- Append the note entry using the format from `meta/templates/note-template.md`. The entry starts with an H2 heading: `## YYYY-MM-DD: <Title>`.
-- Entries are in reverse chronological order (newest first, right after the H1 heading).
+Keep it concise. Do not pad with empty sections.
 
-**If general note** (no project):
+## Step 3: Write the File
 
-- Create a standalone file: `notes/YYYY-MM-DD-<slug>.md` where `<slug>` is a kebab-case version of the title.
-- Use a standalone format with an H1 heading: `# YYYY-MM-DD: <Title>`, followed by metadata (People, Tags) and the same Details/Takeaways/Action Items sections.
+**If project note** (routed to a project):
 
-## Step 4: Cross-Link
+- Check if `projects/<slug>/notes.md` exists. If not, create it with H1: `# <Project Name> — Notes`.
+- Prepend the new entry as H2: `## YYYY-MM-DD: <Title>` (newest first).
 
-- If today's daily note exists, add or update the **Log & Notes** section (or **Events & Appointments** if it was an event/appointment) with a link to the note and a one-line summary.
-- Tag the daily note entry with relevant `#p-` and `#person-` tags.
-- If action items reference specific projects, add them as tasks in those projects' Open Tasks sections.
+**If topic note** (standalone):
 
-## Step 5: Knowledge Base Updates
+- Determine the topic folder from context (e.g. GLSL → `notes/glsl/`, cooking → `notes/cooking/`). Create the folder if it doesn't exist.
+- File name: `notes/<topic>/YYYY-MM-DD-<slug>.md`.
 
-- If durable facts were learned (health info, place recommendations, person details, topic knowledge), update the relevant knowledge base entries. Create new entries if needed.
-- Append a changelog entry to any KB article that is edited.
+**If KB content** (durable reference):
 
-## Step 6: Commit
+- Write or update the relevant `knowledge-base/` entry directly.
 
-- Once the user confirms the note is complete, commit with a message like "Add note: <title> (YYYY-MM-DD)".
+## Step 4: Cross-link
+
+- If the note relates to a project, and the project's `README.md` dev log doesn't have an entry for this session yet, add one: `- **YYYY-MM-DD:** <one-line summary>`.
+- If durable facts were learned and not already written to the KB in Step 2, update or create the relevant `knowledge-base/` entry now.
+
+## Step 5: Commit
+
+Commit with a short message: `note: <title>` or `note: <project> — <title>`.
 
 $ARGUMENTS

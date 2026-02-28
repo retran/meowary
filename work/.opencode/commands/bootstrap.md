@@ -75,12 +75,15 @@ If the user mentioned MCP integrations (Jira, Confluence, etc.), do a quick smok
 
 ## Step 5: Create Author KB Entry (fresh setup only)
 
-If this is a fresh setup (Step 2b), offer to create a knowledge base entry for the author:
+`meta/context.md` holds agent configuration — name, role, team, tooling. It is not a personal profile.
 
-- Create `knowledge-base/people/<slug>.md` from `meta/templates/person-template.md`.
-- Fill in the known details (name, role, team).
-- Add a link from `meta/context.md` to the KB entry.
-- Register the `#person-<slug>` tag in `meta/tags.md` if it doesn't exist.
+The KB entry for the author (`knowledge-base/people/<slug>.md`) is optional and serves a different purpose: recording things about yourself that are useful as reference in a work context — communication style, areas of expertise, working preferences, relationships with teams. Don't duplicate fields already in `context.md`.
+
+Offer to create the entry only if the user seems to want it. If created:
+
+- Use `meta/templates/person-template.md`. Skip fields already covered by `context.md` (name, role, team are in context — link to it rather than repeat).
+- Add one line to `meta/context.md`: `**Profile:** [<name>](../knowledge-base/people/<slug>.md)`.
+- Register `#person-<slug>` in `meta/tags.md`.
 
 ## Step 6: Summary
 
