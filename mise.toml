@@ -1,0 +1,6 @@
+# mise configuration for the journal repo.
+# Autoloads .env when you cd into this directory (requires mise shell activation).
+# See .env.example for the required variables.
+
+[env]
+_.file = { path = ".env", redact = true }

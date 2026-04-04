@@ -1,0 +1,23 @@
+{
+  "name": "journal-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "audit-resources-links": "tsx audit-resources-links.ts",
+    "fix-resources-links": "tsx fix-resources-links.ts",
+    "fetch-confluence-updates": "tsx fetch-confluence-updates.ts",
+    "fetch-missing-pages": "tsx fetch-missing-pages.ts",
+    "generate-resources-plan": "tsx generate-resources-plan.ts",
+    "resources-operation": "tsx resources-operation.ts",
+    "update-confluence-dates": "tsx update-confluence-dates.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.0"
+  }
+}
