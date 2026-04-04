@@ -4,7 +4,7 @@ description: Actualize a single resource article
 
 Actualize a single resource article. Load the `resources` skill and then `resources/enrich.md` sub-skill before proceeding. Then execute Workflow A in full.
 
-Arguments: `/resources-enrich <article-path>` — path to the resource article to actualize (e.g. `resources/process/api-guidelines.md`).
+Arguments: `/r-enrich <article-path>` — path to the resource article to actualize (e.g. `resources/process/api-guidelines.md`).
 
 If no argument is provided, ask the user which article to actualize. Show the current list from `knowledge-graph.md` if helpful.
 

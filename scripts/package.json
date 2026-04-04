@@ -4,20 +4,25 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "audit-resources-links": "tsx audit-resources-links.ts",
-    "fix-resources-links": "tsx fix-resources-links.ts",
-    "fetch-confluence-updates": "tsx fetch-confluence-updates.ts",
-    "fetch-missing-pages": "tsx fetch-missing-pages.ts",
-    "generate-resources-plan": "tsx generate-resources-plan.ts",
-    "resources-operation": "tsx resources-operation.ts",
-    "update-confluence-dates": "tsx update-confluence-dates.ts"
-  },
-  "devDependencies": {
-    "tsx": "^4.19.0",
-    "typescript": "^5.6.0",
-    "@types/node": "^22.0.0"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "health-links": "node health-links.js",
+    "fix-links": "node fix-links.js",
+    "confluence-updates": "node confluence-updates.js",
+    "confluence-missing": "node confluence-missing.js",
+    "confluence-backfill-dates": "node confluence-backfill-dates.js",
+    "plan-resources": "node plan-resources.js",
+    "run-operation": "node run-operation.js",
+    "health-all": "node health-all.js",
+    "report-resources": "node report-resources.js",
+    "discover-connections": "node discover-connections.js",
+    "qmd-index": "node qmd-index.js",
+    "fetch-source": "node fetch-source.js"
   },
   "dependencies": {
     "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0"
   }
 }

@@ -1,0 +1,30 @@
+# qmd.yml — qmd semantic search index configuration
+#
+# Defines collections for semantic querying via `qmd query "<question>"`.
+# Run `node scripts/qmd-index.js` to build/update the index.
+#
+# Install: npm install -g qmd (requires Node >= 22)
+# First run downloads ~2GB embedding model.
+
+collections:
+  - name: resources
+    path: resources/
+    description: "Knowledge base — atomic, topic-based reference articles"
+  - name: journal
+    path: journal/
+    description: "Time-based notes — daily, weekly, meetings"
+  - name: inbox
+    path: inbox/
+    description: "Unprocessed captures and scratch pad"
+  - name: projects
+    path: projects/
+    description: "Active project dashboards, specs, and plans"
+  - name: areas
+    path: areas/
+    description: "Ongoing responsibility dashboards"
+  - name: drafts
+    path: drafts/
+    description: "Unpublished documents for external audiences"
+  - name: archive
+    path: archive/
+    description: "Completed and inactive projects, areas, and resources"

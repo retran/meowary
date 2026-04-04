@@ -16,6 +16,9 @@ Load these on top of `resources` for specific workflows:
 | Sync Confluence map and enrich resources in batch (detect new/modified pages, produce operation plan, execute) | `resources/sync` ([sync.md](sync.md)) |
 | Review all resources and plan graph restructuring (identify merges, splits, deletes, creates, reclassifies) | `resources/plan` ([plan.md](plan.md)) |
 | Discover hidden connections between articles (backlinks, shared tags/sources, entity co-occurrence) | `resources/discover` ([discover.md](discover.md)) |
+| Execute a structural operation (delete, merge, split, create, reclassify) | `resources/operations` ([operations.md](operations.md)) |
+| Ingest an external source (URL or file) into resources | `resources/ingest` ([ingest.md](ingest.md)) |
+| Query all journal data and synthesize a cited answer | `resources/query` ([query.md](query.md)) |
 
 ## Related Skills
 
@@ -26,7 +29,7 @@ Load these alongside `resources` when their domain is involved:
 | Fetching Confluence pages, recording in confluence-map, write to Confluence with approval | `confluence` |
 | Searching Jira issues, extracting facts for resource articles, write to Jira with approval | `jira` |
 
-Workflow D (structural operations: delete, merge, split, create, reclassify) is defined in this file and called by all three sub-skills.
+Workflow D (structural operations: delete, merge, split, create, reclassify) is defined in [operations.md](operations.md) — load it when executing any structural operation.
 
 ## Resources Philosophy
 
@@ -39,6 +42,8 @@ Resources form a **concept graph**, not a mirror of Confluence. Articles are nod
 - **Cross-references build value.** Every link added is a path through the graph. Prefer many short linked articles over few long ones.
 - **Confluence is raw material.** Distill durable facts. Discard meeting logistics, formatting boilerplate, and expiring status updates. A 5-page Confluence document might become 30 lines across two resource articles.
 - **Jira and codebase verify and enrich.** Confirm current state, add concrete details, remove stale claims.
+
+- **Synthesis articles are first-class nodes.** `resources/synthesis/` holds articles produced by Workflow G that answer recurring questions by compiling multiple sources. They have `status: synthesis` in front matter, cite all sources, and are cross-linked from the articles they draw on.
 
 ---
 
@@ -57,73 +62,6 @@ During every session — regardless of primary task — scan for resource gaps. 
 | Daily/weekly note log entry contains durable facts | Extract to the relevant resource article |
 
 **Scanning discipline:** At the end of every writing or editing session, do a quick mental scan: "Did I encounter any durable facts not yet captured in resources?" If yes, act immediately.
-
----
-
-## Workflow D: Execute a Structural Operation
-
-**Purpose:** Execute a single structural operation from the plan (`delete`, `merge`, `split`, `create`, `reclassify`). Each operation runs in its own session.
-
-**Input:** Operation type and details from `resources-actualize-plan.md`.
-
-### Delete
-
-1. Read the article to confirm it should be deleted.
-   2. Use `rg` to search `resources/` for all inbound links to the article (see [ref-search.md](ref-search.md)).
-3. Remove or redirect every inbound link.
-4. Delete the file.
-5. Remove the row from `knowledge-graph.md`.
-6. Check `confluence-map.md`: for each page ID listed in the article's `## Sources`, search whether any other resource article references that same page ID. If no other article references it, remove the row from `confluence-map.md` (or annotate it as orphaned if you prefer to keep it for historical record).
-7. Commit: `Resources: delete <path> — <reason>`
-
-### Merge
-
-1. Read both articles (surviving and absorbed).
-2. Identify unique content in the absorbed article not present in the survivor.
-3. Merge unique content into the surviving article — do not just concatenate. Restructure sections to flow naturally.
-4. Update the surviving article's `## Sources`, `## Related`, `## Changelog`, `updated`. Set `actualized: ""` — the article is structurally complete but not yet enriched by Workflow A.
-   5. Use `rg` to search `resources/` for all inbound links to the absorbed article. Redirect them to the surviving article.
-6. Delete the absorbed article.
-7. Update `knowledge-graph.md`: update the surviving row, remove the absorbed row.
-8. Register any new tags in `tags.md`.
-9. Commit: `Resources: merge <absorbed> into <surviving>`
-
-### Split
-
-1. Read the source article.
-2. Identify the sections/content to extract into each new article.
-3. Create new articles from `.opencode/templates/resources-template.md`. Fill all front matter. Set `updated` to today. Set `actualized: ""` — new articles are structurally complete but not yet enriched by Workflow A. Write real content — no stubs.
-4. Remove the extracted content from the source article. Replace with a link to the new article. Update the source article's `updated`. Set `actualized: ""` on the source article as well.
-5. Update the source article's `## Related`, `## Changelog`.
-6. Add bidirectional cross-references between source and new articles.
-   7. Use `rg` to search `resources/` for inbound links to the source article that reference the extracted content. Redirect to the new article where appropriate.
-8. Add rows for new articles to `knowledge-graph.md`. Update the source article's row.
-9. Register any new tags in `tags.md`.
-10. Commit: `Resources: split <source> → <new1>, <new2>`
-
-### Create
-
-1. Gather data about the concept: search Confluence, Jira, codebase, and existing resource articles.
-2. Create the article from the appropriate template. Place in the correct subfolder by concept domain.
-3. Fill all front matter. Set `updated` to today. Set `actualized: ""` — the article is structurally complete but not yet enriched by Workflow A. Assign tags.
-4. Write a real Overview and at least one substantive section. No stubs.
-5. Add `## Sources` listing every source used.
-6. Add `## Related` with cross-references to articles that mention this concept.
-7. Add back-links in all referenced articles.
-8. Add a row to `knowledge-graph.md`.
-9. Register any new tags in `tags.md`.
-10. Update `confluence-map.md` if new Confluence pages were fetched.
-11. Commit: `Resources: create <path>`
-
-### Reclassify (move/rename)
-
-1. Read the article.
-2. Move/rename the file to the new path.
-   3. Use `rg` to search `resources/` for all inbound links to the old path. Update them to the new path.
-4. Update the article's front matter if tags or content need adjustment for the new subfolder. Set `actualized: ""` — the article is structurally complete but not yet enriched by Workflow A.
-5. Update `## Changelog` and `updated`.
-6. Update the row in `knowledge-graph.md` (file path and summary if needed).
-7. Commit: `Resources: reclassify <old-path> → <new-path>`
 
 ---
 
@@ -156,4 +94,4 @@ During every session — regardless of primary task — scan for resource gaps. 
 - **No stubs.** Every new article needs a real Overview and at least one substantive section.
 - **Distill, don't copy.** Confluence and Jira are sources, not mirrors.
 - **Read-only externals.** Never write to Jira or Confluence. Codebase is read-only.
-- **Fix all inbound links.** After any delete, merge, reclassify, split, or rename: use `rg "<old-filename>" .` from the repo root to find every inbound link (not just in `resources/` — daily notes and project files link in too). Update or remove all matches. Broken links are unacceptable.
+- **Fix all inbound links.** After any delete, merge, reclassify, split, or rename: run `node scripts/find-backlinks.js <old-path>` from the repo root to find every inbound link (not just in `resources/` — daily notes and project files link in too). Update or remove all matches. Broken links are unacceptable.

@@ -6,6 +6,14 @@ updated: 2026-04-01
 
 ## Journal Repo Patterns
 
+### Scripts
+
+- All scripts: JavaScript (ESM), run via `node scripts/<name>.js [args]` from repo root.
+- `scripts/package.json` has `"type": "module"` — use `import`/`export`, not `require`.
+- No TypeScript, no build step. Run directly with `node`.
+- Shared utilities in `scripts/lib/` — import with relative paths.
+- All scripts write to stdout only. Exit 0 always; report issues, don't throw.
+
 ### Skill Files
 - YAML frontmatter: `name`, `description`, `compatibility: opencode`
 - Sub-skills loaded on demand via `skill` tool

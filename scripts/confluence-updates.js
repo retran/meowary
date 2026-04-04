@@ -1,14 +1,16 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
- * fetch-confluence-updates.ts
+ * confluence-updates.js
  *
  * Fetches all Confluence pages modified on or after a given date across one or
  * more spaces, and cross-references with confluence-map.md to show which local
  * map entries need to be re-read.
  *
  * Usage:
- *   npx tsx scripts/fetch-confluence-updates.ts YYYY-MM-DD [SPACE1 SPACE2 ...]
+ *   node scripts/confluence-updates.js YYYY-MM-DD [SPACE1 SPACE2 ...]
  *   Default spaces: set CONFLUENCE_SPACES in .env (space-separated list)
+ *
+ * Exit 0 always.
  */
 
 import {
@@ -22,28 +24,17 @@ import {
 
 const PAGE_SIZE = 50;
 
-interface ConfluenceResult {
-  id: string;
-  title: string;
-  version?: { when?: string };
-}
-
-interface SearchResponse {
-  results: ConfluenceResult[];
-}
-
-async function main(): Promise<number> {
-  // Parse args
+async function main() {
   const args = process.argv.slice(2);
   if (args.length < 1) {
-    console.error("Usage: fetch-confluence-updates.ts YYYY-MM-DD [SPACE1 SPACE2 ...]");
-    return 1;
+    console.error("Usage: confluence-updates.js YYYY-MM-DD [SPACE1 SPACE2 ...]");
+    return;
   }
 
   const since = args[0];
   if (!/^\d{4}-\d{2}-\d{2}$/.test(since)) {
     console.error("ERROR: Date must be in YYYY-MM-DD format.");
-    return 1;
+    return;
   }
 
   requireAtlassianCredentials();
@@ -51,7 +42,7 @@ async function main(): Promise<number> {
   const spaces = args.length > 1 ? args.slice(1) : CONFLUENCE_DEFAULT_SPACES;
   if (spaces.length === 0) {
     console.error("ERROR: No spaces specified and CONFLUENCE_SPACES not set.");
-    return 1;
+    return;
   }
 
   const { ids, inMap } = loadMapIds(MAP_FILE);
@@ -63,7 +54,6 @@ async function main(): Promise<number> {
   console.log(`Fetching pages modified on or after ${since}...`);
   console.log();
 
-  // Table header
   console.log(
     `${"PAGE ID".padEnd(14)} ${"MODIFIED".padEnd(12)} ${"IN MAP".padEnd(8)}  TITLE`
   );
@@ -85,7 +75,7 @@ async function main(): Promise<number> {
     });
 
     const url = `${CONFLUENCE_BASE}/rest/api/content/search?${params}`;
-    let response: Response;
+    let response;
     try {
       response = await fetch(url, {
         headers: { Authorization: authHeader() },
@@ -103,11 +93,11 @@ async function main(): Promise<number> {
       break;
     }
 
-    const data = (await response.json()) as SearchResponse;
+    const data = await response.json();
     const results = data.results ?? [];
 
     for (const r of results) {
-      if (r.id.startsWith("att")) continue; // skip attachments
+      if (r.id.startsWith("att")) continue;
 
       const when = r.version?.when ?? "";
       const date = when ? when.slice(0, 10) : "\u2014";
@@ -133,8 +123,6 @@ async function main(): Promise<number> {
   console.log(`Total pages modified since ${since} : ${totalFetched}`);
   console.log(`In confluence-map.md             : ${inMapCount}`);
   console.log(`Not in confluence-map.md         : ${notInMapCount}`);
-
-  return 0;
 }
 
-main().then((code) => process.exit(code));
+main().catch((err) => console.error(`Unexpected error: ${err.message}`));

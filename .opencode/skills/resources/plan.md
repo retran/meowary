@@ -11,7 +11,7 @@ compatibility: opencode
 
 **Output:** `resources-actualize-plan.md` — an ordered queue of operations.
 
-**When to run:** Before a batch actualization pass. The plan file is consumed by Workflow D (structural operations, in [SKILL.md](SKILL.md)) and Workflow A (single-article enrichment, in [enrich.md](enrich.md)).
+**When to run:** Before a batch actualization pass. The plan file is consumed by [operations.md](operations.md) (structural operations) and Workflow A (single-article enrichment, in [enrich.md](enrich.md)).
 
 ### Step 1: Read the Full Resources Map
 
@@ -21,7 +21,11 @@ compatibility: opencode
 
 ### Step 2: Scan All Articles
 
-For each subfolder in `resources/`, read every article — including `resources/people/`. Person files are full resource nodes and must be reviewed. At minimum read:
+Start with a high-level overview — run `node scripts/report-resources.js --sort actualized` to see all articles sorted by how recently they were enriched. This shows coverage gaps (long-stale articles) and size outliers (split candidates) at a glance.
+
+Also run `node scripts/health-all.js` to get a full health report: orphaned articles, missing knowledge-graph entries, tag inconsistencies, stale articles, and empty sections. Use this output as additional input for Step 3.
+
+Then for each subfolder in `resources/`, read every article — including `resources/people/`. Person files are full resource nodes and must be reviewed. At minimum read:
 - Full front matter (`status`, `updated`, `tags`)
 - All headings and the first paragraph of each section
 - `## Related` and `## Sources` sections in full
@@ -36,7 +40,7 @@ Systematically check for:
 
 **b. Splits** — Articles covering two or more distinct concepts that deserve independent nodes. Symptoms: article exceeds ~80 lines, has sections on unrelated subtopics, or is linked to only for one of its sections.
 
-**c. New nodes** — Concepts, components, people, teams, processes, or decisions mentioned in multiple articles but with no dedicated article. These are missing nodes in the graph. Also grep `journal/daily/`, `journal/weekly/`, and `projects/` for recurring concepts that have no resource article — journal content often contains durable facts that never made it into resources. Only list concepts that appear in 2+ sources or are substantial enough to warrant a dedicated article.
+**c. New nodes** — Concepts, components, people, teams, processes, or decisions mentioned in multiple articles but with no dedicated article. These are missing nodes in the graph. Also search `journal/daily/`, `journal/weekly/`, and `projects/` for recurring concepts that have no resource article — journal content often contains durable facts that never made it into resources. Only list concepts that appear in 2+ sources or are substantial enough to warrant a dedicated article.
 
 **d. Deletions / archiving** — Articles that are stubs with no useful content, duplicates fully covered by another article, or topics no longer relevant.
 

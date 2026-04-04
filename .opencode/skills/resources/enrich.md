@@ -5,6 +5,20 @@ depends_on: resources
 compatibility: opencode
 ---
 
+## Create-If-Not-Exists
+
+If the article path passed to `/r-enrich` **does not exist**, run Workflow D Create for that concept first:
+
+- Use the path slug as the concept name (e.g. `resources/people/alice-smith.md` → concept: "Alice Smith").
+- Gather available context from Confluence, Jira, and journal before creating.
+- Follow all Workflow D Create steps in [operations.md](operations.md).
+
+After the file is created, proceed with **Step 0** below on the newly created file.
+
+This enables `/r-enrich resources/people/<slug>.md` and `/r-enrich resources/teams/<slug>.md` to create new person or team articles without a dedicated create command.
+
+---
+
 ## Workflow A: Actualize a Single Article
 
 **Input:** article file path (e.g. `resources/process/ci-pipeline.md`).
@@ -39,12 +53,12 @@ Run all five sub-steps. Use multiple search strategies per sub-step — do not s
 **When the article is a person file** (`resources/people/`), use these source priorities:
 - **2b (Confluence):** Search the person's full name; check their team's roster and org chart pages.
 - **2c (Jira):** Search by assignee or reporter. Note current role, active projects, and work focus.
-- **2e (Journal):** Grep the person's name across `journal/daily/`, `journal/meetings/`, and `projects/`. Extract role updates, team changes, and collaboration patterns.
+- **2e (Journal):** Search for the person's name across `journal/daily/`, `journal/meetings/`, and `projects/`. Extract role updates, team changes, and collaboration patterns.
 - Codebase (2d) is less relevant for most person files — skip unless the article covers technical ownership.
 
 #### 2a. Local Resources
 
-- Grep key terms across `resources/`.
+- Search key terms across `resources/`.
 - Check same-subfolder articles for overlap or missing cross-references.
 - Check `knowledge-graph.md` for articles with shared tags.
 - Read related articles to avoid duplicating existing facts.
@@ -93,7 +107,7 @@ Correct stale technical details from current code state.
 
 #### 2e. Journal (daily notes, weekly logs, projects)
 
-- Grep key terms across `journal/daily/`, `journal/weekly/`, and `projects/`.
+- Search key terms across `journal/daily/`, `journal/weekly/`, and `projects/`.
 - Read matching daily note entries and project dev log sections — focus on Log & Notes, decisions recorded, blockers resolved.
 - Extract durable facts: architectural decisions made during work sessions, ownership changes, process observations, concrete numbers or dates not yet captured in resources.
 - Check project READMEs (`projects/*/README.md`) for current status, open tasks, and dev log entries that reveal facts the article should reflect.
@@ -172,10 +186,13 @@ After enriching, apply layered distillation to make the article progressively mo
 
 #### 7a. Orphan scan
 
-Check whether the article has at least one inbound link from another resource file. Articles with zero inbound links are invisible in the knowledge graph.
+Check whether the article has at least one inbound link from another resource file. Run:
 
-- Search `resources/` for the article's filename in link syntax (e.g. `](maia-010.md)` or `](../adr/maia-010.md)`).
-- If zero hits, fix by adding a link from the most closely related article's `## Related` section.
+```
+node scripts/find-backlinks.js <article-path>
+```
+
+Zero results means the article is orphaned — invisible in the knowledge graph. Fix by adding a link from the most closely related article's `## Related` section.
 
 People files (`resources/people/`) are exempt from the orphan check — they do not need inbound links. They are **not** exempt from actualization: every person file goes through Workflow A in full.
 
@@ -195,7 +212,7 @@ Check articles in the same subfolder that share tags with the current article:
 - Check all reference sources against the article's `actualized` date:
   - **Confluence** — for each page ID in `## Sources`, check `confluence-map.md` for its last-modified date. Flag if the page was modified after `actualized`.
   - **Jira** — for any Jira issue keys mentioned in the article, check if the issue was updated after `actualized`.
-  - **Journal** — grep `journal/daily/` and `projects/` for the article's key terms. If recent entries (after `actualized`) contain facts not reflected in the article, flag it.
+  - **Journal** — search `journal/daily/` and `projects/` for the article's key terms. If recent entries (after `actualized`) contain facts not reflected in the article, flag it.
   - **Codebase** — if the article references specific files, namespaces, or components, check whether they changed after `actualized`.
 - Do not fix stale articles now — report them in the commit message.
 

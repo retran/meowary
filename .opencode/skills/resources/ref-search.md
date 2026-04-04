@@ -1,49 +1,98 @@
 ---
 name: resources/ref-search
-description: Ripgrep search patterns for resources operations — inbound links, concept search, tag listing, cross-folder references
+description: Script reference card for resources operations — inbound links, health checks, analysis, and structural operations
 compatibility: opencode
 ---
 
-## Searching Resources
+## Script Reference Card
 
-Use **ripgrep (`rg`)** for all resource searches. It is faster and more precise than glob or `find`.
+All deterministic operations on resource files are handled by scripts in `scripts/`. Load this reference when you need to know which script to run for a given task.
 
-### Find all inbound links to a file
+### Find inbound links to an article
 
-```bash
-rg "adr-conventions" resources/ --type md
+```
+node scripts/find-backlinks.js <article-path>
 ```
 
-Use this after every rename, move, split, or delete to catch every broken link before committing.
+- Use after every rename, move, split, or delete — catches all broken links before committing.
+- Searches the **entire repo** (not just `resources/`), so daily notes and project files are included.
+- Outputs one path per line. Zero results = orphaned article.
 
-### Search resource content by concept or keyword
+### Run all health checks
 
-```bash
-rg "tool execution context" resources/ --type md -i
+```
+node scripts/health-all.js
 ```
 
-Use before creating a new article to check if the concept already exists somewhere.
+- Runs every health script and outputs a unified grouped report.
+- Run before planning (Workflow C) and before sync (Workflow B).
+- Issues: orphans, stale articles, tag inconsistencies, broken links, project health, empty sections.
 
-### List files containing a tag
+### Individual health checks
 
-```bash
-rg "t-spam" resources/ --type md -l
+| Script | What it checks | Key flags |
+|--------|---------------|-----------|
+| `node scripts/health-orphans.js` | Articles in `resources/` (excl. `people/`) with zero inbound links | — |
+| `node scripts/health-kg-coverage.js` | Resource articles not in `knowledge-graph.md` | — |
+| `node scripts/health-tags.js` | Tags used but not in `tags.md`; registered tags with no usage | — |
+| `node scripts/health-stale.js` | Articles not actualized recently | `--days N` (default 90) |
+| `node scripts/health-links.js` | Broken links and missing bidirectional back-links | `--scope resources\|journal\|all` |
+| `node scripts/health-lengths.js` | Articles exceeding line limit (split candidates) | `--lines N` (default 80) |
+| `node scripts/health-frontmatter.js` | Files missing `updated` or `tags` front matter | — |
+
+### Report on all resource articles
+
+```
+node scripts/report-resources.js [--sort actualized|lines|inlinks]
 ```
 
-### Find all articles in a subfolder referencing another subfolder
+- Table output: path, lines, tags, actualized date, inlinks, outlinks.
+- Use before a planning pass to spot size outliers and stale coverage at a glance.
 
-```bash
-rg "\.\./people/" resources/process/ --type md -l
+### Discover connections between articles
+
+```
+node scripts/discover-connections.js [--scope <path>] [--limit N]
 ```
 
-### Locate where a person or team is mentioned across resources
+- Scores article pairs by shared tags (+1), shared sources (+2), entity co-occurrence (+1), structural proximity (+1).
+- Pairs scoring 3+ are strong candidates for new cross-references.
+- Use at the start of Workflow E (discover.md).
 
-```bash
-rg "person-alice" resources/ --type md
+### Fix broken links in bulk
+
+```
+node scripts/fix-links.js
 ```
 
-### Rules for search
+- Identifies and interactively prompts for broken link fixes across `resources/`.
+- Run after `find-backlinks.js` surfaces broken links.
 
-- **Always search before creating.** Run `rg "<concept>"` across `resources/` before creating a new article — the article may already exist under a different name.
-- **Always search after rename/move.** Run `rg "<old-filename>"` across the whole repo (not just `resources/`) to catch inbound links in daily notes, project READMEs, meta files, and AGENTS.md.
-- **Search the whole repo for cross-cutting renames.** Use `rg "old-name" .` (repo root) rather than `rg "old-name" resources/` — daily notes and project files link into resources too.
+### Generate a resource operation plan
+
+```
+node scripts/plan-resources.js
+```
+
+- Produces a structured candidate operation list (delete, merge, split, create, actualize).
+- Use as input before Workflow C (plan.md) to see a machine-generated starting point.
+
+### Execute a structural operation
+
+```
+node scripts/run-operation.js
+```
+
+- Interactive prompts for delete / merge / split / reclassify / create.
+- Follows the procedures in [operations.md](operations.md).
+
+---
+
+## Migration: rg → scripts
+
+| Old (rg) | New (script) |
+|----------|-------------|
+| `rg "filename" resources/` | `node scripts/find-backlinks.js <file>` |
+| `rg "filename" .` (whole repo) | `node scripts/find-backlinks.js <file>` (searches entire repo) |
+| Orphan scan bash loop | `node scripts/health-orphans.js` |
+| `rg "^tags:.*<tag>" resources/ -l` | `node scripts/health-tags.js` |

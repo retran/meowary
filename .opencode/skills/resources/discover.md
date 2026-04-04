@@ -25,39 +25,44 @@ Pick one of:
 
 ### Step 2: Build the Connection Index
 
-For each article in scope:
+Run the discovery script to automatically build the index and compute pair scores for the chosen scope:
+
+```
+node scripts/discover-connections.js --scope <path> --limit 20
+```
+
+- `--scope` accepts a subfolder path (e.g. `resources/studio-pro/`) or `resources/` for the full graph.
+- `--limit` caps the output to the top N pairs by score (default: 20).
+
+The script handles sub-steps 2a–2e and Step 3. Review its output before proceeding to Step 4.
+
+For individual backlink lookups, use:
+
+```
+node scripts/find-backlinks.js <article-path>
+```
+
+**What the script checks (for reference):**
 
 #### 2a. Backlink Scan
 
-Search all `resources/` files for inbound links to the article:
-```
-rg "\(<relative-path-to-article>\)" resources/
-```
-Record every file that links to it.
+Finds all `resources/` files that contain inbound links to the article. Zero results = orphaned article.
 
 #### 2b. Shared Tag Analysis
 
-Read the article's `tags` from front matter. For each tag:
-- Query `knowledge-graph.md` for all articles with the same tag.
-- These are **tag siblings** — articles that share a concept but may not link to each other.
+Reads the article's `tags` from front matter and queries `knowledge-graph.md` for articles sharing the same tags. These are **tag siblings**.
 
 #### 2c. Shared Source Analysis
 
-Read the article's `## Sources` section. For each Confluence page ID or Jira issue key:
-- Search `resources/` for other articles referencing the same source.
-- These are **source siblings** — articles that draw from the same evidence but may cover different facets.
+Reads the article's `## Sources` section. Articles referencing the same Confluence page ID or Jira issue key are **source siblings** — they draw from the same evidence but may cover different facets.
 
 #### 2d. Entity Co-occurrence
 
-Extract named entities from the article (people, teams, components, services, Jira projects). Search for each entity across other articles in scope:
-```
-rg -l "<entity-name>" resources/
-```
-Articles mentioning the same entities are **entity neighbors**.
+Extracts named entities (people, teams, components, services, Jira projects) and searches for each across other articles in scope. Articles mentioning the same entities are **entity neighbors**.
 
 #### 2e. Structural Proximity
 
-Check articles in the same subfolder. Articles in the same domain that share zero cross-references are **proximity gaps** — likely related but disconnected.
+Checks articles in the same subfolder that share zero cross-references. These are **proximity gaps** — likely related but disconnected.
 
 ### Step 3: Score and Rank
 
@@ -103,6 +108,12 @@ If the user approves, add cross-references for the top-ranked missing connection
 
 If the user does not approve patching, save the report to `discovery-report.md` (repo root) for manual review.
 
+5. Append a dated entry to `resources-log.md` (even when N = 0 — the report was generated):
+
+```
+- **YYYY-MM-DD:** discover | <scope> — cross-references added: N
+```
+
 ### Step 6: Synthesis Opportunities
 
 Scan the cluster map for groups of 3+ articles that are all interconnected. These are candidates for:
@@ -111,36 +122,6 @@ Scan the cluster map for groups of 3+ articles that are all interconnected. Thes
 - A **hub article** that ties the cluster together (flag as a `create` candidate for the next plan).
 
 Report these opportunities but do not act on them without user approval.
-
----
-
-## Quick Discovery Commands
-
-For ad-hoc exploration without running the full workflow:
-
-### Find what links to an article
-```
-rg "\(.*<filename>\)" resources/
-```
-
-### Find tag siblings
-```
-rg "^tags:.*<tag-name>" resources/ -l
-```
-
-### Find articles mentioning a person or component
-```
-rg -l "<name>" resources/
-```
-
-### Find orphan articles (no inbound links)
-```bash
-for f in resources/**/*.md; do
-  name=$(basename "$f")
-  count=$(rg -c "\($name\)" resources/ 2>/dev/null | awk -F: '{s+=$2} END {print s+0}')
-  [ "$count" -eq 0 ] && echo "ORPHAN: $f"
-done
-```
 
 ---
 

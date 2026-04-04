@@ -4,7 +4,7 @@ description: Run resources graph review and produce an operation plan
 
 Run a full resources graph review and produce an ordered operation plan. Load the `resources` skill and then `resources/plan.md` sub-skill before proceeding. Then execute Workflow C in full.
 
-Arguments: `/resources-plan` — no arguments. Operates on all resources.
+Arguments: `/r-plan` — no arguments. Operates on all resources.
 
 Execute all steps of **Workflow C** as defined in `.opencode/skills/resources/plan.md`:
 

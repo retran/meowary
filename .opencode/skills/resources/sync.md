@@ -14,7 +14,7 @@ Scan all configured Confluence spaces for new and modified pages, update the map
 Run the missing-pages script:
 
 ```
-bash scripts/fetch-missing-pages.sh
+node scripts/confluence-missing.js
 ```
 
 Scans configured Confluence spaces (set in `CONFLUENCE_SPACES` — see `.env.example`). Pass space keys as arguments to limit the scan. Output: table of page IDs not yet in the map. If empty, skip to Step 3.
@@ -50,7 +50,7 @@ Process in batches of 10. Save after each batch.
 Run the updates script:
 
 ```
-bash scripts/fetch-confluence-updates.sh YYYY-MM-DD
+node scripts/confluence-updates.js YYYY-MM-DD
 ```
 
 Replace `YYYY-MM-DD` with the date of the last `## Changelog` entry in `confluence-map.md`. Scans configured spaces by default. If output is empty, skip to Step 5.
@@ -68,7 +68,7 @@ For each modified page ID:
 Run the dates script:
 
 ```
-bash scripts/update-confluence-dates.sh
+node scripts/confluence-backfill-dates.js
 ```
 
 The script reads credentials from `.env` (see `.env.example`), calls the Confluence REST API for each row, and writes `version.when` dates in place.
@@ -110,7 +110,7 @@ Before touching any resource articles, do a full analysis across all actionable 
 | 5 | create | ... | What concept; source page IDs |
 | 6 | actualize | ... | What new facts to merge; source page IDs |
 
-**Operation types** (same definitions as Workflow D in [SKILL.md](SKILL.md)):
+**Operation types** (same definitions as [operations.md](operations.md)):
 - `delete` — article is a stub, duplicate, or obsolete.
 - `merge` — two articles cover the same concept. Surviving article absorbs the other.
 - `reclassify` — article is in the wrong subfolder or needs renaming.
@@ -124,13 +124,13 @@ Do not create or edit any resource articles yet. The operation list is input to 
 
 ### Step 8: Execute Operations
 
-Execute each operation from Step 7 in order, following [Workflow D](SKILL.md#workflow-d-execute-a-structural-operation) procedures for each operation type:
+Execute each operation from Step 7 in order, loading the `resources/operations` sub-skill ([operations.md](operations.md)) for each operation type:
 
 **Structural operations** (`delete`, `merge`, `reclassify`, `split`):
-Follow the Workflow D procedure for that type exactly. These change graph structure.
+Follow the operations.md procedure for that type exactly. These change graph structure.
 
 **`create` operations:**
-Follow the Workflow D Create procedure. Use source Confluence page IDs from the plan to gather facts.
+Follow the operations.md Create procedure. Use source Confluence page IDs from the plan to gather facts.
 
 **`actualize` operations:**
 Merge new durable facts from the source Confluence pages into the existing article:
@@ -142,15 +142,29 @@ Merge new durable facts from the source Confluence pages into the existing artic
 
 Process in batches of 10. Save after each batch.
 
-### Step 9: Graph Health Check
+### Step 9: Rebuild Semantic Index
 
-1. **Orphan scan.** Scan **all articles in `resources/`** (not just those touched in Step 8) for articles with no inbound links from other resource files. Fix by adding a cross-reference from a related article, or flag for review. Report orphans in the commit message. People files (`resources/people/`) are exempt from the orphan check but not from actualization.
-2. **Staleness check.** For pages updated in Step 4, compare Confluence `Last Modified` against the resource article's `actualized` date (fall back to `updated` if `actualized` is absent). Set `status: outdated` if facts drifted and cannot be fixed now.
+Run `node scripts/qmd-index.js` to rebuild the QMD semantic index after structural changes.
+
+### Step 10: Graph Health Check
+
+Run `node scripts/health-all.js` for a full health report. Review and address:
+
+1. **Orphan scan.** Articles in `resources/` (excl. `people/`) with no inbound links. Fix by adding a cross-reference from a related article, or flag for review. Report orphans in the commit message.
+2. **Staleness check.** For pages updated in Step 4, compare Confluence `Last Modified` against the resource article's `actualized` date. Set `status: outdated` if facts drifted and cannot be fixed now.
 3. **Tag consistency.** Verify front matter `tags` match the `knowledge-graph.md` row for every article created or updated in Step 8.
 
-### Step 10: Commit
+### Step 11: Commit
 
 ```
 git add resources/ confluence-map.md knowledge-graph.md tags.md
 git commit -m "Confluence sync: N new pages, M updated; resources ops: D deleted, G merged, C created, U actualized"
+```
+
+### Step 12: Append to resources-log.md
+
+Append a dated entry to `resources-log.md` at the repo root:
+
+```
+- **YYYY-MM-DD:** Confluence sync — N new pages, M updated; D deleted, G merged, C created, U actualized
 ```

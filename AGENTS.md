@@ -85,6 +85,8 @@ Five files at repo root describe the author's external development environment. 
 ├── tags.md                    # All tags registered here
 ├── knowledge-graph.md         # Resource index — topics, people, teams, projects
 ├── confluence-map.md          # Confluence page index + summaries
+├── resources-log.md           # Append-only log of resource operations (ingest, sync, enrich)
+├── qmd.yml                    # QMD index config for semantic search over resources
 ├── recurring-events.md        # Standing meetings and recurring events
 ├── reading-list.md            # Articles, papers, books to read
 ├── architecture.md            # External repo structure, tech stack, build system, CI
@@ -208,6 +210,9 @@ Sub-skills provide detailed instructions for specific tasks within a parent skil
 | `resources/sync` | `.opencode/skills/resources/sync.md` | `resources` | Confluence map sync and batch enrichment |
 | `resources/plan` | `.opencode/skills/resources/plan.md` | `resources` | Resource graph review and operation planning |
 | `resources/discover` | `.opencode/skills/resources/discover.md` | `resources` | Resource discovery — find gaps and create stubs |
+| `resources/operations` | `.opencode/skills/resources/operations.md` | `resources` | Execute a structural operation (delete, merge, split, create, reclassify) |
+| `resources/ingest` | `.opencode/skills/resources/ingest.md` | `resources` | Ingest an external source (URL or file) into resources |
+| `resources/query` | `.opencode/skills/resources/query.md` | `resources` | Query all journal data and synthesize a cited answer |
 | `workflow/brainstorm` | `.opencode/skills/workflow/brainstorm.md` | `workflow` | Brainstorm solutions, produce problem specs with options |
 | `workflow/plan` | `.opencode/skills/workflow/plan.md` | `workflow` | Plan implementation from an approved spec |
 | `workflow/implement` | `.opencode/skills/workflow/implement.md` | `workflow` | Implement from an approved plan |
@@ -230,7 +235,9 @@ Sub-skills provide detailed instructions for specific tasks within a parent skil
 | Confluence map sync and batch enrichment | `resources` + `.opencode/skills/resources/sync.md` |
 | Resource graph review and planning | `resources` + `.opencode/skills/resources/plan.md` |
 | Resource discovery | `resources` + `.opencode/skills/resources/discover.md` |
-| Resource structural operation (create, delete, merge, split, reclassify) | `resources` |
+| Resource structural operation (create, delete, merge, split, reclassify) | `resources` + `.opencode/skills/resources/operations.md` |
+| Ingesting an external source (URL or file) into resources | `resources` + `.opencode/skills/resources/ingest.md` |
+| Querying all journal data to synthesize an answer | `resources` + `.opencode/skills/resources/query.md` |
 | Fetching Confluence pages | `confluence` |
 | Querying Jira issues | `jira` |
 | Creating or managing GitLab MRs, CI pipelines | `glab` |

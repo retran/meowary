@@ -1,13 +1,15 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
- * fetch-missing-pages.ts
+ * confluence-missing.js
  *
  * Enumerates ALL pages in one or more Confluence spaces and reports which ones
  * are not yet in confluence-map.md.
  *
  * Usage:
- *   npx tsx scripts/fetch-missing-pages.ts [SPACE1 SPACE2 ...]
+ *   node scripts/confluence-missing.js [SPACE1 SPACE2 ...]
  *   Default spaces: set CONFLUENCE_SPACES in .env (space-separated list)
+ *
+ * Exit 0 always.
  */
 
 import {
@@ -21,24 +23,14 @@ import {
 
 const PAGE_SIZE = 50;
 
-interface ConfluenceResult {
-  id: string;
-  title: string;
-  version?: { when?: string };
-}
-
-interface ContentResponse {
-  results: ConfluenceResult[];
-}
-
-async function main(): Promise<number> {
+async function main() {
   requireAtlassianCredentials();
 
   const args = process.argv.slice(2);
   const spaces = args.length > 0 ? args : CONFLUENCE_DEFAULT_SPACES;
   if (spaces.length === 0) {
     console.error("ERROR: No spaces specified and CONFLUENCE_SPACES not set.");
-    return 1;
+    return;
   }
 
   const { ids, inMap } = loadMapIds(MAP_FILE);
@@ -72,7 +64,7 @@ async function main(): Promise<number> {
       });
 
       const url = `${CONFLUENCE_BASE}/rest/api/content?${params}`;
-      let response: Response;
+      let response;
       try {
         response = await fetch(url, {
           headers: { Authorization: authHeader() },
@@ -92,7 +84,7 @@ async function main(): Promise<number> {
         break;
       }
 
-      const data = (await response.json()) as ContentResponse;
+      const data = await response.json();
       const results = data.results ?? [];
 
       for (const r of results) {
@@ -123,8 +115,6 @@ async function main(): Promise<number> {
   console.log(`Total pages seen      : ${totalSeen}`);
   console.log(`Already in map        : ${inMapCount}`);
   console.log(`Missing from map      : ${missingCount}`);
-
-  return 0;
 }
 
-main().then((code) => process.exit(code));
+main().catch((err) => console.error(`Unexpected error: ${err.message}`));

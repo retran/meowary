@@ -1,36 +1,30 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
- * resources-operation.ts
+ * run-operation.js
  *
  * Executes a single resource graph operation via OpenCode (Workflow D from the
  * resources skill).
  *
  * Usage:
- *   npx tsx scripts/resources-operation.ts <op-type> <target> <details>
+ *   node scripts/run-operation.js <op-type> <target> <details>
  *
  * Op types: delete, merge, split, create, reclassify, actualize
  *
  * Examples:
- *   npx tsx scripts/resources-operation.ts delete  "resources/maia/stale.md" "Stub, no content"
- *   npx tsx scripts/resources-operation.ts merge   "resources/eng/a.md ← resources/eng/b.md" "Same concept"
- *   npx tsx scripts/resources-operation.ts split   "resources/eng/big.md → resources/eng/new1.md + resources/eng/new2.md" "Two concepts"
- *   npx tsx scripts/resources-operation.ts create  "resources/tools/new-tool.md" "Concept X; mentioned in a, b"
- *   npx tsx scripts/resources-operation.ts reclassify "resources/eng/wrong.md → resources/platform/right.md" "Platform concept"
- *   npx tsx scripts/resources-operation.ts actualize "resources/maia/copilot.md" "Enrich with latest facts"
+ *   node scripts/run-operation.js delete  "resources/maia/stale.md" "Stub, no content"
+ *   node scripts/run-operation.js merge   "resources/eng/a.md ← resources/eng/b.md" "Same concept"
+ *   node scripts/run-operation.js split   "resources/eng/big.md → resources/eng/new1.md + resources/eng/new2.md" "Two concepts"
+ *   node scripts/run-operation.js create  "resources/tools/new-tool.md" "Concept X; mentioned in a, b"
+ *   node scripts/run-operation.js reclassify "resources/eng/wrong.md → resources/platform/right.md" "Platform concept"
+ *   node scripts/run-operation.js actualize "resources/maia/copilot.md" "Enrich with latest facts"
+ *
+ * Exit 0 always.
  */
 
 import { execSync, execFileSync } from "node:child_process";
 import { JOURNAL_DIR } from "./config.js";
 
-const VALID_OPS = [
-  "delete",
-  "merge",
-  "split",
-  "create",
-  "reclassify",
-  "actualize",
-] as const;
-type OpType = (typeof VALID_OPS)[number];
+const VALID_OPS = ["delete", "merge", "split", "create", "reclassify", "actualize"];
 
 // ---------------------------------------------------------------------------
 // Parse args
@@ -38,19 +32,19 @@ type OpType = (typeof VALID_OPS)[number];
 
 const args = process.argv.slice(2);
 if (args.length < 3) {
-  console.error("Usage: resources-operation.ts <op-type> <target> <details>");
+  console.error("Usage: run-operation.js <op-type> <target> <details>");
   console.error(`Op types: ${VALID_OPS.join(", ")}`);
-  process.exit(1);
+  process.exit(0);
 }
 
-const opType = args[0] as OpType;
+const opType = args[0];
 const target = args[1];
 const details = args[2];
 
 if (!VALID_OPS.includes(opType)) {
   console.error(`ERROR: Unknown operation type: ${opType}`);
   console.error(`Valid types: ${VALID_OPS.join(", ")}`);
-  process.exit(1);
+  process.exit(0);
 }
 
 console.log(`\u2192 Operation: ${opType}`);
@@ -61,7 +55,7 @@ console.log(`  Details: ${details}`);
 // Snapshot sessions
 // ---------------------------------------------------------------------------
 
-let beforeSessions: string[] = [];
+let beforeSessions = [];
 try {
   const output = execSync("opencode session list 2>/dev/null", {
     encoding: "utf-8",
@@ -83,7 +77,7 @@ try {
 const COMMON_PREAMBLE =
   "Load the `resources` and `writing` skills first. Read `resources-actualize-plan.md` for full context.";
 
-const prompts: Record<OpType, string> = {
+const prompts = {
   delete: `${COMMON_PREAMBLE}
 
 Execute a **delete** operation (Workflow D from the resources skill).
@@ -93,11 +87,12 @@ Reason: ${details}
 
 Follow the Workflow D Delete procedure exactly:
 1. Read the article to confirm deletion.
-2. Search resources/ for all inbound links.
+2. Run \`node scripts/find-backlinks.js ${target}\` to find all inbound links.
 3. Remove or redirect every inbound link.
 4. Delete the file.
 5. Remove the row from knowledge-graph.md.
-6. Commit: \`Resources: delete ${target} — ${details}\``,
+6. Check confluence-map.md: for each page ID in the article's ## Sources, check whether any other resource article references that same page ID. If none do, remove (or annotate) the row from confluence-map.md.
+7. Commit: \`Resources: delete ${target} — ${details}\``,
 
   merge: `${COMMON_PREAMBLE}
 
@@ -110,8 +105,9 @@ The format is: \`surviving-article ← absorbed-article\`. The surviving article
 absorbs content from the absorbed one.
 
 Follow the Workflow D Merge procedure exactly — all mandatory steps. Do not just
-    concatenate. Restructure sections to flow naturally. Search resources/ for ALL
-    inbound links to the absorbed article and redirect them.`,
+    concatenate. Restructure sections to flow naturally. Run
+    \`node scripts/find-backlinks.js <absorbed-article>\` to find ALL inbound links
+    and redirect them to the survivor.`,
 
   split: `${COMMON_PREAMBLE}
 
@@ -125,7 +121,8 @@ separate articles.
 
 Follow the Workflow D Split procedure exactly — all mandatory steps. Each new
     article must be real content, not a stub. Add bidirectional cross-references.
-    Update all inbound links that reference the extracted content.`,
+    Run \`node scripts/find-backlinks.js <source>\` to find links referencing
+    the extracted content and update them as appropriate.`,
 
   create: `${COMMON_PREAMBLE}
 
@@ -137,7 +134,8 @@ Details: ${details}
 Follow the Workflow D Create procedure exactly — all mandatory steps. Search
     Confluence, Jira, codebase, and existing resource articles for facts about
     this concept. Write a real article with Overview and substantive sections.
-    No stubs. Add bidirectional cross-references.`,
+    No stubs. Add bidirectional cross-references. After creation, run
+    \`node scripts/health-orphans.js\` to verify the new article has inbound links.`,
 
   reclassify: `${COMMON_PREAMBLE}
 
@@ -148,8 +146,9 @@ Rationale: ${details}
 
 The format is: \`old-path → new-path\`.
 
-Follow the Workflow D Reclassify procedure exactly — all 7 steps. Search
-resources/ for ALL inbound links to the old path and update them.`,
+Follow the Workflow D Reclassify procedure exactly — all mandatory steps. Run
+    \`node scripts/find-backlinks.js <old-path>\` to find ALL inbound links
+    to the old path and update them to the new path.`,
 
   actualize: `${COMMON_PREAMBLE}
 
@@ -173,16 +172,15 @@ try {
   execFileSync("opencode", ["run", prompt], {
     cwd: JOURNAL_DIR,
     stdio: "inherit",
-    timeout: 900_000, // 15 minutes
+    timeout: 900_000,
   });
-} catch (err: unknown) {
-  const error = err as { status?: number; signal?: string };
-  if (error.signal === "SIGTERM") {
+} catch (err) {
+  if (err.signal === "SIGTERM") {
     console.error("ERROR: opencode run timed out after 15 minutes");
   } else {
-    console.error(`ERROR: opencode run failed (exit ${error.status})`);
+    console.error(`ERROR: opencode run failed (exit ${err.status})`);
   }
-  process.exit(error.status ?? 1);
+  process.exit(0);
 }
 
 // ---------------------------------------------------------------------------

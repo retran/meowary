@@ -1,23 +1,26 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
- * generate-resources-plan.ts
+ * plan-resources.js
  *
  * Runs a whole-resources graph review session via OpenCode (Workflow C from the
  * resources skill) to produce an ordered operation plan.
  *
  * Output: resources-actualize-plan.md — typed operation queue consumed by
- *         resources-operation.ts.
+ *         run-operation.js.
  *
  * Usage:
- *   npx tsx scripts/generate-resources-plan.ts                  # review entire resources
- *   npx tsx scripts/generate-resources-plan.ts --subfolder maia  # scope to one subfolder
+ *   node scripts/plan-resources.js                   # review entire resources
+ *   node scripts/plan-resources.js --subfolder maia  # scope to one subfolder
  *
- * The plan must be reviewed before running resources-operation.ts.
+ * The plan must be reviewed before running run-operation.js.
+ *
+ * Exit 0 always.
  */
 
 import { execSync, execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { JOURNAL_DIR } from "./config.js";
 
 const PLAN_FILE = resolve(JOURNAL_DIR, "resources-actualize-plan.md");
@@ -33,12 +36,12 @@ for (let i = 0; i < args.length; i++) {
     subfolder = args[i + 1] ?? "";
     if (!subfolder) {
       console.error("ERROR: --subfolder requires a value");
-      process.exit(1);
+      process.exit(0);
     }
     i++;
   } else {
     console.error(`ERROR: Unknown argument: ${args[i]}`);
-    process.exit(1);
+    process.exit(0);
   }
 }
 
@@ -56,7 +59,7 @@ console.log();
 // Snapshot sessions (to clean up after)
 // ---------------------------------------------------------------------------
 
-let beforeSessions: string[] = [];
+let beforeSessions = [];
 try {
   const output = execSync("opencode session list 2>/dev/null", {
     encoding: "utf-8",
@@ -76,7 +79,7 @@ try {
 // ---------------------------------------------------------------------------
 
 const PROMPT = `You are performing **Workflow C: Graph Review** from the resources skill. Your goal
-is to analyze the entire knowledge base as a knowledge graph and produce an
+is to analyze the entire resources graph and produce an
 ordered operation plan. You are NOT editing any resource articles — planning only.
 
 Load the \`resources\` and \`writing\` skills first. Follow Workflow C steps exactly.
@@ -171,16 +174,15 @@ try {
   execFileSync("opencode", ["run", PROMPT], {
     cwd: JOURNAL_DIR,
     stdio: "inherit",
-    timeout: 1800_000, // 30 minutes
+    timeout: 1800_000,
   });
-} catch (err: unknown) {
-  const error = err as { status?: number; signal?: string };
-  if (error.signal === "SIGTERM") {
+} catch (err) {
+  if (err.signal === "SIGTERM") {
     console.error("ERROR: opencode run timed out after 30 minutes");
   } else {
-    console.error(`ERROR: opencode run failed (exit ${error.status})`);
+    console.error(`ERROR: opencode run failed (exit ${err.status})`);
   }
-  process.exit(error.status ?? 1);
+  process.exit(0);
 }
 
 // ---------------------------------------------------------------------------
@@ -219,12 +221,11 @@ if (existsSync(PLAN_FILE)) {
   console.log();
   console.log(`Plan generated: ${PLAN_FILE}`);
   console.log(
-    "Review the plan, then run operations with: npx tsx scripts/resources-operation.ts <op-type> <target> <details>"
+    "Review the plan, then run operations with: node scripts/run-operation.js <op-type> <target> <details>"
   );
 } else {
   console.log();
   console.log(
     "WARNING: Plan file was not created. Check the OpenCode session output."
   );
-  process.exit(1);
 }

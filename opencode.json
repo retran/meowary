@@ -42,6 +42,5 @@
     "external_directory": {
       "~/workspace/**": "allow"
     }
-  },
-  "_comment_external_directory": "Set the path above to the directory where your source code repositories live. {env:VAR} is not supported in permission keys — edit the path directly."
+  }
 }

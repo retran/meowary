@@ -11,6 +11,23 @@ No automated tests — this is a Markdown-only repo. Quality assurance:
 - Link checking: all relative links resolve to existing files
 - Tag consistency: tags in files match `tags.md` registry
 
+## Journal Scripts
+
+Scripts in `scripts/` are plain JavaScript (ESM). No compilation step.
+
+### Framework
+- Vitest for unit tests (works with ESM `.js` files)
+
+### Structure
+- Co-locate test files: `foo.js` → `foo.test.js` in the same directory
+- Test utility functions from `scripts/lib/` (parsing, link extraction, graph reads)
+- Scripts with side-effects (fetch, file writes) are not unit-tested; verify by smoke-running against the repo
+
+### Conventions
+- Test names describe behavior: `"returns empty array when file has no links"`
+- Arrange-Act-Assert. One assertion per test when practical.
+- Mock the filesystem with fixtures for lib/ unit tests; never mock the unit under test.
+
 ## TypeScript Projects
 
 ### Framework
