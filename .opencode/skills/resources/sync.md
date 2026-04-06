@@ -25,7 +25,7 @@ Load the `confluence` skill for the row format and tag rules.
 
 For each missing page ID:
 
-1. Fetch the page via `atlassian_confluence_get_page` (pass `page_id`).
+1. Fetch the page via `confluence read <page_id>`.
 2. Determine the parent from the `ancestors` array. Use the immediate parent's page ID. Write `root` if the page has no ancestors.
 3. Write a one-to-three-sentence summary. Name decisions, numbers, components, ownership. No filler ("this page describes...").
 4. Assign tags from `tags.md`. Every row needs at least one tag.
@@ -59,7 +59,7 @@ Replace `YYYY-MM-DD` with the date of the last `## Changelog` entry in `confluen
 
 For each modified page ID:
 
-1. Fetch the current content via `atlassian_confluence_get_page`.
+1. Fetch the current content via `confluence read <page_id>`.
 2. Update `Summary` and `Tags` if the content changed meaningfully.
 3. Leave `Last Modified` as-is — Step 5 overwrites it.
 

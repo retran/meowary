@@ -103,6 +103,23 @@ Five files at repo root describe the author's external development environment. 
 
 ## Automation Tools
 
+### CLI-First Integration
+
+CLIs are preferred over MCP for all external service integrations. MCP is reserved for capabilities with no CLI equivalent — currently none are needed.
+
+One-time bootstrap for external service CLIs:
+
+| Tool | Install | One-time setup |
+|------|---------|----------------|
+| `confluence` | `npm install -g confluence-cli` | Set env vars (see `.env.example`) |
+| `jira` | `brew install ankitpokhrel/tap/jira-cli` | `jira init` (interactive, generates `~/.config/.jira/.config.yml`) |
+| `ctx7` | `npm install -g ctx7` | Optional: set `CONTEXT7_API_KEY` |
+| `gh` | `brew install gh` | `gh auth login` (one-time) |
+| `glab` | `brew install glab` | `glab auth login` (one-time) |
+| `repomix` | `npm install -g repomix` | None — works immediately |
+
+To snapshot which tools are installed and their versions, run `node scripts/env-context.js`. Output is written to `env-snapshot.md` (gitignored).
+
 ### QMD — Semantic Search
 
 QMD provides semantic search across the journal. Used by `/ask` and the `r-ingest` workflow.
@@ -220,6 +237,7 @@ Load the listed skill as soon as the trigger condition is met. Do not start the 
 | `thinking` | `.opencode/skills/thinking/SKILL.md` | Structured reasoning for complex decisions — frame the problem, research options, compare tradeoffs, plan execution, verify the plan before acting |
 | `security` | `.opencode/skills/security/SKILL.md` | Baseline safety rules for production systems, credentials, destructive operations, and cloud environments |
 | `conventions` | `.opencode/skills/conventions/SKILL.md` | Commit message and MR/PR title conventions — Conventional Commits format with Jira issue key prefix |
+| `repomix` | `.opencode/skills/repomix/SKILL.md` | Pack a repository or file subset into a single AI-friendly file for analysis, review, or planning |
 
 ### Sub-skills
 
@@ -281,3 +299,4 @@ Sub-skills provide detailed instructions for specific tasks within a parent skil
 | `/pre-plan` — surface gray areas before planning | `workflow` |
 | `/do` — smart command dispatcher | _(self-contained)_ |
 | `/draft` — write a draft document | `writing` |
+| Packing a repo or file subset for AI analysis, review, or planning | `repomix` |

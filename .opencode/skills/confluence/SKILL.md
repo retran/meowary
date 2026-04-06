@@ -4,11 +4,32 @@ description: Read Confluence pages and maintain the local confluence map — sea
 compatibility: opencode
 ---
 
+## Setup
+
+Environment variables (set in `.env` — see `.env.example`):
+
+| Variable | Purpose |
+|----------|---------|
+| `CONFLUENCE_DOMAIN` | Your instance domain, e.g. `your-instance.atlassian.net` |
+| `CONFLUENCE_EMAIL` | Your Atlassian email |
+| `CONFLUENCE_API_TOKEN` | Atlassian API token (same value as `ATLASSIAN_API_TOKEN`) |
+| `CONFLUENCE_API_PATH` | Set to `/wiki/rest/api` for Atlassian Cloud |
+| `CONFLUENCE_READ_ONLY` | `true` blocks all write operations at CLI level |
+
+Run once to initialize the CLI config from these env vars:
+```bash
+confluence init
+```
+
+`CONFLUENCE_SPACES` in `.env` lists the default spaces to search (used by `scripts/`).
+
 ## Write Policy
 
 **Never create, edit, or delete Confluence pages without explicit user approval.**
 
 Default posture is read-only. Before any write operation, stop and ask: "Should I write this to Confluence?" Proceed only if the user explicitly says yes. When in doubt, describe the change and provide the text — let the user apply it.
+
+`CONFLUENCE_READ_ONLY=true` enforces this at the CLI level — all write commands exit with an error until the user sets it to `false`.
 
 ## Fetching Pages
 
@@ -20,21 +41,46 @@ Default posture is read-only. Before any write operation, stop and ask: "Should 
 
 ### How to fetch
 
-Use `atlassian_confluence_get_page` with `page_id`. Prefer page ID over title+space to avoid ambiguity.
+```bash
+# Read by page ID (preferred — unambiguous)
+confluence read PAGE_ID
+
+# Read in markdown format
+confluence read PAGE_ID --format markdown
+```
+
+### Getting page info (metadata)
+
+```bash
+confluence info PAGE_ID
+```
 
 ### Search strategies
 
-When a page ID is not known, use `atlassian_confluence_search` with CQL:
+When a page ID is not known:
 
-| Goal | CQL example |
-|------|-------------|
-| Page by exact title | `title = "Release Process" AND space = "ENG"` |
-| Pages about a topic | `text ~ "deployment pipeline" AND type = page` |
-| Pages in a space | `space = "ENG" AND type = page` |
-| Recent pages | `space = "ENG" AND lastModified > "2026-01-01"` |
-| Pages mentioning a person | `text ~ "Alice Smith" AND type = page` |
+```bash
+# Text search (general keyword search)
+confluence search "deployment pipeline" --limit 10
 
-Use at least three strategies before concluding a page does not exist.
+# Find by exact title in a specific space
+confluence find "Release Process" --space ENG
+
+# List child pages of a known page
+confluence children PAGE_ID --recursive --format tree
+
+# List all spaces (to discover space keys)
+confluence spaces
+```
+
+| Goal | Command |
+|------|---------|
+| Search by keyword | `confluence search "keyword" --limit 10` |
+| Find by title in space | `confluence find "Title" --space SPACEKEY` |
+| Browse space pages | `confluence children ROOT_PAGE_ID --recursive` |
+| Discover space keys | `confluence spaces` |
+
+Use at least two strategies before concluding a page does not exist.
 
 ## Recording Pages in `confluence-map.md`
 
@@ -51,13 +97,11 @@ After fetching a page, add or update a row.
 | Page ID | Confluence numeric page ID |
 | Title | Exact page title, linked to Confluence URL |
 | Parent | Parent page ID, or `root` for top-level pages |
-| Last Modified | `version.when` date (YYYY-MM-DD), or `—` if unknown |
+| Last Modified | Date from `confluence info`, or `—` if unknown |
 | Summary | 1–3 sentences. Name decisions, numbers, components. No filler. |
 | Tags | Backtick-quoted tags from `tags.md`. At least one. |
 
 **Section:** Place the row under `## Space: <SpaceKey>`. Create the section if it does not exist.
-
-**Configured spaces:** See `CONFLUENCE_SPACES` in `.env` / `.env.example`. Base URL from `CONFLUENCE_URL`.
 
 **Tag rules:**
 - Use team tag for team-specific pages.
@@ -85,19 +129,22 @@ Confluence pages are raw material. Resource articles are refined output.
 
 ## Writing to Confluence (with approval)
 
-When the user explicitly approves a write:
+When the user explicitly approves a write, first ensure `CONFLUENCE_READ_ONLY=false` or unset.
 
-- **Create:** Use `atlassian_confluence_create_page`. Confirm space key, parent page, title, and content before calling.
-- **Update:** Use `atlassian_confluence_update_page`. Show the diff or full new content to the user first.
-- **Delete:** Use `atlassian_confluence_delete_page`. Confirm the page ID and title before calling. Irreversible — double-check.
+- **Create:** `confluence create "Title" SPACEKEY --file content.md --format markdown` — confirm space key, title, and content before running.
+- **Create child:** `confluence create-child "Title" PARENT_PAGE_ID --file content.md --format markdown`
+- **Update:** `confluence update PAGE_ID --file content.md --format markdown` — show the diff or full new content to the user first. Title-only: `confluence update PAGE_ID --title "New Title"`.
+- **Delete:** `confluence delete PAGE_ID --yes` — confirm the page ID and title before running. Irreversible — double-check.
+- **Move:** `confluence move PAGE_ID NEW_PARENT_ID` — same space only.
 
 After any write, update `confluence-map.md` to reflect the change.
 
 ## Rules
 
-- **Read-only by default.** Ask before any write.
+- **Read-only by default.** Ask before any write. `CONFLUENCE_READ_ONLY=true` enforces this at CLI level.
 - **Check the map first.** Do not re-fetch a page whose Summary is sufficient.
 - **Summary quality.** State facts directly — no "this page describes". Name decisions, numbers, components.
 - **At least one tag per row.** Use registered tags from `tags.md` only.
 - **Update the map after every fetch.** Missing rows lead to duplicate fetches.
 - **Distill, don't copy.** Extract durable facts. Discard ephemeral content.
+- **URL reads:** `confluence read` only accepts page IDs or URLs with a `pageId` query param — not display/pretty URLs.

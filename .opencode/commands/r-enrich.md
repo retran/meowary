@@ -12,7 +12,7 @@ Execute all steps of **Workflow A** as defined in `.opencode/skills/resources/en
 
 0. Read the plan (if `resources-actualize-plan.md` exists, find this article's entry).
 1. Read & understand the article — key terms, sources, outbound links, inbound links.
-2. Gather data from all five sources: local resources, Confluence, Jira, codebase, journal.
+2. Gather data from all five sources: local resources, Confluence (use `confluence search "term"` / `confluence read PAGE_ID` — see `confluence` skill), Jira (use `jira issue list -q "..." --plain` / `PAGER=cat jira issue view ISSUE-KEY` — see `jira` skill), codebase, journal.
 3. Enrich the article with new durable facts.
 4. Remove outdated content.
 5. Fix cross-references (outbound and inbound back-links).

@@ -96,9 +96,9 @@ When investigating APIs, libraries, or unfamiliar code during any workflow phase
 | Priority | Tool | Use when |
 |----------|------|----------|
 | 1 | Codebase search (Grep/Glob) | Answer is in the working repo |
-| 2 | context7 | Need library/framework docs (query official docs) |
-| 3 | gh_grep | Need real-world usage examples from GitHub |
-| 4 | exa | Need broader web search, blog posts, Stack Overflow |
+| 2 | `ctx7` — library docs | Need library/framework docs: `ctx7 library <name> [query]` → get ID → `ctx7 docs <id> "<query>"` |
+| 3 | `gh search code` | Need real-world usage examples: `gh search code "<pattern>" --language <lang>` |
+| 4 | `websearch` tool | Need broader web search, blog posts, Stack Overflow |
 
 **Reference, do not recall.** When a task requires knowledge of a specific API, class, or config option — look it up. Do not rely on training data for version-sensitive details.
 

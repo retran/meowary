@@ -13,6 +13,12 @@ Arguments: `/morning`
 3. Create today's daily note from `.opencode/templates/daily-template.md` if it does not exist. Replace all placeholders. Verify navigation links.
 4. Populate `## Morning > Calendar` from `recurring-events.md` — include all events for today's weekday. For biweekly events, calculate the correct occurrence.
 5. Scan active projects (`projects/`) and areas (`areas/`) for work in flight. Surface MIT candidates.
+5b. **Jira open issues (if configured):** If `jira` is available, run:
+   ```bash
+   jira issue list -q "assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC" --plain
+   jira sprint list --current -a$(jira me) --plain
+   ```
+   Surface any high-priority or sprint-blocked issues as MIT candidates. If `jira` is not installed or `jira init` has not been run, skip this step silently.
 6. Set the Focus line: ask the user "What would make today a success?" Encourage a project tag inline (e.g. `Ship X #p-myproject`).
 7. Fill MITs:
    - Primary MIT (`★`) first — the non-negotiable for the day. Must link to an active project or area.

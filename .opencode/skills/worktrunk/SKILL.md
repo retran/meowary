@@ -1,6 +1,6 @@
 ---
 name: worktrunk
-description: Manage git worktrees with wt — create, switch, list, merge, and remove worktrees; check out MR branches
+description: Manage git worktrees with wt — create, switch, list, merge, and remove worktrees; check out MR/PR branches
 compatibility: opencode
 ---
 
@@ -32,6 +32,12 @@ wt switch pr:<N>              # Check out GitHub PR #N's branch
 | `--branches` | Include branches without worktrees in picker |
 | `--clobber` | Remove stale path at target |
 | `-y` | Skip approval prompts |
+
+Arguments after `--` are forwarded to the `--execute` command:
+
+```bash
+wt switch -x claude -c feature-a -- 'Add user authentication'
+```
 
 **Interactive picker:** `wt switch` with no arguments opens a picker. Preview tabs (toggle with `1`–`5`): HEAD diff, log, diff vs main, remote diff, LLM summary. `Alt-c` creates a new worktree from the query.
 
@@ -84,6 +90,97 @@ wt remove -f                 # Force removal (ignore untracked files)
 
 Removal runs in the background by default. Logs at `.git/wt/logs/<branch>-remove.log`.
 
+### `wt step` — Run individual operations
+
+Building blocks of `wt merge`, plus standalone utilities.
+
+```bash
+wt step commit              # Stage all changes and commit with LLM-generated message
+wt step commit --stage=tracked  # Stage only tracked files before committing
+wt step squash              # Squash all branch commits into one with LLM message
+wt step rebase              # Rebase onto target branch
+wt step push                # Fast-forward target to current branch
+wt step diff                # Show all changes since branching (committed + staged + unstaged + untracked)
+wt step diff -- --stat      # Pass extra args to git diff
+wt step copy-ignored        # Copy gitignored files (build caches, node_modules) from primary worktree
+wt step prune               # Remove worktrees and branches merged into default branch
+wt step prune --dry-run     # Preview what would be removed
+wt step for-each -- git status --short  # Run a command in every worktree
+```
+
+**`wt step commit` staging options:**
+
+| `--stage` | Behavior |
+|-----------|----------|
+| `all` (default) | Stage all changes including untracked files |
+| `tracked` | Stage only modified tracked files |
+| `none` | Commit only what's already staged |
+
+### `wt hook` — Run configured hooks
+
+Hooks are shell commands that run automatically at lifecycle events.
+
+```bash
+wt hook pre-merge           # Run all pre-merge hooks manually
+wt hook pre-start --yes     # Skip approval prompts (for CI)
+wt hook show                # Show all configured hooks
+```
+
+**Hook types:**
+
+| Event | `pre-` (blocking) | `post-` (background) |
+|-------|-------------------|----------------------|
+| switch | `pre-switch` | `post-switch` |
+| start (create) | `pre-start` | `post-start` |
+| commit | `pre-commit` | `post-commit` |
+| merge | `pre-merge` | `post-merge` |
+| remove | `pre-remove` | `post-remove` |
+
+**Configuration** (`.config/wt.toml` in project root, committed to repo):
+
+```toml
+[pre-start]
+install = "npm ci"
+
+[post-start]
+copy = "wt step copy-ignored"
+server = "npm run dev -- --port {{ branch | hash_port }}"
+
+[pre-merge]
+test = "npm test"
+
+[post-remove]
+kill-server = "lsof -ti :{{ branch | hash_port }} -sTCP:LISTEN | xargs kill 2>/dev/null || true"
+```
+
+**Template variables in hooks:**
+
+| Variable | Value |
+|----------|-------|
+| `{{ branch }}` | Active branch name |
+| `{{ worktree_path }}` | Active worktree path |
+| `{{ primary_worktree_path }}` | Primary worktree path |
+| `{{ repo }}` | Repository directory name |
+| `{{ branch \| hash_port }}` | Deterministic port 10000–19999 for branch |
+| `{{ branch \| sanitize }}` | Branch name with `/` replaced by `-` |
+| `{{ branch \| sanitize_db }}` | Database-safe identifier with hash suffix |
+
+### `wt config` — Configuration and shell integration
+
+```bash
+wt config shell install     # Install shell integration (required for cd on switch)
+wt config create            # Create user config with documented examples
+wt config create --project  # Create project config (.config/wt.toml)
+wt config show              # Show current config and file locations
+```
+
+**Config files:**
+
+| File | Location | Purpose |
+|------|----------|---------|
+| User config | `~/.config/worktrunk/config.toml` | Personal preferences, LLM commit setup |
+| Project config | `.config/wt.toml` | Hooks, dev URL — committed to repo |
+
 ---
 
 ## Common Workflows
@@ -96,18 +193,35 @@ wt switch --create feature-xyz   # Create worktree + branch
 wt merge                         # Squash, rebase, merge, cleanup
 ```
 
-### Review a GitLab MR
+### Review a GitLab MR or GitHub PR
 
 ```bash
 wt switch mr:101                 # Check out MR !101's branch
+wt switch pr:42                  # Check out PR #42's branch
 # … review, test …
 wt remove                        # Clean up when done
+```
+
+### Run multiple agents in parallel
+
+```bash
+wt switch -x claude -c feature-a -- 'Add user authentication'
+wt switch -x claude -c feature-b -- 'Fix the pagination bug'
+wt switch -x claude -c feature-c -- 'Write tests for the API'
+wt list --full                   # Monitor all worktrees with CI status
 ```
 
 ### See what's in flight
 
 ```bash
 wt list --full                   # All worktrees with CI status
+```
+
+### Clean up merged worktrees
+
+```bash
+wt step prune --dry-run          # Preview
+wt step prune                    # Remove all merged worktrees
 ```
 
 ---
@@ -118,4 +232,6 @@ wt list --full                   # All worktrees with CI status
 - **`wt switch --create`** creates both the branch and worktree in one step.
 - **`wt merge`** merges current → target (opposite direction from `git merge`).
 - **`mr:<N>` / `pr:<N>` shortcuts** require the respective CLI (`glab` or `gh`) to be authenticated.
-- **`-x` / `--execute`** runs a command after switching — useful for launching editors or other tools. It replaces the `wt` process with the command, giving it full terminal control.
+- **`-x` / `--execute`** runs a command after switching — useful for launching editors or agents. Arguments after `--` are forwarded to the command.
+- **`wt step commit`** generates LLM commit messages — requires a commit generation command configured in `~/.config/worktrunk/config.toml`.
+- **Shell integration** (`wt config shell install`) is required for `wt switch` to change directories.

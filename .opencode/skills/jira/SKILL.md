@@ -4,19 +4,22 @@ description: Search and read Jira issues — query assigned issues, sprint board
 compatibility: opencode
 ---
 
-## Backend Detection
+## Setup
 
-This skill uses the **MCP backend** (Atlassian MCP tools) by default when available. The MCP tools are available in this environment as `atlassian_jira_*` functions.
+```bash
+# Install (one-time)
+brew install ankitpokhrel/tap/jira-cli
 
-| Scenario | Backend | Notes |
-|----------|---------|-------|
-| MCP tools available | MCP (`atlassian_jira_*`) | Preferred — richer field access |
-| MCP unavailable | `jira` CLI | Fallback — run `jira issue list` etc. |
-
-When using MCP, **never assign by display name** — use account ID or email. To find an account ID:
+# Configure (interactive, one-time — generates ~/.config/.jira/.config.yml)
+jira init
 ```
-atlassian_jira_search_user(query='user.fullname ~ "Alice Smith"')
-```
+
+Set `JIRA_API_TOKEN` in `.env` before running `jira init`. Set project key via `jira init` prompt.
+
+**Agent output flags:**
+- Always use `--plain` for non-interactive list output.
+- Always use `--no-input` for create/edit commands.
+- `jira issue view` uses `less` pager by default — prefix with `PAGER=cat` for non-interactive use.
 
 ---
 
@@ -28,92 +31,91 @@ Default posture is read-only. Before any write operation, stop and ask: "Should 
 
 ### Safety rules
 
-- **Never transition an issue** without first fetching its current status with `atlassian_jira_get_transitions`. Transitions are ID-based and vary by project workflow.
-- **Never assign by display name** in MCP — always resolve to account ID first.
-- **Never edit a description** without showing the user the current content first. Use `atlassian_jira_get_issue` and display it before proposing changes.
+- **Never transition an issue** without first showing the current status and confirming the target status with the user.
+- **Never edit a description** without showing the user the current content first.
 - **Never create an issue** without confirming project key, issue type, summary, and description with the user.
-- **Always show the comment text** before calling `atlassian_jira_add_comment`.
+- **Always show the comment text** before adding a comment.
 
 ---
 
 ## Searching Issues
 
-Use `atlassian_jira_search` with JQL. Prefer specific, targeted queries.
-
 **Project key:** Read `context.md` → **Conventions → Jira project key** to find your project key.
+
+```bash
+# Your open issues
+jira issue list -a$(jira me) --plain
+
+# Current sprint issues (assigned to me)
+jira sprint list --current -a$(jira me) --plain
+
+# Use raw JQL for complex queries
+jira issue list -q "assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC" --plain
+jira issue list -q "sprint in openSprints() AND assignee = currentUser()" --plain
+jira issue list -q "assignee = currentUser() AND priority in (Blocker, Critical) AND statusCategory != Done" --plain
+jira issue list -q "project = PROJ AND updated >= -7d ORDER BY updated DESC" --plain
+jira issue list -q "assignee = currentUser() AND updated >= -1d" --plain
+```
 
 ### Common JQL patterns
 
-```
-# Your open issues
-assignee = currentUser() AND statusCategory != Done
-
-# Current sprint
-assignee = currentUser() AND sprint in openSprints()
-
-# Issues in a project
-project = PROJ AND statusCategory != Done
-
-# Issues on a topic
-project = PROJ AND text ~ "keyword" ORDER BY updated DESC
-
-# High-priority issues
-assignee = currentUser() AND priority in (Blocker, Critical) AND statusCategory != Done
-
-# Recently updated
-project = PROJ AND updated >= -7d ORDER BY updated DESC
-
-# By label
-labels = "my-label" AND project = PROJ
-
-# By epic
-parent = PROJ-123
-```
+| Goal | JQL |
+|------|-----|
+| Open assigned issues | `assignee = currentUser() AND statusCategory != Done` |
+| Current sprint | `assignee = currentUser() AND sprint in openSprints()` |
+| Issues in a project | `project = PROJ AND statusCategory != Done` |
+| High-priority | `assignee = currentUser() AND priority in (Blocker, Critical) AND statusCategory != Done` |
+| Recently updated | `project = PROJ AND updated >= -7d ORDER BY updated DESC` |
+| By label | `labels = "my-label" AND project = PROJ` |
+| By epic | `parent = PROJ-123` |
 
 ### Search strategies
 
 When looking for issues on a topic, try at least two strategies:
 
-1. Text search: `text ~ "keyword"`
-2. Label search: `labels = "keyword"`
-3. Component search: `component = "ComponentName"`
-4. Epic/parent search: `parent = EPIC-KEY`
+1. Text search: `jira issue list -q "text ~ \"keyword\"" --plain`
+2. Label search: `jira issue list -q "labels = \"keyword\"" --plain`
+3. Summary search: `jira issue list -q "summary ~ \"keyword\"" --plain`
 
 ---
 
 ## Getting Issue Details
 
-```
-# Get a specific issue (summary, status, description, assignee, etc.)
-atlassian_jira_get_issue("PROJ-123")
+```bash
+# View issue (non-interactive — avoids less pager)
+PAGER=cat jira issue view PROJ-123
 
-# Get issue with all fields
-atlassian_jira_get_issue("PROJ-123", fields="*all")
-
-# Get available transitions (e.g. to check what statuses are possible)
-atlassian_jira_get_transitions("PROJ-123")
+# View with recent comments
+PAGER=cat jira issue view PROJ-123 --comments 5
 ```
 
 ---
 
 ## Sprint and Board Queries
 
-```
-# Find the board for a project
-atlassian_jira_get_agile_boards(project_key="PROJ")
+```bash
+# List all boards
+jira board list --plain
 
-# Get active sprints on a board
-atlassian_jira_get_sprints_from_board(board_id="123", state="active")
+# List sprints (explorer view — use --table for non-interactive)
+jira sprint list --table --plain
 
-# Get issues in a sprint
-atlassian_jira_get_sprint_issues(sprint_id="456")
+# Current active sprint issues
+jira sprint list --current --plain
+
+# Current sprint, assigned to me
+jira sprint list --current -a$(jira me) --plain
+
+# Previous sprint
+jira sprint list --prev --plain
+
+# Issues in a specific sprint (get ID from sprint list)
+jira sprint list SPRINT_ID --plain
 ```
 
 ---
 
 ## Extracting Facts for Resources and Daily Notes
-
-When pulling Jira data into the journal:
 
 **What to extract (durable facts):**
 - Decisions recorded in issue descriptions or comments
@@ -145,18 +147,20 @@ Replace `<jira-url>` with the Jira URL from `context.md` → **Tooling → Jira 
 
 ## Morning Planning Queries
 
-During `/morning` or `/week-plan`, run these to populate the daily note:
+During `/morning` or `/week-plan`, run these to surface MIT candidates:
 
-```
+```bash
 # Assigned open issues
-assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC
+jira issue list -q "assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC" --plain
 
 # Current sprint
-assignee = currentUser() AND sprint in openSprints() ORDER BY priority DESC
+jira sprint list --current -a$(jira me) --plain
 
 # Blockers
-assignee = currentUser() AND priority = Blocker AND statusCategory != Done
+jira issue list -q "assignee = currentUser() AND priority = Blocker AND statusCategory != Done" --plain
 ```
+
+Skip silently if `jira` is not installed or returns a config error.
 
 ---
 
@@ -164,34 +168,51 @@ assignee = currentUser() AND priority = Blocker AND statusCategory != Done
 
 When the user explicitly approves a write:
 
-- **Add comment:** Use `atlassian_jira_add_comment`. Show the comment text to the user first.
-- **Update issue:** Use `atlassian_jira_update_issue`. Show what fields will change.
-- **Transition status:** Use `atlassian_jira_get_transitions` first to get valid transition IDs, then `atlassian_jira_transition_issue`. Confirm the transition and any required fields.
-- **Create issue:** Use `atlassian_jira_create_issue`. Confirm project, type, summary, and description.
+- **Add comment:**
+  ```bash
+  jira issue comment add PROJ-123 "Comment text here"
+  ```
+  Show the comment text to the user first.
+
+- **Update issue:**
+  ```bash
+  jira issue edit PROJ-123 -s"New summary" --no-input
+  jira issue edit PROJ-123 --label new-label --no-input
+  ```
+  Show what fields will change.
+
+- **Transition status:**
+  ```bash
+  jira issue move PROJ-123 "In Progress"
+  # With comment and resolution
+  jira issue move PROJ-123 Done -RFixed --comment "Completed"
+  ```
+  Confirm the target status name before running (status names are project-specific).
+
+- **Create issue:**
+  ```bash
+  jira issue create -tStory -s"Summary" -yHigh -b"Description" --no-input
+  # Attach to epic
+  jira issue create -tStory -s"Summary" -PEPIC-42 --no-input
+  ```
+  Confirm project key, type, summary, and description with the user first.
+
+- **Assign:**
+  ```bash
+  jira issue assign PROJ-123 $(jira me)
+  ```
 
 After any write, note the issue key in the daily note log.
-
----
-
-## Deep Dive Triggers
-
-Load additional reference docs when the task requires it:
-
-| Trigger | Action |
-|---------|--------|
-| Working with a specific project's workflow | Run `atlassian_jira_get_transitions` on a representative issue to map the workflow |
-| Assigning issues via MCP | First resolve account ID with `atlassian_jira_search_user` or `atlassian_jira_get_user_profile` |
-| Custom fields needed | Use `atlassian_jira_search_fields` to find field IDs before querying |
-| Sprint capacity or velocity | Use board + sprint tools; note sprint IDs change frequently |
 
 ---
 
 ## Rules
 
 - **Read-only by default.** Ask before any write.
+- **Always use `--plain`** for list commands — avoids interactive TUI.
+- **Always use `PAGER=cat`** before `jira issue view` — avoids `less` pager.
+- **Always use `--no-input`** for create/edit — skips interactive prompts.
 - **Summarise, don't copy.** Issue descriptions in daily notes are summaries + issue key links.
 - **Use the issue key** (e.g. `PROJ-123`) in all references — not search URLs.
 - **Check before creating.** Search for existing issues before suggesting a new one.
 - **Extract facts to resources.** If a Jira issue contains a durable architectural decision or process, note it as a resource candidate.
-- **Never transition blind.** Always fetch available transitions first — IDs are project-specific.
-- **Never assign by display name.** Resolve to account ID via user search.
