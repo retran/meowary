@@ -1,6 +1,6 @@
 ---
 name: confluence
-description: Read Confluence pages and maintain the local confluence map — search, fetch, record, and transform pages into KB source material
+description: Read Confluence pages and maintain the local confluence map — search, fetch, record, and transform pages into resource source material
 compatibility: opencode
 ---
 
@@ -65,19 +65,19 @@ After fetching a page, add or update a row.
 - Both can coexist.
 - Do not create new tags without registering in `tags.md`.
 
-## Transforming Pages into KB Source Material
+## Transforming Pages into Resource Source Material
 
-Confluence pages are raw material. KB articles are refined output.
+Confluence pages are raw material. Resource articles are refined output.
 
 **What to extract:** Durable facts only — decisions, process definitions, architecture, ownership, team structure. Discard meeting logistics, ephemeral status updates, changelogs, and formatting boilerplate.
 
-**Condensing:** A KB article is shorter than its source. Use tables and bullets. Quote specific numbers, dates, and names. A 5-page Confluence document might become 30 lines of KB.
+**Condensing:** A resource article is shorter than its source. Use tables and bullets. Quote specific numbers, dates, and names. A 5-page Confluence document might become 30 lines.
 
-**One page → multiple articles:** Split when the page covers distinct topics belonging in different KB folders. Each article links to the other.
+**One page → multiple articles:** Split when the page covers distinct topics belonging in different resource folders. Each article links to the other.
 
 **Multiple pages → one article:** Merge when several pages describe aspects of one topic. Track all source page IDs in `confluence-map.md`.
 
-**Source attribution:** Each KB article's `## Sources` section lists every Confluence page used:
+**Source attribution:** Each resource article's `## Sources` section lists every Confluence page used:
 
 ```
 - [Page Title](<confluence-url>/spaces/SPACE/pages/PAGE_ID) — reason this page was used

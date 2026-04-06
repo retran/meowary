@@ -92,13 +92,14 @@ Leave empty: Accomplishments, Failures & Setbacks, Carry-Over, Notes & Reflectio
 ## Friday Wrap-Up Flow
 
 Fill in on Friday, after completing the daily evening wrap-up:
-- **Accomplishments** — compile from the week's daily notes Log & Notes sections. One line per item.
+- **Accomplishments** — compile from the week's daily notes Evening > Completed sections and Day > Inbox sections. One line per item.
 - **Failures & Setbacks** — identify unmet goals and uncompleted tasks.
 - **Carry-Over** — collect incomplete tasks; confirm with user what carries vs. drops.
 - **Notes & Reflections** — prompt: "What did this week prove? What would you do differently?" Minimum 2 sentences. Do not leave blank.
 - Mark completed goals with `- [x]`.
+- **Waiting-For review** — open `waiting-for.md` and scan all Active items. Flag any whose follow-up date is on or before today. For each flagged item: note it in Notes & Reflections or carry it forward as an MIT candidate for next week.
 
-### KB Scan (end of weekly wrap-up)
+### Resources Scan (end of weekly wrap-up)
 
 Review the week's daily notes and meeting notes for durable facts not yet captured in resources:
 

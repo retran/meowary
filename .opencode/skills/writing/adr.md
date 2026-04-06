@@ -6,7 +6,7 @@ compatibility: opencode
 
 This sub-skill extends `writing`. Load `writing` first, then load `writing/adr` when drafting any ADR.
 
-ADRs are drafted locally in `projects/<name>/` before publishing to Confluence. There is no `resources/adr/` folder — Confluence is the source of truth for accepted ADRs. Local files are working drafts only.
+ADRs are drafted locally in `projects/<name>/` before publishing to Confluence. ADRs are not stored in `resources/` — Confluence is the source of truth for accepted ADRs. Local files are working drafts only.
 
 For org-specific ADR conventions (storage locations, naming series, Confluence spaces, decision process), see `context.md`.
 

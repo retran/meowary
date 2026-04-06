@@ -11,16 +11,29 @@ tags: []
 
 [← {{PREV_DATE}}]({{PREV_DATE}}.md) | [Week {{WEEK_NUMBER}}](../weekly/{{WEEK_FILE}}) | [{{NEXT_DATE}} →]({{NEXT_DATE}}.md)
 
-## Tasks
+## Morning
 
-- [ ]
-- [ ]
-- [ ]
+Focus:
+★ MIT 1:
+  MIT 2:
+  MIT 3:
 
-## Events & Meetings
+Calendar:
 
-## Blockers & Time Off
+## Day
 
-## Log & Notes
+### Inbox
 
-## Day Summary
+### Events
+
+### Waiting
+
+## Evening
+
+### Completed
+
+### Carried / Dropped
+
+### Insights → Resources
+
+### Day Summary

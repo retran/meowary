@@ -178,9 +178,9 @@ If MCP integrations were mentioned, smoke-test each:
 3. Write events organized by weekday.
 4. If file has content → show and ask if still accurate.
 
-## Step 7: Author KB Entry (fresh only)
+## Step 7: Author Resource Entry (fresh only)
 
-Offer to create a knowledge base entry for the author:
+Offer to create a resource entry for the author:
 - Create `resources/people/<slug>.md` from template.
 - Fill in known details (name, role, team).
 - Register `#person-<slug>` tag in `tags.md`.
@@ -189,8 +189,9 @@ Offer to create a knowledge base entry for the author:
 ## Step 8: Orientation
 
 Show the user what was created/updated, then explain the key workflows:
-- `/morning` to start each day (auto-includes weekly planning on Mondays)
-- `/evening` to close each day (auto-includes weekly wrap-up on Fridays)
+- `/morning` to start each day: sets Focus, MITs (Morning zone), and Calendar; includes weekly planning on Mondays
+- `/evening` to close each day: fills Completed, Carried/Dropped, Insights→Resources, Day Summary (Evening zone); includes weekly wrap-up on Fridays
+- Daily notes use three temporal zones: Morning (Focus + MITs), Day (Inbox + Events + Waiting), Evening (Completed + Insights → Resources + Day Summary)
 - `/brainstorm` → `/plan` → `/implement` → `/review` for structured work (code or documents)
 - `/lint` to check repo health
 - Commit changes with a descriptive message.

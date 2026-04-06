@@ -22,5 +22,3 @@ Index of Confluence pages fetched during sessions. Maintained by the `confluence
      Tags: registered tags from tags.md, backtick-quoted inline. -->
 
 ## Changelog
-
-- **2026-04-02:** File created (stub).

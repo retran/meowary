@@ -42,7 +42,7 @@ Turn an approved spec (or a well-understood task) into an ordered implementation
 4. Check for tests that cover affected code.
 
 **Document mode:**
-1. Identify the document's final location (e.g., `resources/adr/`, `drafts/`, `resources/<domain>/`).
+1. Identify the document's final location (e.g., `projects/<name>/`, `drafts/`, `resources/<domain>/`).
 2. Identify existing content to reference or update.
 3. List sources to consult (Confluence, Jira, existing resource articles, external docs).
 4. Identify cross-links needed (knowledge-graph, related resources, project dashboards).

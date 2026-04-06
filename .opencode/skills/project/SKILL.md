@@ -98,14 +98,14 @@ The Dev Log is a reverse-chronological record of work done on the project. Newes
 
 **Format:**
 ```markdown
-- **YYYY-MM-DD:** What was done. Decisions made. Links to daily notes or KB articles if relevant.
+- **YYYY-MM-DD:** What was done. Decisions made. Links to daily notes or resource articles if relevant.
 ```
 
 Rules:
 - One entry per work session (not per commit).
 - Be specific: name files changed, decisions made, problems solved.
 - Link to the day's daily note when the work is logged there too: `[2026-03-25](../../journal/daily/2026-03-25.md)`.
-- Link to KB articles when durable facts were extracted from the work.
+- Link to resource articles when durable facts were extracted from the work.
 - Final entry before archiving must be: `**YYYY-MM-DD:** Project completed and archived.`
 
 ---
@@ -137,7 +137,7 @@ Run these checks after any work on a project:
 2. Set `deadline` in front matter to the actual completion date if not already set.
 3. Add final Dev Log entry: `**YYYY-MM-DD:** Project completed and archived.`
 4. Move entire folder: `git mv projects/<slug> archive/projects/<slug>`.
-5. Update any links pointing to the old path (daily notes, weekly notes, KB articles).
+5. Update any links pointing to the old path (daily notes, weekly notes, resource articles).
 
 ---
 
@@ -149,7 +149,7 @@ Projects live in a web of references. Keep these links current:
 |-----------|-------|------|
 | Daily note → project | Daily note Log & Notes | `[Project Name](../projects/<slug>/README.md)` |
 | Project → daily note | Dev Log entry | `[2026-03-25](../../journal/daily/2026-03-25.md)` |
-| Project → KB article | Overview or Dev Log | Link when referencing a durable concept |
+| Project → resource article | Overview or Dev Log | Link when referencing a durable concept |
 | Weekly note → project | Weekly Goals / Accomplishments | `#p-<slug>` tag on the line |
 | Meeting → project | Meeting Action Items | Add action item to project Open Tasks |
 

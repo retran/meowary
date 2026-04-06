@@ -21,7 +21,7 @@ Run the QMD semantic search across all configured collections:
 qmd query "<question>"
 ```
 
-If `qmd` is not installed, run `node scripts/qmd-index.js` first for installation instructions. As a fallback, search `resources/`, `journal/`, `inbox/`, `projects/`, `areas/`, `drafts/`, and `archive/` for key terms manually.
+If `qmd` is not installed, run `node scripts/qmd-index.js` first for installation instructions. As a fallback, search `resources/`, `journal/`, `inbox/`, `projects/`, `areas/`, `drafts/`, `archive/`, and root-level meta files (e.g. `context.md`, `knowledge-graph.md`, `tags.md`) for key terms manually.
 
 QMD returns a ranked list of matching passages with their source files.
 

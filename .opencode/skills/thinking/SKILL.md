@@ -6,15 +6,15 @@ compatibility: opencode
 
 Use this skill when a task is genuinely complex: multiple competing options, high risk of unintended consequences, unclear requirements, or decisions that are hard to reverse.
 
-Do not use it for routine tasks (writing a daily note, creating a KB article from a template, running a standard workflow). Use it when the right path is not obvious.
+Do not use it for routine tasks (writing a daily note, creating a resource article from a template, running a standard workflow). Use it when the right path is not obvious.
 
 ## When to Load
 
 | Signal | Example |
 |--------|---------|
-| Two or more plausible approaches with different tradeoffs | Merge two KB articles vs. split them differently |
-| Irreversible structural change | Deleting or renaming a heavily-linked KB article |
-| Ambiguous requirements | User says "clean up the KB" without specifying scope |
+| Two or more plausible approaches with different tradeoffs | Merge two resource articles vs. split them differently |
+| Irreversible structural change | Deleting or renaming a heavily-linked resource article |
+| Ambiguous requirements | User says "clean up resources" without specifying scope |
 | Competing constraints | Need to update AGENTS.md without breaking existing commands |
 | High blast radius | Change that touches 10+ files |
 

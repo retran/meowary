@@ -125,7 +125,7 @@ Three or more failed fix attempts indicate an **architectural problem**. Stop pa
 - **Do not patch symptoms.** If the error is a null reference, do not just add a null check. Find out why it is null.
 - **Validate the fix.** Run the full test suite. An unvalidated fix is a guess, not a solution.
 
-## Debug Knowledge Base
+## Debug Log
 
 After resolving a bug, append an entry to `projects/<project>/debug-log.md` (create if missing). Use the template at `.opencode/templates/debug-log.md`. One entry per bug, flat append-only format.
 

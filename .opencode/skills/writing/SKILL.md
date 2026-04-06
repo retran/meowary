@@ -1,6 +1,6 @@
 ---
 name: writing
-description: Write or edit any journal content — KB articles, ADRs, meeting notes, daily notes, weekly notes, READMEs, structured notes — following repo style and structure rules
+description: Write or edit any journal content — resource articles, ADRs, meeting notes, daily notes, weekly notes, READMEs, structured notes — following repo style and structure rules
 compatibility: opencode
 ---
 
@@ -79,7 +79,7 @@ Key rules:
 ## When to use me
 
 Load this skill when:
-- Writing or editing any KB article
+- Writing or editing any resource article
 - Drafting a project README or overview section
 - Editing structured notes that will be referenced repeatedly
 - Reviewing any documentation draft for style and structure

@@ -40,7 +40,9 @@ const full = args.includes("--full");
 const changedOnly = args.includes("--changed");
 
 // Must match collections in qmd.yml
+// null prefix = root-level files (no subdirectory separator in path)
 const COLLECTION_PREFIXES = {
+  meta:      null,
   resources: "resources/",
   journal:   "journal/",
   inbox:     "inbox/",
@@ -71,7 +73,12 @@ if (changedOnly) {
     const affected = new Set();
     for (const f of changedFiles) {
       for (const [name, prefix] of Object.entries(COLLECTION_PREFIXES)) {
-        if (f.startsWith(prefix)) { affected.add(name); break; }
+        if (prefix === null) {
+          // meta collection: root-level files only (no directory separator)
+          if (!f.includes("/")) { affected.add(name); break; }
+        } else if (f.startsWith(prefix)) {
+          affected.add(name); break;
+        }
       }
     }
 

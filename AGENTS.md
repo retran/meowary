@@ -68,12 +68,11 @@ Five files at repo root describe the author's external development environment. 
 ├── areas/                     # Ongoing responsibilities with no end date
 │   └── <name>/
 │       └── README.md          # Area dashboard (focus, tasks, log)
-├── resources/                 # Knowledge base — atomic, topic-based reference articles
+├── resources/                 # Resources — atomic, topic-based reference articles
 │   ├── <domain>/              # Domain subfolders (scope defined in context.md)
 │   ├── tools/                 # Developer tools and internal tooling
 │   ├── teams/                 # One file per team
-│   ├── people/                # One file per person
-│   └── adr/                   # Architecture Decision Records
+│   └── people/                # One file per person
 ├── drafts/                    # Outputs for external audiences (blog posts, proposals, Confluence drafts)
 ├── archive/                   # Completed or inactive items (PARA)
 │   ├── projects/
@@ -102,6 +101,30 @@ Five files at repo root describe the author's external development environment. 
 └── AGENTS.md                  # Agent instructions (this file)
 ```
 
+## Automation Tools
+
+### QMD — Semantic Search
+
+QMD provides semantic search across the journal. Used by `/ask` and the `r-ingest` workflow.
+
+- Install: `npm install -g @tobilu/qmd` (Node.js ≥ 22 required)
+- First run: downloads ~2GB embedding model — allow time and disk space
+- Index: `node scripts/qmd-index.js` — runs `qmd update` + `qmd embed` against all 8 collections in `qmd.yml`
+  - `--changed` flag: skip re-index if no git changes since last commit (fast early-exit)
+  - `--full` flag: force full re-embed (`qmd embed -f`) — use after switching embedding model
+- Query: `qmd query "<question>"` — returns cited snippets across all 8 collections
+- Re-index after: any bulk create/actualize operation, any `/r-ingest` run, any `/r-sync` run
+
+### Scripts — `scripts/`
+
+Automation scripts for health checks, Confluence sync, and resource operations.
+
+- Language: JavaScript (ESM). `scripts/package.json` has `"type": "module"`.
+- Run from repo root: `node scripts/<name>.js [args]`
+- No build step, no TypeScript. Run directly with Node.js.
+- Shared utilities: `scripts/lib/` (`links.js`, `frontmatter.js`, `graph.js`)
+- Scripts are read-only (stdout only) except: `fix-links.js`, `confluence-backfill-dates.js`, `run-operation.js`, `plan-resources.js`, `migrate-daily-notes.js`.
+
 ## YAML Front Matter
 
 Every Markdown file must begin with a YAML front matter block. Exceptions: `AGENTS.md`.
@@ -122,10 +145,10 @@ For format details on each content type, load the referenced skill. Do not start
 |---|---|---|
 | Daily notes | `writing` + `.opencode/skills/writing/daily.md` | `journal/daily/YYYY-MM-DD.md` — append-only |
 | Weekly notes | `writing` + `.opencode/skills/writing/weekly.md` | `journal/weekly/YYYY-WNN.md` — Monday plan, Friday wrap |
-| Meeting notes | `writing` + `.opencode/skills/writing/meeting.md` | `journal/meetings/YYYY-MM-DD-<slug>.md` |
+| Meeting notes | `writing` + `.opencode/skills/writing/meeting.md` | `journal/meetings/YYYY-MM-DD-<slug>.md` — types: general, 1-1, standup, retro, kickoff |
 | Project dashboards | `project` | `projects/<slug>/README.md` |
 | Area dashboards | `project` + `.opencode/skills/writing/area.md` | `areas/<slug>/README.md` |
-| Knowledge base | `resources` | `resources/<domain>/` — one topic per article |
+| Resources | `resources` | `resources/<domain>/` — one topic per article |
 | ADRs | `writing` + `.opencode/skills/writing/adr.md` | Draft in `projects/<name>/`, not `resources/` |
 | Writing style & tags | `writing` | Plain language, active voice, tables over prose |
 
@@ -135,6 +158,9 @@ For format details on each content type, load the referenced skill. Do not start
 |---|---|
 | What I did today, task outcomes, reflections | `journal/daily/` |
 | Standing meeting notes | `journal/meetings/` |
+| Meeting action items (own tasks) | Today's `### Inbox` in daily note |
+| Meeting action items (waiting on someone) | `waiting-for.md` |
+| Meeting action items (project tasks) | `projects/<name>/README.md` Open Tasks |
 | Persistent facts: person roles, team structure, process, architecture | `resources/` |
 | Project tasks, status, dev log | `projects/<name>/README.md` |
 | Area tasks, focus, ongoing log | `areas/<name>/README.md` |
@@ -182,11 +208,11 @@ Load the listed skill as soon as the trigger condition is met. Do not start the 
 
 | Skill | Path | Description |
 |-------|------|-------------|
-| `writing` | `.opencode/skills/writing/SKILL.md` | Write or edit any journal content — KB articles, ADRs, meeting notes, daily notes, weekly notes, READMEs, structured notes — following repo style and structure rules |
+| `writing` | `.opencode/skills/writing/SKILL.md` | Write or edit any journal content — resource articles, ADRs, meeting notes, daily notes, weekly notes, READMEs, structured notes — following repo style and structure rules |
 | `project` | `.opencode/skills/project/SKILL.md` | Create, update, and maintain project dashboards — tasks, dev log, status, cross-links, lifecycle |
 | `resources` | `.opencode/skills/resources/SKILL.md` | Maintain and actualize resources — single-article enrichment, batch Confluence map sync, graph review and operation planning, and structural operations (create, delete, merge, split, reclassify) |
-| `confluence` | `.opencode/skills/confluence/SKILL.md` | Read Confluence pages and maintain the local confluence map — search, fetch, record, and transform pages into KB source material |
-| `jira` | `.opencode/skills/jira/SKILL.md` | Search and read Jira issues — query assigned issues, sprint boards, epics, and extract facts for KB and daily notes |
+| `confluence` | `.opencode/skills/confluence/SKILL.md` | Read Confluence pages and maintain the local confluence map — search, fetch, record, and transform pages into resource source material |
+| `jira` | `.opencode/skills/jira/SKILL.md` | Search and read Jira issues — query assigned issues, sprint boards, epics, and extract facts for resources and daily notes |
 | `glab` | `.opencode/skills/glab/SKILL.md` | Work with GitLab via glab CLI — merge request lifecycle, CI monitoring, issue management |
 | `github` | `.opencode/skills/github/SKILL.md` | Work with GitHub via gh CLI — pull request lifecycle, Actions CI, issue management, repo operations |
 | `workflow` | `.opencode/skills/workflow/SKILL.md` | Structured workflows for software engineering and document authoring — brainstorm, plan, implement, review, debug |

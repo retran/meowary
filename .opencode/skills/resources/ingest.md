@@ -1,6 +1,6 @@
 ---
 name: resources/ingest
-description: Ingest an external source (URL or file) into the knowledge base — fetch, identify concepts, create or actualize articles, re-index
+description: Ingest an external source (URL or file) into resources — fetch, identify concepts, create or actualize articles, re-index
 depends_on: resources
 compatibility: opencode
 ---
@@ -11,7 +11,7 @@ compatibility: opencode
 
 **Input:** A URL or local file path.
 
-**Output:** One or more new or updated resource articles, updated `knowledge-graph.md`, re-indexed `qmd.yml`, log entry in `resources-log.md`.
+**Output:** One or more new or updated resource articles, updated `knowledge-graph.md`, semantic index rebuilt, log entry in `resources-log.md`.
 
 ### Step 1: Fetch and Read the Source
 

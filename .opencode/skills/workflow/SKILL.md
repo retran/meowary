@@ -15,7 +15,7 @@ The workflow operates in two modes, inferred from context:
 | Mode | Trigger | Artifacts |
 |------|---------|-----------|
 | **Code** | Task targets an external repository or involves writing code | Specs, plans, code changes |
-| **Document** | Task targets journal content: ADR, proposal, RFC, KB article, blog post | Specs, plans, written documents |
+| **Document** | Task targets journal content: ADR, proposal, RFC, resource article, blog post | Specs, plans, written documents |
 
 **Detection:** If the user specifies a target repository or the task involves code changes, use code mode. If the task involves writing a document within the journal (or for external publication via `drafts/`), use document mode. When ambiguous, ask.
 

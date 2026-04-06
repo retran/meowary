@@ -1,6 +1,6 @@
 ---
 name: jira
-description: Search and read Jira issues — query assigned issues, sprint boards, epics, and extract facts for KB and daily notes
+description: Search and read Jira issues — query assigned issues, sprint boards, epics, and extract facts for resources and daily notes
 compatibility: opencode
 ---
 
@@ -111,7 +111,7 @@ atlassian_jira_get_sprint_issues(sprint_id="456")
 
 ---
 
-## Extracting Facts for KB and Daily Notes
+## Extracting Facts for Resources and Daily Notes
 
 When pulling Jira data into the journal:
 
@@ -134,7 +134,7 @@ When pulling Jira data into the journal:
 - Investigated PROJ-456 (short description) — decision or outcome. #p-project-tag
 ```
 
-**Format for KB `## Sources` section:**
+**Format for resource articles `## Sources` section:**
 ```
 - [PROJ-456](<jira-url>/browse/PROJ-456) — decision or outcome
 ```
@@ -192,6 +192,6 @@ Load additional reference docs when the task requires it:
 - **Summarise, don't copy.** Issue descriptions in daily notes are summaries + issue key links.
 - **Use the issue key** (e.g. `PROJ-123`) in all references — not search URLs.
 - **Check before creating.** Search for existing issues before suggesting a new one.
-- **Extract facts to KB.** If a Jira issue contains a durable architectural decision or process, note it as a KB candidate.
+- **Extract facts to resources.** If a Jira issue contains a durable architectural decision or process, note it as a resource candidate.
 - **Never transition blind.** Always fetch available transitions first — IDs are project-specific.
 - **Never assign by display name.** Resolve to account ID via user search.
