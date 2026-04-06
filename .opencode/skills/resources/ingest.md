@@ -7,11 +7,11 @@ compatibility: opencode
 
 ## Workflow F: Ingest an External Source
 
-**Purpose:** Bring content from a URL or local file into `resources/` as one or more resource articles. Fetches the source, identifies concepts, executes the minimum set of resource operations (create or actualize), updates the knowledge graph, and re-indexes.
+**Purpose:** Bring content from a URL or local file into `resources/` as one or more resource articles. Fetches the source, identifies concepts, executes the minimum set of resource operations (create or actualize), and re-indexes.
 
 **Input:** A URL or local file path.
 
-**Output:** One or more new or updated resource articles, updated `knowledge-graph.md`, semantic index rebuilt, log entry in `resources-log.md`.
+**Output:** One or more new or updated resource articles, semantic index rebuilt, log entry in `resources-log.md`.
 
 ### Step 1: Fetch and Read the Source
 
@@ -35,7 +35,7 @@ Scan the source material for:
 - **Concepts:** processes, patterns, decisions, standards, frameworks, methodologies.
 - **Relationships:** ownership, dependencies, supersessions, replacements.
 
-For each concept found, check `knowledge-graph.md`:
+For each concept found, check `resources/` directly (use `qmd query "<concept>"` or `rg`):
 
 - **Exists** → mark as `actualize` candidate.
 - **Does not exist** → mark as `create` candidate (if the concept is substantial — more than a one-liner).
@@ -64,9 +64,8 @@ For each operation decided in Step 3, load `resources/operations` ([operations.m
 
 After all operations:
 
-- Update `knowledge-graph.md` rows for every created or modified article.
 - Register any new tags in `tags.md`.
-- Update `confluence-map.md` if the source was a Confluence page.
+- If the source was a Confluence page: add the page ID to the article's `confluence:` front matter and update `confluence-sync.json` if it should be monitored.
 
 ### Step 6: Re-index
 
@@ -79,7 +78,7 @@ Rebuilds the semantic index so new articles are queryable by `/ask`.
 ### Step 7: Commit
 
 ```
-git add resources/ knowledge-graph.md tags.md
+git add resources/ tags.md confluence-sync.json
 git commit -m "Ingest: <source-title> — <operation summary>"
 ```
 

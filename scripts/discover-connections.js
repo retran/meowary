@@ -20,7 +20,7 @@
 import { readFileSync } from "node:fs";
 import { resolve, relative, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
-import { listResourceFiles } from "./lib/graph.js";
+import { findMdFiles } from "./lib/links.js";
 import { getFrontmatterField } from "./lib/frontmatter.js";
 
 const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
@@ -41,7 +41,7 @@ for (let i = 0; i < args.length; i++) {
   }
 }
 
-const files = listResourceFiles(scope);
+const files = findMdFiles(scope);
 
 // Gather per-file data
 const fileData = files.map((f) => {

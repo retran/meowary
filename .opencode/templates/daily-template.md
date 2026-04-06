@@ -5,6 +5,7 @@ weekday: {{DAY}}
 week: "{{WEEK_FILE}}"
 updated: {{DATE}}
 tags: []
+confluence: []
 ---
 
 # {{DATE}}: {{DAY}}

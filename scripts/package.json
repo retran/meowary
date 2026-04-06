@@ -10,7 +10,7 @@
     "fix-links": "node fix-links.js",
     "confluence-updates": "node confluence-updates.js",
     "confluence-missing": "node confluence-missing.js",
-    "confluence-backfill-dates": "node confluence-backfill-dates.js",
+    "confluence-ingest": "node confluence-ingest.js",
     "plan-resources": "node plan-resources.js",
     "run-operation": "node run-operation.js",
     "health-all": "node health-all.js",

@@ -19,7 +19,6 @@ const SCRIPTS_DIR = resolve(fileURLToPath(import.meta.url), "..");
 
 const CHECKS = [
   { name: "frontmatter",  script: "health-frontmatter.js",  label: "Front Matter" },
-  { name: "kg-coverage",  script: "health-kg-coverage.js",  label: "Knowledge Graph Coverage" },
   { name: "orphans",      script: "health-orphans.js",       label: "Orphaned Articles" },
   { name: "tags",         script: "health-tags.js",          label: "Tag Registry" },
   { name: "stale",        script: "health-stale.js",         label: "Stale Articles" },

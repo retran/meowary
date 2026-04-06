@@ -3,6 +3,7 @@ type: area
 status: Active
 updated: {{DATE}}
 tags: [a-{{AREA_SLUG}}]
+confluence: []
 ---
 
 # {{AREA_NAME}}

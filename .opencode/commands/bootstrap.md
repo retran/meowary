@@ -184,7 +184,6 @@ Offer to create a resource entry for the author:
 - Create `resources/people/<slug>.md` from template.
 - Fill in known details (name, role, team).
 - Register `#person-<slug>` tag in `tags.md`.
-- Add entry to `knowledge-graph.md`.
 
 ## Step 8: Orientation
 

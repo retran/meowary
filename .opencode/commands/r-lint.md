@@ -15,7 +15,6 @@ node scripts/health-all.js
 This runs all checks and produces a grouped report:
 
 - **Front Matter** — files missing `updated` or `tags` front matter
-- **Knowledge Graph Coverage** — resource files not in `knowledge-graph.md`
 - **Orphaned Articles** — resources with no inbound links (excl. `people/`)
 - **Tag Registry** — tags used but not registered in `tags.md`; registered tags not in use
 - **Stale Articles** — articles not actualized in 90+ days

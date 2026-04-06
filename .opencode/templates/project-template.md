@@ -4,6 +4,7 @@ status: Active
 deadline: "{{DEADLINE}}"
 updated: {{DATE}}
 tags: [p-{{PROJECT_SLUG}}]
+confluence: []
 ---
 
 # {{PROJECT_NAME}}

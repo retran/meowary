@@ -90,9 +90,7 @@ Follow the Workflow D Delete procedure exactly:
 2. Run \`node scripts/find-backlinks.js ${target}\` to find all inbound links.
 3. Remove or redirect every inbound link.
 4. Delete the file.
-5. Remove the row from knowledge-graph.md.
-6. Check confluence-map.md: for each page ID in the article's ## Sources, check whether any other resource article references that same page ID. If none do, remove (or annotate) the row from confluence-map.md.
-7. Commit: \`Resources: delete ${target} — ${details}\``,
+5. Commit: \`Resources: delete ${target} — ${details}\``,
 
   merge: `${COMMON_PREAMBLE}
 

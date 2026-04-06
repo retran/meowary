@@ -50,7 +50,7 @@ Finds all `resources/` files that contain inbound links to the article. Zero res
 
 #### 2b. Shared Tag Analysis
 
-Reads the article's `tags` from front matter and queries `knowledge-graph.md` for articles sharing the same tags. These are **tag siblings**.
+Reads the article's `tags` from front matter and searches `resources/` for articles sharing the same tags (use `rg` on front matter or `qmd query`). These are **tag siblings**.
 
 #### 2c. Shared Source Analysis
 

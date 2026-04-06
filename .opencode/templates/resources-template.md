@@ -5,6 +5,7 @@ tags: [{{TAGS}}]
 status: current
 updated: {{DATE}}
 actualized: ""
+confluence: []
 ---
 
 # {{TITLE}}

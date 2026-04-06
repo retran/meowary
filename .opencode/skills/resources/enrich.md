@@ -40,9 +40,7 @@ If the plan file does not exist, proceed without it — Steps 1–8 are self-suf
 ### Step 1: Read & Understand
 
 - Read the article fully: front matter, body, `## Related`, `## Changelog`.
-- Note `status`, `updated`, `tags`, outbound links, inbound references.
-- Read the article's row in `knowledge-graph.md`.
-- Check `confluence-map.md` for related Confluence page IDs.
+- Note `status`, `updated`, `tags`, `confluence: [...]` (source page IDs), outbound links.
 - Identify 3–8 **key terms** (nouns, component names, concepts) to drive searches.
 - Note any concepts, people, components, or decisions mentioned in the article that have no resource article yet — these are candidate new nodes.
 
@@ -58,15 +56,15 @@ Run all five sub-steps. Use multiple search strategies per sub-step — do not s
 
 #### 2a. Local Resources
 
-- Search key terms across `resources/`.
+- Search key terms across `resources/` (use `qmd query "<term>"` or `rg`).
 - Check same-subfolder articles for overlap or missing cross-references.
-- Check `knowledge-graph.md` for articles with shared tags.
+- Check articles sharing the same tags (search `tags:` front matter with `rg`).
 - Read related articles to avoid duplicating existing facts.
 - Identify gaps: unlinked mentions, outdated cross-references, missing back-links.
 
 #### 2b. Confluence
 
-Load the `confluence` skill for search strategies, fetch procedures, and confluence-map format.
+Load the `confluence` skill for search strategies and fetch procedures.
 
 Search using at least three strategies:
 
@@ -79,7 +77,8 @@ Search using at least three strategies:
 For each relevant page:
 - Extract durable facts (decisions, ownership, dates, metrics, architecture).
 - Compare against current article content — note gaps and contradictions.
-- Add new pages to `confluence-map.md` (see `confluence` skill for row format).
+- Add the page ID to the article's `confluence:` front matter if not already present.
+- Add the page to `confluence-sync.json` if it should be monitored going forward (see `confluence` skill).
 
 #### 2c. Jira
 
@@ -121,7 +120,7 @@ Scan all material gathered in 2a–2e. For each piece of source material, identi
 - **Concepts:** processes, patterns, decisions, standards, frameworks, methodologies.
 - **Relationships:** ownership, dependencies, supersessions, replacements.
 
-For each entity or concept found, check `knowledge-graph.md`. If no article exists and the topic is substantial (more than a one-liner), note it in `## Changelog` as a candidate for a future `create` operation in Workflow C. Do not create articles — just flag them.
+For each entity or concept found, check `resources/` (or use `qmd query "<concept>"`) to see if an article exists. If no article exists and the topic is substantial (more than a one-liner), note it in `## Changelog` as a candidate for a future `create` operation in Workflow C. Do not create articles — just flag them.
 
 ### Step 3: Enrich the Article
 
@@ -177,10 +176,9 @@ After enriching, apply layered distillation to make the article progressively mo
 - Append to `## Changelog` (newest first): `- **YYYY-MM-DD:** <what changed>.`
 - Create `## Changelog` if missing.
 - Update `## Sources`: add links for any new sources used; remove links to sources no longer referenced. See [ref-sources.md](ref-sources.md) for format by source type.
-- Verify `tags` in front matter match inline tags and the `knowledge-graph.md` row.
+- Update `confluence:` front matter: add any new Confluence page IDs used as sources.
+- Verify `tags` in front matter match inline tags.
 - Register new tags in `tags.md` (see [ref-tags.md](ref-tags.md)).
-- Update `knowledge-graph.md` row if summary or tags changed (see [ref-knowledge-graph.md](ref-knowledge-graph.md)).
-- Update `confluence-map.md` if new Confluence pages were fetched (see `confluence` skill for row format).
 
 ### Step 7: Graph Health Check
 
@@ -200,7 +198,6 @@ People files (`resources/people/`) are exempt from the orphan check — they do 
 
 For the article and any articles edited during this iteration:
 
-- Front matter `tags` must match the `knowledge-graph.md` row tags exactly.
 - All tags must exist in `tags.md`. Common mistakes: `spam` instead of `t-spam`, unregistered tags.
 - Inline `#tags` in the body should match front matter tags.
 
@@ -209,11 +206,10 @@ For the article and any articles edited during this iteration:
 Check articles in the same subfolder that share tags with the current article:
 
 - If `actualized` is older than **2 weeks** and `status: current`, flag as potentially stale.
-- Check all reference sources against the article's `actualized` date:
-  - **Confluence** — for each page ID in `## Sources`, check `confluence-map.md` for its last-modified date. Flag if the page was modified after `actualized`.
-  - **Jira** — for any Jira issue keys mentioned in the article, check if the issue was updated after `actualized`.
-  - **Journal** — search `journal/daily/` and `projects/` for the article's key terms. If recent entries (after `actualized`) contain facts not reflected in the article, flag it.
-  - **Codebase** — if the article references specific files, namespaces, or components, check whether they changed after `actualized`.
+- **Confluence** — for each page ID in `confluence:` front matter, check `confluence-sync.json` for its last-synced date. Flag if the page was modified in Confluence after `actualized`.
+- **Jira** — for any Jira issue keys mentioned in the article, check if the issue was updated after `actualized`.
+- **Journal** — search `journal/daily/` and `projects/` for the article's key terms. If recent entries (after `actualized`) contain facts not reflected in the article, flag it.
+- **Codebase** — if the article references specific files, namespaces, or components, check whether they changed after `actualized`.
 - Do not fix stale articles now — report them in the commit message.
 
 ### Step 8: Commit
@@ -223,7 +219,7 @@ Stage only files touched in this iteration:
 - The article itself
 - Articles where back-links were added
 - Newly created articles
-- `knowledge-graph.md`, `tags.md`, `confluence-map.md` (if changed)
+- `tags.md`, `confluence-sync.json` (if changed)
 
 Commit message: `Enrich resources: <subfolder>/<article-name>`
 

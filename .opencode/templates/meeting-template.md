@@ -7,6 +7,7 @@ recurrence: once
 attendees: []
 updated: {{DATE}}
 tags: [{{TAGS}}]
+confluence: []
 ---
 
 # {{DATE}}: {{MEETING_TITLE}}

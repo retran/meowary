@@ -33,7 +33,6 @@ node scripts/health-all.js
 | Script | What it checks | Key flags |
 |--------|---------------|-----------|
 | `node scripts/health-orphans.js` | Articles in `resources/` (excl. `people/`) with zero inbound links | — |
-| `node scripts/health-kg-coverage.js` | Resource articles not in `knowledge-graph.md` | — |
 | `node scripts/health-tags.js` | Tags used but not in `tags.md`; registered tags with no usage | — |
 | `node scripts/health-stale.js` | Articles not actualized recently | `--days N` (default 90) |
 | `node scripts/health-links.js` | Broken links and missing bidirectional back-links | `--scope resources\|journal\|all` |

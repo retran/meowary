@@ -31,7 +31,7 @@ Turn an approved spec (or a well-understood task) into an ordered implementation
 2. Read the approved spec if one exists
 3. Check for `specs/CONTEXT-<slug>.md` alongside the spec (same as code mode above). Do not block if absent.
 3. Identify source material — load the `confluence` skill to fetch relevant Confluence pages; load the `jira` skill to read linked issues or epics; also check existing resource articles and external references
-4. Identify cross-links needed (knowledge-graph, related resources, project dashboards)
+4. Identify cross-links needed (related resources, project dashboards)
 
 ### Step 1: Map the Change
 
@@ -45,7 +45,7 @@ Turn an approved spec (or a well-understood task) into an ordered implementation
 1. Identify the document's final location (e.g., `projects/<name>/`, `drafts/`, `resources/<domain>/`).
 2. Identify existing content to reference or update.
 3. List sources to consult (Confluence, Jira, existing resource articles, external docs).
-4. Identify cross-links needed (knowledge-graph, related resources, project dashboards).
+4. Identify cross-links needed (related resources, project dashboards).
 
 ### Step 2: Order the Tasks
 
@@ -72,13 +72,13 @@ Then create an ordered task list. Each task:
 1. Research and source gathering first
 2. Core content sections (in logical reading order)
 3. Cross-references and links
-4. Front matter, tags, knowledge-graph updates last
+4. Front matter, tags, resource article updates last
 
 ### Step 3: Define Test/Verification Strategy
 
 **Code mode:** For each significant change — what tests to add, what to assert, edge cases, integration verification.
 
-**Document mode:** Verification checklist — style compliance, completeness vs spec, cross-links valid, front matter correct, knowledge-graph updated.
+**Document mode:** Verification checklist — style compliance, completeness vs spec, cross-links valid, front matter correct, resource articles updated.
 
 ### Step 4: Assess Risks
 

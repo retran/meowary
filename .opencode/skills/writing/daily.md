@@ -200,7 +200,7 @@ At the end of every daily note update (and always during `/evening`), scan for r
 - Did a meeting reveal a person's role change, team structure update, or process decision? Update the relevant resource article.
 - Did a work session produce architectural knowledge, component ownership facts, or process observations? Capture in `resources/`.
 - Did you mention a concept, person, team, or tool with no resource article? Flag it as a candidate for creation.
-- After writing to or creating a resource article, update `knowledge-graph.md`: add the article if new, or refresh its `actualized` date and topic tags if existing.
+- After writing to or creating a resource article, update the article's `updated` and `tags` front matter fields to reflect the changes.
 
 Do not wait for an explicit resources task. Surface gaps and fill them during Evening > Insights → Resources.
 

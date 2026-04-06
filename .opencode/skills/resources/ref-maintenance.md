@@ -1,6 +1,6 @@
 ---
 name: resources/ref-maintenance
-description: Resources and Confluence maintenance procedures — triggers, fetch/record protocol, Confluence→resources transformation rules, graph health checks, tag registry maintenance
+description: Resources maintenance procedures — triggers, Confluence tracking, transformation rules, graph health
 compatibility: opencode
 ---
 
@@ -8,72 +8,51 @@ compatibility: opencode
 
 | Trigger | Required actions |
 |---------|-----------------|
-| New resource article created | Add row to `knowledge-graph.md`; register any new tags in `tags.md` |
-| Confluence page fetched | Add/update row in `confluence-map.md`; if resource article created, link it in `knowledge-graph.md` |
-| Confluence map updated (new or modified pages) | For each new/modified page, check if it contains durable facts; create or update resource articles accordingly; update `knowledge-graph.md` and `tags.md` |
+| New resource article created | Register any new tags in `tags.md` |
+| Confluence page fetched for enrichment | Add page ID to article's `confluence:` front matter; add to `confluence-sync.json` if monitoring |
+| Confluence sync detects new/stale pages | Run `node scripts/confluence-ingest.js` — see [sync.md](sync.md) |
 | Resource article edited | Update `updated` front matter; append to `## Changelog` |
 | New tag introduced | Add to correct table in `tags.md` with link |
 | New person/team encountered | Create resource entry from template; register tag |
-| Resource article deleted or moved | Remove/update row in `knowledge-graph.md`; fix all links in the repo |
+| Resource article deleted or moved | Fix all inbound links in the repo |
 
-## Maintaining `knowledge-graph.md`
+## Confluence Tracking
 
-`knowledge-graph.md` has three columns: `File` (relative link to the resource article), `Summary` (one-line description), `Tags` (backtick-quoted tag names).
+There are two separate tracking mechanisms:
 
-Steps when adding or updating a row:
+| Artifact | Purpose | Format |
+|----------|---------|--------|
+| `confluence-sync.json` | Operational monitoring registry — pages we actively track for changes | JSON at repo root |
+| Article `confluence: [PAGE_IDs]` | Provenance — which pages informed this article | Front matter list |
 
-1. Identify the resources subfolder for the article. Create a new section if the folder is new.
-2. Add the row under the correct section header.
-3. After a batch of changes, append a dated changelog entry to `knowledge-graph.md`.
+These are independent. An article may cite pages not in the monitoring registry; a monitored page may inform many articles.
 
-Full row format and summary rules: see [ref-knowledge-graph.md](ref-knowledge-graph.md).
+**When to add a page to `confluence-sync.json`:**
+- You want to be notified when it changes (ongoing monitoring)
+- Use `node scripts/confluence-missing.js` to discover untracked pages in a space
 
-## Fetching and Tracking Confluence Pages
+**When to add a page ID to `confluence:` front matter:**
+- You fetched the page and extracted facts into this article
+- Add the ID every time a new Confluence page informs the article's content
 
-**When to fetch.** Fetch a Confluence page when:
-
-- Writing about a topic and the local resource article may be stale or missing.
-- A meeting or planning session references a Confluence page.
-- The user explicitly asks.
-- The `resources` skill (Workflow B) reports new or modified pages.
-
-The trigger table above covers all fetch conditions.
-
-**How to fetch and record:**
-
-1. Check `confluence-map.md` for an existing row — the Summary may be enough.
-2. If the Summary is insufficient or no row exists, fetch the page.
-3. Add or update the row with all six fields:
-   - `Page ID` — Confluence numeric ID (from the page URL).
-   - `Title` — exact page title, linked to the Confluence URL.
-   - `Parent` — parent page ID (`root` for top-level pages).
-   - `Last Modified` — date from `version.when` in the API response (`YYYY-MM-DD`).
-   - `Summary` — one to three sentences. Name decisions made, key numbers, named components. Do not write "this page describes" — state the facts directly.
-   - `Tags` — registered tags only (from `tags.md`), backtick-quoted inline. Every row needs at least one tag.
-4. If the fetch is the source for a new resource article, link it in `knowledge-graph.md`.
-5. For bulk map maintenance, use the `resources` skill (Workflow B).
-
-Write policy: never create, edit, or delete Confluence pages without explicit user approval.
+**Re-fetch cadence.** No fixed schedule. Re-fetch when:
+- `node scripts/confluence-updates.js YYYY-MM-DD` reports the page was modified
+- A daily workflow reveals that a resource article's facts are stale
+- The user explicitly asks to refresh a topic
 
 ## Confluence → Resources Transformation
 
 Confluence pages are raw material. Resource articles are refined output.
 
-**What to extract.** Durable facts only — decisions, process definitions, architecture descriptions, ownership, team structure. Discard meeting logistics, ephemeral status updates, change logs, and formatting boilerplate.
+**What to extract:** Durable facts only — decisions, process definitions, architecture, ownership, team structure. Discard meeting logistics, ephemeral status updates, changelogs, and formatting boilerplate.
 
-**How much to condense.** A resource article is shorter than its Confluence source. Use tables and bullet lists. Quote specific numbers, dates, and names. Drop narrative filler. A 5-page Confluence document might become 30 lines of resources.
+**Condensing:** A resource article is shorter than its source. Use tables and bullets. Quote specific numbers, dates, and names. A 5-page Confluence document might become 30 lines.
 
-**One page → multiple articles.** Split when a Confluence page covers distinct topics that belong in different resources subfolders. Each article links to the others.
+**One page → multiple articles:** Split when the page covers distinct topics belonging in different resource subfolders. Each article links to the other.
 
-**Multiple pages → one article.** Merge when several Confluence pages describe aspects of one topic. Track all source page IDs in `confluence-map.md`.
+**Multiple pages → one article:** Merge when several pages describe aspects of one topic. Track all source page IDs in the article's `confluence:` front matter.
 
-**Source attribution.** Each resource article includes a `## Sources` section listing every Confluence page it draws from. See [ref-sources.md](ref-sources.md) for format.
-
-**Re-fetch cadence.** No fixed schedule. Re-fetch when:
-
-- Workflow B detects a modified page.
-- A daily workflow reveals that a resource article's facts are stale.
-- The user explicitly asks to refresh a topic.
+**Source attribution:** Each resource article's `## Sources` section lists every Confluence page used. See [ref-sources.md](ref-sources.md) for format.
 
 ## Maintaining `tags.md`
 
@@ -89,10 +68,14 @@ Full tag format: see [ref-tags.md](ref-tags.md).
 
 The knowledge graph degrades silently. These checks catch problems early.
 
-**During Workflow B:** After Step 7, scan for orphan articles — articles with no inbound links from other resource files. Orphans are either missing cross-references or candidates for archiving. Report them in the commit message.
+**On demand / after bulk operations:**
+```
+node scripts/health-all.js
+```
+Reports: orphaned articles, missing frontmatter, tag inconsistencies, stale articles, overly long articles.
 
-**During `/week-wrap`:** If resource articles were created or heavily edited during the week, verify bidirectional links are intact. Check that new articles appear in `knowledge-graph.md`.
+**Orphan check:** Articles with no inbound links from other resource files are orphans — invisible in the graph. Fix by adding a cross-reference from a related article. Run `node scripts/find-backlinks.js <path>` to check. People files are exempt.
 
-**Staleness heuristic:** An article with `updated` older than 6 months and `status: current` is potentially stale. During Workflow B, if the corresponding Confluence source page was modified after the article's `updated` date, flag the article for review. Set `status: outdated` if the facts have drifted.
+**Staleness heuristic:** An article with `actualized` (or `updated`) older than 90 days and `status: current` is potentially stale. During sync, if the corresponding Confluence page was modified after the article's `actualized` date, flag for review. Set `status: outdated` if facts have drifted.
 
-**Tag consistency:** When reviewing an article, verify its front matter `tags` match the inline tags and the row in `knowledge-graph.md`. Mismatches cause search failures.
+**Tag consistency:** Front matter `tags` must exist in `tags.md`. Inline `#tags` in the body should match front matter tags. Mismatches cause search failures.

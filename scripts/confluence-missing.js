@@ -3,7 +3,10 @@
  * confluence-missing.js
  *
  * Enumerates ALL pages in one or more Confluence spaces and reports which ones
- * are not yet in confluence-map.md.
+ * are not yet in confluence-sync.json (untracked pages).
+ *
+ * Use this for discovery: find pages worth adding to your monitoring registry.
+ * To add a page: edit confluence-sync.json and add an entry with synced: null.
  *
  * Usage:
  *   node scripts/confluence-missing.js [SPACE1 SPACE2 ...]
@@ -15,11 +18,11 @@
 import {
   CONFLUENCE_BASE,
   CONFLUENCE_DEFAULT_SPACES,
-  MAP_FILE,
+  REPO_ROOT,
   authHeader,
-  loadMapIds,
   requireAtlassianCredentials,
 } from "./config.js";
+import { loadSyncConfig } from "./lib/sync.js";
 
 const PAGE_SIZE = 50;
 
@@ -33,8 +36,9 @@ async function main() {
     return;
   }
 
-  const { ids, inMap } = loadMapIds(MAP_FILE);
-  console.log(`Map contains ${ids.length} page IDs.`);
+  const syncEntries = loadSyncConfig(REPO_ROOT);
+  const trackedIds = new Set(Object.keys(syncEntries));
+  console.log(`Tracking ${trackedIds.size} pages in confluence-sync.json.`);
   console.log(`Spaces to scan: ${spaces.join(" ")}`);
   console.log();
 
@@ -47,7 +51,7 @@ async function main() {
 
   let totalSeen = 0;
   let missingCount = 0;
-  let inMapCount = 0;
+  let trackedCount = 0;
 
   for (const space of spaces) {
     process.stderr.write(`  --- Scanning space: ${space} ---\n`);
@@ -93,8 +97,8 @@ async function main() {
         const date = when ? when.slice(0, 10) : "\u2014";
         const title = r.title.replace(/\t/g, " ");
 
-        if (inMap.has(r.id)) {
-          inMapCount++;
+        if (trackedIds.has(r.id)) {
+          trackedCount++;
         } else {
           missingCount++;
           console.log(
@@ -111,10 +115,14 @@ async function main() {
 
   console.log();
   console.log("--- Summary ---");
-  console.log(`Spaces scanned        : ${spaces.join(" ")}`);
-  console.log(`Total pages seen      : ${totalSeen}`);
-  console.log(`Already in map        : ${inMapCount}`);
-  console.log(`Missing from map      : ${missingCount}`);
+  console.log(`Spaces scanned          : ${spaces.join(" ")}`);
+  console.log(`Total pages seen        : ${totalSeen}`);
+  console.log(`Already tracked locally : ${trackedCount}`);
+  console.log(`Untracked (missing)     : ${missingCount}`);
+  if (missingCount > 0) {
+    console.log();
+    console.log(`Add untracked pages to confluence-sync.json with synced: null to start monitoring them.`);
+  }
 }
 
 main().catch((err) => console.error(`Unexpected error: ${err.message}`));

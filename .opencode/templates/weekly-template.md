@@ -5,6 +5,7 @@ date_start: {{WEEK_START}}
 date_end: {{WEEK_END}}
 updated: {{WEEK_START}}
 tags: []
+confluence: []
 ---
 
 # Week {{WEEK_NUMBER}}: {{WEEK_START}} -- {{WEEK_END}}

@@ -1,0 +1,11 @@
+{
+  "_comment": "Confluence pages we actively monitor. Add entries via confluence-missing.js discovery or manually. Update 'synced' to today's date after ingesting a page (via confluence-ingest.js or manually). 'resources' is an optional list of resource article paths this page is known to inform — used as hints during ingestion, not a 1:1 mapping.",
+  "_schema": {
+    "pageId": {
+      "title": "string — page title",
+      "space": "string — space key",
+      "synced": "YYYY-MM-DD | null — date we last ingested this page into resource articles",
+      "resources": "string[] (optional) — resource article paths this page informs"
+    }
+  }
+}

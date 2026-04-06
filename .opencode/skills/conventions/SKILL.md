@@ -50,7 +50,7 @@ Plain imperative sentence describing what changed.
 **Journal repo:**
 ```
 add address-review command
-fix stale link in knowledge-graph
+fix stale link in resources article
 update context.md with new project
 add weekly note for W14
 ```

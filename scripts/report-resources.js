@@ -15,7 +15,6 @@
 import { readFileSync } from "node:fs";
 import { resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { listResourceFiles } from "./lib/graph.js";
 import { getFrontmatterField, stripFrontmatter } from "./lib/frontmatter.js";
 import { findMdFiles, extractLinks, resolveLink, findBacklinks } from "./lib/links.js";
 
@@ -38,7 +37,7 @@ if (!VALID_SORTS.includes(sortBy)) {
   process.exit(0);
 }
 
-const resourceFiles = listResourceFiles(RESOURCES_ROOT);
+const resourceFiles = findMdFiles(RESOURCES_ROOT);
 
 // Gather data
 const rows = [];

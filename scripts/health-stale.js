@@ -18,7 +18,7 @@
 import { readFileSync } from "node:fs";
 import { resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { listResourceFiles } from "./lib/graph.js";
+import { findMdFiles } from "./lib/links.js";
 import { getFrontmatterField } from "./lib/frontmatter.js";
 
 const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
@@ -38,7 +38,7 @@ for (let i = 0; i < args.length; i++) {
 const now = Date.now();
 const thresholdMs = days * 24 * 60 * 60 * 1000;
 
-const resourceFiles = listResourceFiles(RESOURCES_ROOT);
+const resourceFiles = findMdFiles(RESOURCES_ROOT);
 let staleCount = 0;
 
 for (const f of resourceFiles) {

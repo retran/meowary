@@ -1,6 +1,6 @@
 ---
 type: meta
-updated: 2026-04-02
+updated: 2026-04-07
 tags: []
 ---
 
@@ -28,13 +28,13 @@ To match the high-agency, autonomous capabilities of advanced models (like Claud
    - **Mechanism:** Always preemptively supply non-interactive flags.
 
 3. **Environment Rigor (Context Awareness):**
-   - **Rule:** Assume a headless CI environment where any prompt = failure.
+   - **Rule:** Assume a headless environment where any prompt = failure.
    - **Why:** There is no TTY. "Asking the user" via a shell prompt causes a hang.
    - **Mechanism:** Strictly avoid editors, pagers, and interactive modes.
 
 ## 1. Core Mandates
 
-1. **Assume `CI=true`**: Act as if running in a headless CI/CD pipeline.
+1. **Assume `CI=true`**: Shell-behavior-only flag — not an environment fact. The host is macOS, not a CI runner. This flag suppresses interactive prompts in tools that check for it; it does not mean you are running in CI.
 2. **No Editors/Pagers**: `vim`, `nano`, `less`, `more`, `man` are BANNED.
 3. **Force & Yes**: Always preemptively supply "yes" or "force" flags.
 4. **Use Tools**: Prefer `Read`/`Write`/`Edit` tools over shell manipulation (`sed`, `echo`, `cat`).
@@ -46,8 +46,7 @@ These environment variables help prevent interactive prompts:
 
 | Variable | Value | Purpose |
 |----------|-------|---------|
-| `CI` | `true` | General CI detection |
-| `DEBIAN_FRONTEND` | `noninteractive` | Apt/dpkg prompts |
+| `CI` | `true` | Shell-behavior-only — suppresses interactive prompts in tools that check for it; host is macOS, not CI |
 | `GIT_TERMINAL_PROMPT` | `0` | Git auth prompts |
 | `GIT_EDITOR` | `true` | Block git editor |
 | `GIT_PAGER` | `cat` | Disable git pager |

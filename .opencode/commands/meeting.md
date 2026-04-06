@@ -23,7 +23,7 @@ Arguments: `/meeting [project-slug]`
    - Waiting items → append to `## Active` in `waiting-for.md`.
    - Project tasks → add to `projects/<slug>/README.md` Open Tasks.
 6. Cross-link to daily note: add entry to today's `## Day > ### Events` with a relative link and one-line summary.
-7. Resources scan: if durable facts were learned (team changes, role updates, process decisions, architecture choices), update relevant resource articles. Create stubs if needed. Update `knowledge-graph.md`.
+7. Resources scan: if durable facts were learned (team changes, role updates, process decisions, architecture choices), update relevant resource articles. Create stubs if needed. Update article `updated` front matter.
 8. Commit with a descriptive message (e.g. `Meeting: YYYY-MM-DD <title>`).
 
 $ARGUMENTS

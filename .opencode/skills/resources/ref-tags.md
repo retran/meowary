@@ -16,8 +16,8 @@ compatibility: opencode
 | *(none)* | Topics, domains, technologies | `#architecture` |
 
 - Lowercase kebab-case. No `#` prefix in front matter YAML.
-- `#` prefix in inline body text and in `knowledge-graph.md` / `confluence-map.md` columns (backtick-quoted).
+- `#` prefix in inline body text (backtick-quoted when used in tables).
 - Every article needs at least one tag.
 - Common pitfalls: `spam` instead of `t-spam`; unregistered tags.
 
-**Registering a new tag:** pick a lowercase kebab-case name, add a row to the correct table in `tags.md` with tag, link, and description, then use it in the article's front matter and `knowledge-graph.md`.
+**Registering a new tag:** pick a lowercase kebab-case name, add a row to the correct table in `tags.md` with tag, link, and description, then use it in the article's front matter.

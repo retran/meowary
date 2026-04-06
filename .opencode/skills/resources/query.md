@@ -21,7 +21,7 @@ Run the QMD semantic search across all configured collections:
 qmd query "<question>"
 ```
 
-If `qmd` is not installed, run `node scripts/qmd-index.js` first for installation instructions. As a fallback, search `resources/`, `journal/`, `inbox/`, `projects/`, `areas/`, `drafts/`, `archive/`, and root-level meta files (e.g. `context.md`, `knowledge-graph.md`, `tags.md`) for key terms manually.
+If `qmd` is not installed, run `node scripts/qmd-index.js` first for installation instructions. As a fallback, search `resources/`, `journal/`, `inbox/`, `projects/`, `areas/`, `drafts/`, `archive/`, and root-level meta files (e.g. `context.md`, `tags.md`) for key terms manually.
 
 QMD returns a ranked list of matching passages with their source files.
 
@@ -68,12 +68,11 @@ If Step 4 says to file, create `resources/synthesis/<slug>.md` following the `sy
    - `## Question` — the original question verbatim.
    - `## Synthesis` — the synthesized answer with inline citations.
    - `## Sources` — list every source file used with a brief note on what it contributed.
-4. Add a row to `knowledge-graph.md`.
-5. Register any new tags in `tags.md`.
-6. Add back-links from the most relevant source articles (`## Related` section).
-7. Run `node scripts/qmd-index.js` to index the new file.
-8. Commit: `Resources: synthesis — <slug>`
-9. Append to `resources-log.md`:
+4. Register any new tags in `tags.md`.
+5. Add back-links from the most relevant source articles (`## Related` section).
+6. Run `node scripts/qmd-index.js` to index the new file.
+7. Commit: `Resources: synthesis — <slug>`
+8. Append to `resources-log.md`:
    ```
    - **YYYY-MM-DD:** synthesis | <slug> — filed from question: "<question>"
    ```

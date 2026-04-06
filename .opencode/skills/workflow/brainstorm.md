@@ -29,13 +29,13 @@ Explore a problem before committing to a solution. Produce a spec artifact with 
 **Document mode:**
 1. Load the `writing` skill for style and formatting rules
 2. If the document relates to a codebase, load that codebase's architecture context
-3. Check `knowledge-graph.md` for related resource articles
+3. Search `resources/` (use `qmd query "<topic>"`) for related resource articles
 
 ### Step 1: Understand the Problem
 
 1. Clarify the user's request. Ask questions if ambiguous.
 2. Identify the project. If unclear, ask: "Which project is this for?"
-3. **Search for existing work:** Load the `jira` skill to search for related issues, epics, or prior decisions. Check `knowledge-graph.md` (document mode) or codebase (code mode) for relevant material.
+3. **Search for existing work:** Load the `jira` skill to search for related issues, epics, or prior decisions. Search `resources/` (use `qmd query`) in document mode, or codebase in code mode, for relevant material.
 4. Check for existing specs or plans that might overlap.
 
 ### Claim Provenance

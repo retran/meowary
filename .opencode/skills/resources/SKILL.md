@@ -1,6 +1,6 @@
 ---
 name: resources
-description: Maintain and actualize resources — single-article enrichment, batch Confluence map sync, graph review and operation planning, and structural operations (create, delete, merge, split, reclassify)
+description: Maintain and actualize resources — single-article enrichment, Confluence sync, graph review and operation planning, and structural operations (create, delete, merge, split, reclassify)
 compatibility: opencode
 ---
 
@@ -26,7 +26,7 @@ Load these alongside `resources` when their domain is involved:
 
 | Domain | Skill |
 |--------|-------|
-| Fetching Confluence pages, recording in confluence-map, write to Confluence with approval | `confluence` |
+| Fetching Confluence pages, tracking in `confluence-sync.json`, write to Confluence with approval | `confluence` |
 | Searching Jira issues, extracting facts for resource articles, write to Jira with approval | `jira` |
 
 Workflow D (structural operations: delete, merge, split, create, reclassify) is defined in [operations.md](operations.md) — load it when executing any structural operation.
@@ -57,7 +57,7 @@ During every session — regardless of primary task — scan for resource gaps. 
 | Discussion or document mentions an architectural decision | Update the relevant architecture resource or create an ADR |
 | Work session produces component ownership facts or technical knowledge | Capture in the appropriate domain resource article |
 | A concept, tool, process, or system is mentioned with no resource article | Create a new resource article (not a stub — real content) |
-| Confluence page is referenced that's not in `confluence-map.md` | Fetch, record in confluence-map, extract durable facts to resources |
+| Confluence page is referenced that's not in `confluence-sync.json` | Add to `confluence-sync.json`; fetch and extract durable facts to resources |
 | Jira issue reveals current state contradicting a resource article | Update the resource article with current facts |
 | Daily/weekly note log entry contains durable facts | Extract to the relevant resource article |
 
@@ -68,9 +68,8 @@ During every session — regardless of primary task — scan for resource gaps. 
 ## References
 
 - **Tags** — naming conventions, prefixes, registration procedure: load [ref-tags.md](ref-tags.md).
-- **Resources Map** — row format and update rules for `knowledge-graph.md`: load [ref-knowledge-graph.md](ref-knowledge-graph.md).
 - **Sources** — `## Sources` section format per source type: load [ref-sources.md](ref-sources.md).
-- **Confluence Map** — format and update rules for `confluence-map.md`: load the `confluence` skill.
+- **Confluence tracking** — `confluence-sync.json` format and article `confluence:` frontmatter: load the `confluence` skill.
 - **Searching resources** — ripgrep patterns for inbound links, concept search, tag listing: load [ref-search.md](ref-search.md).
 - **Maintenance procedures** — triggers, fetch/record protocol, transformation rules, graph health: load [ref-maintenance.md](ref-maintenance.md).
 

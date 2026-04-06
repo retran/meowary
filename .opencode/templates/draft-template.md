@@ -4,6 +4,7 @@ target: "{{TARGET}}"
 status: draft
 updated: {{DATE}}
 tags: []
+confluence: []
 ---
 
 # {{TITLE}}

@@ -145,7 +145,7 @@ After creating the meeting file:
 2. Tag the daily note entry with relevant `#p-` and `#person-` tags.
 3. Route action items per the table above.
 4. If durable facts were learned (team changes, role updates, process decisions, architecture choices), update the relevant resource articles. Create stubs if needed.
-5. Update `knowledge-graph.md` if a new resource article was created or an existing one was updated.
+5. If a new resource article was created or an existing one was updated, ensure its `updated` and `tags` front matter are current.
 
 ---
 
@@ -159,4 +159,4 @@ After creating the meeting file:
 - [ ] Action items are checkboxes with `#person-` tags and routing intent marked?
 - [ ] Action items routed to daily note inbox / waiting-for / project tasks?
 - [ ] Daily note cross-linked (entry in `### Events`)?
-- [ ] `knowledge-graph.md` updated if resources were touched?
+- [ ] Resource articles updated (front matter `updated` + `tags` current) if resources were touched?

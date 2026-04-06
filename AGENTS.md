@@ -2,7 +2,7 @@
 
 This repository is a personal work journal managed as a collection of Markdown files with supporting shell and Python scripts for automation. All content is plain Markdown; scripts in `scripts/` handle batch operations like Confluence sync and resource link auditing. The agent also operates as a **workflow agent** — structured workflows (brainstorm, plan, implement, review, debug) produce specs and plans in the journal while writing code or documents.
 
-This journal functions as a **second brain for a software developer**. It externalizes working memory — decisions, context, relationships, technical knowledge — so nothing is lost between sessions, meetings, or projects. The structure follows **PARA** (Projects, Areas, Resources, Archive): time-sensitive work in projects, ongoing responsibilities in areas, durable reference knowledge in resources, and completed items in archive. Daily and weekly notes capture the ephemeral; resources capture the permanent. A **knowledge graph** (`knowledge-graph.md`) indexes all resource articles by topic, person, team, and project — use it to discover connections and find relevant context before writing. The system uses **progressive disclosure**: AGENTS.md provides the rules, skills provide workflows, and context files provide project-specific details — load only what the current task requires. The agent's job is to help maintain this system — capture information accurately, connect it to existing knowledge, and surface it when relevant.
+This journal functions as a **second brain for a software developer**. It externalizes working memory — decisions, context, relationships, technical knowledge — so nothing is lost between sessions, meetings, or projects. The structure follows **PARA** (Projects, Areas, Resources, Archive): time-sensitive work in projects, ongoing responsibilities in areas, durable reference knowledge in resources, and completed items in archive. Daily and weekly notes capture the ephemeral; resources capture the permanent. The system uses **progressive disclosure**: AGENTS.md provides the rules, skills provide workflows, and context files provide project-specific details — load only what the current task requires. The agent's job is to help maintain this system — capture information accurately, connect it to existing knowledge, and surface it when relevant.
 
 ## Author & Context
 
@@ -18,9 +18,11 @@ Author identity, team, tooling, and other instance-specific details live in [`co
 
 Read `context.md` (author identity, team, active projects, tooling). Skip if already loaded this session.
 
+Run `/check-env` if a CLI tool fails unexpectedly, after updating Node.js, or after installing a new tool.
+
 ### Tier 1 — when the task involves writing, resources, people, teams, or projects
 
-Scan `knowledge-graph.md`. Identify articles relevant to the task by topic, team, person, or project tag.
+Search `resources/` with `qmd query "<topic>"` or browse the directory tree to identify articles relevant to the task by topic, team, person, or project tag.
 
 ### Tier 2 — on demand
 
@@ -82,8 +84,7 @@ Five files at repo root describe the author's external development environment. 
 │   └── scratch.md             # Running scratch pad for quick links, ideas, snippets
 ├── context.md                 # Author identity, team, active projects, tooling
 ├── tags.md                    # All tags registered here
-├── knowledge-graph.md         # Resource index — topics, people, teams, projects
-├── confluence-map.md          # Confluence page index + summaries
+├── confluence-sync.json       # Confluence page monitoring registry (page IDs + sync dates)
 ├── resources-log.md           # Append-only log of resource operations (ingest, sync, enrich)
 ├── qmd.yml                    # QMD index config for semantic search over resources
 ├── recurring-events.md        # Standing meetings and recurring events
@@ -132,6 +133,16 @@ QMD provides semantic search across the journal. Used by `/ask` and the `r-inges
 - Query: `qmd query "<question>"` — returns cited snippets across all 8 collections
 - Re-index after: any bulk create/actualize operation, any `/r-ingest` run, any `/r-sync` run
 
+**Search mode routing:**
+
+| Mode | Command | Use when |
+|------|---------|----------|
+| Hybrid (default) | `qmd query "<text>"` | Natural-language questions, general knowledge retrieval |
+| Keyword/BM25 | `qmd search "<text>"` | Exact-match queries: error codes, IDs, version strings, proper nouns |
+| Vector only | `qmd vsearch "<text>"` | Semantic similarity without keyword anchoring |
+
+Use `qmd query` by default. Switch to `qmd search` when the query contains specific identifiers, error codes, or version strings that must appear verbatim.
+
 ### Scripts — `scripts/`
 
 Automation scripts for health checks, Confluence sync, and resource operations.
@@ -139,8 +150,19 @@ Automation scripts for health checks, Confluence sync, and resource operations.
 - Language: JavaScript (ESM). `scripts/package.json` has `"type": "module"`.
 - Run from repo root: `node scripts/<name>.js [args]`
 - No build step, no TypeScript. Run directly with Node.js.
-- Shared utilities: `scripts/lib/` (`links.js`, `frontmatter.js`, `graph.js`)
-- Scripts are read-only (stdout only) except: `fix-links.js`, `confluence-backfill-dates.js`, `run-operation.js`, `plan-resources.js`, `migrate-daily-notes.js`.
+- Shared utilities: `scripts/lib/` (`links.js`, `frontmatter.js`, `confluence.js`, `sync.js`)
+- Scripts are read-only (stdout only) except: `fix-links.js`, `run-operation.js`, `plan-resources.js`, `migrate-daily-notes.js`, `confluence-ingest.js` (writes `confluence-sync.json`).
+
+**Confluence ingestion workflow:**
+
+| Step | Script | Purpose |
+|------|--------|---------|
+| 1. Discover | `node scripts/confluence-missing.js [SPACE...]` | Find pages in a space not yet in `confluence-sync.json` |
+| 2. Track | Edit `confluence-sync.json` | Add new page IDs with `synced: null`; set `resources` hints if known |
+| 3. Check freshness | `node scripts/confluence-updates.js YYYY-MM-DD [SPACE...]` | Show tracked pages updated since that date; flag stale ones |
+| 4. Ingest | `node scripts/confluence-ingest.js` | For each stale page: run OpenCode to update resource articles, then set `synced` to today |
+
+Resource articles are topic-based knowledge nodes — not copies of Confluence pages. A single Confluence page may inform many articles; a single article may draw from many pages.
 
 ## YAML Front Matter
 
@@ -184,7 +206,6 @@ For format details on each content type, load the referenced skill. Do not start
 | Unprocessed captures and raw notes | `inbox/` |
 | Quick links, ideas, snippets (not yet promoted) | `inbox/scratch.md` |
 | Content for external audiences (blog posts, Confluence drafts, proposals) | `drafts/` |
-| Confluence page index + summaries | `confluence-map.md` |
 | Jira issue details | Jira (link from daily note; don't duplicate) |
 
 ### Proactive Resources Enrichment
@@ -216,6 +237,7 @@ During every session — regardless of primary task — scan for resource gaps. 
 8. **Status values** for projects: `Active`, `Paused`, or `Done`.
 9. **Commits** should be descriptive (e.g. "Add daily note for 2026-02-25", "Update Project Alpha tasks").
 10. **Never write to Jira or Confluence without explicit user approval.** Default posture is read-only. Before any write operation, ask: "Should I write this to [Jira/Confluence]?" Proceed only if the user explicitly says yes.
+11. **Use relative Markdown links** — `[text](../path/file.md)` — not Wikilinks (`[[file]]`). Relative links work in both Obsidian and standard Markdown renderers and are required for cross-repo portability.
 
 ## Skill Dispatch
 

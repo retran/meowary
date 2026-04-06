@@ -19,7 +19,7 @@ Arguments: `/evening`
 5. Fill `## Evening > ### Insights → Resources`:
    - Scan today's Day > Inbox, Day > Events, and Day > Waiting for durable facts.
    - For each: check if a resource article exists. If yes, update it. If no, create a stub or flag for creation.
-   - After writing to a resource article, update `knowledge-graph.md`: add the article if new, or update its `actualized` date and tags if existing.
+   - After writing to a resource article, update the article's `updated` and `tags` front matter fields.
    - Record each promotion: `- Wrote X to [resources/domain/article.md](../resources/domain/article.md)`.
    - If nothing to promote, write: `nothing to promote today.` Do not leave blank.
 6. Append Day > Waiting items to `waiting-for.md` (journal root):

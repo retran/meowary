@@ -2,6 +2,7 @@
 type: log
 updated: YYYY-MM-DD
 tags: [p-<project>]
+confluence: []
 ---
 
 # Debug Log

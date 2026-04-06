@@ -3,8 +3,8 @@
  * confluence-updates.js
  *
  * Fetches all Confluence pages modified on or after a given date across one or
- * more spaces, and cross-references with confluence-map.md to show which local
- * map entries need to be re-read.
+ * more spaces, and cross-references with confluence-sync.json to show which
+ * tracked pages are stale (Confluence updated more recently than last synced).
  *
  * Usage:
  *   node scripts/confluence-updates.js YYYY-MM-DD [SPACE1 SPACE2 ...]
@@ -16,11 +16,11 @@
 import {
   CONFLUENCE_BASE,
   CONFLUENCE_DEFAULT_SPACES,
-  MAP_FILE,
+  REPO_ROOT,
   authHeader,
-  loadMapIds,
   requireAtlassianCredentials,
 } from "./config.js";
+import { loadSyncConfig } from "./lib/sync.js";
 
 const PAGE_SIZE = 50;
 
@@ -45,26 +45,27 @@ async function main() {
     return;
   }
 
-  const { ids, inMap } = loadMapIds(MAP_FILE);
+  const syncEntries = loadSyncConfig(REPO_ROOT);
+  const trackedIds = new Set(Object.keys(syncEntries));
   const spaceList = spaces.map((s) => `"${s}"`).join(", ");
   const cql = `space in (${spaceList}) AND type=page AND lastModified>='${since}'`;
 
-  console.log(`Map contains ${ids.length} page IDs.`);
+  console.log(`Tracking ${trackedIds.size} pages in confluence-sync.json.`);
   console.log(`Spaces to scan: ${spaces.join(" ")}`);
   console.log(`Fetching pages modified on or after ${since}...`);
   console.log();
 
   console.log(
-    `${"PAGE ID".padEnd(14)} ${"MODIFIED".padEnd(12)} ${"IN MAP".padEnd(8)}  TITLE`
+    `${"PAGE ID".padEnd(14)} ${"MODIFIED".padEnd(12)} ${"SYNCED".padEnd(12)} ${"STALE".padEnd(6)}  TITLE`
   );
   console.log(
-    `${"---------".padEnd(14)} ${"----------".padEnd(12)} ${"------".padEnd(8)}  -----`
+    `${"---------".padEnd(14)} ${"----------".padEnd(12)} ${"----------".padEnd(12)} ${"-----".padEnd(6)}  -----`
   );
 
   let start = 0;
   let totalFetched = 0;
-  let inMapCount = 0;
-  let notInMapCount = 0;
+  let trackedCount = 0;
+  let staleCount = 0;
 
   while (true) {
     const params = new URLSearchParams({
@@ -99,16 +100,20 @@ async function main() {
     for (const r of results) {
       if (r.id.startsWith("att")) continue;
 
-      const when = r.version?.when ?? "";
-      const date = when ? when.slice(0, 10) : "\u2014";
+      const apiDate = r.version?.when ? r.version.when.slice(0, 10) : "\u2014";
       const title = r.title.replace(/\t/g, " ");
-      const status = inMap.has(r.id) ? "YES" : "NO";
+      const entry = syncEntries[r.id];
+      const synced = entry?.synced ?? "\u2014";
+      const isTracked = trackedIds.has(r.id);
+      const isStale = isTracked && entry?.synced && apiDate > entry.synced;
 
-      if (status === "YES") inMapCount++;
-      else notInMapCount++;
+      if (isTracked) trackedCount++;
+      if (isStale) staleCount++;
+
+      const staleFlag = !isTracked ? "—" : isStale ? "YES" : "no";
 
       console.log(
-        `${r.id.padEnd(14)} ${date.padEnd(12)} ${status.padEnd(8)}  ${title}`
+        `${r.id.padEnd(14)} ${apiDate.padEnd(12)} ${String(synced).padEnd(12)} ${staleFlag.padEnd(6)}  ${title}`
       );
       totalFetched++;
     }
@@ -121,8 +126,12 @@ async function main() {
   console.log("--- Summary ---");
   console.log(`Spaces scanned                   : ${spaces.join(" ")}`);
   console.log(`Total pages modified since ${since} : ${totalFetched}`);
-  console.log(`In confluence-map.md             : ${inMapCount}`);
-  console.log(`Not in confluence-map.md         : ${notInMapCount}`);
+  console.log(`Tracked in confluence-sync.json  : ${trackedCount}`);
+  console.log(`Stale (Confluence newer)         : ${staleCount}`);
+  console.log();
+  if (staleCount > 0) {
+    console.log(`Run: node scripts/confluence-ingest.js   — to ingest stale pages`);
+  }
 }
 
 main().catch((err) => console.error(`Unexpected error: ${err.message}`));

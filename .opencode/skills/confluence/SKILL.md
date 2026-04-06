@@ -1,6 +1,6 @@
 ---
 name: confluence
-description: Read Confluence pages and maintain the local confluence map — search, fetch, record, and transform pages into resource source material
+description: Read Confluence pages and maintain Confluence tracking — search, fetch, record in sync registry and article frontmatter, transform pages into resource source material
 compatibility: opencode
 ---
 
@@ -27,17 +27,17 @@ confluence init
 
 **Never create, edit, or delete Confluence pages without explicit user approval.**
 
-Default posture is read-only. Before any write operation, stop and ask: "Should I write this to Confluence?" Proceed only if the user explicitly says yes. When in doubt, describe the change and provide the text — let the user apply it.
+Default posture is read-only. Before any write operation, stop and ask: "Should I write this to Confluence?" Proceed only if the user explicitly says yes.
 
-`CONFLUENCE_READ_ONLY=true` enforces this at the CLI level — all write commands exit with an error until the user sets it to `false`.
+`CONFLUENCE_READ_ONLY=true` enforces this at the CLI level.
 
 ## Fetching Pages
 
 ### Before fetching
 
-1. Check `confluence-map.md` for an existing row. If the Summary is sufficient for the task, do not re-fetch.
-2. If the row exists but the page may have changed since `Last Modified`, re-fetch.
-3. If no row exists, fetch.
+1. Check the article's `confluence:` front matter for existing page IDs. If the article already cites the page and the content is sufficient, do not re-fetch.
+2. Check `confluence-sync.json` for the page's last `synced` date. If synced recently, the local content may still be current.
+3. If neither check is sufficient, fetch.
 
 ### How to fetch
 
@@ -82,32 +82,41 @@ confluence spaces
 
 Use at least two strategies before concluding a page does not exist.
 
-## Recording Pages in `confluence-map.md`
+## Recording Pages
 
-After fetching a page, add or update a row.
+After fetching a page, record it in two places:
 
-**Row format:**
+### 1. Article `confluence:` front matter (provenance)
 
+Add the page ID to the `confluence:` list in any resource article the page informed:
+
+```yaml
+confluence: [123456789]
 ```
-| PAGE_ID | [Title](<confluence-url>/spaces/SPACE/pages/PAGE_ID) | PARENT | LAST_MODIFIED | Summary. | `#tag1` `#tag2` |
+
+This records which pages contributed facts to this article. One article may cite many pages; one page may inform many articles.
+
+### 2. `confluence-sync.json` (monitoring registry)
+
+Add the page to the monitoring registry if you want to be notified when it changes:
+
+```json
+"PAGE_ID": {
+  "title": "Page Title",
+  "space": "SPACE_KEY",
+  "synced": "YYYY-MM-DD",
+  "resources": ["resources/domain/article.md"]
+}
 ```
 
-| Column | Content |
-|--------|---------|
-| Page ID | Confluence numeric page ID |
-| Title | Exact page title, linked to Confluence URL |
-| Parent | Parent page ID, or `root` for top-level pages |
-| Last Modified | Date from `confluence info`, or `—` if unknown |
-| Summary | 1–3 sentences. Name decisions, numbers, components. No filler. |
-| Tags | Backtick-quoted tags from `tags.md`. At least one. |
+| Field | Content |
+|-------|---------|
+| `title` | Exact Confluence page title |
+| `space` | Space key (e.g. `ENG`, `TEAM`) |
+| `synced` | Date we last ingested this page into resource articles (`YYYY-MM-DD`), or `null` |
+| `resources` | Optional hint list of resource article paths this page informs |
 
-**Section:** Place the row under `## Space: <SpaceKey>`. Create the section if it does not exist.
-
-**Tag rules:**
-- Use team tag for team-specific pages.
-- Use topic tags for content covering a specific product area.
-- Both can coexist.
-- Do not create new tags without registering in `tags.md`.
+Not every fetched page needs to be in `confluence-sync.json` — only pages worth monitoring for changes. Use `node scripts/confluence-missing.js` to discover untracked pages in a space, and `node scripts/confluence-updates.js YYYY-MM-DD` to check which tracked pages have changed since a given date.
 
 ## Transforming Pages into Resource Source Material
 
@@ -119,7 +128,7 @@ Confluence pages are raw material. Resource articles are refined output.
 
 **One page → multiple articles:** Split when the page covers distinct topics belonging in different resource folders. Each article links to the other.
 
-**Multiple pages → one article:** Merge when several pages describe aspects of one topic. Track all source page IDs in `confluence-map.md`.
+**Multiple pages → one article:** Merge when several pages describe aspects of one topic. Track all source page IDs in the article's `confluence:` front matter.
 
 **Source attribution:** Each resource article's `## Sources` section lists every Confluence page used:
 
@@ -131,20 +140,18 @@ Confluence pages are raw material. Resource articles are refined output.
 
 When the user explicitly approves a write, first ensure `CONFLUENCE_READ_ONLY=false` or unset.
 
-- **Create:** `confluence create "Title" SPACEKEY --file content.md --format markdown` — confirm space key, title, and content before running.
+- **Create:** `confluence create "Title" SPACEKEY --file content.md --format markdown`
 - **Create child:** `confluence create-child "Title" PARENT_PAGE_ID --file content.md --format markdown`
-- **Update:** `confluence update PAGE_ID --file content.md --format markdown` — show the diff or full new content to the user first. Title-only: `confluence update PAGE_ID --title "New Title"`.
-- **Delete:** `confluence delete PAGE_ID --yes` — confirm the page ID and title before running. Irreversible — double-check.
+- **Update:** `confluence update PAGE_ID --file content.md --format markdown` — show full new content to user first.
+- **Delete:** `confluence delete PAGE_ID --yes` — confirm page ID and title. Irreversible.
 - **Move:** `confluence move PAGE_ID NEW_PARENT_ID` — same space only.
 
-After any write, update `confluence-map.md` to reflect the change.
+After any write, update `confluence-sync.json` to reflect the change.
 
 ## Rules
 
-- **Read-only by default.** Ask before any write. `CONFLUENCE_READ_ONLY=true` enforces this at CLI level.
-- **Check the map first.** Do not re-fetch a page whose Summary is sufficient.
-- **Summary quality.** State facts directly — no "this page describes". Name decisions, numbers, components.
-- **At least one tag per row.** Use registered tags from `tags.md` only.
-- **Update the map after every fetch.** Missing rows lead to duplicate fetches.
+- **Read-only by default.** Ask before any write.
+- **Check frontmatter and sync.json first.** Do not re-fetch a page whose content is sufficient.
 - **Distill, don't copy.** Extract durable facts. Discard ephemeral content.
+- **Record provenance.** Add page IDs to `confluence:` front matter whenever you extract facts.
 - **URL reads:** `confluence read` only accepts page IDs or URLs with a `pageId` query param — not display/pretty URLs.

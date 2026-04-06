@@ -8,14 +8,13 @@
  *   ATLASSIAN_USERNAME, ATLASSIAN_API_TOKEN
  *   CONFLUENCE_BASE        — Confluence REST API base URL
  *   CONFLUENCE_DEFAULT_SPACES — array of default spaces to scan
- *   SCRIPTS_DIR, JOURNAL_DIR, REPO_ROOT, MAP_FILE
- *   loadMapIds()           — parse confluence-map.md for page IDs
+ *   SCRIPTS_DIR, JOURNAL_DIR, REPO_ROOT
  *   authHeader()           — Basic auth header value
  *   requireAtlassianCredentials() — validate credentials, exit 1 if missing
  */
 
 import { config } from "dotenv";
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
@@ -25,7 +24,6 @@ export const JOURNAL_DIR = resolve(SCRIPTS_DIR, "..");
 /** Alias for JOURNAL_DIR — the repo root. Derived from import.meta.url so scripts
  *  work regardless of the working directory they are invoked from. */
 export const REPO_ROOT = JOURNAL_DIR;
-export const MAP_FILE = resolve(JOURNAL_DIR, "confluence-map.md");
 
 // Load .env from repo root (preferred)
 const envFile = resolve(JOURNAL_DIR, ".env");
@@ -45,22 +43,6 @@ export const CONFLUENCE_BASE = process.env.CONFLUENCE_URL ?? "";
 export const CONFLUENCE_DEFAULT_SPACES = (process.env.CONFLUENCE_SPACES ?? "")
   .split(/\s+/)
   .filter(Boolean);
-
-/**
- * Parse confluence-map.md and return a Set of page IDs and an array of IDs.
- */
-export function loadMapIds(mapFile = MAP_FILE) {
-  const content = readFileSync(mapFile, "utf-8");
-  const idRegex = /^\| (\d{7,}) \|/gm;
-  const ids = [];
-  const inMap = new Set();
-  let match;
-  while ((match = idRegex.exec(content)) !== null) {
-    ids.push(match[1]);
-    inMap.add(match[1]);
-  }
-  return { ids, inMap };
-}
 
 /**
  * Build the Basic auth header value for Confluence REST API calls.
