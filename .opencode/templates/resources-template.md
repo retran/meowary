@@ -2,7 +2,8 @@
 type: resource
 aliases: []
 tags: [{{TAGS}}]
-status: current
+# status: stub (thin, just created) | current (substantive, maintained) | outdated (needs update) | archived | synthesis
+status: stub
 updated: {{DATE}}
 actualized: ""
 confluence: []

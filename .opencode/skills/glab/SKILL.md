@@ -185,7 +185,7 @@ wt switch mr:123           # Check out the branch locally (see worktrunk skill)
 
 ### Fix MR review comments
 
-See the `glab/address-review` sub-skill (`.opencode/skills/glab/address-review.md`) for a structured workflow to address unresolved MR discussion threads.
+Load the `address-review` skill (`.opencode/skills/address-review/SKILL.md`) for a structured workflow to address unresolved MR discussion threads. The skill also covers GitHub PRs and paste/local modes.
 
 ---
 

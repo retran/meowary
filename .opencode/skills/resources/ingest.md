@@ -13,6 +13,21 @@ compatibility: opencode
 
 **Output:** One or more new or updated resource articles, semantic index rebuilt, log entry in `resources-log.md`.
 
+### Step 0: Decide Whether to Write a Source Note
+
+Before fetching, classify the source:
+
+**Narrative source** (article, book chapter, blog post, talk, video, podcast — content that argues or explains): write a source note first.
+
+1. Create `inbox/<source-slug>.md` from the source-note template.
+2. Fill `## What it argues` — 3–10 bullets summarizing what the source claims, in your own words. Not quotes.
+3. Fill `## Candidate topics` — list concepts that should become or update resource articles.
+4. Leave `processed: false`.
+
+Then proceed to Step 1. Use the source note's `## Candidate topics` to drive concept identification in Step 2.
+
+**Reference document** (API spec, Confluence architecture page, changelog, data dictionary — structured reference content): skip this step and go directly to Step 1.
+
 ### Step 1: Fetch and Read the Source
 
 **If the input is a URL:**

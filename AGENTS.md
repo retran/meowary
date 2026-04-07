@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This repository is a personal work journal managed as a collection of Markdown files with supporting shell and Python scripts for automation. All content is plain Markdown; scripts in `scripts/` handle batch operations like Confluence sync and resource link auditing. The agent also operates as a **workflow agent** — structured workflows (brainstorm, plan, implement, review, debug) produce specs and plans in the journal while writing code or documents.
+This repository is a personal work journal managed as a collection of Markdown files with supporting shell scripts for automation. All content is plain Markdown; scripts in `scripts/` handle batch operations like Confluence sync and resource link auditing. The agent also operates as a **workflow agent** — structured workflows (brainstorm, plan, implement, review, debug) produce specs and plans in the journal while writing code or documents.
 
 This journal functions as a **second brain for a software developer**. It externalizes working memory — decisions, context, relationships, technical knowledge — so nothing is lost between sessions, meetings, or projects. The structure follows **PARA** (Projects, Areas, Resources, Archive): time-sensitive work in projects, ongoing responsibilities in areas, durable reference knowledge in resources, and completed items in archive. Daily and weekly notes capture the ephemeral; resources capture the permanent. The system uses **progressive disclosure**: AGENTS.md provides the rules, skills provide workflows, and context files provide project-specific details — load only what the current task requires. The agent's job is to help maintain this system — capture information accurately, connect it to existing knowledge, and surface it when relevant.
 
@@ -81,7 +81,8 @@ Five files at repo root describe the author's external development environment. 
 │   ├── areas/
 │   └── resources/
 ├── inbox/                     # Unprocessed captures — process or promote regularly
-│   └── scratch.md             # Running scratch pad for quick links, ideas, snippets
+│   ├── scratch.md             # Running scratch pad for quick links, ideas, snippets
+│   └── <slug>.md              # Source notes and other captures
 ├── context.md                 # Author identity, team, active projects, tooling
 ├── tags.md                    # All tags registered here
 ├── confluence-sync.json       # Confluence page monitoring registry (page IDs + sync dates)
@@ -187,7 +188,7 @@ For format details on each content type, load the referenced skill. Do not start
 | Meeting notes | `writing` + `.opencode/skills/writing/meeting.md` | `journal/meetings/YYYY-MM-DD-<slug>.md` — types: general, 1-1, standup, retro, kickoff |
 | Project dashboards | `project` | `projects/<slug>/README.md` |
 | Area dashboards | `project` + `.opencode/skills/writing/area.md` | `areas/<slug>/README.md` |
-| Resources | `resources` | `resources/<domain>/` — one topic per article |
+| Resources | `resources` | `resources/<domain>/` — knowledge graph: one topic per article, articles cross-linked, synthesis in `resources/synthesis/` |
 | ADRs | `writing` + `.opencode/skills/writing/adr.md` | Draft in `projects/<name>/`, not `resources/` |
 | Writing style & tags | `writing` | Plain language, active voice, tables over prose |
 
@@ -201,6 +202,7 @@ For format details on each content type, load the referenced skill. Do not start
 | Meeting action items (waiting on someone) | `waiting-for.md` |
 | Meeting action items (project tasks) | `projects/<name>/README.md` Open Tasks |
 | Persistent facts: person roles, team structure, process, architecture | `resources/` |
+| Notes about a specific source (book, article, talk, Confluence page) before promoting concepts to resources | `inbox/` (source note, `type: source-note`) |
 | Project tasks, status, dev log | `projects/<name>/README.md` |
 | Area tasks, focus, ongoing log | `areas/<name>/README.md` |
 | Unprocessed captures and raw notes | `inbox/` |
@@ -284,7 +286,7 @@ Sub-skills provide detailed instructions for specific tasks within a parent skil
 | `workflow/implement` | `.opencode/skills/workflow/implement.md` | `workflow` | Implement from an approved plan |
 | `workflow/review` | `.opencode/skills/workflow/review.md` | `workflow` | Review code changes or documents |
 | `workflow/debug` | `.opencode/skills/workflow/debug.md` | `workflow` | Debug a problem systematically |
-| `glab/address-review` | `.opencode/skills/glab/address-review.md` | `glab` | Address unresolved MR discussion threads — fetch, plan, fix, commit, push, resolve |
+| `address-review` | `.opencode/skills/address-review/SKILL.md` | _(standalone)_ | Address review comments — GitHub PRs, GitLab MRs, pasted text, or local changes |
 
 ### Trigger → Skill mapping
 
@@ -315,7 +317,7 @@ Sub-skills provide detailed instructions for specific tasks within a parent skil
 | Implementing from an approved plan | `workflow` + `.opencode/skills/workflow/implement.md` |
 | Reviewing code changes or documents | `workflow` + `.opencode/skills/workflow/review.md` |
 | Debugging a problem | `workflow` + `.opencode/skills/workflow/debug.md` |
-| Addressing unresolved MR review comments | `glab` + `.opencode/skills/glab/address-review.md` |
+| Addressing unresolved MR review comments | `.opencode/skills/address-review/SKILL.md` |
 | Working with production systems, credentials, or destructive operations | `security` |
 | Writing a commit message or MR/PR title | `conventions` |
 | `/pre-plan` — surface gray areas before planning | `workflow` |

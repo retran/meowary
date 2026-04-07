@@ -33,7 +33,7 @@ Workflow D (structural operations: delete, merge, split, create, reclassify) is 
 
 ## Resources Philosophy
 
-Resources form a **concept graph**, not a mirror of Confluence. Articles are nodes; cross-references are edges. The graph's structure is driven entirely by concepts — never by how Confluence happens to organize its pages.
+`resources/` is the **knowledge graph** — the permanent, evolving layer of the second brain. Articles are nodes; cross-references are edges. The graph grows and deepens over time: new articles are created as concepts emerge, existing articles are enriched as understanding develops, synthesis articles form where multiple nodes connect into an insight. There is no "finished" state — only more developed. The graph's structure is driven entirely by concepts — never by how Confluence happens to organize its pages.
 
 - **Concept-first structure.** Resource article boundaries are drawn around ideas, not around source pages. One Confluence page may feed three resource articles. Three Confluence pages may feed one. The Confluence hierarchy is irrelevant.
 - **One concept per article.** Two distinct concepts in one file? Split immediately. Two files covering the same concept? Merge without hesitation.
@@ -44,6 +44,9 @@ Resources form a **concept graph**, not a mirror of Confluence. Articles are nod
 - **Jira and codebase verify and enrich.** Confirm current state, add concrete details, remove stale claims.
 
 - **Synthesis articles are first-class nodes.** `resources/synthesis/` holds articles produced by Workflow G that answer recurring questions by compiling multiple sources. They have `status: synthesis` in front matter, cite all sources, and are cross-linked from the articles they draw on.
+- **Articles are living documents.** Every revisit should deepen an article, not just bump its timestamp. If re-reading adds no new facts, find one claim to sharpen, one implied link to make explicit, or one thin section to expand. An article that is touched should be meaningfully different afterward.
+- **Cross-links generate synthesis.** When two articles are linked, ask whether they together suggest an insight that neither expresses alone. If yes, flag it as a synthesis candidate in the article's `## Changelog`. The `resources/synthesis/` folder is for exactly this — but flag first, create synthesis articles only on a planning pass.
+- **Articles mature progressively.** New articles start thin; that is normal. Use `status: stub` for brand-new articles with minimal content; graduate to `status: current` as facts accumulate. Maturity is visible through link density and the `actualized` date — not a badge. The goal is a dense, well-connected graph, not a collection of polished standalone documents.
 
 ---
 

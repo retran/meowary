@@ -147,6 +147,26 @@ After enriching, apply layered distillation to make the article progressively mo
 - Layer 3 is optional — add it only when a genuine cross-cutting insight exists. Do not force connections.
 - Revisit layers on subsequent enrichments: update highlights if facts changed, refresh the summary if sections were rewritten.
 
+### Step 3c: Evolution Check
+
+Has this article grown substantively since it was last actualized? Compare the current content against the `actualized` date. If the only change would be a timestamp bump, make at least one real improvement before proceeding:
+
+- Sharpen a claim with more precise language or a concrete example.
+- Make an implied link explicit: text mentions a concept that has a resource article but no link.
+- Expand a thin section by one sentence of context or one concrete fact.
+
+An article that is touched should be meaningfully different afterward.
+
+### Step 3d: Synthesis Check
+
+After cross-referencing in Step 3b: do any two articles you just linked express ideas that together suggest an insight neither contains alone? If yes, append to `## Changelog`:
+
+```
+- **YYYY-MM-DD:** Synthesis candidate: [ArticleA](link) × [ArticleB](link) → <one sentence describing the cross-cutting insight>.
+```
+
+Do not create a synthesis article now. This flags the candidate for a future `/r-plan` pass, which reviews the graph and decides which candidates warrant a new synthesis article.
+
 ### Step 4: Remove Outdated Content
 
 - Remove facts contradicted by Confluence, Jira, or codebase.
