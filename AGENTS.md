@@ -114,3 +114,24 @@ Full rules: load `writing` skill. Non-negotiable constraints:
 1. **Never delete or overwrite past daily notes.** Append-only.
 2. **Maintain links.** Every link must point to an existing target. Update all inbound links when renaming, moving, or deleting files.
 3. **Never write to Jira or Confluence without explicit user approval.**
+
+## Security & GDPR
+
+These rules are non-negotiable in all sessions. Full detail: [`.opencode/reference/security-rules.md`](.opencode/reference/security-rules.md).
+
+**Security:**
+
+- Never mutate production systems without explicit user approval.
+- Never write secrets, tokens, or API keys into source files, commit messages, or log statements.
+- Never pass secrets as inline shell arguments — use environment variables.
+- Never add `sudo` to application code without flagging the user.
+- Never force-push to `main` or `master`.
+- Never bypass security controls (`--no-verify`, disabled hooks) without explicit approval.
+- Verify before any destructive operation (`rm -rf`, `DROP TABLE`, bulk updates) — show scope and confirm.
+
+**GDPR:**
+
+- Never commit PII (email addresses, phone numbers, home addresses) to git.
+- In resource articles and notes, use professional context only — name + role, not personal contact data.
+- Confirm before writing personal data beyond name + role to Confluence or Jira.
+- When ingesting Confluence/Jira content, strip personal contact info before storing in resources.

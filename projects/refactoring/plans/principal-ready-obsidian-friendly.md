@@ -11,7 +11,7 @@ tags: [p-refactoring]
 
 ## End State
 
-- `TRUE:` AGENTS.md instructions match verified codebase reality — no stale references to `confluence-map.md` or `knowledge-graph.md`. `shell_strategy.md` accurately describes macOS. `/archive` sets `status: archived` before moving. `/standup` produces two-dimensional output. qmd routing is documented.
+- `TRUE:` AGENTS.md instructions match verified codebase reality — no stale references to `confluence-map.md` or `knowledge-graph.md`. `/archive` sets `status: archived` before moving. `/standup` produces two-dimensional output. qmd routing is documented. (`shell_strategy.md` deleted as part of `security-gdpr-guards` — no longer relevant.)
 - `EXIST:` `/check-env` slash-command. `scripts/lib/confluence.js` with `loadConfluenceIds(repoRoot)`. `scripts/lib/confluence.test.js`.
 - `WIRED:` `confluence-updates.js` and `confluence-missing.js` use `lib/confluence.js`. `health-all.js` excludes `kg-coverage`. `ask.md` no longer references `knowledge-graph.md`. `run-operation.js` prompts no longer reference deleted global index files. All 10 templates contain `confluence: []` in YAML frontmatter.
 
@@ -28,14 +28,9 @@ tags: [p-refactoring]
 - **Changes:** Read each file first. Add `confluence: []` as a new frontmatter field (after `tags:` line). Do not change any other content.
 - **Verify:** Each file's frontmatter contains `confluence: []`.
 
-### Task 1.2 — Fix `shell_strategy.md`: remove macOS-irrelevant vars
+### Task 1.2 — ~~Fix `shell_strategy.md`: remove macOS-irrelevant vars~~ **OBSOLETE**
 
-- **Files:** `.opencode/plugin/shell-strategy/shell_strategy.md`
-- **Changes:**
-  - Remove `DEBIAN_FRONTEND: noninteractive` from the Environment Variables table and from section 2.
-  - Annotate `CI: true` — add inline note: `# shell-behavior-only, not an environment fact — macOS host`.
-  - Update `updated:` in frontmatter to today's date.
-- **Verify:** File no longer mentions `DEBIAN_FRONTEND`. `CI=true` has the annotation.
+> **Cancelled.** `.opencode/plugin/shell-strategy/shell_strategy.md` was deleted in full as part of the `security-gdpr-guards` refactor. The two security-relevant patterns were extracted to `.opencode/reference/security-rules.md` before deletion. No action required.
 
 ### Task 1.3 — Update `/standup`: two-dimensional output
 
