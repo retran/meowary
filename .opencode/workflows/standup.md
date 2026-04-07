@@ -15,7 +15,7 @@ Acts as a standup synthesiser. Reads available sources — dev-logs, daily note 
 
 | Input | Source | Required |
 |-------|--------|----------|
-| Active projects list | `context.md § Active Projects` | Required |
+| Active projects list | `context/context.md § Active Projects` | Required |
 | Project dev-logs | `projects/<name>/dev-log.md` | Required |
 | Today's daily note | `journal/daily/<date>.md` | Optional |
 | Waiting-for list | `journal/waiting-for.md` | Optional |
@@ -24,7 +24,7 @@ Acts as a standup synthesiser. Reads available sources — dev-logs, daily note 
 
 ### Step 0 — Load context
 
-1. Read `context.md` for active projects list. If absent or has no active projects: glob `projects/*/dev-log.md` and use those projects instead. Do not stop — standup is read-only and can proceed from dev-log alone.
+1. Read `context/context.md` for active projects list. If absent or has no active projects: glob `projects/*/dev-log.md` and use those projects instead. Do not stop — standup is read-only and can proceed from dev-log alone.
 2. Read today's daily note (`journal/daily/<YYYY-MM-DD>.md`) if it exists — Morning MITs and Day zone.
 3. Read the last entry of `dev-log.md` for each active project.
 

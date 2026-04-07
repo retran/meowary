@@ -118,7 +118,7 @@ Done when: root cause stated; classification made; user confirmed (Full).
 
 1. Implement the minimum fix that addresses the root cause.
 2. Fix causes, not symptoms. Do not refactor while fixing. (Refactoring conflates two changes and makes it impossible to isolate whether the fix or the refactor caused a subsequent issue.)
-3. Apply conventions from `patterns.md` and `style.md`.
+3.    Apply conventions from `codebases/<name>.md`.
 4. Verify the fix: confirm the original failure no longer reproduces.
 5. Add a regression test if one does not already exist. (Only skip with explicit user approval.)
 

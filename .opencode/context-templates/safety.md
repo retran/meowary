@@ -1,5 +1,7 @@
 ---
-updated: 2026-04-01
+path: context/safety.md
+updated: YYYY-MM-DD
+apply-when: [always — violations are Blockers regardless of task]
 ---
 
 # Safety Rules

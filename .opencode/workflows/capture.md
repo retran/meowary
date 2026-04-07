@@ -16,7 +16,7 @@ Acts as a zero-friction capture router. Takes raw input and routes it to the rig
 | Input | Source | Required |
 |-------|--------|----------|
 | Capture content | User invocation | Required |
-| Active projects list | `context.md § Active Projects` | Optional (for tagging) |
+| Active projects list | `context/context.md § Active Projects` | Optional (for tagging) |
 | Today's daily note | `journal/daily/<date>.md` | Required only if routing to Day > Inbox |
 
 ## Routing Decision
@@ -34,7 +34,7 @@ When in doubt, default to `inbox/` — it is persistent and cannot be lost.
 
 ### Step 0 — Load context (lightweight)
 
-1. Read `context.md` for active project names — for tagging and linking only.
+1. Read `context/context.md` for active project names — for tagging and linking only.
 2. Check whether today's daily note exists (`journal/daily/<YYYY-MM-DD>.md`) — needed only if routing to Day > Inbox.
 
 Do not load project dev-logs. `/capture` is fast.

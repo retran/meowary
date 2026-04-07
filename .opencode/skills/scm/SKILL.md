@@ -21,7 +21,7 @@ Load the appropriate subskill alongside this one for platform-specific commands:
 
 PR/MR titles and commits require a Jira issue key prefix. No Conventional Commits type prefix.
 
-Quick reference: `[PROJ-123] short description` — read `conventions.md` for the actual project key.
+Quick reference: `[PROJ-123] short description` — read `context/context.md` for the actual project key.
 
 If you don't have the Jira issue key, check the branch name or load the `jira` skill to find it.
 
@@ -31,7 +31,7 @@ If you don't have the Jira issue key, check the branch name or load the `jira` s
 
 | Skill | When to load |
 |-------|-------------|
-| Commit conventions | Any time you create a commit or PR/MR title — read `conventions.md` for the project key |
+| Commit conventions | Any time you create a commit or PR/MR title — read `context/context.md` for the project key |
 | `jira` | When you need the Jira issue key (search by branch name, sprint, or keyword) |
 | `worktrunk` | When checking out a PR/MR branch locally |
 
@@ -39,7 +39,7 @@ If you don't have the Jira issue key, check the branch name or load the `jira` s
 
 ## Rules
 
-- **PR/MR titles and commits must follow `[PROJ-123] description` format.** No Conventional Commits type prefix. Read `conventions.md` for the project key.
+- **PR/MR titles and commits must follow `[PROJ-123] description` format.** No Conventional Commits type prefix. Read `context/context.md` for the project key.
 - **Never force-push to `main` or `master`** without explicit user approval.
 - **Never delete remote branches** that have open MRs or PRs.
 - Use `pr view` / `mr view` and `issue view` to pull context into daily notes — summarise and link, do not copy verbatim.

@@ -33,7 +33,7 @@ The system has three layers:
 
 The agent dispatches workflows via slash commands. `/do <phase>` and `/r <operation>` are the two lifecycle routers; the others are direct dispatch.
 
-**Progressive disclosure** is the operating principle: AGENTS.md is always loaded; skills are loaded only when the task requires them; coding context files (`architecture.md`, `patterns.md`, etc.) are loaded only during coding work.
+**Progressive disclosure** is the operating principle: AGENTS.md is always loaded; skills are loaded only when the task requires them; coding context files in `context/` (`architecture.md`, `coding.md`, etc.) are auto-loaded every session via `opencode.json`.
 
 ## Daily workflow
 
@@ -164,7 +164,7 @@ Meowary's structure draws on four established methods:
 
 ## What the agent does
 
-The agent reads `AGENTS.md` for conventions and `context.md` for your personal details (filled in by `/bootstrap`). It operates in two modes at once.
+The agent reads `AGENTS.md` for conventions and `context/context.md` for your personal details (filled in by `/bootstrap`). It operates in two modes at once.
 
 **As a journal agent** it maintains the second brain:
 
@@ -265,7 +265,7 @@ Open the directory in [OpenCode](https://opencode.ai), then:
 
 | Command | What it does |
 |---------|-------------|
-| `/bootstrap` | Create or refresh `context.md` and coding context files — run once on first use, re-run when context changes |
+| `/bootstrap` | Create or refresh `context/context.md` and coding context files — run once on first use, re-run when context changes |
 | `/morning` | Set daily intent: Focus line, MITs, Calendar; includes weekly planning on Mondays |
 | `/evening` | Close the day: Completed, Carried/Dropped, promote insights to `resources/`, update `waiting-for.md`; includes weekly wrap-up on Fridays |
 | `/standup` | Generate a standup from yesterday's Evening > Completed and today's Morning > MITs |
@@ -337,18 +337,19 @@ Examples: `/r enrich alice-smith`, `/r sync`, `/r ingest https://...`.
 │   ├── scratch.md      # Quick capture pad
 │   └── <slug>.md       # Source notes and captures
 ├── waiting-for.md      # Open delegations — appended by /evening, reviewed weekly
+├── context/
+│   ├── context.md      # Your identity, team, active projects — filled by /bootstrap
+│   ├── architecture.md # External repo structure, tech stack, build system, CI
+│   ├── coding.md       # Language idioms, project conventions, code style rules
+│   ├── testing.md      # Test frameworks, file structure, coverage policy
+│   └── safety.md       # Non-negotiable rules: secrets, destructive ops, approval gates
 ├── .opencode/
 │   ├── commands/       # Slash command definitions
 │   ├── workflows/      # Step-by-step workflow procedures (23 files)
 │   ├── skills/         # Domain-specific instruction sets
 │   ├── scripts/        # Confluence sync, link auditing, health checks
+│   ├── context-templates/ # Blank templates for context/ files
 │   └── reference/      # Structure and security reference docs
-├── context.md          # Your identity, team, active projects — filled by /bootstrap
-├── architecture.md     # External repo structure, tech stack, build system, CI
-├── patterns.md         # Language-specific idioms and project conventions
-├── style.md            # Code style rules per language, linter/formatter config
-├── testing.md          # Test frameworks, file structure, coverage policy
-├── safety.md           # Non-negotiable rules: secrets, destructive ops, approval gates
 ├── confluence-sync.json# Confluence page monitoring registry
 ├── resources-log.md    # Append-only log of resource operations
 ├── qmd.yml             # QMD index config for semantic search

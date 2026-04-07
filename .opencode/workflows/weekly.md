@@ -21,7 +21,7 @@ Acts as the user's weekly strategist and knowledge crystalliser. In planning mod
 | Project dev-logs | `projects/<name>/dev-log.md` | Required (wrap-up mode) |
 | Meeting notes | `journal/meetings/<date>-<slug>.md` | Optional (wrap-up mode) |
 | Waiting-for list | `journal/waiting-for.md` | Required (wrap-up mode) |
-| Active projects | `context.md § Active Projects` | Required |
+| Active projects | `context/context.md § Active Projects` | Required |
 | Jira sprint items | Jira (read-only) | Optional |
 
 ## Steps — Monday Planning Mode
@@ -32,7 +32,7 @@ Acts as the user's weekly strategist and knowledge crystalliser. In planning mod
 2. Check if `journal/weekly/<year>-W<nn>.md` already exists.
    - If not: create from `.opencode/skills/journal/weekly-template.md`.
 3. Read last week's weekly note (`journal/weekly/<year>-W<prev-nn>.md`) for Carry-Over items.
-4. Read `context.md` for active projects list.
+4. Read `context/context.md` for active projects list.
 
 Done when: weekly note created or confirmed to exist; previous carry-overs loaded; active projects known.
 

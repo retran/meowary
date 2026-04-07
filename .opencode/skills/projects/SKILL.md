@@ -63,7 +63,7 @@ Run this at the start of any lifecycle workflow to re-establish context without 
 
 ### 1. Read active projects
 
-Open `context.md`. Find the `## Active Projects` section. Each entry follows this format:
+Open `context/context.md`. Find the `## Active Projects` section. Each entry follows this format:
 
 ```
 - **<slug>:** <description> | phase: <phase> | priority: high|medium|low
@@ -71,16 +71,16 @@ Open `context.md`. Find the `## Active Projects` section. Each entry follows thi
 
 Extract: slug, current phase, priority for each entry.
 
-**Fallback:** If `context.md` is absent, has no `## Active Projects` section, or the section is empty:
+**Fallback:** If `context/context.md` is absent, has no `## Active Projects` section, or the section is empty:
 - Glob `projects/*/dev-log.md` and read the last entry from each to identify active projects.
 - If still ambiguous, ask the user: "Which project is this session for?"
 
-**If `context.md` is empty or missing entirely:** stop and direct the user to run `/bootstrap`.
+**If `context/context.md` is empty or missing entirely:** stop and direct the user to run `/bootstrap`.
 
 ### 2. Determine the active project for this session
 
 - If the user specified a project slug at invocation, use it.
-- If only one project is listed in `context.md`, use it without asking.
+- If only one project is listed in `context/context.md`, use it without asking.
 - If multiple projects are active and the user did not specify: read the last `dev-log.md` entry across all projects; use the most recently updated one. If still unclear, ask once: "Which project?" — do not guess.
 
 ### 3. Read the dev-log last entry
@@ -109,7 +109,7 @@ Before any clarification step, present:
 
 Do not ask questions yet — just present context.
 
-**Notes:** Do not load coding context files (`patterns.md`, `style.md`, `architecture.md`) in Step 0 — load them just-in-time in the step that needs them. If the workflow is a `/r` (knowledge graph) workflow, read `resources-log.md` (repo root) instead of a project `dev-log.md`.
+**Notes:** Do not load `codebases/<name>.md` in Step 0 — load it just-in-time in the step that needs it. If the workflow is a `/r` (knowledge graph) workflow, read `resources-log.md` (repo root) instead of a project `dev-log.md`.
 
 ---
 

@@ -4,17 +4,17 @@ This repository is a personal work journal managed as Markdown files with suppor
 
 ## Author & Context
 
-Author identity, team, tooling, and other instance-specific details live in [`context.md`](context.md).
+Author identity, team, tooling, and other instance-specific details live in [`context/context.md`](context/context.md).
 
-**On first use:** If `context.md` is empty or missing, direct the user to run `/bootstrap` before proceeding with any task that needs this context.
+**On first use:** If `context/context.md` is empty or missing, direct the user to run `/bootstrap` before proceeding with any task that needs this context.
 
-**Keep context current:** If the user shares new information — a new project, role change, team update, tool adoption, or any fact that belongs in `context.md` or the coding context files — update the appropriate file immediately during the session.
+**Keep context current:** If the user shares new information — a new project, role change, team update, tool adoption, or any fact that belongs in `context/context.md` or `codebases/<name>.md` — update the appropriate file immediately during the session.
 
 ## Session Start
 
 ### Tier 0 — every session
 
-Read `context.md` (author identity, team, active projects, tooling). Skip if already loaded this session.
+Read `context/context.md` (author identity, team, active projects, tooling). Skip if already loaded this session.
 
 ### Tier 1 — when the task involves writing, resources, people, teams, or projects
 
@@ -22,28 +22,15 @@ Search `resources/` with `qmd query "<topic>"` or browse the directory tree to i
 
 ### Tier 2 — when doing coding work in external repos
 
-Load the relevant coding context files before starting any workflow via `/do`. See the table in **Coding Context Files** below.
+Read `context/context.md § Codebases` to identify the active codebase. Read `codebases/<name>.md` for that codebase — it contains architecture, tech stack, build commands, test commands, coding conventions, CI context, and key decisions. If no `codebases/<name>.md` exists for the codebase you're working in, create one before proceeding.
 
-## Coding Context Files
-
-Six files at repo root describe the author's external development environment. They are filled in by `/bootstrap` and updated as the environment changes.
-
-| File               | Purpose                                                             | Load when                          |
-| ------------------ | ------------------------------------------------------------------- | ---------------------------------- |
-| `architecture.md`  | Repo structure, tech stack, build system, CI, source control        | Brainstorming, planning, debugging |
-| `patterns.md`      | Language-specific idioms and project conventions for external repos | All coding workflow phases         |
-| `style.md`         | Code style rules per language, linter/formatter config              | Implementing, reviewing            |
-| `testing.md`       | Test frameworks, file structure, coverage policy per language       | Planning, implementing, reviewing  |
-| `safety.md`        | Non-negotiable rules: secrets, destructive ops, approval gates      | Implementing, reviewing            |
-| `conventions.md`   | Commit message format, Jira key prefix, MR title rules              | Implementing, reviewing, committing |
-
-Read before acting. Never invent conventions — if a file is empty, ask the user before assuming any convention. These files describe external repos, not the journal. Update them immediately when you learn something new about the codebase.
+Never invent conventions. If `codebases/<name>.md` is missing or a field is empty, ask the user before assuming anything.
 
 ## Repository Structure
 
 Full directory tree and "What Goes Where" table: [`.opencode/reference/structure.md`](.opencode/reference/structure.md).
 
-Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `.opencode/scripts/`, `.opencode/`.
+Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `context/`, `codebases/`, `.opencode/`.
 
 Workflow prompts live in `.opencode/workflows/` (23 files). Commands live in `.opencode/commands/`.
 
@@ -72,6 +59,10 @@ Workflow prompts live in `.opencode/workflows/` (23 files). Commands live in `.o
 ### Proactive Resources Enrichment
 
 During every session — regardless of primary task — scan for resource gaps. Surface gaps as you work and fill them immediately.
+
+### Proactive Codebase Enrichment
+
+During any coding session, update `codebases/<name>.md` immediately whenever you learn something new about the codebase: a build command, architecture component, coding convention, CI step, or key decision. Do not defer these updates to the end of the session.
 
 ## Editing Rules
 

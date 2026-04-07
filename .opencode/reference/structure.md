@@ -23,7 +23,7 @@ tags: []
 │   └── <name>/
 │       └── README.md          # Area dashboard (focus, tasks, log)
 ├── resources/                 # Resources — atomic, topic-based reference articles
-│   ├── <domain>/              # Domain subfolders (scope defined in context.md)
+│   ├── <domain>/              # Domain subfolders
 │   ├── tools/                 # Developer tools and internal tooling
 │   ├── teams/                 # One file per team
 │   └── people/                # One file per person
@@ -34,22 +34,26 @@ tags: []
 ├── inbox/                     # Unprocessed captures — process or promote regularly
 │   ├── scratch.md             # Running scratch pad for quick links, ideas, snippets
 │   └── <slug>.md              # Source notes and other captures
-├── context.md                 # Author identity, team, active projects, tooling
+├── context/                   # Author identity and global rules (auto-loaded)
+│   ├── context.md             # Identity, tooling, active projects, commit conventions, codebases list
+│   ├── safety.md              # Non-negotiable rules: secrets, destructive ops
+│   └── .gitkeep
+├── codebases/                 # Per-codebase context files
+│   └── <name>.md              # Architecture, tech stack, build, test, CI, coding conventions for one repo
 ├── tags.md                    # All tags registered here
 ├── confluence-sync.json       # Confluence page monitoring registry (page IDs + sync dates)
 ├── resources-log.md           # Append-only log of resource operations (ingest, sync, enrich)
 ├── qmd.yml                    # QMD index config for semantic search over resources
 ├── recurring-events.md        # Standing meetings and recurring events
 ├── reading-list.md            # Articles, papers, books to read
-├── architecture.md            # External repo structure, tech stack, build system, CI
-├── patterns.md                # Language-specific idioms and project conventions
-├── style.md                   # Code style rules per language, linter/formatter config
-├── testing.md                 # Test frameworks, file structure, coverage policy
-├── safety.md                  # Non-negotiable rules: secrets, destructive ops
-├── .opencode/scripts/                   # Automation scripts (Confluence sync, link auditing)
-├── .opencode/                 # OpenCode configuration
+├── .opencode/
 │   ├── commands/              # Custom slash commands
+│   ├── workflows/             # Step-by-step workflow procedures
 │   ├── skills/                # Custom skills (include domain templates)
+│   ├── scripts/               # Automation scripts (Confluence sync, link auditing)
+│   ├── context-templates/     # Blank scaffold files — copy to context/ via /bootstrap
+│   │   ├── context.md
+│   │   └── safety.md
 │   └── reference/             # Reference files (structure, conventions)
 └── AGENTS.md                  # Agent instructions
 ```
@@ -71,3 +75,4 @@ tags: []
 | Quick links, ideas, snippets (not yet promoted) | `inbox/scratch.md` |
 | Content for external audiences (blog posts, Confluence drafts, proposals) | `projects/<name>/drafts/` |
 | Jira issue details | Jira (link from daily note; don't duplicate) |
+| Codebase-specific context (architecture, tech stack, build, test, conventions) | `codebases/<name>.md` |

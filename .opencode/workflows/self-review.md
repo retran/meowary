@@ -18,7 +18,7 @@ Acts as a rigorous internal code reviewer. Reads changed files in full, not just
 | Changed files or diff | Codebase | Required |
 | Plan and success criteria | `projects/<name>/plans/<slug>.md` | Required |
 | Codebase context | `codebases/<name>.md` | Required |
-| `patterns.md`, `style.md`, `testing.md`, `safety.md` | Loaded | Required |
+| Codebase conventions | `codebases/<name>.md`, `context/safety.md` | Required |
 | Complexity tier | User declaration | Required |
 
 ## Complexity Tiers
@@ -37,7 +37,7 @@ Acts as a rigorous internal code reviewer. Reads changed files in full, not just
 
 1. Read `projects/<name>/dev-log.md` last entry — what was implemented in this session?
 2. Read `projects/<name>/plans/<slug>.md` — what are the success criteria?
-3. Load `codebases/<name>.md`, `patterns.md`, `style.md`, `testing.md`, `safety.md`.
+3. Load `codebases/<name>.md` and `context/safety.md`.
 4. Read today's daily note — find any tasks matching this review.
 
 Done when: implementation scope, success criteria, and all convention files loaded.
@@ -51,7 +51,7 @@ Ask the user:
 
 Also:
 - Run `git diff` or read the changed files to understand the scope.
-- Search `resources/` and `patterns.md` for the patterns that should apply.
+- Search `resources/` and `codebases/<name>.md` for the patterns that should apply.
 - Search the web for known anti-patterns in the approach if applicable.
 
 Done when: scope of changes, focus areas, and tier confirmed.
@@ -66,9 +66,7 @@ Done when: all changed files read in full; changes mapped to plan tasks.
 ### Step 2 — Conventions check
 
 Apply systematically:
-- `style.md` rules: naming, formatting, imports, file structure.
-- `patterns.md` rules: language idioms, project-specific patterns.
-- `conventions.md`: commit message format, branch naming.
+- Coding conventions from `codebases/<name>.md`: naming, formatting, imports, file structure, language idioms, project-specific patterns.
 
 List every convention violation, no matter how small. Severity: Minor or Nit.
 
@@ -98,15 +96,15 @@ Done when: test coverage assessed; gaps identified.
 
 1. Are there injection vulnerabilities, auth bypasses, or exposed secrets?
 2. Are there obvious performance regressions: N+1 queries, unnecessary re-renders, unbounded loops?
-3. Reference `safety.md` for non-negotiable security rules — these are Blockers.
+3. Reference `context/safety.md` for non-negotiable security rules — these are Blockers.
 
 Skip for Quick and Standard tiers.
 
-Done when: security and performance analysis complete; `safety.md` rules verified.
+Done when: security and performance analysis complete; `context/safety.md` rules verified.
 
 ### Step 6 — Proactive research (if needed)
 
-If a pattern or approach seems suspicious but isn't in `patterns.md` or `resources/`:
+If a pattern or approach seems suspicious but isn't in `codebases/<name>.md` or `resources/`:
 - Search the web. Form a position before the report.
 - If a dependency is new or updated: check for known issues, deprecations, or breaking changes.
 
@@ -127,7 +125,7 @@ Structure findings by severity:
 
 For each finding: file and line reference, issue description, suggested fix or recommendation.
 
-**Sub-agent trigger (Full):** Offload review report generation to the `code-reviewer` custom agent. Pass: the diff or list of changed files with contents, plan success criteria, and the loaded `patterns.md`, `style.md`, `testing.md`, `safety.md`. The agent returns a structured review report with all findings categorised by severity, with file:line references and suggested fixes. Agent file: `.opencode/agents/code-reviewer.md`.
+**Sub-agent trigger (Full):** Offload review report generation to the `code-reviewer` custom agent. Pass: the diff or list of changed files with contents, plan success criteria, and the loaded `codebases/<name>.md`, `context/safety.md`. The agent returns a structured review report with all findings categorised by severity, with file:line references and suggested fixes. Agent file: `.opencode/agents/code-reviewer.md`.
 
 Run inline for Quick and Standard tiers.
 
@@ -169,7 +167,7 @@ Done when: summary written; dev-log entry appended; daily note updated.
 ## Error Handling
 
 - **No diff available:** Ask the user to list the changed files. Read them in full before proceeding.
-- **`patterns.md` or `style.md` missing:** Note the gap; ask the user for the relevant conventions. Do not skip the conventions check.
+- **`codebases/<name>.md` missing:** Note the gap; ask the user for the relevant conventions. Do not skip the conventions check.
 - **Finding severity unclear:** Escalate, do not downgrade. If uncertain whether a finding is a Blocker or Major, classify it as Blocker and explain the reasoning.
 - **User wants to skip Blockers:** Confirm explicitly. Raising a PR with known Blockers is a deliberate choice — not a default.
 
@@ -178,7 +176,7 @@ Done when: summary written; dev-log entry appended; daily note updated.
 1. Blocker = "I would reject this PR." Nit = cosmetic. Never downgrade to avoid extra work.
 2. All findings presented before any are addressed (Full tier). Do not fix and re-review piecemeal.
 3. Read changed files in full, not just diffs.
-4. `safety.md` violations are always Blockers, regardless of tier.
+4. `context/safety.md` violations are always Blockers, regardless of tier.
 5. Full tier writes review report to `projects/<name>/notes/review-<date>.md`. Quick/Standard: in-session only.
 
 ## Sub-Agents

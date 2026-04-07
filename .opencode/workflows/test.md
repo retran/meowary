@@ -17,7 +17,7 @@ Acts as a quality verification specialist. Distinguishes automated regression ve
 |-------|--------|----------|
 | Plan and success criteria | `projects/<name>/plans/<slug>.md` | Required |
 | Codebase context | `codebases/<name>.md` | Required |
-| Testing framework info | `testing.md` | Required |
+| Testing framework info | `codebases/<name>.md` | Required |
 | Complexity tier | User declaration | Required |
 
 ## Complexity Tiers
@@ -34,9 +34,8 @@ Acts as a quality verification specialist. Distinguishes automated regression ve
 
 1. Read `projects/<name>/dev-log.md` last entry — what was implemented?
 2. Read `projects/<name>/plans/<slug>.md` — identify success criteria and test strategy.
-3. Load `testing.md` for test framework, file structure, and coverage policy.
-4. Load `codebases/<name>.md` for the active codebase.
-5. Read today's daily note — find any tasks matching this testing work.
+3. Load `codebases/<name>.md` for test framework, file structure, coverage policy, and codebase context.
+4. Read today's daily note — find any tasks matching this testing work.
 
 Done when: implemented scope, success criteria, test framework, and codebase context loaded.
 
@@ -70,7 +69,7 @@ Done when: test plan written; user confirmed (Full only).
 ### Step 2 — Run automated tests
 
 1. Run the full test suite or targeted suite for the changed area.
-   - Command: per `testing.md` for this project.
+   - Command: per `codebases/<name>.md` for this project.
 2. Capture output: pass/fail counts, failing test names, error messages.
 3. Do not proceed past failures without either addressing them or explicitly deferring with user approval.
 
@@ -161,7 +160,7 @@ Done when: summary written; dev-log entry appended; daily note updated; regressi
 
 ## Error Handling
 
-- **Test suite command not in `testing.md`:** Ask the user for the correct command. Do not guess. Update `testing.md` with the confirmed command before running.
+- **Test suite command not in `codebases/<name>.md`:** Ask the user for the correct command. Do not guess. Update `codebases/<name>.md` with the confirmed command before running.
 - **Test suite fails to run (not test failures — infrastructure failure):** Note the infrastructure failure; do not proceed. Ask the user to resolve the test environment.
 - **Pre-existing failures in the automated suite:** Document them; do not block on them. Surface clearly as pre-existing so they are not confused with new regressions.
 - **Test session file already exists for today:** Append to the existing file with a `---` separator and a timestamp header.

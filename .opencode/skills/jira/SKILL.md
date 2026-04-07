@@ -28,7 +28,7 @@ Default posture is read-only. Before any write operation, stop and ask: "Should 
 
 ## Searching Issues
 
-**Project key:** Read `context.md` → **Conventions → Jira project key** to find your project key.
+**Project key:** Read `context/context.md` → **Conventions → Jira project key** to find your project key.
 
 ```bash
 # Your open issues
@@ -129,7 +129,7 @@ jira sprint list SPRINT_ID --plain
 - [PROJ-456](<jira-url>/browse/PROJ-456) — decision or outcome
 ```
 
-Replace `<jira-url>` with the Jira URL from `context.md` → **Tooling → Jira URL**.
+Replace `<jira-url>` with the Jira URL from `context/context.md` → **Tooling → Jira URL**.
 
 ---
 

@@ -17,7 +17,7 @@ Acts as a systematic research analyst. Gathers sources proactively — does not 
 |-------|--------|----------|
 | Research question | User invocation | Required |
 | Complexity tier | User declaration | Required |
-| Active project name | `context.md` or dev-log | Recommended |
+| Active project name | `context/context.md` or dev-log | Recommended |
 | Prior scout findings | `projects/<name>/notes/scout-<topic>.md` | Optional |
 
 ## Complexity Tiers

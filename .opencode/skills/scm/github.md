@@ -193,7 +193,7 @@ gh run rerun 12345 --failed           # Retry failed jobs
 ## Rules
 
 - **Prefer `--fill`** — handles pushing and populates title/body from commits automatically.
-- **PR titles and commits must follow `[PROJ-123] description` format.** No Conventional Commits type prefix. Read `conventions.md` for the project key. If you don't have the Jira issue key, check the branch name or load the `jira` skill.
+- **PR titles and commits must follow `[PROJ-123] description` format.** No Conventional Commits type prefix. Read `context/context.md` for the project key. If you don't have the Jira issue key, check the branch name or load the `jira` skill.
 - **Never force-push to `main` or `master`** without explicit user approval.
 - **Never delete remote branches** that have open PRs.
 - Use `pr view` and `issue view` to pull context into daily notes — summarise and link, do not copy verbatim.

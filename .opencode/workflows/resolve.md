@@ -92,7 +92,7 @@ Done when: response plan written and user-confirmed.
 
 1. Address all accepted Bug and Style comments.
 2. Address accepted Suggestions.
-3. Apply conventions from `patterns.md` and `style.md` for every code change.
+3.    Apply conventions from `codebases/<name>.md` for every code change.
 4. Do not address Scope or Design Challenge comments with code changes — those get written responses only.
 
 Done when: all accepted code changes implemented.

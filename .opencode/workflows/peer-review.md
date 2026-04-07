@@ -18,8 +18,8 @@ Acts as a rigorous, constructive peer reviewer. Understands intent before analys
 | Review target (PR number, URL, or file path) | User invocation | Required |
 | PR diff or document content | `gh pr diff` or Read tool | Required |
 | Complexity tier | User declaration | Required |
-| Active project context | `context.md`, `dev-log.md` | Optional |
-| Architecture and patterns context | `architecture.md`, `patterns.md` | Optional (Full tier) |
+| Active project context | `context/context.md`, `dev-log.md` | Optional |
+| Architecture and patterns context | `codebases/<name>.md` | Optional (Full tier) |
 
 ## Complexity Tiers
 
@@ -37,7 +37,7 @@ Default tier: **Standard**.
 
 ### Step 0 — Load context
 
-1. Read `context.md` for active projects and team context (to understand the code/spec domain).
+1. Read `context/context.md` for active projects and team context (to understand the code/spec domain).
 2. Read `projects/<name>/dev-log.md` last entry if this review relates to an active project.
 3. Check `projects/<name>/notes/` for a prior review of the same PR/spec (re-review after changes): if found, load it as context.
 
@@ -84,16 +84,16 @@ Done when: intent summary written.
 - Correctness: does the code do what the PR description says?
 - Edge cases and error handling.
 - Test coverage: are new paths covered? Are existing tests still valid?
-- Naming, readability, consistency with existing patterns (from `patterns.md`, `style.md`).
+- Naming, readability, consistency with existing patterns (from `codebases/<name>.md`).
 - Full tier: security implications, performance implications, design coherence.
 
 **Document review mode** (specs, RFCs, ADRs, docs):
 - Clarity of problem statement, completeness of solution, internal consistency.
 - Open questions left unaddressed, missing edge cases, underspecified contracts.
 - Full tier: design tradeoffs, alternatives considered, long-term maintainability.
-- Alignment with established architecture and patterns (from `architecture.md`).
+- Alignment with established architecture and patterns (from `codebases/<name>.md`).
 
-**Sub-agent trigger (Full):** Offload Steps 3–4 to the `general` built-in agent. Pass: PR diff or document content, the intent summary from Step 2, and the loaded `architecture.md`, `patterns.md`, `style.md`, `safety.md`. The agent returns findings by severity with file:line refs and a draft review response. Run inline (no sub-agent) for Quick and Standard tiers.
+**Sub-agent trigger (Full):** Offload Steps 3–4 to the `general` built-in agent. Pass: PR diff or document content, the intent summary from Step 2, and the loaded `codebases/<name>.md`, `context/safety.md`. The agent returns findings by severity with file:line refs and a draft review response. Run inline (no sub-agent) for Quick and Standard tiers.
 
 Done when: all analysis complete; issues identified with location and description.
 
@@ -195,7 +195,7 @@ Done when: daily note updated; dev-log entry appended if applicable.
 2. Blocker = "I would reject this." Nit = cosmetic. Never downgrade to avoid extra work.
 3. Understand intent before analysing — do not review for scope creep unless asked.
 4. HARD-GATE (Full): present all findings before posting anything. Let the user see the complete picture first.
-5. `safety.md` violations are always Blockers, regardless of tier.
+5. `context/safety.md` violations are always Blockers, regardless of tier.
 
 ## Sub-Agents
 

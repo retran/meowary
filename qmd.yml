@@ -15,6 +15,12 @@ collections:
     path: .
     mask: "*.md"
     description: "Root-level operational files — context, knowledge graph, tags, waiting-for, reading list, etc."
+  - name: context
+    path: context/
+    description: "Author identity, team, active projects, commit conventions, and global safety rules"
+  - name: codebases
+    path: codebases/
+    description: "Per-codebase context — architecture, tech stack, build, test, CI, coding conventions"
   - name: resources
     path: resources/
     description: "Reference articles — atomic, topic-based knowledge"

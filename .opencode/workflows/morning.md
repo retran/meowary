@@ -15,7 +15,7 @@ Acts as the user's structured morning planner. Surfaces current project state fr
 
 | Input | Source | Required |
 |-------|--------|----------|
-| Active projects | `context.md § Active Projects` | Required |
+| Active projects | `context/context.md § Active Projects` | Required |
 | Daily note template | `.opencode/skills/journal/daily-template.md` | Required if creating |
 | Weekly note template | `.opencode/skills/journal/weekly-template.md` | Required on Mondays |
 | Project dev-logs | `projects/<slug>/dev-log.md` | Required |
@@ -28,7 +28,7 @@ Acts as the user's structured morning planner. Surfaces current project state fr
 
 ### Step 0 — Load context
 
-1. Read `context.md`. If entirely missing or empty: stop and direct the user to run `/bootstrap`. Do not proceed.
+1. Read `context/context.md`. If entirely missing or empty: stop and direct the user to run `/bootstrap`. Do not proceed.
 2. Find `## Active Projects`. If the section is absent or empty: ask the user which project to focus on.
 3. Extract active projects (slug, phase, priority) per the projects skill.
 4. Check if today's daily note (`journal/daily/<YYYY-MM-DD>.md`) exists.
@@ -129,7 +129,7 @@ Done when: committed.
 
 ## Error Handling
 
-- **`context.md` missing or empty:** Stop at Step 0 and direct the user to run `/bootstrap`. Do not proceed.
+- **`context/context.md` missing or empty:** Stop at Step 0 and direct the user to run `/bootstrap`. Do not proceed.
 - **`daily-template.md` missing:** Cannot create the daily note. Ask the user to verify the journal skill directory.
 - **`projects/<slug>/dev-log.md` missing:** Note the gap per project; continue with remaining projects.
 - **Jira unavailable:** Skip Jira in Step 3 silently. Note "Jira unavailable" in session output.

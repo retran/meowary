@@ -6,7 +6,7 @@ compatibility: opencode
 
 ADRs are drafted locally in `projects/<name>/` before publishing to Confluence. ADRs are not stored in `resources/` — Confluence is the source of truth for accepted ADRs. Local files are working drafts only.
 
-For org-specific ADR conventions (storage locations, naming series, Confluence spaces, decision process), see `context.md`.
+For org-specific ADR conventions (storage locations, naming series, Confluence spaces, decision process), see `context/context.md`.
 
 ---
 
@@ -48,7 +48,7 @@ Write in stages. Each stage ends with a review before proceeding.
 
 ### File Location
 
-Draft ADRs live in `projects/<name>/` — never in `resources/`. File naming follows the `<area>-NNN` scheme. Zero-pad to three digits (e.g. `auth-001`, `api-003`). The specific naming series for this repo are defined in `context.md`.
+Draft ADRs live in `projects/<name>/` — never in `resources/`. File naming follows the `<area>-NNN` scheme. Zero-pad to three digits (e.g. `auth-001`, `api-003`). The specific naming series for this repo are defined in `context/context.md`.
 
 ### Front Matter
 
@@ -75,7 +75,7 @@ ADRs in this repo blend two established formats:
 - **Nygard (2011):** Minimal. Sections: Title, Context, Decision, Status, Consequences. Decision in active voice ("We will use X."). 1–2 pages. Context = value-neutral facts only.
 - **MADR (Markdown ADR):** Adds Options Considered with pros/cons per option, Decision Drivers, Decision Outcome with confirmation.
 
-The authoritative template reference is in `context.md`.
+The authoritative template reference is in `context/context.md`.
 
 ### Immutability
 

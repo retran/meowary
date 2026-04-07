@@ -26,7 +26,7 @@ Acts as the user's meeting note-taker and action item router. Creates the meetin
 
 ### Step 0 — Load context
 
-1. Read `context.md` for active projects list and people context (for linking attendees to resource articles).
+1. Read `context/context.md` for active projects list and people context (for linking attendees to resource articles).
 2. Check if today's daily note (`journal/daily/<YYYY-MM-DD>.md`) exists — needed for cross-linking.
 3. Search `resources/people/` for articles matching attendee names.
 4. **If meeting type is `1-1`:** also read `resources/people/<other-person-slug>.md` if it exists — surface their role, team, recent context, and any open follow-ups from previous 1-1s.

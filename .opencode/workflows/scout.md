@@ -16,7 +16,7 @@ Acts as a reconnaissance specialist. Searches broadly across all available sourc
 | Input | Source | Required |
 |-------|--------|----------|
 | Topic or question | User invocation | Required |
-| Active project name | `context.md` or dev-log | Optional |
+| Active project name | `context/context.md` or dev-log | Optional |
 | Codebase context | `codebases/<name>.md` | Optional (if codebase is active) |
 
 ## Steps

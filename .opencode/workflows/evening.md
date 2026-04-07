@@ -100,7 +100,7 @@ Done when: weekly note completed and all sections filled.
 
 ### Step 6 — Close
 
-1. Update `## Active Projects` in `context.md`:
+1. Update `## Active Projects` in `context/context.md`:
    - Add any new projects started today (format per the projects skill).
    - Remove any projects completed or archived today.
    - Update `phase:` and `priority:` for any projects whose state changed during the day.

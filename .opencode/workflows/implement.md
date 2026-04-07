@@ -17,7 +17,7 @@ Acts as a disciplined implementation engineer. Does not touch code outside the p
 |-------|--------|----------|
 | Plan | `projects/<name>/plans/<slug>.md` | Required |
 | Codebase context | `codebases/<name>.md` | Required |
-| Conventions | `patterns.md`, `style.md`, `conventions.md` | Required |
+| Conventions | `codebases/<name>.md`, `context/context.md` | Required |
 | Complexity tier | User declaration | Required |
 
 ## Complexity Tiers
@@ -35,8 +35,7 @@ Acts as a disciplined implementation engineer. Does not touch code outside the p
 1. Read `projects/<name>/dev-log.md` last entry for current project context.
 2. Read `projects/<name>/plans/<slug>.md` — identify the current task to implement.
 3. Load `codebases/<name>.md` — conventions, patterns, architecture.
-4. Load `patterns.md` and `style.md` for the active language/framework.
-5. Read today's daily note — find any tasks matching this implementation work.
+4. Read today's daily note — find any tasks matching this implementation work.
 
 Done when: plan, codebase conventions, and current task identified.
 
@@ -72,7 +71,7 @@ Done when: scope boundary, success criteria, and first step confirmed.
 ### Step 2 — Implement
 
 Write code in small, verifiable increments:
-- Apply conventions from `patterns.md` and `style.md` at every step.
+- Apply conventions from `codebases/<name>.md` at every step.
 - Reference `codebases/<name>.md` for architecture decisions and component boundaries.
 - If an unexpected complexity is encountered: **stop immediately**. Surface it to the user and ask: continue as-is, simplify the approach, or replan? Do not absorb complexity silently.
 - Do not touch files outside the plan scope without explicit user approval.
@@ -83,7 +82,7 @@ Done when: all planned tasks for this increment implemented and passing lint/typ
 ### Step 3 — Verify (Standard + Full)
 
 For each completed task:
-1. Run the applicable verification: lint, type check, unit test, manual check — per `testing.md`.
+1. Run the applicable verification: lint, type check, unit test, manual check — per `codebases/<name>.md`.
 2. Surface failures immediately. Do not continue to the next task with unresolved failures.
 3. Fix regressions before proceeding.
 
@@ -96,7 +95,7 @@ Done when: all verification checks pass for the current milestone.
 ### Step 4 — Commit
 
 1. Stage only the files that implement the planned task.
-2. Generate a commit message following `conventions.md`. Show the message to the user and allow editing before committing.
+2. Generate a commit message following `context/context.md` commit format. Show the message to the user and allow editing before committing.
 3. Do not stage unrelated changes.
 
 Done when: commit created with a message that follows conventions.
@@ -132,7 +131,7 @@ Done when: plan updated; dev-log entry appended; daily note updated; `self-revie
 | Code changes | Codebase | Source files |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
 | Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
-| Commits | Git history | Per `conventions.md` |
+| Commits | Git history | Per `context/context.md` commit format |
 
 ## Error Handling
 
@@ -149,7 +148,7 @@ Done when: plan updated; dev-log entry appended; daily note updated; `self-revie
 3. Never re-implement without searching the codebase first.
 4. Stop when unexpected complexity is encountered. Surface it. Do not absorb silently.
 5. Quick tier: inline conventions check at Step 5. Standard/Full: chain to `self-review`.
-6. Commit format: follows `conventions.md`. Show message to user before committing.
+6. Commit format: follows `context/context.md` commit format. Show message to user before committing.
 
 ## Sub-Agents
 

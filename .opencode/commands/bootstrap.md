@@ -2,7 +2,7 @@
 description: First-time setup or update personal context and coding environment
 ---
 
-Set up or revise `context.md` and the six coding context files. Idempotent — safe to re-run anytime.
+Set up or revise `context/context.md`, `context/safety.md`, and any `codebases/<name>.md` files. Idempotent — safe to re-run anytime. Templates live in `.opencode/context-templates/` and `.opencode/skills/codebases/codebase-template.md`.
 
 Arguments: `/bootstrap`
 
@@ -10,7 +10,7 @@ Arguments: `/bootstrap`
 
 ## Step 1: Check Current State
 
-Read `context.md`. Branch:
+Read `context/context.md`. Branch:
 - **Has content** (non-empty Author section) → go to **Step 2a** (revision).
 - **Empty or missing** → go to **Step 2b** (fresh setup).
 
@@ -42,14 +42,18 @@ Ask all questions in one prompt:
 
 ---
 
-## Step 3: Write context.md
+## Step 3: Write context/context.md
 
-Write `context.md` with the collected values. Update `updated:` to today's date. Scan `projects/` and `areas/` (excluding `archive/`) for the Active lists.
+If `context/context.md` does not exist, copy from `.opencode/context-templates/context.md` first.
+
+Write `context/context.md` with the collected values. Update `updated:` to today's date. Scan `projects/` and `areas/` (excluding `archive/`) for the Active lists.
 
 ```markdown
 ---
 type: meta
+path: context/context.md
 updated: YYYY-MM-DD
+apply-when: [every session — identity, tooling, active projects, commit conventions]
 tags: []
 ---
 
@@ -77,7 +81,8 @@ tags: []
 - **Time format:** <e.g. 24-hour>
 - **Week numbering:** ISO 8601
 - **Jira project key:** <key> or n/a
-- **Commit format:** <format>
+- **Commit format (code repos):** <e.g. `[PROJ-123] description`>
+- **Commit format (journal):** description only (no key, no type prefix)
 
 ## Active Projects
 
@@ -96,20 +101,26 @@ tags: []
 
 ---
 
-## Step 4: Coding Context Files (fresh only)
+## Step 4: Safety Rules File (fresh only)
 
-Ask all six questions in one prompt. Write all six files in one pass after collecting answers. If a file already has real content, show it and ask what needs updating.
+If `context/safety.md` does not exist, copy from `.opencode/context-templates/safety.md`. No questions needed — rules are universal. Remove the Jira/Confluence rule if neither tool is used.
 
-| File | Collect |
-|------|---------|
-| `architecture.md` | External workspace path, repo structure, tech stack, build system, CI, source control host |
-| `patterns.md` | Primary languages/frameworks, project-specific naming/state/data patterns |
-| `style.md` | Languages used, linter/formatter in use, any rules differing from defaults |
-| `testing.md` | Test frameworks per language, file structure (co-located vs `tests/`), coverage policy |
-| `safety.md` | No questions — rules are universal. Remove Jira/Confluence line if not used. |
-| `conventions.md` | Use the Jira key from Step 2b. Replace `PROJ` with actual key; remove Jira content if n/a. |
+Update `updated:` and `path:` in the front matter.
 
-Update `updated:` in the front matter of every file written.
+---
+
+## Step 4b: Codebase File (fresh only)
+
+Ask: "Are you currently working in a codebase? If so, what is its name and local path?"
+
+If yes:
+- Create `codebases/<name>.md` by copying `.opencode/skills/codebases/codebase-template.md`.
+- Collect: local path, primary language/framework, repo structure overview, build command, test command, CI system, source control host, any known linter/formatter.
+- Write the file with collected values. Leave unknown sections with `<!-- TBD -->`.
+- Add an entry to `context/context.md § Codebases`:
+  `**<name>:** <local path> — [codebases/<name>.md](../codebases/<name>.md)`
+
+If no, skip this step.
 
 ---
 
