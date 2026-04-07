@@ -87,13 +87,72 @@ tags: []
 - **Explanation depth:** <minimal / moderate / thorough>
 ```
 
-## Step 3b–3f: Coding Context Files (fresh only)
+## Step 3b–3g: Coding Context Files (fresh only)
 
-See `.opencode/reference/bootstrap-questions.md` for the full question sets and rewrite instructions for each of the five context files (`architecture.md`, `patterns.md`, `style.md`, `testing.md`, `safety.md`).
+Ask all questions for all six files **at once** in a single prompt — do not ask file by file. After collecting answers, write all six files in one pass. Update `updated:` in the front matter of each file written.
 
-- Ask all questions for all five files **at once** in a single prompt — do not ask file by file.
-- After collecting answers, write all five files in one pass. Update `updated:` in the front matter of each file written.
-- If any file already has real user-specific content (not a placeholder), show it and ask if it is still accurate. Update only what the user confirms needs changing.
+If any file already has real user-specific content (not a placeholder), show it and ask if it is still accurate. Update only what the user confirms needs changing.
+
+---
+
+### 3b: Architecture (`architecture.md`)
+
+Check for comment placeholders. Collect:
+
+1. **External workspace path** — where source code repos live on disk (e.g. `~/workspace`, `~/code`)
+2. **Repo structure** — key directories, tech stack, purpose of each (one line per repo/sub-project)
+3. **Build system** — e.g. Gradle, npm, Make, cargo
+4. **CI system** — e.g. GitHub Actions, GitLab CI, Jenkins
+5. **Source control host** — e.g. GitHub, GitLab self-hosted, Bitbucket
+
+Write a Markdown table and a one-line prose summary.
+
+---
+
+### 3c: Patterns (`patterns.md`)
+
+Ask:
+
+1. **Primary languages / frameworks** — e.g. TypeScript/React, Python/FastAPI, Go, Kotlin/Spring
+2. **Any project-specific patterns** — naming conventions, state management approach, data access layer style, etc. (optional)
+
+Write language-specific idioms and any project-specific patterns the user described. Remove generic placeholders that do not apply.
+
+---
+
+### 3d: Style (`style.md`)
+
+Ask:
+
+1. **Languages used in external repos** — list all (e.g. TypeScript, Python, Go, Rust, Java, C#)
+2. **Any linter / formatter in use** — e.g. ESLint, Prettier, Ruff, gofmt, clippy (optional)
+3. **Any style rules that differ from common defaults** — e.g. tabs vs spaces, line length, import order (optional)
+
+Add a section per language with the relevant rules. Keep the "Markdown" and "General" sections.
+
+---
+
+### 3e: Testing (`testing.md`)
+
+Ask:
+
+1. **Test frameworks in use** — per language (e.g. Vitest, pytest, Go testing, RSpec)
+2. **Test file structure** — co-located or separate `tests/` directory?
+3. **Any coverage or flakiness policies** (optional)
+
+Replace language-specific sections to match the actual stack. Keep the "Journal Repo" section.
+
+---
+
+### 3f: Safety (`safety.md`)
+
+No questions needed — rules are universal. If the user's tooling does **not** include Jira/Confluence, remove the line "Never write to Jira or Confluence without explicit user approval." Update `updated:` in front matter.
+
+---
+
+### 3g: Conventions (`conventions.md`)
+
+Use the Jira project key already collected in Step 2b. Replace every occurrence of `PROJ` in `conventions.md` with the user's actual project key. If Jira is not used (`n/a`), remove Jira-specific content and note that no prefix is required.
 
 ## Step 4: Verify Tooling Connections
 

@@ -170,7 +170,7 @@ Address one thread (or group) at a time, in the agreed order. After each fix:
 
 ## Step 5: Commit
 
-See `.opencode/reference/conventions.md` for the required format.
+Read `conventions.md` for the project key.
 
 - **Project/code repo:** `[PROJ-123] address review comments from @reviewer`
   Use the Jira issue key from the branch name or PR/MR title. Load the `jira` skill if unclear.

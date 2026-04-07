@@ -6,7 +6,16 @@ Check that all required journal tools are available and report their status.
 
 Arguments: `/check-env`
 
-1. See `.opencode/reference/env-tools.md` for the full tool list with version commands and requirements. For each tool, run `command -v <tool> 2>/dev/null` to detect presence, then capture the version string where applicable.
+1. For each tool below, run `command -v <tool> 2>/dev/null` to detect presence, then capture the version string where applicable.
+
+   | Tool      | Version command   | Required                       |
+   |-----------|-------------------|--------------------------------|
+   | `node`    | `node --version`  | Yes — must be ≥ 22             |
+   | `jira`    | `jira version`    | Yes — Jira CLI for issue queries |
+   | `gh`      | `gh --version`    | Yes — GitHub CLI for PR/issue ops |
+   | `qmd`     | `qmd --version`   | Yes — semantic search index    |
+   | `repomix` | `repomix --version` | Yes — repo packing for analysis |
+   | `glab`    | `glab --version`  | Optional — GitLab CLI          |
 
 2. For each tool, determine status:
    - **OK** — present and version check succeeded

@@ -25,7 +25,7 @@ Systematically review code changes or documents for correctness, style, complete
 2. If reviewing a PR/MR, fetch the diff and description:
    - **GitLab MR:** load the `scm` skill, use `glab mr diff <id>`
    - **GitHub PR:** load the `scm` skill, use `gh pr diff <id>`
-3. To review commit messages against convention, read `.opencode/reference/conventions.md`
+3. To review commit messages against convention, read `conventions.md` for the project key and commit format
 
 **Document mode:**
 1. Load the `writing` skill for style and formatting rules

@@ -41,7 +41,7 @@ For each task in the plan:
       - Code mode: run tests if a test suite exists
       - Document mode: verify cross-links, front matter, style compliance
    4. **Check off** the task in the plan file (`- [x]`).
-   5. **Commit** at natural boundaries if the user has asked for commits. Read `.opencode/reference/conventions.md` for the required commit message format.
+   5. **Commit** at natural boundaries if the user has asked for commits. Read `conventions.md` for the project key and commit format.
 
 ### Step 2: Self-Review
 
