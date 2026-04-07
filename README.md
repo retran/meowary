@@ -23,7 +23,7 @@ Daily and weekly notes capture the ephemeral — what happened, what you decided
 
 ## Daily workflow
 
-Each day follows a three-zone structure grounded in GTD:
+Each day follows a three-zone structure grounded in [Bullet Journal](https://bulletjournal.com/):
 
 ```
 ## Morning         ← intent
@@ -31,7 +31,7 @@ Each day follows a three-zone structure grounded in GTD:
 ## Evening         ← reflection
 ```
 
-The three zones keep different types of thinking separate. Morning is for deciding what matters. Day is for capturing what happens. Evening is for making sense of it and extracting what's worth keeping.
+The three zones keep different types of thinking separate. Morning is for deciding what matters. Day is for **rapid logging** — fast, unstructured capture of everything as it happens, without pausing to organise. Evening is for making sense of it: promoting insights to the knowledge graph and **migrating** unfinished tasks — each one gets an explicit decision (carry to a specific date, or drop with a reason). Nothing silently rolls forward.
 
 ### Morning — set intent
 
@@ -134,13 +134,15 @@ In practice: after a few weeks of daily use, the agent knows your team structure
 
 ## Design foundations
 
-Meowary's structure draws on three established PKM methods:
+Meowary's structure draws on four established methods:
 
-**[Zettelkasten](https://zettelkasten.de/)** (Niklas Luhmann) — the note-flow hierarchy: raw capture → source notes → resource articles → synthesis articles. The key insight: understanding develops in stages. You don't create a permanent article from a source without first processing it in your own words. The daily `### Inbox` captures raw thoughts; source notes process specific sources; resource articles hold atomic concepts; synthesis articles express cross-cutting insights.
+**[Bullet Journal](https://bulletjournal.com/)** (Ryder Carroll) — shapes the daily and weekly flow. The Day > Inbox is BuJo's daily log: rapid logging throughout the day without pausing to organise. Evening > Carried/Dropped is BuJo's migration: every unfinished task gets an explicit decision — carry to a specific date or drop with a reason. Nothing rolls forward silently. The `★` MIT prefix is a BuJo signifier. Weekly notes serve as the monthly log. `/morning` sets intent; `/evening` closes the loop.
 
-**[Evergreen Notes](https://notes.andymatuschak.org/Evergreen_notes)** (Andy Matuschak) — notes are never finished, only more developed. Every revisit to a resource article should deepen it — sharpen a claim, add a link, expand a thin section. The `actualized` frontmatter field tracks when each article was last substantively enriched, not just edited. Note titles stay as topic/term noun phrases (e.g. `ci-pipeline`, `alice-smith`) — they function as concept graph nodes, which requires composable names, not assertions.
+**[Zettelkasten](https://zettelkasten.de/)** (Niklas Luhmann) — shapes how knowledge flows into the graph. The note-flow hierarchy: raw capture (Day > Inbox) → source notes (`inbox/`) → resource articles (`resources/`) → synthesis articles (`resources/synthesis/`). The key insight: understanding develops in stages. You summarize a source in your own words before promoting concepts to the graph. Cross-links are where new ideas emerge — two connected articles together express an insight neither contains alone.
 
-**[Digital Gardening](https://maggieappleton.com/garden-history)** — a low-pressure philosophy of progressive development. No article is a failure for being thin. New articles start with `status: stub`; they develop into `status: current` as facts accumulate. The garden grows through tending, not through batch completions. The `/r-plan` command is the gardening pass: review the graph, identify what to merge, split, deepen, or synthesize.
+**[Evergreen Notes](https://notes.andymatuschak.org/Evergreen_notes)** (Andy Matuschak) — shapes how resource articles develop. Notes are never finished, only more developed. Every revisit to a resource article should deepen it — sharpen a claim, add a link, expand a thin section. The `actualized` frontmatter field tracks when each article was last substantively enriched. Note titles stay as topic/term noun phrases (e.g. `ci-pipeline`, `alice-smith`) — they function as concept graph nodes, which requires composable names.
+
+**[Digital Gardening](https://maggieappleton.com/garden-history)** — the philosophy underlying `resources/` as a whole. No article is a failure for being thin. New articles start with `status: stub`; they develop into `status: current` as facts accumulate. The garden grows through regular tending, not through batch completions. The `/r-plan` command is the gardening pass: review the graph, identify what to merge, split, deepen, or synthesize.
 
 ## What the agent does
 
