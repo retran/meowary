@@ -1,6 +1,6 @@
 ---
 name: jira
-description: Search and read Jira issues — query assigned issues, sprint boards, epics, and extract facts for resources and daily notes
+description: Search and read Jira issues — query assigned issues, sprint boards, epics, and extract facts for resources and daily notes. Use when querying or reading Jira issues.
 compatibility: opencode
 ---
 

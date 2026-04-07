@@ -1,6 +1,6 @@
 ---
 name: glab
-description: Work with GitLab via glab CLI — merge request lifecycle, CI monitoring, issue management
+description: Work with GitLab via glab CLI — merge request lifecycle, CI monitoring, issue management. Use when creating or managing GitLab MRs, CI pipelines, or issues.
 compatibility: opencode
 ---
 

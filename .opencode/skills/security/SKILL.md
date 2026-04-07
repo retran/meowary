@@ -1,6 +1,6 @@
 ---
 name: security
-description: Baseline safety rules for working with production systems, credentials, and sensitive operations
+description: Baseline safety rules for working with production systems, credentials, and sensitive operations. Use when working with production systems, credentials, or destructive operations.
 compatibility: opencode
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: address-review
-description: "Address review comments — GitHub PRs, GitLab MRs, or pasted comments on local changes"
+description: "Address review comments — GitHub PRs, GitLab MRs, or pasted comments on local changes. Use when addressing unresolved MR or PR review comments."
 compatibility: opencode
 ---
 

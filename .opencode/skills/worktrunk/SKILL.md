@@ -1,6 +1,6 @@
 ---
 name: worktrunk
-description: Manage git worktrees with wt — create, switch, list, merge, and remove worktrees; check out MR/PR branches
+description: Manage git worktrees with wt — create, switch, list, merge, and remove worktrees; check out MR/PR branches. Use when managing git worktrees.
 compatibility: opencode
 ---
 

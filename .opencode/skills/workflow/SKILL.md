@@ -1,6 +1,6 @@
 ---
 name: workflow
-description: Structured workflows for software engineering and document authoring — brainstorm, plan, implement, review, debug phases with hard approval gates
+description: Structured workflows for software engineering and document authoring — brainstorm, plan, implement, review, debug phases with hard approval gates. Use when brainstorming, planning, implementing, reviewing, or debugging code or documents.
 compatibility: opencode
 ---
 
@@ -23,13 +23,13 @@ The workflow operates in two modes, inferred from context:
 
 Load these on top of `workflow` for specific phases:
 
-| Phase | Sub-skill file | Trigger | Depends on |
-|-------|---------------|---------|------------|
-| Brainstorm | `workflow/brainstorm` | Exploring a problem, generating options | `workflow` |
-| Plan | `workflow/plan` | Creating an implementation plan | `workflow` |
-| Implement | `workflow/implement` | Building from an approved plan | `workflow` |
-| Review | `workflow/review` | Reviewing code changes or documents | `workflow` |
-| Debug | `workflow/debug` | Investigating a bug or error (code only) | `workflow` |
+| Trigger | Sub-skill |
+|---------|-----------|
+| Exploring a problem space, generating solution options | `workflow/brainstorm` ([brainstorm.md](brainstorm.md)) |
+| Creating an implementation plan from an approved spec | `workflow/plan` ([plan.md](plan.md)) |
+| Building from an approved plan | `workflow/implement` ([implement.md](implement.md)) |
+| Reviewing code changes or documents | `workflow/review` ([review.md](review.md)) |
+| Investigating a bug or error | `workflow/debug` ([debug.md](debug.md)) |
 
 ## Workflow
 

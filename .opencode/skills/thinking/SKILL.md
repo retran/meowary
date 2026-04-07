@@ -1,6 +1,6 @@
 ---
 name: thinking
-description: Structured reasoning for complex decisions — frame the problem, research options, compare tradeoffs, plan execution, verify the plan before acting
+description: Structured reasoning for complex decisions — frame the problem, research options, compare tradeoffs, plan execution, verify the plan before acting. Use for complex decisions with high risk or irreversible steps.
 compatibility: opencode
 ---
 

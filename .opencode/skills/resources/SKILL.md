@@ -1,6 +1,6 @@
 ---
 name: resources
-description: Maintain and actualize resources — single-article enrichment, Confluence sync, graph review and operation planning, and structural operations (create, delete, merge, split, reclassify)
+description: Maintain and actualize resources — single-article enrichment, Confluence sync, graph review and operation planning, and structural operations (create, delete, merge, split, reclassify). Use when working with resource articles, enriching knowledge, or any resources sub-workflow.
 compatibility: opencode
 ---
 
@@ -10,8 +10,8 @@ Load the `writing` skill alongside this one — it governs style and formatting 
 
 Load these on top of `resources` for specific workflows:
 
-| Task | Sub-skill to load |
-|------|------------------|
+| Trigger | Sub-skill |
+|---------|-----------|
 | Actualize a single resource article (enrich with new facts, fix cross-references, update metadata) | `resources/enrich` ([enrich.md](enrich.md)) |
 | Sync Confluence map and enrich resources in batch (detect new/modified pages, produce operation plan, execute) | `resources/sync` ([sync.md](sync.md)) |
 | Review all resources and plan graph restructuring (identify merges, splits, deletes, creates, reclassifies) | `resources/plan` ([plan.md](plan.md)) |

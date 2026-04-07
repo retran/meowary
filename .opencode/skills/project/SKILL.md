@@ -1,6 +1,6 @@
 ---
 name: project
-description: Create, update, and maintain project dashboards — tasks, dev log, status, cross-links, lifecycle
+description: Create, update, and maintain project dashboards — tasks, dev log, status, cross-links, lifecycle. Use when creating or updating a project or area dashboard.
 compatibility: opencode
 ---
 

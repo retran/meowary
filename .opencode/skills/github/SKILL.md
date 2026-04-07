@@ -1,6 +1,6 @@
 ---
 name: github
-description: Work with GitHub via gh CLI — pull request lifecycle, Actions CI, issue management, repo operations
+description: Work with GitHub via gh CLI — pull request lifecycle, Actions CI, issue management, repo operations. Use when creating or managing GitHub PRs, Actions, or issues.
 compatibility: opencode
 ---
 
