@@ -53,4 +53,4 @@ Omit to search all collections.
 
 ## Maintenance
 
-Re-index after bulk changes: `node scripts/qmd-index.js`
+Re-index after bulk changes: `node .opencode/scripts/qmd-index.js`

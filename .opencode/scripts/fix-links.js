@@ -25,7 +25,7 @@ import {
   isWithinDir,
 } from "./lib/links.js";
 
-const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 const KB_ROOT = resolve(REPO_ROOT, "resources");
 const TODAY = new Date().toISOString().slice(0, 10);
 

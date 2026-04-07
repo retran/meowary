@@ -96,4 +96,4 @@ During every session — regardless of primary task — scan for resource gaps. 
 - **No stubs.** Every new article needs a real Overview and at least one substantive section.
 - **Distill, don't copy.** Confluence and Jira are sources, not mirrors.
 - **Read-only externals.** Never write to Jira or Confluence. Codebase is read-only.
-- **Fix all inbound links.** After any delete, merge, reclassify, split, or rename: run `node scripts/find-backlinks.js <old-path>` from the repo root to find every inbound link (not just in `resources/` — daily notes and project files link in too). Update or remove all matches. Broken links are unacceptable.
+- **Fix all inbound links.** After any delete, merge, reclassify, split, or rename: run `node .opencode/scripts/find-backlinks.js <old-path>` from the repo root to find every inbound link (not just in `resources/` — daily notes and project files link in too). Update or remove all matches. Broken links are unacceptable.

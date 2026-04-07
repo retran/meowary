@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 import { findMdFiles } from "./lib/links.js";
 import { hasFrontmatter, getFrontmatterField } from "./lib/frontmatter.js";
 
-const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 const EXCLUDE = new Set(["AGENTS.md"]);
 
 const allFiles = findMdFiles(REPO_ROOT).filter((f) => {

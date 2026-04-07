@@ -46,7 +46,7 @@ tags: []
 ├── style.md                   # Code style rules per language, linter/formatter config
 ├── testing.md                 # Test frameworks, file structure, coverage policy
 ├── safety.md                  # Non-negotiable rules: secrets, destructive ops
-├── scripts/                   # Automation scripts (Confluence sync, link auditing)
+├── .opencode/scripts/                   # Automation scripts (Confluence sync, link auditing)
 ├── .opencode/                 # OpenCode configuration
 │   ├── commands/              # Custom slash commands
 │   ├── skills/                # Custom skills

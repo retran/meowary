@@ -21,7 +21,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { findBacklinks } from "./lib/links.js";
 
-const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 
 const args = process.argv.slice(2);
 if (args.length === 0) {

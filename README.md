@@ -170,7 +170,7 @@ You own the Markdown. The agent does the grunt work.
 
 | Tool | Purpose | Install |
 | ---- | ------- | ------- |
-| [Node.js](https://nodejs.org) ≥ 22 | Runs all `scripts/` automation | [nodejs.org](https://nodejs.org) or `mise install node@22` |
+| [Node.js](https://nodejs.org) ≥ 22 | Runs all `.opencode/scripts/` automation | [nodejs.org](https://nodejs.org) or `mise install node@22` |
 | [qmd](https://github.com/tobi/qmd) | Semantic search — powers `/ask`, `/r-ingest`, `/r-sync` | `npm install -g @tobilu/qmd` |
 
 ### CLI integrations — install what you use
@@ -282,7 +282,7 @@ Open the directory in [OpenCode](https://opencode.ai), then:
 │   ├── scratch.md      # Quick capture pad
 │   └── <slug>.md       # Source notes and captures
 ├── waiting-for.md      # Open delegations — appended by /evening, reviewed weekly
-├── scripts/            # Confluence sync, link auditing, migration tools
+├── .opencode/scripts/            # Confluence sync, link auditing, migration tools
 ├── context.md          # Your identity, team, active projects — filled by /bootstrap
 ├── confluence-sync.json# Confluence page monitoring registry
 ├── resources-log.md    # Append-only log of resource operations
@@ -308,7 +308,7 @@ All integrations use CLI tools installed separately. Credentials go in `.env` (s
 | Web search | Exa (built-in) | Web search from OpenCode | Set `OPENCODE_ENABLE_EXA=1` in `.env` — no API key required |
 | Library docs | Context7 (built-in) | Framework and library documentation | Set `CONTEXT7_API_KEY` in `.env` (optional — public rate limits apply without it) |
 
-The Atlassian REST credentials (`ATLASSIAN_USERNAME`, `ATLASSIAN_API_TOKEN`, `JIRA_URL`, `CONFLUENCE_URL`) are also used by `scripts/config.js` for direct API calls in the automation scripts — set them even if you use `jira-cli` and `confluence-cli`.
+The Atlassian REST credentials (`ATLASSIAN_USERNAME`, `ATLASSIAN_API_TOKEN`, `JIRA_URL`, `CONFLUENCE_URL`) are also used by `.opencode/scripts/config.js` for direct API calls in the automation scripts — set them even if you use `jira-cli` and `confluence-cli`.
 
 ## Source code access
 

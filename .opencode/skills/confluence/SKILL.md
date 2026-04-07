@@ -76,7 +76,7 @@ Add the page to the monitoring registry if you want to be notified when it chang
 | `synced` | Date we last ingested this page into resource articles (`YYYY-MM-DD`), or `null` |
 | `resources` | Optional hint list of resource article paths this page informs |
 
-Not every fetched page needs to be in `confluence-sync.json` — only pages worth monitoring for changes. Use `node scripts/confluence-missing.js` to discover untracked pages in a space, and `node scripts/confluence-updates.js YYYY-MM-DD` to check which tracked pages have changed since a given date.
+Not every fetched page needs to be in `confluence-sync.json` — only pages worth monitoring for changes. Use `node .opencode/scripts/confluence-missing.js` to discover untracked pages in a space, and `node .opencode/scripts/confluence-updates.js YYYY-MM-DD` to check which tracked pages have changed since a given date.
 
 ## Transforming Pages into Resource Source Material
 

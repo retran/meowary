@@ -10,7 +10,7 @@ compatibility: opencode
 |---------|-----------------|
 | New resource article created | Register any new tags in `tags.md` |
 | Confluence page fetched for enrichment | Add page ID to article's `confluence:` front matter; add to `confluence-sync.json` if monitoring |
-| Confluence sync detects new/stale pages | Run `node scripts/confluence-ingest.js` — see [sync.md](sync.md) |
+| Confluence sync detects new/stale pages | Run `node .opencode/scripts/confluence-ingest.js` — see [sync.md](sync.md) |
 | Resource article edited | Update `updated` front matter; append to `## Changelog` |
 | New tag introduced | Add to correct table in `tags.md` with link |
 | New person/team encountered | Create resource entry from template; register tag |
@@ -29,14 +29,14 @@ These are independent. An article may cite pages not in the monitoring registry;
 
 **When to add a page to `confluence-sync.json`:**
 - You want to be notified when it changes (ongoing monitoring)
-- Use `node scripts/confluence-missing.js` to discover untracked pages in a space
+- Use `node .opencode/scripts/confluence-missing.js` to discover untracked pages in a space
 
 **When to add a page ID to `confluence:` front matter:**
 - You fetched the page and extracted facts into this article
 - Add the ID every time a new Confluence page informs the article's content
 
 **Re-fetch cadence.** No fixed schedule. Re-fetch when:
-- `node scripts/confluence-updates.js YYYY-MM-DD` reports the page was modified
+- `node .opencode/scripts/confluence-updates.js YYYY-MM-DD` reports the page was modified
 - A daily workflow reveals that a resource article's facts are stale
 - The user explicitly asks to refresh a topic
 
@@ -70,11 +70,11 @@ The knowledge graph degrades silently. These checks catch problems early.
 
 **On demand / after bulk operations:**
 ```
-node scripts/health-all.js
+node .opencode/scripts/health-all.js
 ```
 Reports: orphaned articles, missing frontmatter, tag inconsistencies, stale articles, overly long articles.
 
-**Orphan check:** Articles with no inbound links from other resource files are orphans — invisible in the graph. Fix by adding a cross-reference from a related article. Run `node scripts/find-backlinks.js <path>` to check. People files are exempt.
+**Orphan check:** Articles with no inbound links from other resource files are orphans — invisible in the graph. Fix by adding a cross-reference from a related article. Run `node .opencode/scripts/find-backlinks.js <path>` to check. People files are exempt.
 
 **Staleness heuristic:** An article with `actualized` (or `updated`) older than 90 days and `status: current` is potentially stale. During sync, if the corresponding Confluence page was modified after the article's `actualized` date, flag for review. Set `status: outdated` if facts have drifted.
 

@@ -9,7 +9,7 @@ Audit the journal repo for convention violations and report findings as a checkl
 Execute the full health suite:
 
 ```
-node scripts/health-all.js
+node .opencode/scripts/health-all.js
 ```
 
 This runs all checks and produces a grouped report:

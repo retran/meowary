@@ -33,7 +33,7 @@ Then proceed to Step 1. Use the source note's `## Candidate topics` to drive con
 **If the input is a URL:**
 
 ```
-node scripts/fetch-source.js <url>
+node .opencode/scripts/fetch-source.js <url>
 ```
 
 The script fetches the HTML, strips navigation and boilerplate, and outputs clean markdown with a `<!-- Source: <url> -->` header. Read the output.
@@ -85,7 +85,7 @@ After all operations:
 ### Step 6: Re-index
 
 ```
-node scripts/qmd-index.js
+node .opencode/scripts/qmd-index.js
 ```
 
 Rebuilds the semantic index so new articles are queryable by `/ask`.

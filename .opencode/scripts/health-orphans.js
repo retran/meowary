@@ -15,7 +15,7 @@ import { resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { findMdFiles, findBacklinks } from "./lib/links.js";
 
-const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 const RESOURCES_ROOT = resolve(REPO_ROOT, "resources");
 
 const resourceFiles = findMdFiles(RESOURCES_ROOT).filter((f) => {

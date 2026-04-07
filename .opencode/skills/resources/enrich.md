@@ -207,7 +207,7 @@ Do not create a synthesis article now. This flags the candidate for a future `/r
 Check whether the article has at least one inbound link from another resource file. Run:
 
 ```
-node scripts/find-backlinks.js <article-path>
+node .opencode/scripts/find-backlinks.js <article-path>
 ```
 
 Zero results means the article is orphaned — invisible in the knowledge graph. Fix by adding a link from the most closely related article's `## Related` section.

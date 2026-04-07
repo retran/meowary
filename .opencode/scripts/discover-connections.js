@@ -23,7 +23,7 @@ import { fileURLToPath } from "node:url";
 import { findMdFiles } from "./lib/links.js";
 import { getFrontmatterField } from "./lib/frontmatter.js";
 
-const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 
 // Parse flags
 const args = process.argv.slice(2);

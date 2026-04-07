@@ -24,7 +24,7 @@ import {
   resolveLink,
 } from "./lib/links.js";
 
-const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 
 // ---------------------------------------------------------------------------
 // Parse args

@@ -20,7 +20,7 @@ import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
 
 export const SCRIPTS_DIR = dirname(fileURLToPath(import.meta.url));
-export const JOURNAL_DIR = resolve(SCRIPTS_DIR, "..");
+export const JOURNAL_DIR = resolve(SCRIPTS_DIR, "../..");
 /** Alias for JOURNAL_DIR — the repo root. Derived from import.meta.url so scripts
  *  work regardless of the working directory they are invoked from. */
 export const REPO_ROOT = JOURNAL_DIR;

@@ -106,7 +106,7 @@ Review the week's daily notes and meeting notes for durable facts not yet captur
 1. Scan all daily log entries and meeting discussions from the week.
 2. Identify: role changes, team updates, process decisions, architecture choices, tool adoptions.
 3. For each durable fact found: check if a resource article exists. If yes, update it. If no, create one or flag for creation.
-4. Run `node scripts/health-stale.js` to surface resource articles not updated recently that were referenced this week — flag as stale.
+4. Run `node .opencode/scripts/health-stale.js` to surface resource articles not updated recently that were referenced this week — flag as stale.
 
 This scan consolidates what might have been missed during individual daily resource scans.
 

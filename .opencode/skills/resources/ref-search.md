@@ -6,12 +6,12 @@ compatibility: opencode
 
 ## Script Reference Card
 
-All deterministic operations on resource files are handled by scripts in `scripts/`. Load this reference when you need to know which script to run for a given task.
+All deterministic operations on resource files are handled by scripts in `.opencode/scripts/`. Load this reference when you need to know which script to run for a given task.
 
 ### Find inbound links to an article
 
 ```
-node scripts/find-backlinks.js <article-path>
+node .opencode/scripts/find-backlinks.js <article-path>
 ```
 
 - Use after every rename, move, split, or delete — catches all broken links before committing.
@@ -21,7 +21,7 @@ node scripts/find-backlinks.js <article-path>
 ### Run all health checks
 
 ```
-node scripts/health-all.js
+node .opencode/scripts/health-all.js
 ```
 
 - Runs every health script and outputs a unified grouped report.
@@ -32,17 +32,17 @@ node scripts/health-all.js
 
 | Script | What it checks | Key flags |
 |--------|---------------|-----------|
-| `node scripts/health-orphans.js` | Articles in `resources/` (excl. `people/`) with zero inbound links | — |
-| `node scripts/health-tags.js` | Tags used but not in `tags.md`; registered tags with no usage | — |
-| `node scripts/health-stale.js` | Articles not actualized recently | `--days N` (default 90) |
-| `node scripts/health-links.js` | Broken links and missing bidirectional back-links | `--scope resources\|journal\|all` |
-| `node scripts/health-lengths.js` | Articles exceeding line limit (split candidates) | `--lines N` (default 80) |
-| `node scripts/health-frontmatter.js` | Files missing `updated` or `tags` front matter | — |
+| `node .opencode/scripts/health-orphans.js` | Articles in `resources/` (excl. `people/`) with zero inbound links | — |
+| `node .opencode/scripts/health-tags.js` | Tags used but not in `tags.md`; registered tags with no usage | — |
+| `node .opencode/scripts/health-stale.js` | Articles not actualized recently | `--days N` (default 90) |
+| `node .opencode/scripts/health-links.js` | Broken links and missing bidirectional back-links | `--scope resources\|journal\|all` |
+| `node .opencode/scripts/health-lengths.js` | Articles exceeding line limit (split candidates) | `--lines N` (default 80) |
+| `node .opencode/scripts/health-frontmatter.js` | Files missing `updated` or `tags` front matter | — |
 
 ### Report on all resource articles
 
 ```
-node scripts/report-resources.js [--sort actualized|lines|inlinks]
+node .opencode/scripts/report-resources.js [--sort actualized|lines|inlinks]
 ```
 
 - Table output: path, lines, tags, actualized date, inlinks, outlinks.
@@ -51,7 +51,7 @@ node scripts/report-resources.js [--sort actualized|lines|inlinks]
 ### Discover connections between articles
 
 ```
-node scripts/discover-connections.js [--scope <path>] [--limit N]
+node .opencode/scripts/discover-connections.js [--scope <path>] [--limit N]
 ```
 
 - Scores article pairs by shared tags (+1), shared sources (+2), entity co-occurrence (+1), structural proximity (+1).
@@ -61,7 +61,7 @@ node scripts/discover-connections.js [--scope <path>] [--limit N]
 ### Fix broken links in bulk
 
 ```
-node scripts/fix-links.js
+node .opencode/scripts/fix-links.js
 ```
 
 - Identifies and interactively prompts for broken link fixes across `resources/`.
@@ -70,7 +70,7 @@ node scripts/fix-links.js
 ### Generate a resource operation plan
 
 ```
-node scripts/plan-resources.js
+node .opencode/scripts/plan-resources.js
 ```
 
 - Produces a structured candidate operation list (delete, merge, split, create, actualize).
@@ -79,7 +79,7 @@ node scripts/plan-resources.js
 ### Execute a structural operation
 
 ```
-node scripts/run-operation.js
+node .opencode/scripts/run-operation.js
 ```
 
 - Interactive prompts for delete / merge / split / reclassify / create.
@@ -91,7 +91,7 @@ node scripts/run-operation.js
 
 | Old (rg) | New (script) |
 |----------|-------------|
-| `rg "filename" resources/` | `node scripts/find-backlinks.js <file>` |
-| `rg "filename" .` (whole repo) | `node scripts/find-backlinks.js <file>` (searches entire repo) |
-| Orphan scan bash loop | `node scripts/health-orphans.js` |
-| `rg "^tags:.*<tag>" resources/ -l` | `node scripts/health-tags.js` |
+| `rg "filename" resources/` | `node .opencode/scripts/find-backlinks.js <file>` |
+| `rg "filename" .` (whole repo) | `node .opencode/scripts/find-backlinks.js <file>` (searches entire repo) |
+| Orphan scan bash loop | `node .opencode/scripts/health-orphans.js` |
+| `rg "^tags:.*<tag>" resources/ -l` | `node .opencode/scripts/health-tags.js` |

@@ -28,7 +28,7 @@ Pick one of:
 Run the discovery script to automatically build the index and compute pair scores for the chosen scope:
 
 ```
-node scripts/discover-connections.js --scope <path> --limit 20
+node .opencode/scripts/discover-connections.js --scope <path> --limit 20
 ```
 
 - `--scope` accepts a subfolder path (e.g. `resources/studio-pro/`) or `resources/` for the full graph.
@@ -39,7 +39,7 @@ The script handles sub-steps 2a–2e and Step 3. Review its output before procee
 For individual backlink lookups, use:
 
 ```
-node scripts/find-backlinks.js <article-path>
+node .opencode/scripts/find-backlinks.js <article-path>
 ```
 
 **What the script checks (for reference):**

@@ -18,7 +18,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SCRIPTS_DIR = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(SCRIPTS_DIR, "..");
+const REPO_ROOT = resolve(SCRIPTS_DIR, "../..");
 const SNAPSHOT_FILE = resolve(REPO_ROOT, "env-snapshot.md");
 
 function run(cmd) {

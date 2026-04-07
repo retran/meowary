@@ -48,7 +48,7 @@ Read before acting. Never invent conventions — if a file is empty, ask the use
 
 Full directory tree and "What Goes Where" table: [`.opencode/reference/structure.md`](.opencode/reference/structure.md).
 
-Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `drafts/`, `archive/`, `inbox/`, `scripts/`, `.opencode/`.
+Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `drafts/`, `archive/`, `inbox/`, `.opencode/scripts/`, `.opencode/`.
 
 ## Automation Tools
 
@@ -65,19 +65,19 @@ CLIs are preferred over MCP for all external service integrations.
 | `glab` | `brew install glab` | `glab auth login` |
 | `repomix` | `npm install -g repomix` | None |
 
-To snapshot installed tools and versions: `node scripts/env-context.js` → writes `env-snapshot.md` (gitignored).
+To snapshot installed tools and versions: `node .opencode/scripts/env-context.js` → writes `env-snapshot.md` (gitignored).
 
 ### QMD — Semantic Search
 
 Full documentation: load the `qmd` skill.
 
-- Index: `node scripts/qmd-index.js` (`--changed` for fast early-exit, `--full` to force re-embed)
+- Index: `node .opencode/scripts/qmd-index.js` (`--changed` for fast early-exit, `--full` to force re-embed)
 - Query: `qmd query "<question>"`
 - Re-index after any bulk create/actualize, `/r-ingest`, or `/r-sync` run.
 
-### Scripts — `scripts/`
+### Scripts — `.opencode/scripts/`
 
-- Language: JavaScript (ESM). Run from repo root: `node scripts/<name>.js [args]`
+- Language: JavaScript (ESM). Run from repo root: `node .opencode/scripts/<name>.js [args]`
 - Scripts are read-only (stdout only) except: `fix-links.js`, `run-operation.js`, `plan-resources.js`, `migrate-daily-notes.js`, `confluence-ingest.js`.
 - Confluence ingestion workflow: load `resources/sync` sub-skill.
 

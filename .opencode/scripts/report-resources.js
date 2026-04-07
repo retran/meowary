@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 import { getFrontmatterField, stripFrontmatter } from "./lib/frontmatter.js";
 import { findMdFiles, extractLinks, resolveLink, findBacklinks } from "./lib/links.js";
 
-const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 const RESOURCES_ROOT = resolve(REPO_ROOT, "resources");
 
 // Parse --sort flag

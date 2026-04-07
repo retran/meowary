@@ -7,7 +7,7 @@ tags: []
 # Resources Log
 
 Running log of automated resource operations. Entries are appended by:
-- `node scripts/health-all.js` (lint runs)
+- `node .opencode/scripts/health-all.js` (lint runs)
 - Workflow B (`/r-sync`) — sync operations
 - Workflow E (`/r-discover`) — discovery runs
 - Workflow F (`/r-ingest`) — ingest operations

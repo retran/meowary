@@ -21,7 +21,7 @@ import { fileURLToPath } from "node:url";
 import { findMdFiles } from "./lib/links.js";
 import { stripFrontmatter } from "./lib/frontmatter.js";
 
-const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 const RESOURCES_ROOT = resolve(REPO_ROOT, "resources");
 
 // Parse --lines flag

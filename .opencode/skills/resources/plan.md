@@ -21,9 +21,9 @@ compatibility: opencode
 
 ### Step 2: Scan All Articles
 
-Start with a high-level overview — run `node scripts/report-resources.js --sort actualized` to see all articles sorted by how recently they were enriched. This shows coverage gaps (long-stale articles) and size outliers (split candidates) at a glance.
+Start with a high-level overview — run `node .opencode/scripts/report-resources.js --sort actualized` to see all articles sorted by how recently they were enriched. This shows coverage gaps (long-stale articles) and size outliers (split candidates) at a glance.
 
-Also run `node scripts/health-all.js` to get a full health report: orphaned articles, tag inconsistencies, stale articles, and empty sections. Use this output as additional input for Step 3.
+Also run `node .opencode/scripts/health-all.js` to get a full health report: orphaned articles, tag inconsistencies, stale articles, and empty sections. Use this output as additional input for Step 3.
 
 Then for each subfolder in `resources/`, read every article — including `resources/people/`. Person files are full resource nodes and must be reviewed. At minimum read:
 - Full front matter (`status`, `updated`, `tags`)
