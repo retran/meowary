@@ -339,10 +339,9 @@ Examples: `/r enrich alice-smith`, `/r sync`, `/r ingest https://...`.
 ├── waiting-for.md      # Open delegations — appended by /evening, reviewed weekly
 ├── context/
 │   ├── context.md      # Your identity, team, active projects — filled by /bootstrap
-│   ├── architecture.md # External repo structure, tech stack, build system, CI
-│   ├── coding.md       # Language idioms, project conventions, code style rules
-│   ├── testing.md      # Test frameworks, file structure, coverage policy
 │   └── safety.md       # Non-negotiable rules: secrets, destructive ops, approval gates
+├── codebases/
+│   └── <name>.md       # Per-repo context: stack, build, test, conventions, CI, decisions
 ├── .opencode/
 │   ├── commands/       # Slash command definitions
 │   ├── workflows/      # Step-by-step workflow procedures (23 files)
