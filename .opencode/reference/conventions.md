@@ -1,9 +1,3 @@
----
-name: conventions
-description: Commit message and MR/PR title conventions — Jira key prefix for project repos, plain description for journal. Use when writing a commit message or MR/PR title.
-compatibility: opencode
----
-
 # Commit & MR Title Conventions
 
 The format depends on which repo you are working in.

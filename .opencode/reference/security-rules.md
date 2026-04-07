@@ -1,9 +1,3 @@
----
-name: security
-description: Baseline safety rules for working with production systems, credentials, and sensitive operations. Use when working with production systems, credentials, or destructive operations.
-compatibility: opencode
----
-
 # Security Rules
 
 These rules apply to all workflow phases when working with real systems, credentials, or production environments. They are non-negotiable.

@@ -1,7 +1,10 @@
 ---
-name: address-review
-description: "Address review comments — GitHub PRs, GitLab MRs, or pasted comments on local changes. Use when addressing unresolved MR or PR review comments."
+name: workflow/address-review
+description: Address review comments — GitHub PRs, GitLab MRs, or pasted comments on local changes. Use when addressing unresolved MR or PR review comments.
 compatibility: opencode
+depends_on:
+  - workflow
+  - scm
 ---
 
 # Address Review Comments
@@ -167,7 +170,7 @@ Address one thread (or group) at a time, in the agreed order. After each fix:
 
 ## Step 5: Commit
 
-Load the `conventions` skill for the required format.
+See `.opencode/reference/conventions.md` for the required format.
 
 - **Project/code repo:** `[PROJ-123] address review comments from @reviewer`
   Use the Jira issue key from the branch name or PR/MR title. Load the `jira` skill if unclear.
@@ -241,5 +244,3 @@ gh api graphql -f query='
 - **Do not resolve architectural threads.** Leave those for the reviewer to close.
 - **Hard gate before code changes.** Always present the plan before touching files.
 - **Local mode:** commit only. No push, no resolve.
-
-Base directory for this skill: file:///Users/retran/workspace/meowary/.opencode/skills/address-review

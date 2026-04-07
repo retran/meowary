@@ -24,7 +24,7 @@ Execute an approved plan by writing code or documents, validating output, and tr
 1. Read `style.md`, `patterns.md`, `testing.md`, `safety.md`
 2. Read the approved plan (`projects/<project>/plans/<slug>.md`)
 3. If no plan exists, confirm the task is small enough to proceed without one
-4. If the code touches security-sensitive areas (auth, credentials, prod systems), load the `security` skill
+4. If the code touches security-sensitive areas (auth, credentials, prod systems), read `.opencode/reference/security-rules.md`
 
 **Document mode:**
 1. Load the `writing` skill (and appropriate sub-skill: `writing/adr`, `writing/meeting`, etc.)
@@ -41,7 +41,7 @@ For each task in the plan:
       - Code mode: run tests if a test suite exists
       - Document mode: verify cross-links, front matter, style compliance
    4. **Check off** the task in the plan file (`- [x]`).
-   5. **Commit** at natural boundaries if the user has asked for commits. Load the `conventions` skill for the required commit message format.
+   5. **Commit** at natural boundaries if the user has asked for commits. Read `.opencode/reference/conventions.md` for the required commit message format.
 
 ### Step 2: Self-Review
 

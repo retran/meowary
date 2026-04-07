@@ -4,25 +4,6 @@ description: Read Confluence pages and maintain Confluence tracking — search, 
 compatibility: opencode
 ---
 
-## Setup
-
-Environment variables (set in `.env` — see `.env.example`):
-
-| Variable | Purpose |
-|----------|---------|
-| `CONFLUENCE_DOMAIN` | Your instance domain, e.g. `your-instance.atlassian.net` |
-| `CONFLUENCE_EMAIL` | Your Atlassian email |
-| `CONFLUENCE_API_TOKEN` | Atlassian API token (same value as `ATLASSIAN_API_TOKEN`) |
-| `CONFLUENCE_API_PATH` | Set to `/wiki/rest/api` for Atlassian Cloud |
-| `CONFLUENCE_READ_ONLY` | `true` blocks all write operations at CLI level |
-
-Run once to initialize the CLI config from these env vars:
-```bash
-confluence init
-```
-
-`CONFLUENCE_SPACES` in `.env` lists the default spaces to search (used by `scripts/`).
-
 ## Write Policy
 
 **Never create, edit, or delete Confluence pages without explicit user approval.**
@@ -57,28 +38,7 @@ confluence info PAGE_ID
 
 ### Search strategies
 
-When a page ID is not known:
-
-```bash
-# Text search (general keyword search)
-confluence search "deployment pipeline" --limit 10
-
-# Find by exact title in a specific space
-confluence find "Release Process" --space ENG
-
-# List child pages of a known page
-confluence children PAGE_ID --recursive --format tree
-
-# List all spaces (to discover space keys)
-confluence spaces
-```
-
-| Goal | Command |
-|------|---------|
-| Search by keyword | `confluence search "keyword" --limit 10` |
-| Find by title in space | `confluence find "Title" --space SPACEKEY` |
-| Browse space pages | `confluence children ROOT_PAGE_ID --recursive` |
-| Discover space keys | `confluence spaces` |
+When a page ID is not known, see [confluence/reference/search-strategies.md](reference/search-strategies.md) for commands and strategy table.
 
 Use at least two strategies before concluding a page does not exist.
 

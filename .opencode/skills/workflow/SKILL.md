@@ -30,6 +30,8 @@ Load these on top of `workflow` for specific phases:
 | Building from an approved plan | `workflow/implement` ([implement.md](implement.md)) |
 | Reviewing code changes or documents | `workflow/review` ([review.md](review.md)) |
 | Investigating a bug or error | `workflow/debug` ([debug.md](debug.md)) |
+| Deep reasoning for complex decisions | `workflow/thinking` ([thinking.md](thinking.md)) |
+| Addressing unresolved review comments | `workflow/address-review` ([address-review.md](address-review.md)) |
 
 ## Workflow
 

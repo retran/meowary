@@ -4,18 +4,6 @@ description: Search and read Jira issues — query assigned issues, sprint board
 compatibility: opencode
 ---
 
-## Setup
-
-```bash
-# Install (one-time)
-brew install ankitpokhrel/tap/jira-cli
-
-# Configure (interactive, one-time — generates ~/.config/.jira/.config.yml)
-jira init
-```
-
-Set `JIRA_API_TOKEN` in `.env` before running `jira init`. Set project key via `jira init` prompt.
-
 **Agent output flags:**
 - Always use `--plain` for non-interactive list output.
 - Always use `--no-input` for create/edit commands.
@@ -59,15 +47,7 @@ jira issue list -q "assignee = currentUser() AND updated >= -1d" --plain
 
 ### Common JQL patterns
 
-| Goal | JQL |
-|------|-----|
-| Open assigned issues | `assignee = currentUser() AND statusCategory != Done` |
-| Current sprint | `assignee = currentUser() AND sprint in openSprints()` |
-| Issues in a project | `project = PROJ AND statusCategory != Done` |
-| High-priority | `assignee = currentUser() AND priority in (Blocker, Critical) AND statusCategory != Done` |
-| Recently updated | `project = PROJ AND updated >= -7d ORDER BY updated DESC` |
-| By label | `labels = "my-label" AND project = PROJ` |
-| By epic | `parent = PROJ-123` |
+See [`jira/reference/jql-patterns.md` — Common JQL patterns](reference/jql-patterns.md#common-jql-patterns).
 
 ### Search strategies
 
@@ -93,25 +73,7 @@ PAGER=cat jira issue view PROJ-123 --comments 5
 
 ## Sprint and Board Queries
 
-```bash
-# List all boards
-jira board list --plain
-
-# List sprints (explorer view — use --table for non-interactive)
-jira sprint list --table --plain
-
-# Current active sprint issues
-jira sprint list --current --plain
-
-# Current sprint, assigned to me
-jira sprint list --current -a$(jira me) --plain
-
-# Previous sprint
-jira sprint list --prev --plain
-
-# Issues in a specific sprint (get ID from sprint list)
-jira sprint list SPRINT_ID --plain
-```
+See [`jira/reference/jql-patterns.md` — Sprint and Board Queries](reference/jql-patterns.md#sprint-and-board-queries).
 
 ---
 
@@ -147,20 +109,7 @@ Replace `<jira-url>` with the Jira URL from `context.md` → **Tooling → Jira 
 
 ## Morning Planning Queries
 
-During `/morning` or `/week-plan`, run these to surface MIT candidates:
-
-```bash
-# Assigned open issues
-jira issue list -q "assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC" --plain
-
-# Current sprint
-jira sprint list --current -a$(jira me) --plain
-
-# Blockers
-jira issue list -q "assignee = currentUser() AND priority = Blocker AND statusCategory != Done" --plain
-```
-
-Skip silently if `jira` is not installed or returns a config error.
+See [`jira/reference/jql-patterns.md` — Morning Planning Queries](reference/jql-patterns.md#morning-planning-queries).
 
 ---
 

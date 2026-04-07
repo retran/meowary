@@ -114,25 +114,3 @@ Full rules: load `writing` skill. Non-negotiable constraints:
 1. **Never delete or overwrite past daily notes.** Append-only.
 2. **Maintain links.** Every link must point to an existing target. Update all inbound links when renaming, moving, or deleting files.
 3. **Never write to Jira or Confluence without explicit user approval.**
-
-## Skill Dispatch
-
-Skills are in `.opencode/skills/`. Trigger conditions are in each skill's `description` frontmatter field, and sub-skill trigger tables are in each parent `SKILL.md`. Load the skill as soon as the trigger condition is met.
-
-| Skill | Path |
-|-------|------|
-| `writing` | `writing/SKILL.md` |
-| `project` | `project/SKILL.md` |
-| `resources` | `resources/SKILL.md` |
-| `confluence` | `confluence/SKILL.md` |
-| `jira` | `jira/SKILL.md` |
-| `glab` | `glab/SKILL.md` |
-| `github` | `github/SKILL.md` |
-| `workflow` | `workflow/SKILL.md` |
-| `worktrunk` | `worktrunk/SKILL.md` |
-| `thinking` | `thinking/SKILL.md` |
-| `security` | `security/SKILL.md` |
-| `conventions` | `conventions/SKILL.md` |
-| `repomix` | `repomix/SKILL.md` |
-| `qmd` | `qmd/SKILL.md` |
-| `address-review` | `address-review/SKILL.md` |
