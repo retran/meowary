@@ -1,6 +1,6 @@
 ---
 name: repomix
-description: Pack a repository or file subset into a single AI-friendly file for analysis, review, or planning. Use when packing a repo or file subset for AI analysis, review, or planning.
+description: Pack a repository or file subset into a single AI-friendly file using repomix. Load when preparing an external codebase for analysis, review, or planning — before scout, research, or peer-review workflows on large external repos.
 compatibility: opencode
 updated: 2026-04-06
 tags: []

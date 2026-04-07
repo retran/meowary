@@ -1,6 +1,6 @@
 ---
 name: scm/github
-description: GitHub — PR lifecycle, Actions CI, issue management, repo API. Load alongside scm/SKILL.md when working in a GitHub repository.
+description: GitHub-specific commands — PR lifecycle (create, review, merge), Actions CI status, issue management, and repo API via gh CLI. Load alongside scm/SKILL.md when working in a GitHub repository.
 compatibility: opencode
 ---
 
@@ -71,7 +71,7 @@ gh pr reopen 123
 
 ### Fix review comments
 
-Load the `workflow/address-review` sub-skill for a structured workflow to address unresolved PR discussion threads.
+Use `/do resolve` for a structured workflow to address unresolved PR discussion threads.
 
 ---
 

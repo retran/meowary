@@ -1,6 +1,6 @@
 ---
 name: scm/gitlab
-description: GitLab — MR lifecycle, CI pipeline monitoring, issue management. Load alongside scm/SKILL.md when working in a GitLab repository.
+description: GitLab-specific commands — MR lifecycle (create, review, merge), CI pipeline monitoring, and issue management via glab CLI. Load alongside scm/SKILL.md when working in a GitLab repository.
 compatibility: opencode
 ---
 
@@ -67,7 +67,7 @@ glab mr reopen 123
 
 ### Fix review comments
 
-Load the `workflow/address-review` sub-skill for a structured workflow to address unresolved MR discussion threads.
+Use `/do resolve` for a structured workflow to address unresolved MR discussion threads.
 
 ---
 

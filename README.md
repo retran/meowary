@@ -21,6 +21,20 @@ The structure follows **PARA** — a proven method for organising working knowle
 
 Daily and weekly notes capture the ephemeral — what happened, what you decided, what's next. The `resources/` folder is the **knowledge graph**: a permanent, cross-linked, always-developing body of knowledge where articles are nodes and cross-references are edges. Articles grow over time — they are never "finished", only more developed. QMD provides semantic search across the full graph, so the agent can surface relevant articles before writing anything.
 
+## How the system is organised
+
+The system has three layers:
+
+**AGENTS.md** — the top-level contract. Defines session start behaviour (three tiers: every session, writing/resources tasks, coding work), editing rules, security policy, and how to load context. The agent reads this on every session start.
+
+**Skills** (`.opencode/skills/`) — domain-specific instruction sets. Each skill covers one topic: journal format, resource graph rules, project lifecycle, QMD syntax, SCM commands. Skills are loaded on demand when a workflow step needs them. They carry the format rules, philosophy, templates, and editor checklists for their domain.
+
+**Workflows** (`.opencode/workflows/`) — step-by-step procedures. Each workflow is a numbered sequence of actions for one task (morning routine, implement a feature, enrich a resource). Workflows are pure procedures — they reference skills for domain rules but don't duplicate them.
+
+The agent dispatches workflows via slash commands. `/do <phase>` and `/r <operation>` are the two lifecycle routers; the others are direct dispatch.
+
+**Progressive disclosure** is the operating principle: AGENTS.md is always loaded; skills are loaded only when the task requires them; coding context files (`architecture.md`, `patterns.md`, etc.) are loaded only during coding work.
+
 ## Daily workflow
 
 Each day follows a three-zone structure grounded in [Bullet Journal](https://bulletjournal.com/):
@@ -59,7 +73,7 @@ Three sub-sections accumulate throughout the day without needing a command:
 
 The Inbox is intentionally unstructured. Write everything there during the day — decisions made, things learned, things to follow up. The evening pass turns that raw capture into structured knowledge.
 
-For richer structured captures (URLs, ideas to develop, references to file later), use `/capture` — these go to `inbox/` and are processed separately via `/r-plan` or `/r-ingest`.
+For richer structured captures (URLs, ideas to develop, references to file later), use `/capture` — these go to `inbox/` and are processed separately via `/r ingest` or `/r plan`.
 
 ### Evening — reflect and promote
 
@@ -73,7 +87,7 @@ Run `/evening` at the end of the day. The agent:
 6. Updates project and area dashboards with dev log entries.
 7. Updates the weekly note's daily link list.
 
-The Insights → Resources step is the heart of the second brain. It's the mechanism that converts ephemeral capture into durable knowledge. Over time, `resources/` becomes a dense, cross-linked reference layer that the agent reads before acting — so it answers from your context rather than from scratch.
+The Insights → Resources step is the heart of the second brain. It converts ephemeral capture into durable knowledge. Over time, `resources/` becomes a dense, cross-linked reference layer that the agent reads before acting — so it answers from your context rather than from scratch.
 
 On **Fridays**, `/evening` also triggers the weekly wrap-up.
 
@@ -92,23 +106,25 @@ Weekly notes live in `journal/weekly/YYYY-WNN.md`. The weekly cycle adds two rev
 - Runs a **Resources Scan** — scans all daily and meeting notes from the week for durable facts not yet in `resources/`.
 - Reviews **`waiting-for.md`** — flags Active items whose follow-up date has passed, surfaces them as MIT candidates for next week.
 
+Run `/weekly` at any time to trigger a manual weekly review outside the Friday flow.
+
 ## The knowledge graph
 
 `resources/` is an evolving knowledge graph. Articles are nodes; cross-references are edges. The graph grows through three mechanisms:
 
 **1. Daily capture → promotion.** The `/evening` routine scans the day's Inbox, Events, and Waiting for durable facts and writes them directly into the graph. Quick facts go straight to resource articles. Richer sources (articles, books, talks) go through a source note first — you summarize what it argues in your own words and list candidate topics, then promote those to the graph. This intermediate step is where understanding forms before it becomes a permanent article.
 
-**2. Deliberate ingestion.** `/r-ingest <url-or-file>` fetches and processes a source into resource articles. Narrative sources produce a source note in `inbox/` before the graph update — the same principle as the evening routine, just for larger inputs.
+**2. Deliberate ingestion.** `/r ingest <url-or-file>` fetches and processes a source into resource articles. Narrative sources produce a source note in `inbox/` before the graph update — the same principle as the evening routine, just for larger inputs.
 
-**3. Enrichment and synthesis.** `/r-enrich <article>` deepens an existing article from Confluence, Jira, codebase, and journal. Every enrichment pass checks for synthesis candidates: pairs of newly-linked articles that together express an insight neither contains alone. Flagged candidates are reviewed during `/r-plan` and become synthesis articles in `resources/synthesis/` when the pattern is strong enough.
+**3. Enrichment and synthesis.** `/r enrich <article>` deepens an existing article from Confluence, Jira, codebase, and journal. Every enrichment pass checks for synthesis candidates: pairs of newly-linked articles that together express an insight neither contains alone. Flagged candidates are reviewed during `/r plan` and become synthesis articles in `resources/synthesis/` when the pattern is strong enough.
 
 ```
 Source (article, book, talk, Confluence page, codebase)
-        ↓ /r-ingest or /evening
+        ↓ /r ingest or /evening
 inbox/<source-note>.md     ← what it argues, in your own words; candidate topics
-        ↓ /evening or /r-plan
+        ↓ /evening or /r plan
 resources/<domain>/<topic>.md   ← atomic, cross-linked, deepens on every revisit
-        ↓ /r-enrich (synthesis check)
+        ↓ /r enrich (synthesis check)
 resources/synthesis/<insight>.md   ← cross-cutting insight from multiple nodes
         ↓ any session
 qmd query → agent reads relevant articles → answers from your accumulated context
@@ -142,7 +158,9 @@ Meowary's structure draws on four established methods:
 
 **[Evergreen Notes](https://notes.andymatuschak.org/Evergreen_notes)** (Andy Matuschak) — shapes how resource articles develop. Notes are never finished, only more developed. Every revisit to a resource article should deepen it — sharpen a claim, add a link, expand a thin section. The `actualized` frontmatter field tracks when each article was last substantively enriched. Note titles stay as topic/term noun phrases (e.g. `ci-pipeline`, `alice-smith`) — they function as concept graph nodes, which requires composable names.
 
-**[Digital Gardening](https://maggieappleton.com/garden-history)** — the philosophy underlying `resources/` as a whole. No article is a failure for being thin. New articles start with `status: stub`; they develop into `status: current` as facts accumulate. The garden grows through regular tending, not through batch completions. The `/r-plan` command is the gardening pass: review the graph, identify what to merge, split, deepen, or synthesize.
+**[Digital Gardening](https://maggieappleton.com/garden-history)** — the philosophy underlying `resources/` as a whole. No article is a failure for being thin. New articles start with `status: stub`; they develop into `status: current` as facts accumulate. The garden grows through regular tending, not through batch completions. The `/r plan` command is the gardening pass: review the graph, identify what to merge, split, deepen, or synthesize.
+
+**[PARA](https://fortelabs.com/blog/para/)** (Tiago Forte) — the top-level organisational structure. Projects (time-bound deliverables), Areas (ongoing responsibilities), Resources (durable reference), Archive (completed or inactive). Every file in the repo has exactly one home based on its nature, not its topic.
 
 ## What the agent does
 
@@ -157,28 +175,57 @@ The agent reads `AGENTS.md` for conventions and `context.md` for your personal d
 
 **As a coding agent** it uses the accumulated context to do real work:
 
-- Run structured workflows: brainstorm → spec → plan → implement → review
-- Draft external documents: proposals, RFCs, postmortems
+- Run structured workflows: scout → research → plan → design → implement → test → self-review → peer-review
+- Draft external documents: proposals, RFCs, ADRs, postmortems
 - Review code, debug problems, address MR/PR comments
 - Look up architecture, team ownership, and prior decisions from your own notes before acting — so it doesn't ask you things you've already documented
 
 You own the Markdown. The agent does the grunt work.
+
+## Skills
+
+Skills are domain-specific instruction sets in `.opencode/skills/`. They are loaded on demand — the agent selects the relevant skill when a task requires it.
+
+| Skill | What it covers |
+|-------|----------------|
+| `journal` | Journal philosophy; routes to `daily`, `weekly`, `meeting` sub-skills |
+| `journal/daily` | Daily note format — three-zone structure, MIT system, rapid logging |
+| `journal/weekly` | Weekly note format — Monday planning, Friday wrap-up, carry-over migration |
+| `journal/meeting` | Meeting note format — sections by type, action item routing |
+| `projects` | Project dashboard format, dev-log protocol, Step 0 state reading |
+| `projects/spec` | Problem spec format — options analysis and recommendation |
+| `projects/plan` | Implementation plan format — phased breakdown, dependencies, risks |
+| `projects/rfc` | RFC format — proposals seeking broader input |
+| `projects/adr` | Architecture Decision Record format and Confluence process |
+| `projects/dev-log` | Dev-log entry format and phase-specific fields |
+| `areas` | Area dashboard format, task states, archiving |
+| `inbox` | Capture and source-note formats, processing rules |
+| `resources` | Knowledge graph philosophy, tag conventions, health scripts |
+| `query` | Multi-source retrieval strategy — citation format, confidence tags, staleness rules |
+| `qmd` | QMD CLI mechanics — query types, syntax, index maintenance |
+| `writing` | Prose quality rules — active voice, concision, formatting |
+| `confluence` | Read Confluence pages, maintain sync registry |
+| `jira` | Read Jira issues, extract facts for notes and resources |
+| `scm` | PR/MR lifecycle via gh/glab; routes to `github` or `gitlab` sub-skills |
+| `repomix` | Pack external repos for analysis, review, or planning |
+| `worktrunk` | Git worktree management via wt |
 
 ## Prerequisites
 
 ### Required
 
 | Tool | Purpose | Install |
-| ---- | ------- | ------- |
+|------|---------|---------|
 | [Node.js](https://nodejs.org) ≥ 22 | Runs all `.opencode/scripts/` automation | [nodejs.org](https://nodejs.org) or `mise install node@22` |
-| [qmd](https://github.com/tobi/qmd) | Semantic search — powers `/ask`, `/r-ingest`, `/r-sync` | `npm install -g @tobilu/qmd` |
+| [qmd](https://github.com/tobi/qmd) | Semantic search — powers knowledge graph queries | `npm install -g @tobilu/qmd` |
+| [repomix](https://github.com/yamadashy/repomix) | Packs external repos for analysis | `npm install -g repomix` |
 
 ### CLI integrations — install what you use
 
 These are all optional. Install the tools that match your workflow.
 
 | Tool | Purpose | Install |
-| ---- | ------- | ------- |
+|------|---------|---------|
 | [confluence-cli](https://www.npmjs.com/package/confluence-cli) | Read Confluence pages into resources | `npm install -g confluence-cli` |
 | [jira-cli](https://github.com/ankitpokhrel/jira-cli) | Query Jira issues and sprints | `brew install ankitpokhrel/tap/jira-cli` |
 | [gh](https://cli.github.com) | GitHub CLI — PR lifecycle, Actions, issues | `brew install gh` |
@@ -187,7 +234,7 @@ These are all optional. Install the tools that match your workflow.
 ### Env management — pick one
 
 | Tool | Purpose | Install |
-| ---- | ------- | ------- |
+|------|---------|---------|
 | [direnv](https://direnv.net) | Auto-loads `.env` when you enter the directory | `brew install direnv` |
 | [mise](https://mise.jdx.dev) | Auto-loads `.env`; also manages Node.js versions | `curl https://mise.run \| sh` |
 
@@ -214,52 +261,52 @@ Open the directory in [OpenCode](https://opencode.ai), then:
 
 ## Commands
 
-### Daily workflow
+### Daily rhythm
 
-| Command      | What it does |
-| ------------ | ------------ |
-| `/bootstrap` | Create or refresh `context.md` — run once on first use, re-run when context changes |
-| `/morning`   | Set daily intent: Focus line, MITs, Calendar from recurring events; includes weekly planning on Mondays |
-| `/evening`   | Close the day: Completed, Carried/Dropped, promote insights to `resources/`, update `waiting-for.md`; includes weekly wrap-up on Fridays |
-| `/standup`   | Generate a standup from yesterday's Evening > Completed and today's Morning > MITs |
-| `/meeting`   | Record a meeting interactively and cross-link to today's Day > Events |
-| `/capture`   | Quick-capture a URL, idea, or reference to `inbox/` for later processing |
+| Command | What it does |
+|---------|-------------|
+| `/bootstrap` | Create or refresh `context.md` and coding context files — run once on first use, re-run when context changes |
+| `/morning` | Set daily intent: Focus line, MITs, Calendar; includes weekly planning on Mondays |
+| `/evening` | Close the day: Completed, Carried/Dropped, promote insights to `resources/`, update `waiting-for.md`; includes weekly wrap-up on Fridays |
+| `/standup` | Generate a standup from yesterday's Evening > Completed and today's Morning > MITs |
+| `/meeting` | Record a meeting interactively and cross-link to today's Day > Events |
+| `/capture` | Quick-capture a URL, idea, or reference to `inbox/` for later processing |
+| `/weekly` | Run a manual weekly review and planning pass outside the Friday flow |
 
-### Structured work (code or documents)
+### Lifecycle work — `/do <phase>`
 
-| Command          | What it does |
-| ---------------- | ------------ |
-| `/brainstorm`    | Explore a problem and produce a spec with options — requires user approval before planning |
-| `/pre-plan`      | Scout for ambiguities, reusable assets, and open questions before writing a plan |
-| `/plan`          | Turn an approved spec into a step-by-step implementation plan |
-| `/implement`     | Execute an approved plan |
-| `/review`        | Review code changes, a document, or a PR/MR diff |
-| `/debug`         | Investigate a bug or error systematically |
-| `/address-review`| Address unresolved PR/MR discussion threads — fetch, fix, push, resolve (GitHub and GitLab) |
-| `/draft`         | Draft any external document: proposal, RFC, postmortem, blog post |
+`/do` parses your intent and dispatches to the matching workflow. Pass a project slug and optional complexity tier (`quick`, `standard`, `full`).
 
-### Resources
+| Phase | What it does |
+|-------|-------------|
+| `scout` | Explore what already exists — codebase, resources, prior decisions |
+| `research` | Deep dive into a topic — read sources, extract facts, update resources |
+| `plan` | Turn an approved spec into a step-by-step implementation plan |
+| `design` | Decide how to build something — ADR or design doc output |
+| `write` | Draft any external document: proposal, RFC, ADR, postmortem |
+| `implement` | Execute an approved plan |
+| `test` | Manual QA or verification pass |
+| `self-review` | Review your own changes before requesting peer review |
+| `resolve` | Address PR/MR feedback threads — fetch, fix, push, resolve |
+| `debug` | Investigate a bug or error systematically |
+| `peer-review` | Review someone else's PR/MR or code |
 
-| Command       | What it does |
-| ------------- | ------------ |
-| `/ask`        | Query all journal data with a question and synthesize a cited answer |
-| `/r-enrich`   | Enrich a resource article from Confluence or another source |
-| `/r-plan`     | Review the resource graph and plan structural operations (merge, split, reclassify) |
-| `/r-sync`     | Sync Confluence tracked pages and batch-update resource articles |
-| `/r-discover` | Discover gaps and cross-connection opportunities in `resources/` |
-| `/r-ingest`   | Ingest a URL or file directly into `resources/` |
-| `/r-lint`     | Audit the journal repo for convention violations (read-only) |
+Examples: `/do scout payment-service`, `/do implement mcp-client full`, `/do write proposal`.
 
-### Organisation
+### Knowledge graph — `/r <operation>`
 
-| Command        | What it does |
-| -------------- | ------------ |
-| `/new-project` | Create a project dashboard with spec, plan, and dev log structure |
-| `/new-area`    | Create an area dashboard for an ongoing responsibility |
-| `/new-adr`     | Draft an Architecture Decision Record |
-| `/archive`     | Move a completed project or area to `archive/` with link updates |
-| `/check-env`   | Verify Node.js version and required CLI tools are installed |
-| `/do`          | Smart dispatcher — translate freeform text into the best matching command |
+`/r` parses your intent and dispatches to the matching resource workflow.
+
+| Operation | What it does |
+|-----------|-------------|
+| `enrich` | Deepen a resource article from Confluence, Jira, codebase, and journal |
+| `sync` | Sync tracked Confluence pages and batch-update resource articles |
+| `plan` | Review the resource graph and plan structural operations (merge, split, reclassify) |
+| `discover` | Find gaps and cross-connection opportunities in `resources/` |
+| `ops` | Execute structural operations: delete, merge, split, create, reclassify |
+| `ingest` | Ingest a URL or file directly into `resources/` |
+
+Examples: `/r enrich alice-smith`, `/r sync`, `/r ingest https://...`.
 
 ## Structure
 
@@ -269,21 +316,39 @@ Open the directory in [OpenCode](https://opencode.ai), then:
 │   ├── daily/          # YYYY-MM-DD.md — three-zone daily notes (Morning/Day/Evening)
 │   ├── weekly/         # YYYY-WNN.md — weekly plan and wrap
 │   └── meetings/       # YYYY-MM-DD-<slug>.md
-├── projects/           # Active projects (README, specs, plans, drafts)
+├── projects/           # Active projects
+│   └── <name>/
+│       ├── README.md   # Project dashboard (status, tasks)
+│       ├── dev-log.md  # Persistent cross-session work log (append-only)
+│       ├── specs/      # Problem specs with options
+│       ├── plans/      # Implementation plans
+│       └── drafts/     # Proposals, RFCs, ADRs
 ├── areas/              # Ongoing responsibilities
+│   └── <name>/
+│       └── README.md   # Area dashboard (focus, tasks, log)
 ├── resources/          # Reference articles — one per topic
 │   ├── <domain>/
 │   ├── tools/
 │   ├── teams/
-│   └── people/
-├── drafts/             # External-facing docs (proposals, blog posts)
+│   ├── people/
+│   └── synthesis/      # Cross-cutting insights
 ├── archive/            # Completed projects and areas
 ├── inbox/
 │   ├── scratch.md      # Quick capture pad
 │   └── <slug>.md       # Source notes and captures
 ├── waiting-for.md      # Open delegations — appended by /evening, reviewed weekly
-├── .opencode/scripts/            # Confluence sync, link auditing, migration tools
+├── .opencode/
+│   ├── commands/       # Slash command definitions
+│   ├── workflows/      # Step-by-step workflow procedures (23 files)
+│   ├── skills/         # Domain-specific instruction sets
+│   ├── scripts/        # Confluence sync, link auditing, health checks
+│   └── reference/      # Structure and security reference docs
 ├── context.md          # Your identity, team, active projects — filled by /bootstrap
+├── architecture.md     # External repo structure, tech stack, build system, CI
+├── patterns.md         # Language-specific idioms and project conventions
+├── style.md            # Code style rules per language, linter/formatter config
+├── testing.md          # Test frameworks, file structure, coverage policy
+├── safety.md           # Non-negotiable rules: secrets, destructive ops, approval gates
 ├── confluence-sync.json# Confluence page monitoring registry
 ├── resources-log.md    # Append-only log of resource operations
 ├── qmd.yml             # QMD index config for semantic search
@@ -291,7 +356,6 @@ Open the directory in [OpenCode](https://opencode.ai), then:
 ├── recurring-events.md # Standing meetings and recurring events
 ├── reading-list.md     # Articles, papers, books to read
 ├── AGENTS.md           # Agent instructions
-├── opencode.json       # Agent configuration — plugins and permissions
 └── .env.example        # Credentials template
 ```
 
@@ -300,7 +364,7 @@ Open the directory in [OpenCode](https://opencode.ai), then:
 All integrations use CLI tools installed separately. Credentials go in `.env` (see `.env.example`).
 
 | Integration | Tool | What it gives you | One-time setup |
-| ----------- | ---- | ----------------- | -------------- |
+|-------------|------|-------------------|----------------|
 | Confluence | `confluence-cli` | Read Confluence pages into resource articles | `npm install -g confluence-cli` + set `CONFLUENCE_DOMAIN`, `CONFLUENCE_EMAIL`, `CONFLUENCE_API_TOKEN` in `.env` |
 | Jira | `jira-cli` | Query issues, sprints, and epics | `brew install ankitpokhrel/tap/jira-cli` + `jira init` |
 | GitHub | `gh` | PR lifecycle, Actions CI, code search | `brew install gh` + `gh auth login` |

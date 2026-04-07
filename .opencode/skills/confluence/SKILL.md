@@ -1,6 +1,6 @@
 ---
 name: confluence
-description: Read Confluence pages and maintain Confluence tracking — search, fetch, record in sync registry and article frontmatter, transform pages into resource source material. Use when fetching or reading Confluence pages.
+description: Read Confluence pages and maintain Confluence tracking — search, fetch, record page IDs in sync registry and article frontmatter, and transform page content into resource facts. Load when fetching a Confluence page, enriching a resource from Confluence, or updating confluence-sync.json.
 compatibility: opencode
 ---
 

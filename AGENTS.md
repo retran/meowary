@@ -16,19 +16,13 @@ Author identity, team, tooling, and other instance-specific details live in [`co
 
 Read `context.md` (author identity, team, active projects, tooling). Skip if already loaded this session.
 
-Run `/check-env` if a CLI tool fails unexpectedly, after updating Node.js, or after installing a new tool.
-
 ### Tier 1 — when the task involves writing, resources, people, teams, or projects
 
-Search `resources/` with `qmd query "<topic>"` or browse the directory tree to identify articles relevant to the task by topic, team, person, or project tag.
+Search `resources/` with `qmd query "<topic>"` or browse the directory tree to identify articles relevant to the task by topic, team, person, or project tag. Read specific resource articles that directly bear on the task. If an article should exist but doesn't, create a stub before proceeding.
 
-### Tier 2 — on demand
+### Tier 2 — when doing coding work in external repos
 
-Read specific resource articles that directly bear on the task. If the task mentions a person, team, tool, process, or architectural concept, look it up before writing about it. If an article should exist but doesn't, create a stub before proceeding.
-
-### Tier 3 — when doing coding work in external repos
-
-Load the relevant coding context files before starting any workflow (brainstorm, plan, implement, review, debug). See the table in **Coding Context Files** below.
+Load the relevant coding context files before starting any workflow via `/do`. See the table in **Coding Context Files** below.
 
 ## Coding Context Files
 
@@ -49,36 +43,39 @@ Read before acting. Never invent conventions — if a file is empty, ask the use
 
 Full directory tree and "What Goes Where" table: [`.opencode/reference/structure.md`](.opencode/reference/structure.md).
 
-Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `drafts/`, `archive/`, `inbox/`, `.opencode/scripts/`, `.opencode/`.
+Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `.opencode/scripts/`, `.opencode/`.
+
+Workflow prompts live in `.opencode/workflows/` (23 files). Commands live in `.opencode/commands/`.
 
 ## Automation Tools
 
-### QMD — Semantic Search
+### Slash Commands
 
-Full documentation: load the `qmd` skill.
+**Lifecycle workflows** — `/do <phase>` dispatches to `.opencode/workflows/`:
+`scout`, `research`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
+
+**Knowledge graph workflows** — `/r <operation>` dispatches to `.opencode/workflows/`:
+`enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`
+
+**Daily workflows** — direct dispatch: `/morning`, `/evening`, `/standup`, `/weekly`, `/capture`, `/meeting`
+
+**Utility commands** — `/bootstrap`
+
+### QMD — Semantic Search
 
 - Index: `node .opencode/scripts/qmd-index.js` (`--changed` for fast early-exit, `--full` to force re-embed)
 - Query: `qmd query "<question>"`
-- Re-index after any bulk create/actualize, `/r-ingest`, or `/r-sync` run.
-
-## YAML Front Matter
-
-Every Markdown file must begin with a YAML front matter block (exception: `AGENTS.md`). Full rules: load `writing` skill.
-
-Key constraints:
-
-- `updated` and `tags` are mandatory in every file.
-- `tags`: lowercase kebab-case, no `#` prefix, registered in `tags.md`.
+- Re-index after any bulk create/actualize, `/r ingest`, or `/r sync` run.
 
 ## Conventions
 
 ### Proactive Resources Enrichment
 
-During every session — regardless of primary task — scan for resource gaps. Full trigger-action table: load `resources` skill. Surface gaps as you work and fill them immediately.
+During every session — regardless of primary task — scan for resource gaps. Surface gaps as you work and fill them immediately.
 
 ## Editing Rules
 
-Full rules: load `writing` skill. Non-negotiable constraints:
+Non-negotiable constraints:
 
 1. **Never delete or overwrite past daily notes.** Append-only.
 2. **Maintain links.** Every link must point to an existing target. Update all inbound links when renaming, moving, or deleting files.

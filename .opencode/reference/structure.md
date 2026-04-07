@@ -1,5 +1,5 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-08
 tags: []
 ---
 
@@ -13,7 +13,8 @@ tags: []
 │   └── meetings/              # One file per meeting, named YYYY-MM-DD-<slug>.md
 ├── projects/                  # Active microprojects with a defined end
 │   └── <name>/
-│       ├── README.md          # Project dashboard (status, tasks, dev log)
+│       ├── README.md          # Project dashboard (status, tasks)
+│       ├── dev-log.md         # Persistent cross-session work log (append-only)
 │       ├── resources.md       # Links, snippets, references (optional)
 │       ├── specs/             # Brainstorm output — problem specs with options
 │       ├── plans/             # Implementation plans linked to specs
@@ -26,7 +27,6 @@ tags: []
 │   ├── tools/                 # Developer tools and internal tooling
 │   ├── teams/                 # One file per team
 │   └── people/                # One file per person
-├── drafts/                    # Outputs for external audiences (blog posts, proposals, Confluence drafts)
 ├── archive/                   # Completed or inactive items (PARA)
 │   ├── projects/
 │   ├── areas/
@@ -49,9 +49,8 @@ tags: []
 ├── .opencode/scripts/                   # Automation scripts (Confluence sync, link auditing)
 ├── .opencode/                 # OpenCode configuration
 │   ├── commands/              # Custom slash commands
-│   ├── skills/                # Custom skills
-│   ├── reference/             # Reference files (structure, conventions)
-│   └── templates/             # File templates
+│   ├── skills/                # Custom skills (include domain templates)
+│   └── reference/             # Reference files (structure, conventions)
 └── AGENTS.md                  # Agent instructions
 ```
 
@@ -70,5 +69,5 @@ tags: []
 | Area tasks, focus, ongoing log | `areas/<name>/README.md` |
 | Unprocessed captures and raw notes | `inbox/` |
 | Quick links, ideas, snippets (not yet promoted) | `inbox/scratch.md` |
-| Content for external audiences (blog posts, Confluence drafts, proposals) | `drafts/` |
+| Content for external audiences (blog posts, Confluence drafts, proposals) | `projects/<name>/drafts/` |
 | Jira issue details | Jira (link from daily note; don't duplicate) |

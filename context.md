@@ -35,7 +35,9 @@ tags: []
 
 ## Active Projects
 
-<!-- Scan projects/ excluding archive/ -->
+<!-- Scan projects/ excluding archive/. One entry per active project. Format:
+- **<slug>:** <one-line description> | phase: <current-phase> | priority: high|medium|low
+-->
 
 ## Active Areas
 

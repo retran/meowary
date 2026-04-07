@@ -1,6 +1,6 @@
 ---
 name: scm
-description: Work with GitHub and GitLab via gh/glab CLIs — PR/MR lifecycle, CI monitoring, issue management. Load this skill plus the platform-specific subskill for commands.
+description: PR/MR lifecycle, CI monitoring, and issue management via gh/glab CLIs — title and commit conventions, authentication, and platform-specific subskill routing. Load when creating or reviewing a PR/MR, monitoring CI, managing issues, or pushing code changes; then also load the platform-specific subskill.
 compatibility: opencode
 ---
 
