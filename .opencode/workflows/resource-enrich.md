@@ -56,7 +56,7 @@ Run all sub-steps. Do not stop after the first hit per sub-step.
 
 **2a. Local resources** — QMD query + ripgrep across `resources/`; check tag siblings and same-subfolder articles; identify missing back-links and cross-references.
 
-**2b. Confluence** — search using ≥3 strategies (exact title, domain terms, synonyms, people/component names, tags); extract durable facts; add page IDs to `confluence:` front matter and `confluence-sync.json`. (≥3 strategies because Confluence search is keyword-based with no semantic fallback — multiple strategies compensate for vocabulary mismatches.)
+**2b. Confluence** — search using ≥3 strategies (exact title, domain terms, synonyms, people/component names, tags); extract durable facts; add page IDs to `confluence:` front matter and `meta/confluence-sync.json`. (≥3 strategies because Confluence search is keyword-based with no semantic fallback — multiple strategies compensate for vocabulary mismatches.)
 
 **2c. Jira** — search using ≥2 strategies (component/feature names, team project key, epics, people); extract durable facts only (decisions, deadlines, ownership changes). (≥2 strategies because Jira ticket titles vary widely; component + owner searches complement each other.)
 
@@ -120,7 +120,7 @@ Done when: all outbound links verified; back-links added for new links.
 
 1. Set `updated` and `actualized` to today.
 2. Append to `## Changelog`: `- **YYYY-MM-DD:** <what changed>.`
-3. Update `## Sources`; update `confluence:` front matter; verify tags; register new tags in `tags.md`.
+3. Update `## Sources`; update `confluence:` front matter; verify tags; register new tags in `meta/tags.md`.
 
 Done when: front matter updated; changelog appended; tags verified.
 
@@ -128,7 +128,7 @@ Done when: front matter updated; changelog appended; tags verified.
 
 **7a. Orphan scan:** Run `node .opencode/scripts/find-backlinks.js <article-path>`. Zero inbound links = orphaned; fix by linking from the closest related article. (People files are exempt.)
 
-**7b. Tag consistency:** All tags must exist in `tags.md`. Inline `#tags` must match front matter.
+**7b. Tag consistency:** All tags must exist in `meta/tags.md`. Inline `#tags` must match front matter.
 
 **7c. Staleness spot-check:** Check same-subfolder articles sharing tags; flag (do not fix) those with `actualized` > 2 weeks old or with Confluence pages modified since `actualized`.
 
@@ -136,10 +136,10 @@ Done when: orphan check done and fixed; tag consistency verified; stale neighbor
 
 ### Step 8 — Commit and close
 
-1. Stage: the article, back-linked articles, newly created articles, `tags.md`, `confluence-sync.json`.
+1. Stage: the article, back-linked articles, newly created articles, `meta/tags.md`, `meta/confluence-sync.json`.
 2. Commit: `Enrich resources: <subfolder>/<article-name>`
 3. If staleness check found stale neighbors: append their paths to the commit message body.
-4. Append to `resources-log.md`: `- **YYYY-MM-DD:** enrich | <path> — <one-line summary>`
+4. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** enrich | <path> — <one-line summary>`
 5. Append work log entry to `## Day` zone of today's daily note.
 6. Mark any matching task items as done.
 7. **Stop.** Report completion. Do not auto-continue to the next article.
@@ -152,9 +152,9 @@ Done when: committed; log entry appended; daily note updated; stopped.
 |--------|----------|
 | Enriched article | `resources/<path>.md` |
 | Back-linked articles | Various `resources/` paths |
-| `tags.md` updates | Repo root |
-| `confluence-sync.json` updates | Repo root |
-| `resources-log.md` entry | Repo root |
+| `meta/tags.md` updates | `meta/` |
+| `meta/confluence-sync.json` updates | `meta/` |
+| `meta/resources-log.md` entry | `meta/` |
 | Daily note work log | `journal/daily/<date>.md` Day zone |
 | Commit | Git history |
 

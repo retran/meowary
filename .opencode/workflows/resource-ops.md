@@ -18,7 +18,7 @@ Acts as a disciplined knowledge graph restructuring operator. Never leaves a bro
 | Operation type | User invocation | Required |
 | Source/target paths | User invocation | Required |
 | `find-backlinks.js` output | Script | Required for rename/merge/delete/split |
-| `confluence-sync.json` | Repo root | Required for rename/merge/delete |
+| `meta/confluence-sync.json` | `meta/` | Required for rename/merge/delete |
 
 ## Complexity Tiers
 
@@ -47,7 +47,7 @@ Done when: article file written with front matter, summary, and changelog.
 
 ### Create Step 2 — Register tags
 
-Add any new tags to `tags.md`.
+Add any new tags to `meta/tags.md`.
 
 Done when: all tags registered.
 
@@ -91,9 +91,9 @@ Done when: file moved.
 
 Done when: all inbound links updated to new path.
 
-### Rename Step 3 — Update `confluence-sync.json`
+### Rename Step 3 — Update `meta/confluence-sync.json`
 
-If the article appears in `confluence-sync.json` `resources` fields, update the path.
+If the article appears in `meta/confluence-sync.json` `resources` fields, update the path.
 
 Done when: sync registry updated.
 
@@ -149,10 +149,10 @@ git rm resources/<source-path>.md
 
 Done when: source file deleted.
 
-### Merge Step 4 — Update `confluence-sync.json`
+### Merge Step 4 — Update `meta/confluence-sync.json`
 
 1. Merge `confluence:` front matter page IDs from source into target.
-2. Remove source entry from `confluence-sync.json` if present.
+2. Remove source entry from `meta/confluence-sync.json` if present.
 
 Done when: sync registry updated.
 
@@ -206,7 +206,7 @@ Done when: all inbound links updated.
 
 ### Split Step 4 — Register tags
 
-Add any new tags to `tags.md`.
+Add any new tags to `meta/tags.md`.
 
 Done when: all tags registered.
 
@@ -252,9 +252,9 @@ git rm resources/<path>.md
 
 Done when: file deleted.
 
-### Delete Step 3 — Update `confluence-sync.json`
+### Delete Step 3 — Update `meta/confluence-sync.json`
 
-Remove the article from any `resources` fields in `confluence-sync.json`.
+Remove the article from any `resources` fields in `meta/confluence-sync.json`.
 
 Done when: sync registry updated.
 
@@ -309,7 +309,7 @@ Update every inbound link found in Step 0 to the new archive path, or remove the
 
 Done when: all inbound links updated or removed.
 
-### Archive Step 4 — Update `confluence-sync.json`
+### Archive Step 4 — Update `meta/confluence-sync.json`
 
 Update the article's path in any `resources` fields; or mark as archived.
 
@@ -336,7 +336,7 @@ Done when: QMD index rebuilt.
 ## Close (all operations)
 
 After committing:
-1. Append to `resources-log.md`: `- **YYYY-MM-DD:** <operation> | <subject-slug> — <one-line summary>`
+1. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** <operation> | <subject-slug> — <one-line summary>`
    - Example: `- **2026-04-07:** archive | resources/teams/old-team.md — archived; team disbanded`
 2. Append work log entry to `## Day` zone of today's daily note.
 3. Mark any matching task items as done.
@@ -347,9 +347,9 @@ After committing:
 | Output | Location |
 |--------|----------|
 | New/modified/deleted article(s) | `resources/` |
-| Updated `tags.md` | Repo root |
-| Updated `confluence-sync.json` | Repo root |
-| `resources-log.md` entry | Repo root |
+| Updated `meta/tags.md` | `meta/` |
+| Updated `meta/confluence-sync.json` | `meta/` |
+| `meta/resources-log.md` entry | `meta/` |
 | Daily note work log | `journal/daily/<date>.md` Day zone |
 | Commit | Git history |
 

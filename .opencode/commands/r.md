@@ -8,7 +8,9 @@ Knowledge graph router — parses intent and dispatches to the right resource wo
 
 Arguments: `/r <intent> [article-slug|topic]`
 
-1. Read `resources-log.md` last entry if the file exists (may not exist before first `/r` run).
+> **Before proceeding:** Check that `meta/resources-log.md` exists. If not, copy from `.opencode/meta-templates/resources-log-template.md`.
+
+1. Read `meta/resources-log.md` last entry if the file exists (may not exist before first `/r` run).
    Read `resources-actualize-plan.md` if it exists.
 2. Parse `$ARGUMENTS`: operation type, target article/topic/scope.
 3. Match against the trigger table below. Select the workflow file.

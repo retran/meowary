@@ -42,6 +42,18 @@ Ask all questions in one prompt:
 
 ---
 
+## Step 2c: Bootstrap Meta Files (fresh only)
+
+Ensure the `meta/` directory files exist. For each file listed below, check if it exists. If not, copy from the template:
+
+| File | Template |
+|------|----------|
+| `meta/tags.md` | `.opencode/meta-templates/tags-template.md` |
+| `meta/confluence-sync.json` | `.opencode/meta-templates/confluence-sync-template.json` |
+| `meta/resources-log.md` | `.opencode/meta-templates/resources-log-template.md` |
+
+---
+
 ## Step 3: Write context/context.md
 
 If `context/context.md` does not exist, copy from `.opencode/context-templates/context.md` first.
@@ -139,6 +151,14 @@ Check required CLI tools:
 
 Report status (OK / MISSING / WARN). Don't block on failures — note for the user to fix.
 
+After checking tools, regenerate the environment snapshot:
+
+```
+node .opencode/scripts/env-context.js
+```
+
+This writes the CLI tool versions and paths to `context/env-snapshot.md`. If the script does not exist: manually note any tool gaps; skip the script step.
+
 ---
 
 ## Step 6: Environment (fresh only)
@@ -149,13 +169,15 @@ Check for `.env` at repo root. If missing, check for `.env.example` and tell the
 
 ## Step 7: Recurring Events (fresh only)
 
-Read `recurring-events.md`. If empty, ask for recurring events (standups, 1-on-1s, ceremonies) with day and time. Write organized by weekday.
+Read `journal/recurring-events.md`. If the file does not exist, copy it from `.opencode/meta-templates/recurring-events-template.md` first. If empty, ask for recurring events (standups, 1-on-1s, ceremonies) with day and time. Write organized by weekday.
 
 ---
 
 ## Step 8: Author Resource Entry (fresh only)
 
-Offer to create `resources/people/<slug>.md` for the author. If accepted: fill name, role, team; register `#person-<slug>` in `tags.md`.
+Offer to create `resources/people/<slug>.md` for the author. If accepted: fill name, role, team; register `#person-<slug>` in `meta/tags.md`.
+
+> **Before using `meta/tags.md`:** Check that it exists. If not, copy from `.opencode/meta-templates/tags-template.md`.
 
 ---
 

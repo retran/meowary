@@ -19,7 +19,7 @@ Acts as a proactive knowledge graph scout. Scans what has been written — not w
 | `journal/daily/` and `journal/weekly/` | Repo                                  | Required          |
 | `projects/`                            | Repo                                  | Optional          |
 | `codebases/<name>.md`                  | Loaded if codebase active             | Optional          |
-| `resources-log.md`                     | Repo root                             | For last-run date |
+| `meta/resources-log.md`                     | `meta/`                               | For last-run date |
 
 ## Complexity Tiers
 
@@ -30,7 +30,7 @@ Not applicable. Fixed-procedure workflow — all steps are mandatory.
 ### Step 0 — Load context
 
 1. Read today's daily note — find any tasks matching this workflow.
-2. Check `resources-log.md` for the last `r-discover` entry — note the date range to scan.
+2. Check `meta/resources-log.md` for the last `r-discover` entry — note the date range to scan.
 
 Done when: daily note checked; last discover date noted.
 
@@ -128,9 +128,9 @@ Done when: stubs created for all confirmed high-priority candidates (or skipped)
 
 ### Step 7 — Commit and close
 
-1. Stage: gap report, any new stub articles, `tags.md`.
+1. Stage: gap report, any new stub articles, `meta/tags.md`.
 2. Commit: `Discover knowledge gaps: N candidates, M stubs created`
-3. Append to `resources-log.md`: `- **YYYY-MM-DD:** r-discover | N candidates, M stubs`
+3. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** r-discover | N candidates, M stubs`
 4. Append work log entry to `## Day` zone of today's daily note.
 5. Mark any matching task items as done.
 
@@ -142,13 +142,13 @@ Done when: committed; log entry appended; daily note updated.
 | ---------------------------- | ------------------------------------------ |
 | Gap report                   | `projects/<name>/notes/discover-<date>.md` |
 | Stub articles (if requested) | `resources/<subfolder>/<slug>.md`          |
-| `resources-log.md` entry     | Repo root                                  |
+| `meta/resources-log.md` entry     | `meta/`                                  |
 | Daily note work log          | `journal/daily/<date>.md` Day zone         |
 | Commit                       | Git history                                |
 
 ## Error Handling
 
-- **`resources-log.md` has no prior discover entry:** Default to last 30 days. Note this in the gap report header.
+- **`meta/resources-log.md` has no prior discover entry:** Default to last 30 days. Note this in the gap report header.
 - **No active project:** Write the gap report inline (in-session) rather than to a project path. Still commit stubs if created.
 - **Near-duplicate candidates found:** Surface them explicitly in the report's "Duplicates found" section. Do not create separate stubs for near-duplicates — suggest `resource-ops merge` instead.
 - **User confirms stub creation for a concept that already has an article:** Surface the existing article; ask whether to update it instead.

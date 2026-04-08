@@ -1,6 +1,6 @@
 ---
 name: confluence
-description: Read Confluence pages and maintain Confluence tracking — search, fetch, record page IDs in sync registry and article frontmatter, and transform page content into resource facts. Load when fetching a Confluence page, enriching a resource from Confluence, or updating confluence-sync.json.
+description: Read Confluence pages and maintain Confluence tracking — search, fetch, record page IDs in sync registry and article frontmatter, and transform page content into resource facts. Load when fetching a Confluence page, enriching a resource from Confluence, or updating meta/confluence-sync.json.
 compatibility: opencode
 ---
 
@@ -17,7 +17,7 @@ Default posture is read-only. Before any write operation, stop and ask: "Should 
 ### Before fetching
 
 1. Check the article's `confluence:` front matter for existing page IDs. If the article already cites the page and the content is sufficient, do not re-fetch.
-2. Check `confluence-sync.json` for the page's last `synced` date. If synced recently, the local content may still be current.
+2. Check `meta/confluence-sync.json` for the page's last `synced` date. If synced recently, the local content may still be current.
 3. If neither check is sufficient, fetch.
 
 ### How to fetch
@@ -77,7 +77,7 @@ confluence: [123456789]
 
 This records which pages contributed facts to this article. One article may cite many pages; one page may inform many articles.
 
-### 2. `confluence-sync.json` (monitoring registry)
+### 2. `meta/confluence-sync.json` (monitoring registry)
 
 Add the page to the monitoring registry if you want to be notified when it changes:
 
@@ -97,7 +97,7 @@ Add the page to the monitoring registry if you want to be notified when it chang
 | `synced` | Date we last ingested this page into resource articles (`YYYY-MM-DD`), or `null` |
 | `resources` | Optional hint list of resource article paths this page informs |
 
-Not every fetched page needs to be in `confluence-sync.json` — only pages worth monitoring for changes. Use `node .opencode/scripts/confluence-missing.js` to discover untracked pages in a space, and `node .opencode/scripts/confluence-updates.js YYYY-MM-DD` to check which tracked pages have changed since a given date.
+Not every fetched page needs to be in `meta/confluence-sync.json` — only pages worth monitoring for changes. Use `node .opencode/scripts/confluence-missing.js` to discover untracked pages in a space, and `node .opencode/scripts/confluence-updates.js YYYY-MM-DD` to check which tracked pages have changed since a given date.
 
 ## Transforming Pages into Resource Source Material
 
@@ -127,7 +127,7 @@ When the user explicitly approves a write, first ensure `CONFLUENCE_READ_ONLY=fa
 - **Delete:** `confluence delete PAGE_ID --yes` — confirm page ID and title. Irreversible.
 - **Move:** `confluence move PAGE_ID NEW_PARENT_ID` — same space only.
 
-After any write, update `confluence-sync.json` to reflect the change.
+After any write, update `meta/confluence-sync.json` to reflect the change.
 
 ## Rules
 

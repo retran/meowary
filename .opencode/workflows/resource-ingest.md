@@ -93,7 +93,7 @@ Done when: all target articles updated with durable facts and provenance.
 For each create candidate confirmed by the user:
 1. Create `resources/<subfolder>/<slug>.md` with the distilled content.
 2. Apply progressive summarization (highlight + summary if >80 lines — ~80 lines is the threshold where a navigation summary helps readers).
-3. Add to `tags.md` if new tags are needed.
+3. Add to `meta/tags.md` if new tags are needed.
 4. Link from the nearest related article.
 
 Done when: new articles created and linked from nearest relatives.
@@ -107,16 +107,16 @@ Done when: all back-links added; outbound links verified.
 
 ### Step 7 — Update registries
 
-1. If source is Confluence: update `confluence-sync.json` with page ID, space, and `synced: today`.
-2. Register any new tags in `tags.md`.
+1. If source is Confluence: update `meta/confluence-sync.json` with page ID, space, and `synced: today`.
+2. Register any new tags in `meta/tags.md`.
 
-Done when: `confluence-sync.json` updated; tags registered.
+Done when: `meta/confluence-sync.json` updated; tags registered.
 
 ### Step 8 — Commit and close
 
-1. Stage: modified/created resource articles, `tags.md`, `confluence-sync.json`.
+1. Stage: modified/created resource articles, `meta/tags.md`, `meta/confluence-sync.json`.
 2. Commit: `Ingest resources: <source-title> → <N articles affected>`
-3. Append to `resources-log.md`: `- **YYYY-MM-DD:** ingest | <source-type>: <source-title> → <N articles>`
+3. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** ingest | <source-type>: <source-title> → <N articles>`
 4. Run QMD re-index: `node .opencode/scripts/qmd-index.js`
 5. Append work log entry to `## Day` zone of today's daily note.
 6. Mark any matching task items as done.
@@ -129,9 +129,9 @@ Done when: committed; log entry appended; QMD re-indexed; daily note updated.
 |--------|----------|
 | Updated resource articles | `resources/` |
 | New resource articles | `resources/<subfolder>/` |
-| `confluence-sync.json` updates | Repo root |
-| `tags.md` updates | Repo root |
-| `resources-log.md` entry | Repo root |
+| `meta/confluence-sync.json` updates | `meta/` |
+| `meta/tags.md` updates | `meta/` |
+| `meta/resources-log.md` entry | `meta/` |
 | Daily note work log | `journal/daily/<date>.md` Day zone |
 | Commit | Git history |
 

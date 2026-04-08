@@ -62,7 +62,7 @@ Done when: Today section drafted (1–3 bullets).
 
 1. From `dev-log.md` entries: any `**Deferred:**` items caused by an external dependency.
 2. From today's daily note `## Day > ### Waiting`: items waiting on others.
-3. From `waiting-for.md`: items with overdue follow-up date.
+3. From `journal/waiting-for.md`: items with overdue follow-up date.
 4. If none: "No blockers."
 
 Done when: Blockers section drafted.
@@ -121,5 +121,5 @@ None. `/standup` is read-only.
 | Condition | Suggested next workflow |
 |-----------|------------------------|
 | Standup reveals a clear top priority | Start the appropriate lifecycle workflow |
-| Blocker identified that needs escalation | `capture` the blocker; note in `waiting-for.md` |
+| Blocker identified that needs escalation | `capture` the blocker; note in `journal/waiting-for.md` |
 | `morning` was not run yet | `morning` to set up the day |

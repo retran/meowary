@@ -50,7 +50,7 @@ Store companion files alongside the README in the same folder:
 3. Replace all placeholders: `{{PROJECT_NAME}}`, `{{PROJECT_SLUG}}`, `{{DEADLINE}}`, `{{DATE}}`.
 4. Write a real **Overview** — what the project is, what it delivers, why it exists. No placeholder text.
 5. Add at least one concrete **Open Task**.
-6. Register `#p-<slug>` in `tags.md` (projects table).
+6. Register `#p-<slug>` in `meta/tags.md` (projects table).
 7. Create `projects/<slug>/dev-log.md` from `.opencode/skills/projects/dev-log-template.md`.
 8. If today's daily note exists, add a log entry linking to the new README.
 9. If a weekly note exists, consider adding a weekly goal.
@@ -109,7 +109,7 @@ Before any clarification step, present:
 
 Do not ask questions yet — just present context.
 
-**Notes:** Do not load `codebases/<name>.md` in Step 0 — load it just-in-time in the step that needs it. If the workflow is a `/r` (knowledge graph) workflow, read `resources-log.md` (repo root) instead of a project `dev-log.md`.
+**Notes:** Do not load `codebases/<name>.md` in Step 0 — load it just-in-time in the step that needs it. If the workflow is a `/r` (knowledge graph) workflow, read `meta/resources-log.md` instead of a project `dev-log.md`.
 
 ---
 
@@ -183,7 +183,7 @@ Apply on every edit:
 - `**Status:**` inline line must match front matter `status`.
 - No stubs: Overview must be substantive, Open Tasks must have at least one concrete item on Active projects.
 - `#p-<slug>` tag must be present in front matter `tags` and in the `**Tags:**` line.
-- Tag must be registered in `tags.md`.
+- Tag must be registered in `meta/tags.md`.
 - `dev-log.md` must exist and have at least one entry.
 
 ---
@@ -233,4 +233,4 @@ A project is a time-bound deliverable with a defined end. The dashboard is not j
 - [ ] `updated` front matter set to today?
 - [ ] Overview is substantive — not a placeholder?
 - [ ] At least one concrete Open Task present on Active projects?
-- [ ] `#p-<slug>` registered in `tags.md`?
+- [ ] `#p-<slug>` registered in `meta/tags.md`?

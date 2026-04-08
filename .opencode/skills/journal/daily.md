@@ -163,7 +163,9 @@ Filled once, at the end of the day. Owned by `/evening`.
 
 1. Copy `.opencode/skills/journal/daily-template.md`.
 2. Replace all placeholders: `{{DATE}}`, `{{DAY}}`, `{{WEEK_NUMBER}}`, `{{WEEK_FILE}}`, `{{PREV_DATE}}`, `{{NEXT_DATE}}`.
-3. Populate `### Calendar` from `recurring-events.md` — include events scheduled for this weekday.
+3. Populate `### Calendar` from `journal/recurring-events.md` — include events scheduled for this weekday.
+
+> **Before using this file:** Check that `journal/recurring-events.md` exists. If not, copy from `.opencode/meta-templates/recurring-events-template.md`.
 4. Verify navigation links (prev/next) exist before writing them.
 
 ---
@@ -213,4 +215,6 @@ Do not wait for an explicit resources task. Surface gaps and fill them during Ev
 - [ ] Day Summary ends with `End-of-day scan:` line?
 - [ ] Monday: weekly note created/updated with focus and goals?
 - [ ] Friday: weekly wrap-up completed?
-- [ ] `waiting-for.md` updated with any new Waiting items from today?
+- [ ] `journal/waiting-for.md` updated with any new Waiting items from today?
+
+> **Before using this file:** Check that `journal/waiting-for.md` exists. If not, copy from `.opencode/meta-templates/waiting-for-template.md`.

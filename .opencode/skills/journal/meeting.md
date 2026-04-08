@@ -129,7 +129,7 @@ Route every action item before closing:
 | Item type | Route to |
 |---|---|
 | Own task for today or tomorrow | Today's `### Inbox` in daily note |
-| Waiting on someone else | `waiting-for.md` (append to `## Active`) |
+| Waiting on someone else | `journal/waiting-for.md` (append to `## Active`) |
 | Task belonging to a project | `projects/<slug>/README.md` Open Tasks |
 | Deferred (no clear owner or date) | `### Parking Lot` |
 

@@ -94,7 +94,9 @@ Human-readable name (e.g. `# Architecture Governance`).
 3. Replace placeholders: `{{AREA_NAME}}`, `{{AREA_SLUG}}`, `{{DATE}}`.
 4. Write a concrete **Focus** section — what the responsibility is and what the current focus is.
 5. Add at least one concrete **Open Task**.
-6. Register `#a-<slug>` in `tags.md` under Area Tags. Link to `areas/<slug>/README.md`.
+6. Register `#a-<slug>` in `meta/tags.md` under Area Tags. Link to `areas/<slug>/README.md`.
+
+> **Before using this file:** Check that `meta/tags.md` exists. If not, copy from `.opencode/meta-templates/tags-template.md`.
 
 ---
 
@@ -117,7 +119,7 @@ To archive:
 2. Set `status: Paused` in front matter (areas have no "Done" state — the move to `archive/` signals completion).
 3. Move `areas/<slug>/` to `archive/areas/<slug>/`.
 4. Update any cross-links pointing to the old path.
-5. Remove the `#a-<slug>` tag from `tags.md` or mark it as archived.
+5. Remove the `#a-<slug>` tag from `meta/tags.md` or mark it as archived.
 
 ---
 
@@ -140,7 +142,7 @@ Apply on every edit:
 - No `deadline` field — areas do not have deadlines.
 - Focus must be substantive and current, not a placeholder.
 - `#a-<slug>` tag must be present in both front matter `tags` and `**Tags:**` line.
-- Tag must be registered in `tags.md`.
+- Tag must be registered in `meta/tags.md`.
 - Active areas must have at least one concrete Open Task.
 
 ---

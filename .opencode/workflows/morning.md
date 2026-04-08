@@ -5,7 +5,7 @@ tags: []
 
 # Morning
 
-> Daily start-of-day orientation. Creates today's daily note, surfaces project state from dev-log entries, checks inbox, pulls calendar and sprint context, and sets 1–3 Most Important Tasks. Triggers weekly planning on Mondays. Invoke at the start of each workday.
+> Daily start-of-day orientation. Creates today's daily note, surfaces project state from dev-log entries, checks inbox, pulls calendar from `journal/recurring-events.md` and sprint context, and sets 1–3 Most Important Tasks. Triggers weekly planning on Mondays. Invoke at the start of each workday.
 
 ## Role
 
@@ -19,7 +19,7 @@ Acts as the user's structured morning planner. Surfaces current project state fr
 | Daily note template | `.opencode/skills/journal/daily-template.md` | Required if creating |
 | Weekly note template | `.opencode/skills/journal/weekly-template.md` | Required on Mondays |
 | Project dev-logs | `projects/<slug>/dev-log.md` | Required |
-| Recurring events | `recurring-events.md` | Optional |
+| Recurring events | `journal/recurring-events.md` | Optional |
 | Inbox captures | `inbox/` | Optional |
 | Waiting items | `journal/waiting-for.md` | Optional |
 | Jira sprint | Jira (read-only) | Optional |
@@ -63,17 +63,17 @@ Done when: one-liner surfaced for each active project; stalled projects flagged.
    - **Discard** → add `processed: true` and a one-line discard note to the item's front matter.
    Mark each processed item with `processed: true`.
 4. If count > 5: add a Day zone task `Process inbox (N items)` — do not triage inline.
-5. Surface any `waiting-for.md` items overdue as of today.
+5. Surface any `journal/waiting-for.md` items overdue as of today.
 
 Done when: every inbox item has a routing decision, or bulk deferral noted; overdue waiting items surfaced.
 
 ### Step 3 — Pull calendar and sprint context
 
-1. Read `recurring-events.md` for today's weekday — populate `### Calendar` in the Morning zone.
+1. Read `journal/recurring-events.md` for today's weekday — populate `### Calendar` in the Morning zone.
 2. Query open Jira sprint items assigned to the user; flag any due today or overdue.
 3. Surface up to 5 Jira items as context: priority, key, summary, status. Do not write them as MITs.
 
-If `recurring-events.md` does not exist: leave Calendar blank and note the gap.
+If `journal/recurring-events.md` does not exist: leave Calendar blank and note the gap.
 If Jira is unavailable or unconfigured: skip silently.
 
 Done when: Calendar populated (or gap noted); Jira items surfaced (or skipped).
@@ -132,6 +132,7 @@ Done when: committed.
 - **`context/context.md` missing or empty:** Stop at Step 0 and direct the user to run `/bootstrap`. Do not proceed.
 - **`daily-template.md` missing:** Cannot create the daily note. Ask the user to verify the journal skill directory.
 - **`projects/<slug>/dev-log.md` missing:** Note the gap per project; continue with remaining projects.
+- **`journal/recurring-events.md` missing:** Leave Calendar blank; note the gap. To restore, copy from `.opencode/meta-templates/recurring-events-template.md`.
 - **Jira unavailable:** Skip Jira in Step 3 silently. Note "Jira unavailable" in session output.
 - **Morning zone already complete:** Confirm before re-running. Never silently overwrite.
 - **Scope creep** (user asks for a full planning session): surface as a next step suggestion. Append deferred work to `projects/<slug>/deferred-items.md`.
@@ -144,3 +145,30 @@ Done when: committed.
 4. Reads Jira only. Never creates, updates, or transitions Jira items.
 5. Commit format: `Morning: <YYYY-MM-DD>`.
 6. MITs capped at 3 per the journal skill. Warn if the user requests more.
+
+---
+
+## Recurring Events
+
+The recurring events file lives at `journal/recurring-events.md`. It lists standing meetings and recurring calendar events organized by weekday. `/morning` reads it in Step 3 to populate the `### Calendar` section in the daily note's Morning zone.
+
+> **Before using this file:** Check that `journal/recurring-events.md` exists. If not, copy from `.opencode/meta-templates/recurring-events-template.md`.
+
+### Format
+
+Events are organized by weekday heading. Each event is a bullet with time and title:
+
+```markdown
+## Monday
+- 09:00 Team standup
+- 14:00 1-1 with manager
+
+## Tuesday
+- 09:00 Team standup
+```
+
+### Update rules
+
+- Add new recurring events when they are scheduled.
+- Remove or comment out events that end.
+- `/bootstrap` Step 7 populates this file during initial setup.

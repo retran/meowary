@@ -1,6 +1,6 @@
 ---
 name: resources
-description: Knowledge graph philosophy, tag conventions, health scripts, and maintenance rules for resource articles. Load when creating, enriching, merging, splitting, or deleting a resource article, or at the start of any /r workflow.
+description: Knowledge graph philosophy, tag conventions, health scripts, operation log, and maintenance rules for resource articles. Load when creating, enriching, merging, splitting, or deleting a resource article, or at the start of any /r workflow.
 compatibility: opencode
 ---
 
@@ -31,7 +31,7 @@ During every session — regardless of primary task — scan for resource gaps a
 | Discussion or document mentions an architectural decision | Update the relevant architecture resource or create an ADR |
 | Work session produces component ownership or technical knowledge | Capture in the appropriate domain resource article |
 | A concept, tool, process, or system is mentioned with no resource article | Create a new resource article (not a stub — real content) |
-| Confluence page referenced that's not in `confluence-sync.json` | Add to `confluence-sync.json`; fetch and extract durable facts |
+| Confluence page referenced that's not in `meta/confluence-sync.json` | Add to `meta/confluence-sync.json`; fetch and extract durable facts |
 | Jira issue reveals current state contradicting a resource article | Update the resource article with current facts |
 | Daily/weekly note log entry contains durable facts | Extract to the relevant resource article |
 
@@ -39,7 +39,9 @@ During every session — regardless of primary task — scan for resource gaps a
 
 ## Tags
 
-`tags.md` is the canonical tag registry. Read it before assigning or creating tags.
+> **Before using this file:** Check that `meta/tags.md` exists. If not, copy from `.opencode/meta-templates/tags-template.md`.
+
+`meta/tags.md` is the canonical tag registry. Read it before assigning or creating tags.
 
 | Prefix | Scope | Example |
 |--------|-------|---------|
@@ -50,7 +52,7 @@ During every session — regardless of primary task — scan for resource gaps a
 
 - Lowercase kebab-case. No `#` prefix in front matter YAML; `#` prefix in inline body text.
 - Every article needs at least one tag.
-- **Registering a new tag:** pick a lowercase kebab-case name, add a row to the correct table in `tags.md` with tag, link, and description, then use it in the article's front matter.
+- **Registering a new tag:** pick a lowercase kebab-case name, add a row to the correct table in `meta/tags.md` with tag, link, and description, then use it in the article's front matter.
 
 ---
 
@@ -99,7 +101,7 @@ Runs every health check and outputs a unified report: orphans, stale articles, t
 | Script | What it checks |
 |--------|---------------|
 | `health-orphans.js` | Articles with zero inbound links |
-| `health-tags.js` | Tags used but not in `tags.md`; registered tags with no usage |
+| `health-tags.js` | Tags used but not in `meta/tags.md`; registered tags with no usage |
 | `health-stale.js` | Articles not actualized recently (`--days N`, default 90) |
 | `health-links.js` | Broken links and missing bidirectional back-links |
 | `health-lengths.js` | Articles exceeding line limit — split candidates (`--lines N`, default 80) |
@@ -137,23 +139,25 @@ Produces a structured candidate operation list (delete, merge, split, create, ac
 
 | Trigger | Required actions |
 |---------|-----------------|
-| New resource article created | Register any new tags in `tags.md` |
-| Confluence page fetched for enrichment | Add page ID to article's `confluence:` front matter; add to `confluence-sync.json` if monitoring |
+| New resource article created | Register any new tags in `meta/tags.md` |
+| Confluence page fetched for enrichment | Add page ID to article's `confluence:` front matter; add to `meta/confluence-sync.json` if monitoring |
 | Resource article edited | Update `updated` front matter; append to `## Changelog` |
-| New tag introduced | Add to correct table in `tags.md` with link |
+| New tag introduced | Add to correct table in `meta/tags.md` with link |
 | New person/team encountered | Create resource entry from template; register tag |
 | Resource article deleted or moved | Fix all inbound links in the repo |
 
 ### Confluence Tracking
 
+> **Before using this file:** Check that `meta/confluence-sync.json` exists. If not, copy from `.opencode/meta-templates/confluence-sync-template.json`.
+
 Two separate tracking mechanisms:
 
 | Artifact | Purpose | Format |
 |----------|---------|--------|
-| `confluence-sync.json` | Operational monitoring registry — pages actively tracked for changes | JSON at repo root |
+| `meta/confluence-sync.json` | Operational monitoring registry — pages actively tracked for changes | JSON at `meta/` |
 | Article `confluence: [PAGE_IDs]` | Provenance — which pages informed this article | Front matter list |
 
-- Add to `confluence-sync.json` when you want to be notified of changes (ongoing monitoring).
+- Add to `meta/confluence-sync.json` when you want to be notified of changes (ongoing monitoring).
 - Add a page ID to `confluence:` front matter every time a Confluence page informs an article's content.
 - Re-fetch when `node .opencode/scripts/confluence-updates.js YYYY-MM-DD` reports the page was modified.
 
@@ -170,7 +174,34 @@ The knowledge graph degrades silently. Run `health-all.js` on demand and after b
 
 - **Orphans:** Articles with no inbound links from other resource files. Fix by adding a cross-reference from a related article. People files are exempt.
 - **Staleness:** An article with `actualized` older than 90 days and `status: current` is potentially stale. Set `status: outdated` if facts have drifted.
-- **Tag consistency:** Front matter `tags` must exist in `tags.md`. Inline `#tags` in the body should match front matter tags.
+- **Tag consistency:** Front matter `tags` must exist in `meta/tags.md`. Inline `#tags` in the body should match front matter tags.
+
+---
+
+## Resources Log
+
+The operation log lives at `meta/resources-log.md`. It is an append-only log of every knowledge graph operation — enrichments, syncs, plan runs, ingests, and structural operations.
+
+> **Before using this file:** Check that `meta/resources-log.md` exists. If not, copy from `.opencode/meta-templates/resources-log-template.md`.
+
+### Format
+
+Each entry is one line appended to the log:
+
+```markdown
+- **YYYY-MM-DD:** <operation> | <subject> — <one-line summary>
+```
+
+Examples:
+- `- **2026-04-08:** enrich | resources/tools/opencode.md — added MCP integration facts`
+- `- **2026-04-08:** r-plan | 14 operations planned`
+- `- **2026-04-08:** Confluence sync — 3 pages ingested; 0 deleted, 0 merged, 1 created, 2 actualized`
+
+### Append rules
+
+- Append only — never edit or delete past entries.
+- One entry per workflow invocation at the **Close** step.
+- The log is the audit trail for all `/r` operations; it drives the "last run" date lookups in `resource-discover` and `resource-sync`.
 
 ---
 
@@ -199,7 +230,7 @@ The knowledge graph degrades silently. Run `health-all.js` on demand and after b
 - [ ] `updated` set to today?
 - [ ] `## Changelog` entry appended with today's date?
 - [ ] Every outbound link has a corresponding inbound link in the target article?
-- [ ] All tags present in `tags.md`?
+- [ ] All tags present in `meta/tags.md`?
 - [ ] No stubs: Overview and at least one substantive section present?
 - [ ] `## Sources` section lists all pages that contributed facts?
 - [ ] No content copied verbatim from Confluence — distilled only?

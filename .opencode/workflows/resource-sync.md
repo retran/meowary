@@ -15,9 +15,9 @@ Acts as a systematic Confluence sync operator. Reads Confluence pages; never wri
 
 | Input | Source | Required |
 |-------|--------|----------|
-| `confluence-sync.json` | Repo root | Required |
+| `meta/confluence-sync.json` | `meta/` | Required |
 | `CONFLUENCE_SPACES` env var | `.env` | Required for discovery |
-| Last sync date | `confluence-sync.json` | Required for Step 2 |
+| Last sync date | `meta/confluence-sync.json` | Required for Step 2 |
 
 ## Complexity Tiers
 
@@ -28,7 +28,7 @@ Not applicable. Fixed-procedure workflow — all steps run in sequence.
 ### Step 0 — Load context
 
 1. Read today's daily note — find any tasks matching this sync.
-2. Check `confluence-sync.json` for the date of the last sync pass (used in Step 2).
+2. Check `meta/confluence-sync.json` for the date of the last sync pass (used in Step 2).
 
 Done when: daily note checked; last sync date noted.
 
@@ -47,11 +47,11 @@ node .opencode/scripts/confluence-missing.js [SPACE...]
 ```
 
 - Scans configured Confluence spaces (from `CONFLUENCE_SPACES` in `.env`).
-- Outputs page IDs not yet in `confluence-sync.json`.
-- For each untracked page worth monitoring: add an entry to `confluence-sync.json` with `synced: null`.
+- Outputs page IDs not yet in `meta/confluence-sync.json`.
+- For each untracked page worth monitoring: add an entry to `meta/confluence-sync.json` with `synced: null`.
 - If output is empty: skip to Step 2.
 
-Done when: untracked pages identified; new entries added to `confluence-sync.json`.
+Done when: untracked pages identified; new entries added to `meta/confluence-sync.json`.
 
 ### Step 2 — Detect stale pages
 
@@ -73,15 +73,15 @@ node .opencode/scripts/confluence-ingest.js
 
 For each stale entry:
 1. Read the Confluence page via the `confluence` skill.
-2. Identify relevant resource articles (from `confluence-sync.json` `resources` hint or by concept matching).
+2. Identify relevant resource articles (from `meta/confluence-sync.json` `resources` hint or by concept matching).
 3. Extract durable facts; update resource articles (follow `resource-enrich` Steps 3–6 for each article).
-4. Set `synced` to today in `confluence-sync.json` after each successful ingest.
+4. Set `synced` to today in `meta/confluence-sync.json` after each successful ingest.
 
 To ingest specific pages only: `node .opencode/scripts/confluence-ingest.js PAGE_ID [PAGE_ID ...]`
 
 If a page's content is ambiguous or conflicts with existing resource content: **pause and ask the user** how to resolve before continuing.
 
-**Sub-agent trigger:** When only 1 stale page exists, run inline. When ≥2 stale pages exist, spawn one `confluence-fetcher` agent per page in parallel; integrate results before Step 4. Each agent receives: the Confluence page URL or ID, the matching resource article path from `confluence-sync.json` `resources` hint (or "no existing article" if none), and a topic context derived from the page title and space. Returns: path written, 3–7 extracted facts, GDPR notes, and sync registry update status. Agent file: `.opencode/agents/confluence-fetcher.md`. If any agent returns a conflict: it flags it; pause and ask the user to resolve before proceeding to Step 4.
+**Sub-agent trigger:** When only 1 stale page exists, run inline. When ≥2 stale pages exist, spawn one `confluence-fetcher` agent per page in parallel; integrate results before Step 4. Each agent receives: the Confluence page URL or ID, the matching resource article path from `meta/confluence-sync.json` `resources` hint (or "no existing article" if none), and a topic context derived from the page title and space. Returns: path written, 3–7 extracted facts, GDPR notes, and sync registry update status. Agent file: `.opencode/agents/confluence-fetcher.md`. If any agent returns a conflict: it flags it; pause and ask the user to resolve before proceeding to Step 4.
 
 Done when: all stale pages ingested; sync registry updated; conflicts resolved.
 
@@ -108,7 +108,7 @@ Done when: health check complete; critical issues addressed; non-critical issues
 ### Step 6 — Commit
 
 ```
-git add resources/ confluence-sync.json tags.md
+git add resources/ meta/confluence-sync.json meta/tags.md
 git commit -m "Confluence sync: N pages ingested; resources: D deleted, G merged, C created, U actualized"
 ```
 
@@ -116,7 +116,7 @@ Done when: commit created with accurate counts.
 
 ### Step 7 — Close
 
-1. Append to `resources-log.md`:
+1. Append to `meta/resources-log.md`:
    ```
    - **YYYY-MM-DD:** Confluence sync — N pages ingested; D deleted, G merged, C created, U actualized
    ```
@@ -130,9 +130,9 @@ Done when: log entry appended; daily note updated.
 | Output | Location |
 |--------|----------|
 | Updated resource articles | `resources/` |
-| Updated `confluence-sync.json` | Repo root |
-| Updated `tags.md` | Repo root |
-| `resources-log.md` entry | Repo root |
+| Updated `meta/confluence-sync.json` | `meta/` |
+| Updated `meta/tags.md` | `meta/` |
+| `meta/resources-log.md` entry | `meta/` |
 | Daily note work log | `journal/daily/<date>.md` Day zone |
 | Commit | Git history |
 

@@ -1,6 +1,6 @@
 ---
 type: meta
-updated: 2026-04-02
+updated: {{DATE}}
 tags: []
 ---
 

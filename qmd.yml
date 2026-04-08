@@ -6,15 +6,13 @@
 # Install: npm install -g qmd (requires Node >= 22)
 # First run downloads ~2GB embedding model.
 #
-# Coverage: all .md files in the journal except .opencode/.
-# - meta:     root-level files only (mask: '*.md', non-recursive)
-# - subdirs:  one collection per content directory
+# Coverage: all .md files across content directories. .opencode/ is excluded.
+# Collections: meta, context, codebases, resources, journal, inbox, projects, areas, drafts, archive
 
 collections:
   - name: meta
-    path: .
-    mask: "*.md"
-    description: "Root-level operational files — context, knowledge graph, tags, waiting-for, reading list, etc."
+    path: meta/
+    description: "Knowledge graph operational files — tag registry, Confluence sync registry, resources operation log"
   - name: context
     path: context/
     description: "Author identity, team, active projects, commit conventions, and global safety rules"

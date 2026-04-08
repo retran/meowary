@@ -131,7 +131,7 @@ Done when: Notes & Reflections written.
 
 ### Step 5 — Waiting-For review
 
-1. Open `waiting-for.md`.
+1. Open `journal/waiting-for.md`.
 2. Flag items whose follow-up date is on or before today.
 3. Note flagged items in Notes & Reflections or surface as MIT candidates for next week's goals.
 

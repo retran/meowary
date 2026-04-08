@@ -16,8 +16,8 @@ Acts as a rigorous knowledge graph planner. Reviews the full graph — not just 
 | Input | Source | Required |
 |-------|--------|----------|
 | `resources/` directory | Repo | Required |
-| `tags.md` | Repo root | Required |
-| `confluence-sync.json` | Repo root | Optional |
+| `meta/tags.md` | `meta/` | Required |
+| `meta/confluence-sync.json` | `meta/` | Optional |
 | Health/report scripts | `.opencode/scripts/` | Required |
 
 ## Complexity Tiers
@@ -44,8 +44,8 @@ Done when: scope and regeneration mode confirmed.
 ### Step 1 — Orient
 
 1. Browse the `resources/` directory tree to understand current coverage.
-2. Read `tags.md` — understand the tag taxonomy.
-3. Check `confluence-sync.json` for monitored pages and last-sync dates.
+2. Read `meta/tags.md` — understand the tag taxonomy.
+3. Check `meta/confluence-sync.json` for monitored pages and last-sync dates.
 
 Done when: directory structure, tag taxonomy, and Confluence coverage understood.
 
@@ -136,7 +136,7 @@ Done when: commit created.
 
 ### Step 6 — Close
 
-1. Append to `resources-log.md`:
+1. Append to `meta/resources-log.md`:
    ```
    - **YYYY-MM-DD:** r-plan | N operations planned
    ```
@@ -150,7 +150,7 @@ Done when: log entry appended; daily note updated.
 | Output | Location |
 |--------|----------|
 | `resources-actualize-plan.md` | Repo root |
-| `resources-log.md` entry | Repo root |
+| `meta/resources-log.md` entry | `meta/` |
 | Daily note work log | `journal/daily/<date>.md` Day zone |
 | Commit | Git history |
 

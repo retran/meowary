@@ -47,16 +47,16 @@ Done when: user has responded (or questions are not applicable).
 1. Read all content in `## Day > ### Inbox`, `## Day > ### Events`, and `## Day > ### Waiting`.
 2. Categorise each Inbox item as: **done**, **carry** (to a future date), or **drop**.
 3. Confirm all Events are linked to meeting notes — flag any unlinked meeting.
-4. Identify new Waiting items to route to `waiting-for.md`.
-5. Flag any existing `waiting-for.md` items with an overdue follow-up date.
+4. Identify new Waiting items to route to `journal/waiting-for.md`.
+5. Flag any existing `journal/waiting-for.md` items with an overdue follow-up date.
 
 Done when: every Inbox item has a category; Events cross-checked; new Waiting items identified.
 
 ### Step 2 — Route Waiting items
 
 For each new waiting item in `## Day > ### Waiting`:
-- Append to `waiting-for.md` under `## Active` using the format defined in the journal skill.
-- Do not duplicate items already in `waiting-for.md`.
+- Append to `journal/waiting-for.md` under `## Active` using the format defined in the journal skill.
+- Do not duplicate items already in `journal/waiting-for.md`.
 
 If overdue follow-up items were flagged in Step 1: surface them to the user with a prompt to chase or close.
 
@@ -125,7 +125,7 @@ Done when: `context.md` updated; committed.
 ## Error Handling
 
 - **No daily note:** Create from template; note Morning zone was skipped; proceed.
-- **`waiting-for.md` missing:** Create the file with `## Active` and `## Resolved` sections before appending.
+- **`waiting-for.md` missing:** Create the file from `.opencode/meta-templates/waiting-for-template.md`. If the template does not exist, create the file with `## Active` and `## Resolved` sections before appending.
 - **Evening zone already filled:** Confirm with user before overwriting any section. Never silently overwrite.
 - **Resource article missing for a durable fact:** Create a stub before writing the fact. Do not write to a non-existent file.
 - **Friday wrap-up: weekly note missing:** Create from `.opencode/skills/journal/weekly-template.md` with a note that Monday planning was skipped.

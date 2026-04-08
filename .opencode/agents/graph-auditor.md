@@ -24,7 +24,7 @@ You will receive:
 1. List all `.md` files in `resources/` recursively using Bash or Glob.
 2. For each file: read the YAML front matter. Extract `updated` date and `tags`.
 3. Compare each `updated` date to today's date. Flag as **stale** if older than the staleness threshold.
-4. Read `tags.md` (at repo root or `resources/tags.md` — check both). Build the registered tag list.
+4. Read `meta/tags.md`. Build the registered tag list.
    - Flag articles with tags not in the registered list.
    - Flag articles missing `updated` or `tags` fields entirely.
 5. Scan all `journal/`, `projects/`, and `areas/` `.md` files for Markdown links pointing into `resources/`. Build an inbound link index: `{ "resources/foo.md": ["journal/daily/2026-01-01.md", ...] }`.

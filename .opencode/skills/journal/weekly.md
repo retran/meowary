@@ -102,7 +102,7 @@ Fill in on Friday, after completing the daily evening close-out:
 - **Carry-Over** — collect incomplete tasks; confirm with user what carries vs. drops.
 - **Notes & Reflections** — prompt: "What did this week prove? What would you do differently?" Minimum 2 sentences. Do not leave blank.
 - Mark completed goals with `- [x]`.
-- **Waiting-For review** — scan `waiting-for.md` Active items. Flag any whose follow-up date is on or before today.
+- **Waiting-For review** — scan `journal/waiting-for.md` Active items. Flag any whose follow-up date is on or before today.
 
 ### Resources Scan (end of weekly wrap-up)
 

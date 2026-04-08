@@ -110,6 +110,7 @@ Done when: checklist passed; committed.
 
 - **`meeting-template.md` missing:** Create the file manually with the required front matter schema and sections. Note the missing template.
 - **Today's daily note missing:** Create from `.opencode/skills/journal/daily-template.md` before writing the cross-link.
+- **`journal/waiting-for.md` missing:** Create from `.opencode/meta-templates/waiting-for-template.md` before routing waiting items.
 - **Attendee has no resource article:** Create a stub (`resources/people/<slug>.md`) before the resources scan step.
 - **Action item has no clear routing:** Default to `→ Parking Lot`. Surface to user at end of Step 3 for confirmation.
 - **Pre-meeting template mode:** Create the file with all structural sections empty (except front matter and header). Run Steps 3–6 after the meeting when the user provides notes.

@@ -1,6 +1,6 @@
 ---
 name: journal
-description: Journal layer philosophy and sub-skill index — append-only principles, front matter rules, and routing to daily, weekly, and meeting sub-skills. Load when creating or updating any journal file; then load the specific sub-skill for format details.
+description: Journal layer philosophy and sub-skill index — append-only principles, front matter rules, reading list management, waiting-for list management, and routing to daily, weekly, and meeting sub-skills. Load when creating or updating any journal file, adding items to the reading list or waiting-for list, or routing to a sub-skill for format details.
 compatibility: opencode
 ---
 
@@ -55,3 +55,78 @@ Every journal file begins with a YAML front matter block.
 | [daily-template.md](daily-template.md) | New daily notes |
 | [weekly-template.md](weekly-template.md) | New weekly notes |
 | [meeting-template.md](meeting-template.md) | New meeting notes |
+
+---
+
+## Reading List
+
+The reading list lives at `journal/reading-list.md`. It is a simple table of books, articles, and other material to read or that has been read.
+
+> **Before using this file:** Check that `journal/reading-list.md` exists. If not, copy from `.opencode/meta-templates/reading-list-template.md`.
+
+### Format
+
+Each item is a row in the table:
+
+```markdown
+| Title | Type | Status | Notes |
+| ----- | ---- | ------ | ----- |
+| [Title](url-or-path) | book / article / paper / video | to-read / reading / done | Why it matters; key insight; connects to |
+```
+
+- **Type:** `book`, `article`, `paper`, `video`, or `thread`
+- **Status:** `to-read`, `reading`, or `done`
+- **Notes:** not optional — capture at minimum *why* you added it
+
+### Adding an item
+
+When the user mentions a book, article, or resource they want to read or have just encountered:
+
+1. Check that `journal/reading-list.md` exists; create from template if not.
+2. Append a new row to the table with status `to-read`.
+3. Populate Notes with the reason for adding (context from the conversation or the user's stated reason).
+
+### Updating an item
+
+When the user finishes or starts a resource:
+
+- Change `to-read` → `reading` when they start.
+- Change `reading` → `done` when they finish; add the key insight to Notes.
+
+---
+
+## Waiting-For List
+
+The waiting-for list lives at `journal/waiting-for.md`. It tracks every item delegated, blocked, or waiting on someone else — a durable list that persists across sessions until each item is resolved.
+
+> **Before using this file:** Check that `journal/waiting-for.md` exists. If not, copy from `.opencode/meta-templates/waiting-for-template.md`.
+
+### Format
+
+Two sections: `## Active` (open items) and `## Resolved` (closed items).
+
+Each active item is one line:
+
+```markdown
+- **YYYY-MM-DD** | **<context>** | <what I am waiting for> | follow-up: <YYYY-MM-DD> | @<person-or-system>
+```
+
+Example:
+- `- **2026-04-08** | **PROJ-123** | PR review from Alice | follow-up: 2026-04-10 | @alice`
+
+When an item is resolved: move the line from `## Active` to `## Resolved` and append ` → resolved YYYY-MM-DD`.
+
+### Routing rules
+
+| Source | Action |
+|--------|--------|
+| Meeting action item (waiting on someone) | Append to `## Active` |
+| Daily note `## Day > ### Waiting` item | Append to `## Active` (evening close-out) |
+| Weekly wrap-up overdue review | Surface flagged items; close or extend follow-up dates |
+| Item resolved | Move to `## Resolved` |
+
+### Append rules
+
+- Never edit or delete past lines in `## Resolved`.
+- Check for duplicates before appending — do not add an item already in `## Active`.
+- Always include a `follow-up:` date so the morning and evening workflows can surface overdue items.

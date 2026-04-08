@@ -109,9 +109,9 @@ If `dev-log.md` does not exist or is empty, the project has no prior work record
 
 ---
 
-## `resources-log.md` — Knowledge Graph Variant
+## `meta/resources-log.md` — Knowledge Graph Variant
 
-Knowledge graph workflows (`/r`) write to `resources-log.md` (repo root) instead of a project `dev-log.md`.
+Knowledge graph workflows (`/r`) write to `meta/resources-log.md` instead of a project `dev-log.md`.
 
 Format:
 ```
