@@ -161,6 +161,35 @@ This writes the CLI tool versions and paths to `context/env-snapshot.md`. If the
 
 ---
 
+## Step 5b: Register QMD Collections (fresh only, if qmd is installed)
+
+qmd stores its collection registry in `~/.cache/qmd/index.sqlite`. Collections must be registered once before `qmd update` / `qmd-index.js` can index them.
+
+Run the following from the repo root to register all standard collections (idempotent — safe to re-run):
+
+```bash
+qmd collection add meta ./meta
+qmd collection add context ./context
+qmd collection add codebases ./codebases
+qmd collection add resources ./resources
+qmd collection add skills ./.opencode/skills
+qmd collection add journal ./journal
+qmd collection add inbox ./inbox
+qmd collection add projects ./projects
+qmd collection add areas ./areas
+qmd collection add archive ./archive
+```
+
+Then build the initial index:
+
+```bash
+node .opencode/scripts/qmd-index.js
+```
+
+Skip this step if `qmd` is not installed (will be noted in Step 5).
+
+---
+
 ## Step 6: Environment (fresh only)
 
 Check for `.env` at repo root. If missing, check for `.env.example` and tell the user to copy and fill in credentials.

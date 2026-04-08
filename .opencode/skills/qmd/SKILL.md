@@ -107,3 +107,13 @@ Omit to search all collections.
 ## Maintenance
 
 Re-index after bulk changes: `node .opencode/scripts/qmd-index.js`
+
+- Default (no flag): incremental update — re-indexes changed/new files only
+- `--changed`: git-aware early exit — skips entirely if no indexed `.md` files changed (fastest; use in automated hooks)
+- `--full`: force re-embed all chunks — use only when switching embedding models or recovering a corrupt index
+
+Collections must be registered in the qmd index before they can be updated. The `/bootstrap` command registers all standard collections. To register a new collection manually:
+
+```bash
+qmd collection add <name> <path>   # e.g. qmd collection add context ./context
+```

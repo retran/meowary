@@ -1,13 +1,18 @@
 # qmd.yml — qmd semantic search index configuration
 #
 # Defines collections for semantic querying via `qmd query "<question>"`.
-# Run `node scripts/qmd-index.js` to build/update the index.
+# Run `node .opencode/scripts/qmd-index.js` to build/update the index.
 #
 # Install: npm install -g qmd (requires Node >= 22)
 # First run downloads ~2GB embedding model.
 #
-# Coverage: all .md files across content directories. .opencode/ is excluded.
-# Collections: meta, context, codebases, resources, journal, inbox, projects, areas, drafts, archive
+# NOTE: qmd.yml is documentation — it does NOT drive the live index.
+# Collections are registered in the qmd SQLite index (~/.cache/qmd/index.sqlite)
+# via `qmd collection add`. The /bootstrap command registers all collections.
+# This file exists to document the intended collection layout.
+#
+# Coverage: all .md files across content directories. .opencode/ (except skills/) is excluded.
+# Collections: meta, context, codebases, resources, skills, journal, inbox, projects, areas, archive
 
 collections:
   - name: meta
@@ -22,6 +27,9 @@ collections:
   - name: resources
     path: resources/
     description: "Reference articles — atomic, topic-based knowledge"
+  - name: skills
+    path: .opencode/skills/  # dotfile dir — leading dot is intentional
+    description: "Custom skills — domain-specific workflows and templates"
   - name: journal
     path: journal/
     description: "Time-based notes — daily, weekly, meetings"
@@ -34,9 +42,6 @@ collections:
   - name: areas
     path: areas/
     description: "Ongoing responsibility dashboards"
-  - name: drafts
-    path: drafts/
-    description: "Unpublished documents for external audiences"
   - name: archive
     path: archive/
     description: "Completed and inactive projects, areas, and resources"

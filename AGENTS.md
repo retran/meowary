@@ -53,6 +53,7 @@ Workflow prompts live in `.opencode/workflows/` (23 files). Commands live in `.o
 - Index: `node .opencode/scripts/qmd-index.js` (`--changed` for fast early-exit, `--full` to force re-embed)
 - Query: `qmd query "<question>"`
 - Re-index after any bulk create/actualize, `/r ingest`, or `/r sync` run.
+- Collections are registered in `~/.cache/qmd/index.sqlite` via `qmd collection add`. The `/bootstrap` command registers all standard collections on first setup.
 
 ## Conventions
 
