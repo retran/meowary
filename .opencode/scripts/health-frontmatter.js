@@ -22,9 +22,6 @@ const EXCLUDE = new Set(["AGENTS.md"]);
 
 const allFiles = findMdFiles(REPO_ROOT).filter((f) => {
   const rel = relative(REPO_ROOT, f);
-  // Exclude node_modules and .opencode internals
-  if (rel.startsWith("scripts/node_modules/")) return false;
-  if (rel.startsWith(".git/")) return false;
   return !EXCLUDE.has(rel);
 });
 

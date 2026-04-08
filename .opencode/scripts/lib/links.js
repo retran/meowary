@@ -28,8 +28,12 @@ export const RELATED_HEADERS =
 /** Any H2 section header. */
 export const SECTION_RE = /^##\s+/;
 
+/** Directories to skip during recursive traversal. */
+const EXCLUDED_DIRS = new Set([".opencode", "node_modules", ".git"]);
+
 /**
  * Recursively find all .md files under a directory.
+ * Skips .opencode/, node_modules/, and .git/ directories.
  * Returns sorted array of absolute paths.
  */
 export function findMdFiles(dir) {
@@ -39,6 +43,7 @@ export function findMdFiles(dir) {
   for (const entry of entries) {
     const fullPath = resolve(dir, entry.name);
     if (entry.isDirectory()) {
+      if (EXCLUDED_DIRS.has(entry.name)) continue;
       results.push(...findMdFiles(fullPath));
     } else if (entry.isFile() && entry.name.endsWith(".md")) {
       results.push(fullPath);

@@ -1,7 +1,7 @@
 /**
  * lib/sync.js — Confluence sync registry utilities.
  *
- * Reads/writes confluence-sync.json at the repo root.
+ * Reads/writes meta/confluence-sync.json.
  * This file is the authoritative registry of Confluence pages we monitor,
  * with the date each was last ingested into a local resource article.
  *
@@ -16,7 +16,7 @@
  *   }
  *
  * Exports:
- *   SYNC_FILE                    — absolute path to confluence-sync.json
+ *   SYNC_FILE                    — absolute path to meta/confluence-sync.json
  *   loadSyncConfig(repoRoot)     — read JSON → entries object (skips _comment/_schema keys)
  *   saveSyncConfig(repoRoot, entries) — write entries to file (preserves _comment/_schema)
  *   markSynced(repoRoot, pageId, date) — update synced date for one page
@@ -25,10 +25,10 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
-export const SYNC_FILENAME = "confluence-sync.json";
+export const SYNC_FILENAME = "meta/confluence-sync.json";
 
 /**
- * Return the absolute path to confluence-sync.json.
+ * Return the absolute path to meta/confluence-sync.json.
  */
 export function syncFilePath(repoRoot) {
   return resolve(repoRoot, SYNC_FILENAME);

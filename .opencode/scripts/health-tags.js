@@ -17,13 +17,10 @@ import { findMdFiles } from "./lib/links.js";
 import { getFrontmatterField } from "./lib/frontmatter.js";
 
 const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
-const TAGS_FILE = resolve(REPO_ROOT, "tags.md");
+const TAGS_FILE = resolve(REPO_ROOT, "meta/tags.md");
 
 // Collect all used tags across repo
-const allFiles = findMdFiles(REPO_ROOT).filter((f) => {
-  const rel = relative(REPO_ROOT, f);
-  return !rel.startsWith("scripts/node_modules/") && !rel.startsWith(".git/");
-});
+const allFiles = findMdFiles(REPO_ROOT);
 
 const usedTags = new Set();
 for (const f of allFiles) {
@@ -46,7 +43,7 @@ if (existsSync(TAGS_FILE)) {
     if (m) registeredTags.add(m[1].toLowerCase().trim());
   }
 } else {
-  console.log("health-tags: tags.md not found — skipping registered-tags checks");
+  console.log("health-tags: meta/tags.md not found — skipping registered-tags checks");
 }
 
 // (a) Used but not registered

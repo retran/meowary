@@ -129,6 +129,17 @@ describe("findMdFiles", () => {
     const files = findMdFiles(fixtureDir);
     expect(files).toEqual([]);
   });
+
+  it("excludes .opencode, node_modules, and .git directories", () => {
+    write("top.md", "# Top");
+    write("sub/nested.md", "# Nested");
+    write(".opencode/skill.md", "# Skill");
+    write("node_modules/pkg/readme.md", "# Pkg");
+    write(".git/refs.md", "# Refs");
+    const files = findMdFiles(fixtureDir);
+    const rels = files.map((f) => f.replace(fixtureDir + "/", "")).sort();
+    expect(rels).toEqual(["sub/nested.md", "top.md"]);
+  });
 });
 
 // ---------------------------------------------------------------------------
