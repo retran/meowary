@@ -73,8 +73,10 @@ Done when: committed; log entry appended (see Close below); daily note updated.
 
 1. Confirm old path and new path.
 2. Check that the new path doesn't already exist.
+3. Run `node .opencode/scripts/find-backlinks.js resources/<old-path>.md` — show the user all inbound links.
+4. **HARD-GATE:** Output the pending rename (`<old-path>` → `<new-path>`) and the inbound link count. Do not proceed until the user confirms in this turn.
 
-Done when: old and new paths confirmed; new path is free.
+Done when: old and new paths confirmed; new path is free; user has confirmed the rename.
 
 ### Rename Step 1 — Move file
 
@@ -86,7 +88,7 @@ Done when: file moved.
 
 ### Rename Step 2 — Fix all inbound links
 
-1. Run `node .opencode/scripts/find-backlinks.js resources/<old-path>.md`
+1. Re-run `node .opencode/scripts/find-backlinks.js resources/<old-path>.md` — do not reuse the Step 0 output; this is a fresh run used for the actual fix pass.
 2. Update every inbound link to the new path.
 
 Done when: all inbound links updated to new path.

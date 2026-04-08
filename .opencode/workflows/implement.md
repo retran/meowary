@@ -76,6 +76,7 @@ Write code in small, verifiable increments:
 - If an unexpected complexity is encountered: **stop immediately**. Surface it to the user and ask: continue as-is, simplify the approach, or replan? Do not absorb complexity silently.
 - Do not touch files outside the plan scope without explicit user approval.
 - Standard + Full: run lint/type-check after each file change. Quick: end-only.
+- **Destructive command gate:** Before running any of the following, output the exact command and its arguments, then stop and wait for explicit user confirmation in this turn: `rm`, `git reset --hard`, `git push --force`, `git clean -fd`, `git stash drop`, `DROP TABLE`, `TRUNCATE TABLE`, `DELETE FROM`, bulk file deletions, or any shell command that modifies state outside the project directory. Also gate any `UPDATE` statement without a scoped `WHERE` clause. Do not proceed if confirmation is not received.
 
 Done when: all planned tasks for this increment implemented and passing lint/type-check.
 
