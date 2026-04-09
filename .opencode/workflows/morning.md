@@ -24,6 +24,10 @@ Acts as the user's structured morning planner. Surfaces current project state fr
 | Waiting items | `journal/waiting-for.md` | Optional |
 | Jira sprint | Jira (read-only) | Optional |
 
+## Complexity Tiers
+
+Not applicable. Fixed-procedure workflow.
+
 ## Steps
 
 ### Step 0 — Load context
@@ -48,7 +52,7 @@ Done when: user has responded, or context is clear enough to proceed.
 
 For each active project:
 1. Read `projects/<slug>/dev-log.md` — last entry only. Extract current phase and next action.
-2. Summarise as one line: `<Project>: <phase> — <next action>`.
+2. Summarize as one line: `<Project>: <phase> — <next action>`.
 3. Flag any project whose last dev-log entry is more than 3 working days old as "potentially stalled".
 
 Done when: one-liner surfaced for each active project; stalled projects flagged.
@@ -110,13 +114,18 @@ Commit: `Morning: <YYYY-MM-DD>`.
 
 No dev-log entry — `/morning` reads project dev-logs but does not write to them.
 
-Suggested next steps (present, do not run):
-- Active project with clear next action → appropriate lifecycle workflow
-- Inbox had unprocessed items → `resource-ingest` when ready
-- Stalled project → `scout` to re-orient
-- Monday → weekly note already handled in Step 5
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] MIT set with at most 3 items
+- [ ] Calendar checked for today's meetings
+- [ ] Daily note created with correct front matter
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
 
 Done when: committed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -148,27 +157,11 @@ Done when: committed.
 
 ---
 
-## Recurring Events
+*Suggested next steps (present, do not run):*
 
-The recurring events file lives at `journal/recurring-events.md`. It lists standing meetings and recurring calendar events organized by weekday. `/morning` reads it in Step 3 to populate the `### Calendar` section in the daily note's Morning zone.
-
-> **Before using this file:** Check that `journal/recurring-events.md` exists. If not, copy from `.opencode/meta-templates/recurring-events-template.md`.
-
-### Format
-
-Events are organized by weekday heading. Each event is a bullet with time and title:
-
-```markdown
-## Monday
-- 09:00 Team standup
-- 14:00 1-1 with manager
-
-## Tuesday
-- 09:00 Team standup
-```
-
-### Update rules
-
-- Add new recurring events when they are scheduled.
-- Remove or comment out events that end.
-- `/bootstrap` Step 7 populates this file during initial setup.
+| Condition | Suggested next workflow |
+|-----------|------------------------|
+| Active project with clear next action | appropriate lifecycle workflow |
+| Inbox had unprocessed items | `resource-ingest` when ready |
+| Stalled project | `scout` to re-orient |
+| Monday | weekly note already handled in Step 5 |

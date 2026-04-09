@@ -25,9 +25,9 @@ Acts as a rigorous architecture decision facilitator. Generates genuinely distin
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Frame + ≥2 options + choose; no formal ADR; inline decision note | End gate only |
-| **Standard** | All steps; ≥3 options; tradeoff matrix; ADR draft | Mid-gate after options + end gate |
-| **Full** | All steps; ≥3 options; full tradeoff matrix; ADR via `write`; replan suggestion if needed | HARD-GATE after frame; HARD-GATE after options; HARD-GATE before decide |
+| **Quick** | Frame + ≥2 options + choose; no formal ADR; inline decision note | END-GATE only |
+| **Standard** | All steps; ≥3 options; tradeoff matrix; ADR draft | SOFT-GATE after options; END-GATE at close |
+| **Full** | All steps; ≥3 options; full tradeoff matrix; ADR via `write`; replan suggestion if needed | HARD-GATE (Full): after frame; HARD-GATE (Full): after options; HARD-GATE (Full): before decide |
 
 ## Steps
 
@@ -106,7 +106,7 @@ Done when: all options generated with pros/cons/effort/risk; sub-agent results i
 ### Step 4 — Compare (Standard + Full)
 
 1. Build tradeoff matrix: options × evaluation criteria.
-2. Score or characterise each cell honestly.
+2. Score or characterize each cell honestly.
 3. Surface the decisive tradeoffs — where options diverge most.
 4. Note criteria where all options perform similarly (non-decisive).
 
@@ -125,7 +125,7 @@ Done when: tradeoff matrix written; decisive and non-decisive criteria identifie
 
 Done when: chosen option stated with rationale; rejected alternatives documented with reasons.
 
-### Step 6 — Write decision record
+### Step 6 — Close
 
 - **Quick:** write inline decision note to `projects/<name>/notes/design-<topic>.md`. Use abbreviated ADR format.
 - **Standard + Full:** write ADR draft to `projects/<name>/design/adr-<slug>.md` using the ADR format below. For Full tier, suggest chaining to `write` to finalize.
@@ -184,7 +184,18 @@ Then:
 3. Mark matching task items as done.
 4. Enrich `resources/` with new architecture patterns discovered.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Decision record has clear rationale
+- [ ] All considered options documented with trade-offs
+- [ ] Cross-references to related resources added
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: decision record written; dev-log entry appended; daily note updated.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -228,3 +239,4 @@ Done when: decision record written; dev-log entry appended; daily note updated.
 | Decision made; implementation can proceed | `implement` |
 | New constraint discovered that changes plan scope | `plan replan` |
 | Further research needed to validate chosen option | `research` |
+| Design needs broader exploration of solution space | `brainstorm` |

@@ -5,7 +5,7 @@ tags: []
 
 # Resource-Discover
 
-> Knowledge gap discovery workflow. Scans the journal, project notes, and codebase for concepts, entities, and topics that appear repeatedly but have no resource article. Produces a prioritised list of missing nodes and optionally seeds stub articles for the highest-priority gaps. Forward-looking complement to `resource-plan` (which reviews existing articles) and `resource-enrich` (which deepens individual articles). Invoke when you want to see what the knowledge graph doesn't know it's missing.
+> Knowledge gap discovery workflow. Scans the journal, project notes, and codebase for concepts, entities, and topics that appear repeatedly but have no resource article. Produces a prioritized list of missing nodes and optionally seeds stub articles for the highest-priority gaps. Forward-looking complement to `resource-plan` (which reviews existing articles) and `resource-enrich` (which deepens individual articles). Invoke when you want to see what the knowledge graph doesn't know it's missing.
 
 ## Role
 
@@ -118,6 +118,8 @@ Done when: gap report written.
 
 ### Step 6 — Create stubs (if user requested)
 
+**SOFT-GATE (all tiers):** Confirm stub creation list with the user before writing any files.
+
 1. For each high-priority candidate confirmed by the user: create a minimal stub article in the appropriate `resources/` subfolder using `.opencode/skills/resources/resources-template.md` as the base.
 2. Stub content: complete front matter + one-sentence summary + empty `## Related` section.
 3. Do not enrich stubs here — enrichment is `resource-enrich`'s job.
@@ -126,7 +128,7 @@ Skip if user requested report only.
 
 Done when: stubs created for all confirmed high-priority candidates (or skipped).
 
-### Step 7 — Commit and close
+### Step 7 — Close
 
 1. Stage: gap report, any new stub articles, `meta/tags.md`.
 2. Commit: `Discover knowledge gaps: N candidates, M stubs created`
@@ -134,17 +136,28 @@ Done when: stubs created for all confirmed high-priority candidates (or skipped)
 4. Append work log entry to `## Day` zone of today's daily note.
 5. Mark any matching task items as done.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Discovery findings documented
+- [ ] Stub articles created for identified gaps
+- [ ] Cross-references added to related articles
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: committed; log entry appended; daily note updated.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
-| Output                       | Location                                   |
-| ---------------------------- | ------------------------------------------ |
-| Gap report                   | `projects/<name>/notes/discover-<date>.md` |
-| Stub articles (if requested) | `resources/<subfolder>/<slug>.md`          |
-| `meta/resources-log.md` entry     | `meta/`                                  |
-| Daily note work log          | `journal/daily/<date>.md` Day zone         |
-| Commit                       | Git history                                |
+| Output                       | Location                                   | Format       |
+| ---------------------------- | ------------------------------------------ | ------------ |
+| Gap report                   | `projects/<name>/notes/discover-<date>.md` | Markdown     |
+| Stub articles (if requested) | `resources/<subfolder>/<slug>.md`          | Markdown     |
+| `meta/resources-log.md` entry     | `meta/`                                  | Append entry |
+| Daily note work log          | `journal/daily/<date>.md` Day zone         | Append entry |
+| Commit                       | Git history                                | Git commit   |
 
 ## Error Handling
 
@@ -168,7 +181,7 @@ Done when: committed; log entry appended; daily note updated.
 
 ---
 
-_Suggested next steps (present, do not run):_
+*Suggested next steps (present, do not run):*
 
 | Condition                            | Suggested next workflow                          |
 | ------------------------------------ | ------------------------------------------------ |

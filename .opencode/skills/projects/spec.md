@@ -35,11 +35,13 @@ One spec per topic. Use kebab-case for topic names (e.g. `spec-auth-strategy.md`
 type: spec
 status: draft
 updated: YYYY-MM-DD
-tags: [p-<slug>]
+superseded-by: <path to newer spec, if applicable>
+tags: [spec, p-<slug>]
 ---
 ```
 
 - `status`: `draft` → `under-review` → `accepted` | `rejected`
+- `superseded-by`: optional. Set when a newer spec replaces this one. Points to the relative path of the replacement spec.
 - `updated`: set on creation; update on every edit.
 
 ---
@@ -59,11 +61,15 @@ tags: [p-<slug>]
 
 ## Non-Goals
 
-## Options
+## Approach
 
-## Recommendation
+## Requirements
+
+## Alternatives Considered
 
 ## Open Questions
+
+## Sources
 
 ## Changelog
 ```
@@ -74,11 +80,15 @@ tags: [p-<slug>]
 
 **Non-Goals:** What is explicitly out of scope. This is as important as the problem definition.
 
-**Options:** One `###` subsection per option. Include a brief description and pros/cons for each. List simplest option first.
+**Approach:** The recommended approach. Describe the solution direction, key design choices, and why this approach was selected. Reference specific constraints it satisfies. Name accepted trade-offs explicitly.
 
-**Recommendation:** State the recommended option and why. Reference specific constraints it satisfies. Name accepted trade-offs explicitly.
+**Requirements:** Concrete requirements the implementation must satisfy. Bullet list. These flow directly into plan tasks.
 
-**Open Questions:** Unanswered questions that block or affect the recommendation.
+**Alternatives Considered:** One `###` subsection per alternative. Include a brief description and why it was not chosen. List simplest alternative first.
+
+**Open Questions:** Unanswered questions that block or affect the approach.
+
+**Sources:** Links to external references, documentation, prior art, or research that informed this spec.
 
 **Changelog:** Bullets, newest first. Format: `- **YYYY-MM-DD:** Action.`
 
@@ -93,7 +103,7 @@ tags: [p-<slug>]
 | `accepted` | Recommendation accepted; work tracked in a plan or ADR |
 | `rejected` | Problem descoped or alternative approach chosen |
 
-Accepted and rejected specs are not edited — they are historical records. Create a new spec if the problem changes significantly.
+Accepted, rejected, and superseded specs are not edited — they are historical records. Create a new spec if the problem changes significantly. Set the `superseded-by` field in the old spec's front matter to point to the replacement.
 
 ---
 
@@ -102,7 +112,9 @@ Accepted and rejected specs are not edited — they are historical records. Crea
 - [ ] Front matter complete: `type: spec`, `status`, `updated`, `tags`?
 - [ ] Problem is value-neutral — no solution advocacy?
 - [ ] Constraints separated from Non-Goals?
-- [ ] Options use `###` subsections with pros/cons?
-- [ ] Recommendation references specific constraints?
+- [ ] Approach describes the chosen direction and references constraints?
+- [ ] Requirements listed as concrete bullets?
+- [ ] Alternatives Considered use `###` subsections with rationale for rejection?
+- [ ] Sources section present (even if empty)?
 - [ ] `updated` set to today?
 - [ ] Changelog entry for today?

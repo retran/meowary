@@ -24,9 +24,9 @@ Acts as a disciplined failure analyst. Does not guess or jump to fixes — state
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Observe + first hypothesis + fix if found | End gate only |
-| **Standard** | Observe + hypothesis tree + systematic investigation + fix | Mid-gate after initial hypotheses + end gate |
-| **Full** | Full scientific debug protocol + root cause analysis + postmortem seed | HARD-GATE: confirm root cause before fixing |
+| **Quick** | Observe + first hypothesis + fix if found | END-GATE only |
+| **Standard** | Observe + hypothesis tree + systematic investigation + fix | SOFT-GATE after initial hypotheses; END-GATE at close |
+| **Full** | Full scientific debug protocol + root cause analysis + postmortem seed | HARD-GATE (Full): confirm root cause before fixing |
 
 ## Steps
 
@@ -72,7 +72,7 @@ Done when: reproduction case documented (or non-reproduction documented as a fin
 
 Do not test anything without first stating a hypothesis.
 
-**Mid-gate (Standard):** Present hypotheses to user before investigating. Confirm the list is reasonable before proceeding.
+**SOFT-GATE (Standard):** Present hypotheses to user before investigating. Confirm the list is reasonable before proceeding.
 
 Done when: ordered hypothesis list written; user confirmed (Standard+).
 
@@ -118,7 +118,7 @@ Done when: root cause stated; classification made; user confirmed (Full).
 
 1. Implement the minimum fix that addresses the root cause.
 2. Fix causes, not symptoms. Do not refactor while fixing. (Refactoring conflates two changes and makes it impossible to isolate whether the fix or the refactor caused a subsequent issue.)
-3.    Apply conventions from `codebases/<name>.md`.
+3. Apply conventions from `codebases/<name>.md`.
 4. Verify the fix: confirm the original failure no longer reproduces.
 5. Add a regression test if one does not already exist. (Only skip with explicit user approval.)
 
@@ -145,9 +145,20 @@ Done when: fix applied; original failure no longer reproduces; regression test a
 4. Mark matching task items as done.
 5. If root cause is a systemic issue: suggest `plan replan` in closing summary.
 6. If root cause represents reusable knowledge (pattern, anti-pattern, known library issue): enrich the relevant `resources/` article.
-7. Commit: `Fix: <description of root cause>`.
+7. Commit per `context/context.md` commit format: `Fix: <description of root cause>`.
+
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Root cause identified and documented
+- [ ] Fix verified against original reproduction steps
+- [ ] Debug log entry complete
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
 
 Done when: debug note written; dev-log entry appended; daily note updated; committed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -157,7 +168,7 @@ Done when: debug note written; dev-log entry appended; daily note updated; commi
 | Code fix | Codebase | Source files |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
 | Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
-| Commit | Git history | `Fix: <description>` |
+| Commit | Git history | Per `context/context.md` commit format |
 
 ## Error Handling
 
@@ -173,7 +184,7 @@ Done when: debug note written; dev-log entry appended; daily note updated; commi
 2. Debug note is mandatory for all tiers. Quick sessions still write a note.
 3. Fix causes, not symptoms. Never refactor during a debug session.
 4. Regression test required. Only skippable with explicit user approval.
-5. Commit format: `Fix: <description of root cause>`.
+5. Commit format: per `context/context.md` commit conventions.
 6. Systemic issues get a replan suggestion, not a local fix.
 
 ## Sub-Agents

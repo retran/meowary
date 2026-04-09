@@ -1,5 +1,7 @@
 ---
 description: First-time setup or update personal context and coding environment
+updated: 2026-04-09
+tags: [bootstrap, setup]
 ---
 
 Set up or revise `context/context.md`, `context/safety.md`, and any `codebases/<name>.md` files. Idempotent — safe to re-run anytime. Templates live in `.opencode/context-templates/` and `.opencode/skills/codebases/codebase-template.md`.
@@ -144,6 +146,7 @@ Check required CLI tools:
 |------|----------------|----------|
 | `node` | `node --version` | Yes — must be ≥ 22 |
 | `jira` | `jira version` | Yes — Jira CLI |
+| `confluence` | `confluence --version` | Yes — Confluence CLI |
 | `gh` | `gh --version` | Yes — GitHub CLI |
 | `qmd` | `qmd --version` | Yes — semantic search |
 | `repomix` | `repomix --version` | Yes — repo packing |
@@ -215,8 +218,8 @@ Offer to create `resources/people/<slug>.md` for the author. If accepted: fill n
 Explain the command set:
 
 - **Daily rhythm:** `/morning` to start the day, `/evening` to close it, `/standup` for async updates, `/weekly` for planning and retrospectives
-- **Lifecycle work:** `/do <phase>` — phases: `scout`, `research`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
-- **Knowledge graph:** `/r <operation>` — operations: `enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`, `query`
+- **Lifecycle work:** `/do <phase>` — phases: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
+- **Knowledge graph:** `/r <operation>` — operations: `enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`
 - **Quick capture:** `/capture <note>` — drops a timestamped note into today's daily Inbox
 - **Meeting notes:** `/meeting`
 

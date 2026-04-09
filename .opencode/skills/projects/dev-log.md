@@ -63,7 +63,7 @@ Every lifecycle workflow writes exactly one entry at the Close step. The entry f
 | `<date>` | ISO 8601 (`YYYY-MM-DD`) |
 | `/<workflow>` | Workflow name, e.g. `/scout`, `/implement`, `/debug` |
 | `<topic>` | 2–6 words describing the subject; kebab-case |
-| `**Phase:**` | Matches the workflow name: `scout`, `research`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review` |
+| `**Phase:**` | Matches the workflow name: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review` |
 | `**Duration:**` | Rough estimate: `~15 min`, `~1 hr`, `~3 hrs` |
 | `**Summary:**` | Present tense, 1–2 sentences: what was produced, decided, or found |
 | `**Next:**` | The workflow or action that logically follows — a suggestion, not a command |

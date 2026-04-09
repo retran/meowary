@@ -1,13 +1,13 @@
 ---
 type: codebase
-codebase: <slug>
-path: codebases/<slug>.md
-updated: YYYY-MM-DD
-apply-when: Working in the <slug> codebase
+codebase: {{SLUG}}
+path: codebases/{{SLUG}}.md
+updated: {{DATE}}
+apply-when: Working in the {{SLUG}} codebase
 tags: []
 ---
 
-# Codebase: <name>
+# Codebase: {{NAME}}
 
 ## Overview
 

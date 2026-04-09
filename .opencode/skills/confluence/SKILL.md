@@ -136,3 +136,10 @@ After any write, update `meta/confluence-sync.json` to reflect the change.
 - **Distill, don't copy.** Extract durable facts. Discard ephemeral content.
 - **Record provenance.** Add page IDs to `confluence:` front matter whenever you extract facts.
 - **URL reads:** `confluence read` only accepts page IDs or URLs with a `pageId` query param — not display/pretty URLs.
+
+## Editor Checklist (run silently before every output)
+
+- [ ] Page ID recorded in article front matter `confluence:` field?
+- [ ] Page ID recorded in `meta/confluence-sync.json`?
+- [ ] PII stripped from fetched content before storing?
+- [ ] No write operations without explicit user approval?

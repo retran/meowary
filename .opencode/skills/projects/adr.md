@@ -79,7 +79,7 @@ The authoritative template reference is in `context/context.md`.
 
 ### Immutability
 
-**A finalised ADR must not be edited.** Once status moves beyond `DRAFT`, the content is frozen.
+**A finalized ADR must not be edited.** Once status moves beyond `DRAFT`, the content is frozen.
 
 - To change a decision: create a new ADR and set the old one to `SUPERSEDED`.
 - Add `**Superseded by**` and `**Supersedes**` rows to the metadata tables of both ADRs.
@@ -136,7 +136,7 @@ Add `**Superseded by**` or `**Supersedes**` rows when relevant.
 
 Bold the chosen option's row after the decision is made.
 
-**Decision**: One paragraph or bold phrase summarising what was decided. Active voice. "We will use X." Single-option ADRs are acceptable — document the reasoning anyway.
+**Decision**: One paragraph or bold phrase summarizing what was decided. Active voice. "We will use X." Single-option ADRs are acceptable — document the reasoning anyway.
 
 **Consequences**: Bullet list. List **all** consequences — positive, negative, and neutral. Name costs explicitly. Do not omit negatives.
 
@@ -179,7 +179,7 @@ The main ADR is the entry point. It answers: "What was the overall decision and 
 - Full Background and problem statement (same as if it were a single ADR).
 - Decision Drivers — the cross-cutting constraints that apply to all sub-decisions.
 - A **Sub-ADR Index** section listing each sub-ADR with a one-line description.
-- A high-level **Decision** paragraph summarising the overall direction.
+- A high-level **Decision** paragraph summarizing the overall direction.
 - A **Consequences** section covering only cross-cutting effects; sub-specific effects live in the sub-ADRs.
 - The main ADR **does not repeat** content that lives in the sub-ADRs — it links to it.
 

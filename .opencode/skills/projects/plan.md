@@ -71,9 +71,24 @@ tags: [p-<slug>]
 ## Changelog
 ```
 
-**Overview:** 1–3 sentences summarising the approach. What are we building and how?
+**Overview:** 1–3 sentences summarizing the approach. What are we building and how?
 
 **Phases:** One `###` subsection per phase. Each phase contains `- [ ]` task checkboxes. Tasks must be concrete and independently completable. Mark completed tasks `- [x]` in place — do not delete them.
+
+Each task should include a `[risk: high|medium|low]` tag to signal implementation difficulty:
+
+| Risk | Criteria |
+|------|----------|
+| `high` | First-time patterns, cross-cutting changes (>5 files), or external dependencies |
+| `medium` | Known patterns with moderate scope or some ambiguity |
+| `low` | Mechanical/repetitive changes, single-file edits |
+
+Example:
+```
+- [ ] Refactor auth middleware to support OAuth2 [risk: high]
+- [ ] Add unit tests for token validation [risk: medium]
+- [ ] Update config schema with new fields [risk: low]
+```
 
 **Dependencies:** External systems, teams, or decisions that must be resolved before or during implementation.
 

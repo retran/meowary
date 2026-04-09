@@ -5,7 +5,7 @@ tags: []
 
 # Write
 
-> Produces written artifacts: ADRs, RFCs, specs, proposals, postmortems, and documentation. Operates in two modes: **draft** (outputs to `projects/<name>/drafts/`) and **publish** (outputs to `projects/<name>/docs/`). Content is always sourced from existing knowledge before new material is written. Applies journal writing conventions throughout. Invoke after `design`, `research`, or `plan` produces inputs that need to be formalised.
+> Produces written artifacts: ADRs, RFCs, specs, proposals, postmortems, and documentation. Operates in two modes: **draft** (outputs to `projects/<name>/drafts/`) and **publish** (outputs to `projects/<name>/docs/`). Content is always sourced from existing knowledge before new material is written. Applies journal writing conventions throughout. Invoke after `design`, `research`, or `plan` produces inputs that need to be formalized.
 
 ## Role
 
@@ -35,9 +35,9 @@ Default is **draft** when uncertain. Confirm with the user before publishing.
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Outline + fill; no research step; direct write | End gate only |
-| **Standard** | Source gathering + structured write + review gate | Mid-gate after outline + end gate |
-| **Full** | Full source gathering + structured write + peer review simulation + publish gate | HARD-GATE after outline; HARD-GATE before publish |
+| **Quick** | Outline + fill; no research step; direct write | END-GATE only |
+| **Standard** | Source gathering + structured write + review gate | SOFT-GATE after outline; END-GATE at close |
+| **Full** | Full source gathering + structured write + peer review simulation + publish gate | HARD-GATE (Full): after outline; HARD-GATE (Full): before publish |
 
 ## Steps
 
@@ -109,7 +109,7 @@ Skip for Quick tier.
 
 Done when: review findings addressed; mode (draft vs. publish) confirmed.
 
-### Step 6 — Finalize and file
+### Step 6 — Close
 
 1. Draft mode: write to `projects/<name>/drafts/<slug>.md`.
 2. Publish mode: write to `projects/<name>/docs/<slug>.md`.
@@ -132,7 +132,18 @@ Done when: review findings addressed; mode (draft vs. publish) confirmed.
 8. Commit: `Write <doc-type>: <slug>` or `Publish <doc-type>: <slug>`.
 9. Enrich `resources/` with any new knowledge extracted during writing.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Document structure matches target format (ADR/RFC/proposal)
+- [ ] All claims are substantiated
+- [ ] Cross-references and links are valid
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: document filed; dev-log entry appended; daily note updated; committed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ---
 
@@ -206,4 +217,5 @@ For proposals: use Spec template; adjust sections to: Summary, Problem, Proposed
 | Draft written; implementation can begin | `implement` |
 | Postmortem written; action items ready | `plan` to operationalize them |
 | ADR draft written; ready to finalize | Re-invoke `write` in publish mode |
+| Writing reveals problem framing issues | `brainstorm` |
 | New knowledge surfaced during writing | `resource-enrich` or `resource-ingest` |

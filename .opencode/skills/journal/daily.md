@@ -10,7 +10,7 @@ The daily note is the atomic unit of the journal — the raw log of a single day
 
 The **three-zone structure** exists because these are genuinely different epistemic modes. Planning what to do, logging what happened, and reflecting on what it means require different content and different permissions. Mixing them destroys the record's clarity.
 
-The **MIT system** is a forcing function for prioritisation. Writing three MITs and starring one is not a time-management trick — it is a practice that surfaces the question: *if I only get one thing done today, what must it be?* Without that forcing function, everything feels equally important and nothing gets decided.
+The **MIT system** is a forcing function for prioritization. Writing three MITs and starring one is not a time-management trick — it is a practice that surfaces the question: *if I only get one thing done today, what must it be?* Without that forcing function, everything feels equally important and nothing gets decided.
 
 The **append-only rule** exists because daily notes are immutable historical records. Editing a past daily note destroys its value as evidence of what you actually thought and did. The past is a record, not a draft.
 
@@ -64,9 +64,9 @@ Filled once, at the start of the day. Owned by `/morning`.
 ## Morning
 
 Focus: <one sentence — what makes today a success>
-★ MIT 1: <primary MIT — non-negotiable>
-  MIT 2: <optional>
-  MIT 3: <optional>
+- ★ MIT 1: <primary MIT — non-negotiable>
+- MIT 2: <optional>
+- MIT 3: <optional>
 
 Calendar: <events for the day>
 ```

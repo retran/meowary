@@ -74,7 +74,7 @@ Done when: committed; log entry appended (see Close below); daily note updated.
 1. Confirm old path and new path.
 2. Check that the new path doesn't already exist.
 3. Run `node .opencode/scripts/find-backlinks.js resources/<old-path>.md` — show the user all inbound links.
-4. **HARD-GATE:** Output the pending rename (`<old-path>` → `<new-path>`) and the inbound link count. Do not proceed until the user confirms in this turn.
+4. **HARD-GATE (all tiers):** Output the pending rename (`<old-path>` → `<new-path>`) and the inbound link count. Do not proceed until the user confirms in this turn.
 
 Done when: old and new paths confirmed; new path is free; user has confirmed the rename.
 
@@ -123,7 +123,7 @@ Done when: QMD index rebuilt.
 
 1. Confirm: which article is kept (target), which is absorbed (source)?
 2. Confirm: is there unique content in source that must be preserved?
-3. **HARD-GATE:** Show the user what will be deleted before proceeding.
+3. **HARD-GATE (all tiers):** Show the user what will be deleted before proceeding.
 
 Done when: target and source confirmed; user has seen what will be deleted and confirmed.
 
@@ -182,7 +182,7 @@ Done when: QMD index rebuilt.
 
 1. Confirm: what are the two (or more) new articles? What concept does each cover?
 2. Confirm slugs and subfolders for each new article.
-3. **HARD-GATE:** Show the proposed split to the user before creating files.
+3. **HARD-GATE (all tiers):** Show the proposed split to the user before creating files.
 
 Done when: new article concepts, slugs, and subfolders confirmed; user has approved the split.
 
@@ -236,7 +236,7 @@ Done when: QMD index rebuilt.
 
 1. Confirm the article to delete.
 2. Run `node .opencode/scripts/find-backlinks.js <path>` — show the user all inbound links.
-3. **HARD-GATE:** Confirm deletion explicitly. Never delete without showing inbound link count.
+3. **HARD-GATE (all tiers):** Confirm deletion explicitly. Never delete without showing inbound link count.
 
 Done when: user has seen all inbound links and confirmed deletion.
 
@@ -284,7 +284,7 @@ Done when: QMD index rebuilt.
 
 1. Confirm the article to archive.
 2. Run `node .opencode/scripts/find-backlinks.js <path>` — show the user all inbound links.
-3. **HARD-GATE:** Confirm archival explicitly. Show inbound link count.
+3. **HARD-GATE (all tiers):** Confirm archival explicitly. Show inbound link count.
 
 Done when: user has seen all inbound links and confirmed archival.
 
@@ -337,6 +337,8 @@ Done when: QMD index rebuilt.
 
 ## Close (all operations)
 
+### Close Step 0 — Close
+
 After committing:
 1. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** <operation> | <subject-slug> — <one-line summary>`
    - Example: `- **2026-04-07:** archive | resources/teams/old-team.md — archived; team disbanded`
@@ -344,16 +346,29 @@ After committing:
 3. Mark any matching task items as done.
 4. Stop.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All inbound links updated for renamed/moved files
+- [ ] Sync registry updated if applicable
+- [ ] QMD re-indexed after changes
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
+Done when: log entry appended; daily note updated; stopped.
+
+**END-GATE:** Present final deliverables to the user.
+
 ## Outputs
 
-| Output | Location |
-|--------|----------|
-| New/modified/deleted article(s) | `resources/` |
-| Updated `meta/tags.md` | `meta/` |
-| Updated `meta/confluence-sync.json` | `meta/` |
-| `meta/resources-log.md` entry | `meta/` |
-| Daily note work log | `journal/daily/<date>.md` Day zone |
-| Commit | Git history |
+| Output | Location | Format |
+|--------|----------|--------|
+| New/modified/deleted article(s) | `resources/` | Markdown |
+| Updated `meta/tags.md` | `meta/` | Markdown |
+| Updated `meta/confluence-sync.json` | `meta/` | JSON registry |
+| `meta/resources-log.md` entry | `meta/` | Append entry |
+| Daily note work log | `journal/daily/<date>.md` Day zone | Append entry |
+| Commit | Git history | Git commit |
 
 ## Error Handling
 

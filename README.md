@@ -175,7 +175,7 @@ The agent reads `AGENTS.md` for conventions and `context/context.md` for your pe
 
 **As a coding agent** it uses the accumulated context to do real work:
 
-- Run structured workflows: scout → research → plan → design → implement → test → self-review → peer-review
+- Run structured workflows: scout → research → brainstorm → plan → design → implement → test → self-review → peer-review
 - Draft external documents: proposals, RFCs, ADRs, postmortems
 - Review code, debug problems, address MR/PR comments
 - Look up architecture, team ownership, and prior decisions from your own notes before acting — so it doesn't ask you things you've already documented
@@ -281,6 +281,7 @@ Open the directory in [OpenCode](https://opencode.ai), then:
 |-------|-------------|
 | `scout` | Explore what already exists — codebase, resources, prior decisions |
 | `research` | Deep dive into a topic — read sources, extract facts, update resources |
+| `brainstorm` | Socratic exploration of a problem space — diverge and converge into a spec |
 | `plan` | Turn an approved spec into a step-by-step implementation plan |
 | `design` | Decide how to build something — ADR or design doc output |
 | `write` | Draft any external document: proposal, RFC, ADR, postmortem |
@@ -351,7 +352,7 @@ Examples: `/r enrich alice-smith`, `/r sync`, `/r ingest https://...`.
 │   └── <name>.md           # Per-repo context: stack, build, test, conventions, CI, decisions
 ├── .opencode/
 │   ├── commands/           # Slash command definitions
-│   ├── workflows/          # Step-by-step workflow procedures (23 files)
+│   ├── workflows/          # Step-by-step workflow procedures (24 files)
 │   ├── skills/             # Domain-specific instruction sets
 │   ├── scripts/            # Confluence sync, link auditing, health checks
 │   ├── context-templates/  # Blank templates for context/ files
@@ -388,6 +389,19 @@ The `external_directory` permission in `opencode.json` controls which directorie
 ```
 
 This is what allows the agent to act as a coding agent — reviewing files, making changes, addressing MR comments — in your actual projects. `{env:VAR}` interpolation is not supported in permission keys, so edit the path directly.
+
+## Inspirations
+
+Meowary's workflow system draws from several AI agent frameworks:
+
+| Framework | Inspiration | Link |
+|-----------|------------|------|
+| **Superpowers** (obra) | Mandatory brainstorming phase, spec self-review checklist, strict brainstorm-to-plan pipeline | [github.com/obra/superpowers](https://github.com/obra/superpowers) |
+| **Compound Engineering** (Every) | Scope-tiered questioning, problem pressure test, learning/compound loop, multi-agent review | [github.com/EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) |
+| **GSD** (gsd-build) | Quality gates (schema drift, scope reduction detection), structured artifacts, cross-session state | [github.com/gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) |
+| **Spec Kit** (GitHub) | Separation of specify/plan/implement, cross-artifact consistency checks | [github.com/github/spec-kit](https://github.com/github/spec-kit) |
+
+The system also builds on five PKM methods (PARA, Bullet Journal, Zettelkasten, Evergreen Notes, Digital Gardening) — see the design philosophy section above.
 
 ## License
 

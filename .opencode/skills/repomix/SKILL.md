@@ -6,7 +6,7 @@ updated: 2026-04-06
 tags: []
 ---
 
-# Skill: repomix
+# Repomix
 
 `repomix` packs an entire repository (or a subset of files) into a single AI-friendly file. Use it to prepare codebase context for deep analysis, code review, debugging, or planning when the target repo is too large to load file-by-file.
 

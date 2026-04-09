@@ -19,7 +19,7 @@ Three formats live in the journal:
 ## Principles
 
 1. **Append-only.** Past notes are never edited or deleted. Mark tasks complete; add new content; never remove existing lines.
-2. **Distil → resources.** Every journal update includes a resources scan. Durable facts — role changes, process decisions, architectural choices — belong in `resources/`, not the journal. The journal is raw material; resources distil the permanent layer.
+2. **Distill → resources.** Every journal update includes a resources scan. Durable facts — role changes, process decisions, architectural choices — belong in `resources/`, not the journal. The journal is raw material; resources distill the permanent layer.
 3. **Format serves recall.** Rigid section structures make notes machine-readable and scannable. Deviating makes future retrieval harder.
 4. **Write for your future self.** Assume the reader is you in 6 months with no other context.
 5. **Routing is not optional.** Meeting action items, waiting items, and captured tasks must be routed before a workflow closes. An unrouted action is a commitment that will be forgotten.

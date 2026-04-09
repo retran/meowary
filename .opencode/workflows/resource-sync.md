@@ -79,7 +79,7 @@ For each stale entry:
 
 To ingest specific pages only: `node .opencode/scripts/confluence-ingest.js PAGE_ID [PAGE_ID ...]`
 
-If a page's content is ambiguous or conflicts with existing resource content: **pause and ask the user** how to resolve before continuing.
+**HARD-GATE (all tiers):** If a page's content is ambiguous or conflicts with existing resource content, pause and ask the user how to resolve before continuing.
 
 **Sub-agent trigger:** When only 1 stale page exists, run inline. When ≥2 stale pages exist, spawn one `confluence-fetcher` agent per page in parallel; integrate results before Step 4. Each agent receives: the Confluence page URL or ID, the matching resource article path from `meta/confluence-sync.json` `resources` hint (or "no existing article" if none), and a topic context derived from the page title and space. Returns: path written, 3–7 extracted facts, GDPR notes, and sync registry update status. Agent file: `.opencode/agents/confluence-fetcher.md`. If any agent returns a conflict: it flags it; pause and ask the user to resolve before proceeding to Step 4.
 
@@ -123,18 +123,29 @@ Done when: commit created with accurate counts.
 2. Append work log entry to `## Day` zone of today's daily note.
 3. Mark any matching task items as done.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All stale pages ingested; sync registry dates updated
+- [ ] Health check passed (no critical issues remaining)
+- [ ] Commit message counts match actual operations
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: log entry appended; daily note updated.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
-| Output | Location |
-|--------|----------|
-| Updated resource articles | `resources/` |
-| Updated `meta/confluence-sync.json` | `meta/` |
-| Updated `meta/tags.md` | `meta/` |
-| `meta/resources-log.md` entry | `meta/` |
-| Daily note work log | `journal/daily/<date>.md` Day zone |
-| Commit | Git history |
+| Output | Location | Format |
+|--------|----------|--------|
+| Updated resource articles | `resources/` | Markdown |
+| Updated `meta/confluence-sync.json` | `meta/` | JSON registry |
+| Updated `meta/tags.md` | `meta/` | Markdown |
+| `meta/resources-log.md` entry | `meta/` | Append entry |
+| Daily note work log | `journal/daily/<date>.md` Day zone | Append entry |
+| Commit | Git history | Git commit |
 
 ## Error Handling
 
@@ -148,8 +159,14 @@ Done when: log entry appended; daily note updated.
 
 1. Never write to Confluence — read-only external.
 2. Extract durable facts; discard meeting logistics and expiring status.
-3. One page at a time during ingest.
+3. Track provenance per page; parallel fetching via sub-agents is allowed.
 4. Pause and ask the user if a content conflict is encountered during ingest.
+
+## Sub-Agents
+
+| Step | Agent | Type | Parallel? | Trigger | Output |
+|------|-------|------|-----------|---------|--------|
+| 3 | confluence-fetcher | confluence-fetcher | Yes (per page) | Each stale page | Structured resource facts |
 
 ---
 

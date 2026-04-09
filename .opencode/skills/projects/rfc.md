@@ -119,7 +119,7 @@ Transition from `open` to `accepted` or `rejected` requires a decision from the 
 - [ ] Front matter complete: `type: rfc`, `status`, `updated`, `tags`?
 - [ ] Summary is self-contained — can be read without context?
 - [ ] Motivation names a specific problem, not a vague aspiration?
-- [ ] Drawbacks are honest and explicit — not omitted or minimised?
+- [ ] Drawbacks are honest and explicit — not omitted or minimized?
 - [ ] Open Questions are specific questions, not placeholders?
 - [ ] If `status` is `open` or later: Feedback Log section present?
 - [ ] `updated` set to today?

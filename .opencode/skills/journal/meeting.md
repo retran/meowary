@@ -77,7 +77,7 @@ Omit sections marked `—`. Sections marked `optional` include only if there is 
 One sentence: what this meeting is trying to achieve. Omit for 1-1s and standups.
 
 ### Discussion
-Bullet list of main topics. Each bullet names a topic or summarises a point. Distil — not verbatim notes.
+Bullet list of main topics. Each bullet names a topic or summarizes a point. Distill — not verbatim notes.
 
 For **standups**, use per-person format:
 ```
@@ -115,9 +115,9 @@ For `meeting-type: 1-1`, add these sections below Decisions:
 
 | Section | Description |
 |---|---|
-| `### Wins & Highlights` | What went well since last 1-1? |
-| `### Blockers & Concerns` | What is slowing them down? What do they need help with? |
-| `### Growth & Development` | Career conversations, learning goals, feedback exchange. |
+| `### Wins` | What went well since last 1-1? |
+| `### Blockers` | What is slowing them down? What do they need help with? |
+| `### Growth` | Career conversations, learning goals, feedback exchange. |
 | `### Follow-ups` | Open items from this meeting and carry-overs from the previous 1-1. |
 
 ---
@@ -133,7 +133,7 @@ Route every action item before closing:
 | Task belonging to a project | `projects/<slug>/README.md` Open Tasks |
 | Deferred (no clear owner or date) | `### Parking Lot` |
 
-Every action item must be routed. This is a hard contract.
+Every action item must be routed. **HARD-GATE (all tiers):** do not close until all action items are routed.
 
 ---
 

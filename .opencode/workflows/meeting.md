@@ -9,7 +9,7 @@ tags: []
 
 ## Role
 
-Acts as the user's meeting note-taker and action item router. Creates the meeting file, populates it per type-specific section rules, routes every action item to a tracked location, and extracts durable knowledge. Does not leave action items unrouted — that is a hard contract.
+Acts as the user's meeting note-taker and action item router. Creates the meeting file, populates it per type-specific section rules, routes every action item to a tracked location, and extracts durable knowledge. Does not leave action items unrouted — **HARD-GATE (all tiers):** every action item must be routed before closing.
 
 ## Inputs
 
@@ -21,6 +21,10 @@ Acts as the user's meeting note-taker and action item router. Creates the meetin
 | Attendee resource articles | `resources/people/` | Optional (for linking) |
 | Today's daily note | `journal/daily/<date>.md` | Required (for cross-link) |
 | Waiting-for list | `journal/waiting-for.md` | Required (for routing) |
+
+## Complexity Tiers
+
+Not applicable. Fixed-procedure workflow.
 
 ## Steps
 
@@ -65,7 +69,7 @@ Done when: all required sections written; no required section left blank.
 
 For each action item in `### Action Items`, route it to exactly one destination per the meeting skill routing table.
 
-Every action item must be routed. Do not leave action items unrouted — this is a hard contract.
+**HARD-GATE (all tiers):** Every action item must be routed. Do not leave action items unrouted.
 
 Done when: every action item has a routing destination written.
 
@@ -92,7 +96,18 @@ Done when: durable facts routed or confirmed as none; 1-1 person article updated
 1. Apply the meeting note editor checklist.
 2. Commit: `Meeting: <YYYY-MM-DD> <slug>`.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All action items routed to projects or daily notes
+- [ ] Meeting note has complete attendees and date
+- [ ] Key decisions documented
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: checklist passed; committed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -124,10 +139,6 @@ Done when: checklist passed; committed.
 5. For 1-1 meetings: update or create the person resource article.
 6. Commit format: `Meeting: <YYYY-MM-DD> <slug>`.
 
-## dev-log Update
-
-None. `/meeting` does not write dev-log entries. If a meeting produced a decision that affects a project, the affected lifecycle workflow (e.g. `/do plan`, `/do design`) will write the dev-log entry when that work is executed.
-
 ---
 
 *Suggested next steps (present, do not run):*
@@ -136,5 +147,5 @@ None. `/meeting` does not write dev-log entries. If a meeting produced a decisio
 |-----------|------------------------|
 | Resource stubs created | `resource-enrich` to flesh them out |
 | Action items include own tasks for today | Work through Day > Inbox in the current session |
-| Meeting generated a project decision | `design` or `plan` to formalise it |
+| Meeting generated a project decision | `design` or `plan` to formalize it |
 | Meeting notes contain source material for research | `resource-ingest` |

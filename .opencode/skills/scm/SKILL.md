@@ -6,7 +6,7 @@ compatibility: opencode
 
 `gh` (GitHub CLI) and `glab` (GitLab CLI) handle pull requests, merge requests, CI pipelines, issues, and repo operations.
 
-## Subskills
+## Sub-skills
 
 Load the appropriate subskill alongside this one for platform-specific commands:
 
@@ -42,5 +42,12 @@ If you don't have the Jira issue key, check the branch name or load the `jira` s
 - **PR/MR titles and commits must follow `[PROJ-123] description` format.** No Conventional Commits type prefix. Read `context/context.md` for the project key.
 - **Never force-push to `main` or `master`** without explicit user approval.
 - **Never delete remote branches** that have open MRs or PRs.
-- Use `pr view` / `mr view` and `issue view` to pull context into daily notes — summarise and link, do not copy verbatim.
+- Use `pr view` / `mr view` and `issue view` to pull context into daily notes — summarize and link, do not copy verbatim.
 - Both CLIs require authentication. Run `gh auth status` / `glab auth status` to verify before any operation.
+
+## Editor Checklist (run silently before every output)
+
+- [ ] Commit format matches `context/context.md` conventions?
+- [ ] PR/MR title follows `[PROJ-123] description` format?
+- [ ] No force-push to main/master without explicit approval?
+- [ ] Authentication verified before CLI operations?

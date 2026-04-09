@@ -3,6 +3,7 @@ type: rfc
 status: draft
 updated: {{DATE}}
 tags: [p-{{PROJECT_SLUG}}]
+confluence: []
 ---
 
 # RFC: {{TITLE}}

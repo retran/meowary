@@ -1,12 +1,7 @@
 ---
 name: qmd
-description: QMD CLI mechanics — query types (lex/vec/hyde), query syntax, multi-get, and index maintenance. Load when issuing a qmd query, choosing query types for better recall, or re-indexing after bulk changes.
-license: MIT
+description: QMD CLI mechanics -- query types (lex/vec/hyde), query syntax, multi-get, and index maintenance. Load when issuing a qmd query, choosing query types for better recall, or re-indexing after bulk changes.
 compatibility: Requires qmd CLI. Install via `npm install -g @tobilu/qmd`.
-metadata:
-  author: tobi
-  version: "2.0.0"
-allowed-tools: Bash(qmd:*)
 ---
 
 # QMD — Quick Markdown Search
@@ -117,3 +112,9 @@ Collections must be registered in the qmd index before they can be updated. The 
 ```bash
 qmd collection add <name> <path>   # e.g. qmd collection add context ./context
 ```
+
+## Editor Checklist (run silently before every output)
+
+- [ ] Query type appropriate for the search intent (lex for exact, vec for semantic, hyde for conceptual)?
+- [ ] Collection exists and is indexed before querying?
+- [ ] Re-index triggered after bulk file changes?

@@ -4,6 +4,16 @@ description: Project dashboard format, lifecycle, and Step 0 state-reading proto
 compatibility: opencode
 ---
 
+## Philosophy
+
+A project is a time-bound deliverable with a defined end. The dashboard is not just task management — it is a persistent contract with your future self about what this project is, where it stands, and what comes next. The dev log is the memory; the README is the current state.
+
+- **Dashboards over notes.** The README is the canonical source of project state. Daily notes and meeting notes reference it; they do not replace it.
+- **The dev log is the continuity layer.** Every session ends with a dev-log entry. Every session starts by reading the last one. Without this, context is rebuilt from scratch each time.
+- **Done is a state, not a feeling.** A project is not done until it is archived. Unarchived projects in `projects/` are active.
+
+---
+
 ## Structure
 
 Every project lives at `projects/<slug>/README.md`. The slug is lowercase kebab-case (e.g. `mcp-client`, `release-tooling`).
@@ -136,7 +146,7 @@ When Open Tasks accumulates more than ~8 items (including done items), move all 
 
 ## After Every Work Session
 
-1. **Write a dev-log entry.** Append a new entry to `dev-log.md` summarising what was done, decisions made, and blockers hit. See [dev-log.md](dev-log.md) for the format.
+1. **Write a dev-log entry.** Append a new entry to `dev-log.md` summarizing what was done, decisions made, and blockers hit. See [dev-log.md](dev-log.md) for the format.
 2. **Update Open Tasks.** Mark completed items `- [x]`. Add new tasks discovered. Mark blocked tasks.
 3. **Update Overview if scope changed.** Overview must reflect current reality, not original intent.
 4. **Update `updated` in front matter** to today's date.
@@ -188,23 +198,12 @@ Apply on every edit:
 
 ---
 
-## Philosophy
-
-A project is a time-bound deliverable with a defined end. The dashboard is not just task management — it is a persistent contract with your future self about what this project is, where it stands, and what comes next. The dev log is the memory; the README is the current state.
-
-- **Dashboards over notes.** The README is the canonical source of project state. Daily notes and meeting notes reference it; they do not replace it.
-- **The dev log is the continuity layer.** Every session ends with a dev-log entry. Every session starts by reading the last one. Without this, context is rebuilt from scratch each time.
-- **Done is a state, not a feeling.** A project is not done until it is archived. Unarchived projects in `projects/` are active.
-
----
-
 ## Sub-skills
 
 | Content type | Sub-skill file |
 |---|---|
 | Architecture Decision Records | [adr.md](adr.md) |
 | Dev log entries | [dev-log.md](dev-log.md) |
-| Debug log entries | [debug-log.md](debug-log.md) |
 | Problem specs | [spec.md](spec.md) |
 | Implementation plans | [plan.md](plan.md) |
 | Requests for Comments | [rfc.md](rfc.md) |
@@ -217,6 +216,7 @@ A project is a time-bound deliverable with a defined end. The dashboard is not j
 |---|---|
 | [project-template.md](project-template.md) | New project README |
 | [dev-log-template.md](dev-log-template.md) | New `dev-log.md` |
+| [debug-log-template.md](debug-log-template.md) | New `debug-log.md` |
 | [spec-template.md](spec-template.md) | New spec documents |
 | [plan-template.md](plan-template.md) | New implementation plans |
 | [rfc-template.md](rfc-template.md) | New RFCs |

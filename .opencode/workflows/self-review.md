@@ -25,9 +25,9 @@ Acts as a rigorous internal code reviewer. Reads changed files in full, not just
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Conventions check + obvious issues; no deep logic review | End gate only |
-| **Standard** | Conventions + logic correctness + edge cases + test coverage | End gate |
-| **Full** | All Standard + security/performance analysis + simulated PR review comments | HARD-GATE: present all findings before any are addressed |
+| **Quick** | Conventions check + obvious issues; no deep logic review | END-GATE only |
+| **Standard** | Conventions + logic correctness + edge cases + test coverage | END-GATE |
+| **Full** | All Standard + security/performance analysis + simulated PR review comments | HARD-GATE (Full): present all findings before any are addressed |
 
 > Quick-tier `implement` sessions include a lightweight inline conventions check at Step 5 (Close) and do not require invoking `self-review` separately. Invoke `self-review` for Standard and Full tier sessions, or any change that touches a public API, auth, data persistence, or shared infrastructure.
 
@@ -80,7 +80,7 @@ For each changed function or module:
 3. Are error paths tested and handled gracefully?
 4. Are there race conditions, off-by-one errors, or logic inversions?
 
-Done when: all changed modules reviewed for correctness; findings categorised.
+Done when: all changed modules reviewed for correctness; findings categorized.
 
 ### Step 4 — Test coverage (Standard + Full)
 
@@ -114,6 +114,18 @@ Done when: all suspicious patterns investigated; findings added to the report.
 
 ### Step 7 — Produce review report
 
+Structure findings in two independent sections:
+
+**7a. Plan compliance review:**
+- Does the implementation match the plan's requirements?
+- Are all plan tasks completed?
+- Are success criteria met?
+- Missing implementation = Blocker.
+
+**Fallback:** If no plan exists (ad-hoc changes, no spec/plan), skip plan compliance. Note in the report: "No plan found — reviewing code quality only."
+
+**7b. Code quality review:**
+
 Structure findings by severity:
 
 | Severity | Definition |
@@ -125,13 +137,15 @@ Structure findings by severity:
 
 For each finding: file and line reference, issue description, suggested fix or recommendation.
 
-**Sub-agent trigger (Full):** Offload review report generation to the `code-reviewer` custom agent. Pass: the diff or list of changed files with contents, plan success criteria, and the loaded `codebases/<name>.md`, `context/safety.md`. The agent returns a structured review report with all findings categorised by severity, with file:line references and suggested fixes. Agent file: `.opencode/agents/code-reviewer.md`.
+Both sections run regardless — they are independent concerns. Plan compliance surfaces *what's missing*. Code quality surfaces *what's wrong with what exists*. Report both sections in the review output.
+
+**Sub-agent trigger (Full):** Offload review report generation to the `code-reviewer` custom agent. Pass: the diff or list of changed files with contents, plan file (if available), plan success criteria, and the loaded `codebases/<name>.md`, `context/safety.md`. The agent returns a structured review report with both sections (plan compliance + code quality), findings categorized by severity, with file:line references and suggested fixes. Agent file: `.opencode/agents/code-reviewer.md`.
 
 Run inline for Quick and Standard tiers.
 
 **HARD-GATE (Full):** Present all findings to the user before any are addressed. Let the user decide priority. Addressing the first finding often changes the severity of subsequent findings — the complete picture must be visible first.
 
-Done when: all findings categorised and presented; user has reviewed the complete report.
+Done when: all findings categorized and presented; user has reviewed the complete report.
 
 ### Step 8 — Close
 
@@ -151,9 +165,35 @@ Done when: all findings categorised and presented; user has reviewed the complet
 
 3. Append work log entry to `## Day` zone of today's daily note.
 4. Mark matching task items as done.
-5. Enrich `resources/` if a new pattern or anti-pattern was identified.
+5. **Learnings:** After the dev-log entry, actively reflect:
 
-Done when: summary written; dev-log entry appended; daily note updated.
+   > "Did this review surface any pattern or anti-pattern not already documented in `resources/` or `codebases/<name>.md`?"
+
+   If yes, output:
+
+   ```markdown
+   **Learnings:**
+   - <pattern or anti-pattern discovered>
+   - <convention that should be documented>
+   ```
+
+   Then:
+   1. Check if a relevant resource article exists in `resources/`.
+   2. If yes, add the learning as a fact.
+   3. If no, note it as a candidate for future resource creation.
+
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All findings categorized by severity
+- [ ] Plan compliance section completed (or noted as planless)
+- [ ] Learnings section addressed (new patterns documented or "none identified")
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
+Done when: summary written; dev-log entry appended; daily note updated; learnings addressed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -194,4 +234,5 @@ Done when: summary written; dev-log entry appended; daily note updated.
 | All Blockers resolved | Raise PR |
 | Blockers require code changes | `implement` to fix, then re-review |
 | Logic failures discovered | `debug` |
+| Review reveals fundamental approach issues | `brainstorm` |
 | Review reveals missing test cases | `test` |

@@ -1,8 +1,10 @@
 ---
 type: spec
 status: draft
+superseded-by:
 updated: {{DATE}}
-tags: [p-{{PROJECT_SLUG}}]
+tags: [p-{{PROJECT_SLUG}}, spec]
+confluence: []
 ---
 
 # Spec: {{TITLE}}
@@ -23,29 +25,25 @@ tags: [p-{{PROJECT_SLUG}}]
 
 - 
 
-## Options
+## Approach
 
-### Option A: <name>
+<!-- Chosen approach. How it works. Why this approach over alternatives. -->
 
-**Pros:**
-- 
+## Requirements
 
-**Cons:**
-- 
+1. {{REQUIREMENT}}
 
-### Option B: <name>
+## Alternatives Considered
 
-**Pros:**
-- 
+### {{ALTERNATIVE_NAME}}
 
-**Cons:**
-- 
-
-## Recommendation
-
-<!-- State the recommended option and the key reason. Reference specific constraints it satisfies. -->
+<!-- How it works. Why rejected. -->
 
 ## Open Questions
+
+- 
+
+## Sources
 
 - 
 

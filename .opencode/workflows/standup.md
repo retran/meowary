@@ -5,11 +5,11 @@ tags: []
 
 # Standup
 
-> Read-only daily standup preparation. Synthesises Yesterday / Today / Blockers from dev-log entries and the current daily note, then formats a standup update ready to read aloud or paste. Writes nothing to the journal. Invoke before or during daily standup.
+> Read-only daily standup preparation. Synthesizes Yesterday / Today / Blockers from dev-log entries and the current daily note, then formats a standup update ready to read aloud or paste. Writes nothing to the journal. Invoke before or during daily standup.
 
 ## Role
 
-Acts as a standup synthesiser. Reads available sources — dev-logs, daily note MITs, waiting-for list — and produces a clean Yesterday / Today / Blockers summary. Does not write to any file. Does not interpret or editorialize; surfaces facts only.
+Acts as a standup synthesizer. Reads available sources — dev-logs, daily note MITs, waiting-for list — and produces a clean Yesterday / Today / Blockers summary. Does not write to any file. Does not interpret or editorialize; surfaces facts only.
 
 ## Inputs
 
@@ -19,6 +19,10 @@ Acts as a standup synthesiser. Reads available sources — dev-logs, daily note 
 | Project dev-logs | `projects/<name>/dev-log.md` | Required |
 | Today's daily note | `journal/daily/<date>.md` | Optional |
 | Waiting-for list | `journal/waiting-for.md` | Optional |
+
+## Complexity Tiers
+
+Not applicable. Fixed-procedure workflow.
 
 ## Steps
 
@@ -54,7 +58,7 @@ Done when: Yesterday section drafted (1–3 bullets).
 
 1. From today's daily note `## Morning` MITs (if `/morning` was run).
 2. From each active project dev-log `**Next:**` field in the most recent entry.
-3. Condense to 1–3 bullets. Prioritise the ★ primary MIT if set.
+3. Condense to 1–3 bullets. Prioritize the ★ primary MIT if set.
 
 Done when: Today section drafted (1–3 bullets).
 
@@ -67,7 +71,7 @@ Done when: Today section drafted (1–3 bullets).
 
 Done when: Blockers section drafted.
 
-### Step 4 — Format and output
+### Step 4 — Close
 
 Output the standup in standard format:
 
@@ -82,11 +86,21 @@ Output the standup in standard format:
 - <item or "None">
 ```
 
-Keep each section to 1–3 bullets. Do not include internal project detail not relevant to the standup audience. Summarise at the right level for the team.
+Keep each section to 1–3 bullets. Do not include internal project detail not relevant to the standup audience. Summarize at the right level for the team.
 
 This is the final output. No writes. No commits.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Yesterday/today/blockers format followed
+- [ ] Output is concise (under 2 minutes reading time)
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: formatted standup displayed to user.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -101,6 +115,7 @@ Done when: formatted standup displayed to user.
 - **No dev-log entries:** Note "No recent dev-log entries found for `<project>`." Include the project name in Today if MITs exist.
 - **No daily note:** Proceed from dev-log only; note the gap.
 - **More than 3 active projects:** Ask which to include, or default to the top 3 by priority in `context.md`.
+
 ## Contracts
 
 1. Write nothing to any file.
@@ -109,10 +124,6 @@ Done when: formatted standup displayed to user.
 4. Do not write dev-log entries.
 5. One clarifying question maximum — standup is time-sensitive.
 6. Output is in-session only. The user decides what to paste or read aloud.
-
-## dev-log Update
-
-None. `/standup` is read-only.
 
 ---
 

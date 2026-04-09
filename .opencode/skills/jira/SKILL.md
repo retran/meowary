@@ -118,7 +118,7 @@ jira sprint list SPRINT_ID --plain
 - Speculative discussion not yet resolved
 - Full issue descriptions verbatim
 
-**Format for daily notes:** Summarise and link. Use the issue key for traceability.
+**Format for daily notes:** Summarize and link. Use the issue key for traceability.
 
 ```markdown
 - Investigated PROJ-456 (short description) — decision or outcome. #p-project-tag
@@ -200,7 +200,14 @@ After any write, note the issue key in the daily note log.
 - **Always use `--plain`** for list commands — avoids interactive TUI.
 - **Always use `PAGER=cat`** before `jira issue view` — avoids `less` pager.
 - **Always use `--no-input`** for create/edit — skips interactive prompts.
-- **Summarise, don't copy.** Issue descriptions in daily notes are summaries + issue key links.
+- **Summarize, don't copy.** Issue descriptions in daily notes are summaries + issue key links.
 - **Use the issue key** (e.g. `PROJ-123`) in all references — not search URLs.
 - **Check before creating.** Search for existing issues before suggesting a new one.
 - **Extract facts to resources.** If a Jira issue contains a durable architectural decision or process, note it as a resource candidate.
+
+## Editor Checklist (run silently before every output)
+
+- [ ] Issue key format correct (`PROJ-123`)?
+- [ ] No write operations without explicit user approval?
+- [ ] Sprint and board names match current team context?
+- [ ] PII stripped from fetched content before storing?

@@ -143,16 +143,27 @@ Done when: commit created.
 2. Append work log entry to `## Day` zone of today's daily note.
 3. Mark any matching task items as done.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Plan covers all identified gaps
+- [ ] Priority order is justified
+- [ ] Health metrics baseline documented
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: log entry appended; daily note updated.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
-| Output | Location |
-|--------|----------|
-| `resources-actualize-plan.md` | Repo root |
-| `meta/resources-log.md` entry | `meta/` |
-| Daily note work log | `journal/daily/<date>.md` Day zone |
-| Commit | Git history |
+| Output | Location | Format |
+|--------|----------|--------|
+| `resources-actualize-plan.md` | Repo root | Markdown |
+| `meta/resources-log.md` entry | `meta/` | Append entry |
+| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
+| Commit | Git history | Git commit |
 
 ## Error Handling
 

@@ -24,9 +24,9 @@ Acts as a deliberate review responder. Does not blindly accept or dismiss commen
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Read all comments + address + commit; no written response plan | End gate only |
-| **Standard** | Triage + response plan + address + respond to reviewer | Mid-gate after triage + end gate |
-| **Full** | Full triage + written response plan + address + written responses per comment + ADR update if design changed | HARD-GATE after triage; HARD-GATE after addressing before responding |
+| **Quick** | Read all comments + address + commit; no written response plan | END-GATE only |
+| **Standard** | Triage + response plan + address + respond to reviewer | SOFT-GATE after triage; END-GATE at close |
+| **Full** | Full triage + written response plan + address + written responses per comment + ADR update if design changed | HARD-GATE (Full): after triage; HARD-GATE (Full): after addressing before responding |
 
 ## Steps
 
@@ -56,7 +56,7 @@ Done when: review comments obtained; pre-decided rejections noted; tier confirme
 
 Read every review comment in full before addressing any. Later comments may affect earlier ones — do not start implementing until the complete picture is understood.
 
-Done when: all comments read and summarised.
+Done when: all comments read and summarized.
 
 ### Step 2 — Triage (Standard + Full)
 
@@ -92,7 +92,7 @@ Done when: response plan written and user-confirmed.
 
 1. Address all accepted Bug and Style comments.
 2. Address accepted Suggestions.
-3.    Apply conventions from `codebases/<name>.md` for every code change.
+3. Apply conventions from `codebases/<name>.md` for every code change.
 4. Do not address Scope or Design Challenge comments with code changes — those get written responses only.
 
 Done when: all accepted code changes implemented.
@@ -119,7 +119,7 @@ Done when: responses written for every comment; ADR updated if design changed.
 
 ### Step 7 — Close
 
-1. Commit all code changes: `Address review: <description>`.
+1. Commit all code changes per `context/context.md` commit format: `Address review: <description>`.
 2. Mark resolve tasks done in `projects/<name>/plans/<slug>.md`.
 3. Append dev-log entry:
 
@@ -140,7 +140,18 @@ Done when: responses written for every comment; ADR updated if design changed.
 6. If scope follow-on tasks were created: add `- [ ]` pending tasks to the daily note. If non-trivial, also append to `projects/<name>/plans/<slug>.md`.
 7. If architecture insights were surfaced by the review: enrich the relevant `resources/` article.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Every review finding addressed or explicitly deferred
+- [ ] Commit message references review source
+- [ ] Tests pass after changes
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: committed; dev-log entry appended; daily note updated; follow-on tasks filed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -153,7 +164,7 @@ Done when: committed; dev-log entry appended; daily note updated; follow-on task
 | Project plan update | `projects/<name>/plans/<slug>.md` | Appended (if non-trivial) |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
 | Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
-| Commit | Git history | `Address review: <description>` |
+| Commit | Git history | Per `context/context.md` commit format |
 
 ## Error Handling
 
@@ -168,7 +179,7 @@ Done when: committed; dev-log entry appended; daily note updated; follow-on task
 2. Scope comments are rejected — never silently accepted. File as follow-on tasks.
 3. Design challenges get substantive responses and may trigger ADR updates.
 4. No code changes for Scope or Design Challenge comments.
-5. Commit format: `Address review: <description>`.
+5. Commit format: per `context/context.md` commit conventions.
 6. Never respond dismissively. Reasoning must be stated for every rejection.
 
 ---
@@ -180,4 +191,5 @@ Done when: committed; dev-log entry appended; daily note updated; follow-on task
 | All comments addressed; PR ready | Re-request review or merge |
 | New scope items surfaced | `plan` to incorporate them |
 | Design challenge accepted; ADR needs updating | `write` (update ADR) |
+| Review surfaces fundamental approach questions | `brainstorm` |
 | Fixes need re-verification | `test` |

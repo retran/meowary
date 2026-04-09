@@ -1,5 +1,6 @@
 ---
-updated: 2026-04-08
+type: reference
+updated: 2026-04-09
 tags: []
 ---
 
@@ -53,7 +54,12 @@ tags: []
 │   ├── commands/              # Custom slash commands
 │   ├── workflows/             # Step-by-step workflow procedures
 │   ├── skills/                # Custom skills (include domain templates)
+│   ├── agents/                # Sub-agent definitions (code-reviewer, confluence-fetcher, etc.)
 │   ├── scripts/               # Automation scripts (Confluence sync, link auditing)
+│   ├── reference/             # Reference files (conventions, structure, security rules)
+│   │   ├── workflow-conventions.md  # Canonical workflow formatting rules
+│   │   ├── structure.md             # This file — repo directory tree
+│   │   └── security-rules.md       # Security and GDPR rules
 │   ├── context-templates/     # Blank scaffold files — copy to context/ via /bootstrap
 │   │   ├── context.md
 │   │   └── safety.md
@@ -65,7 +71,6 @@ tags: []
 │   │   ├── reading-list-template.md
 │   │   ├── recurring-events-template.md
 │   │   └── env-snapshot-template.md
-│   └── reference/             # Reference files (structure, conventions)
 └── AGENTS.md                  # Agent instructions
 ```
 
@@ -93,4 +98,6 @@ tags: []
 | Recurring meetings/events | `journal/recurring-events.md` |
 | Reading queue | `journal/reading-list.md` |
 | CLI environment snapshot | `context/env-snapshot.md` |
+| Workflow formatting conventions | `.opencode/reference/workflow-conventions.md` |
+| Security and GDPR rules | `.opencode/reference/security-rules.md` |
 

@@ -171,9 +171,13 @@ glab auth status         # Check current auth
 
 ## Rules
 
-- **Prefer `--fill`** — handles pushing and populates title/description from commits automatically.
-- **MR titles and commits must follow `[PROJ-123] description` format.** No Conventional Commits type prefix. Read `context/context.md` for the project key. If you don't have the Jira issue key, check the branch name or load the `jira` skill.
-- **Never force-push to `main` or `master`** without explicit user approval.
-- **Never delete remote branches** that have open MRs.
-- Use `mr view` and `issue view` to pull context into daily notes — summarise and link, do not copy verbatim.
+All rules from parent `scm/SKILL.md` apply. Additionally:
+
+- Prefer `--fill-commit-body` to pre-populate MR title and body from commit messages.
 - `glab` requires authentication. Run `glab auth status` to verify.
+
+## Editor Checklist (run silently before every output)
+
+- [ ] `glab auth status` verified before operations?
+- [ ] `--fill-commit-body` used to pre-populate from commits?
+- [ ] Labels and reviewers set appropriately?

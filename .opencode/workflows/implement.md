@@ -24,9 +24,9 @@ Acts as a disciplined implementation engineer. Does not touch code outside the p
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Read plan + code + inline conventions check + commit | End gate only |
-| **Standard** | Pre-flight + implement + verify + commit | Mid-gate after each milestone + end gate |
-| **Full** | Full pre-flight + implement with milestone gates + self-review gate | HARD-GATE before first commit; HARD-GATE after each milestone |
+| **Quick** | Read plan + code + inline conventions check + commit | END-GATE only |
+| **Standard** | Pre-flight + implement + verify + commit | SOFT-GATE after each milestone; END-GATE at close |
+| **Full** | Full pre-flight + implement with milestone gates + self-review gate | HARD-GATE (Full): before first commit; HARD-GATE (Full): after each milestone |
 
 ## Steps
 
@@ -123,7 +123,18 @@ Done when: commit created with a message that follows conventions.
 7. Mark matching task items as done.
 8. Enrich `resources/` with architecture insights or patterns discovered during implementation.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All plan tasks addressed or explicitly deferred
+- [ ] Tests pass
+- [ ] No files modified outside plan scope
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: plan updated; dev-log entry appended; daily note updated; `self-review` direction given (Standard + Full).
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -167,4 +178,5 @@ Done when: plan updated; dev-log entry appended; daily note updated; `self-revie
 | Code written; needs review before PR | `self-review` |
 | Unexpected complexity changed scope | `plan replan` |
 | New architectural pattern discovered | `resource-enrich` on relevant resource article |
+| Implementation reveals approach is fundamentally flawed | `brainstorm` |
 | All tasks complete; PR ready | `self-review` then raise PR |

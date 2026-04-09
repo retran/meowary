@@ -1,7 +1,7 @@
 ---
 type: log
-updated: YYYY-MM-DD
-tags: [p-<project>]
+updated: {{DATE}}
+tags: [p-{{PROJECT_SLUG}}]
 confluence: []
 ---
 

@@ -9,7 +9,7 @@ tags: []
 
 ## Role
 
-Acts as a reconnaissance specialist. Searches broadly across all available sources — semantic index, codebase, project notes, web — then synthesises findings into a structured note. Does not design, plan, or implement. Does not make decisions. Surfaces what exists and explicitly flags what is missing.
+Acts as a reconnaissance specialist. Searches broadly across all available sources — semantic index, codebase, project notes, web — then synthesizes findings into a structured note. Does not design, plan, or implement. Does not make decisions. Surfaces what exists and explicitly flags what is missing.
 
 ## Inputs
 
@@ -18,6 +18,10 @@ Acts as a reconnaissance specialist. Searches broadly across all available sourc
 | Topic or question | User invocation | Required |
 | Active project name | `context/context.md` or dev-log | Optional |
 | Codebase context | `codebases/<name>.md` | Optional (if codebase is active) |
+
+## Complexity Tiers
+
+Fixed tier: Quick
 
 ## Steps
 
@@ -132,7 +136,17 @@ Done when: scout note written to `projects/<name>/notes/scout-<topic>.md`.
 3. Append a work log entry to `## Day` zone of today's daily note.
 4. Mark any matching task items as done.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Every finding is tagged (VERIFIED, CITED, ASSUMED)
+- [ ] Gaps and unknowns documented
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: summary presented; dev-log entry appended; daily note updated.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -176,4 +190,5 @@ Done when: summary presented; dev-log entry appended; daily note updated.
 | Enough context; work needs scoping | `plan` |
 | Design decision needed before coding | `design` |
 | Implementation can begin immediately | `implement` |
+| Scout surfaced options but no clear approach | `brainstorm` |
 | Resource article missing | `resource-ops create` then `resource-enrich` |

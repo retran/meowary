@@ -5,11 +5,11 @@ tags: []
 
 # Weekly
 
-> Weekly heartbeat review in two modes: Monday planning (sets focus and goals) and Friday wrap-up (compiles accomplishments, carry-overs, and reflections). Also runs an end-of-week resources scan to crystallise durable knowledge. Triggered automatically from `/morning` on Mondays and `/evening` on Fridays, or invoked explicitly.
+> Weekly heartbeat review in two modes: Monday planning (sets focus and goals) and Friday wrap-up (compiles accomplishments, carry-overs, and reflections). Also runs an end-of-week resources scan to crystallize durable knowledge. Triggered automatically from `/morning` on Mondays and `/evening` on Fridays, or invoked explicitly.
 
 ## Role
 
-Acts as the user's weekly strategist and knowledge crystalliser. In planning mode: seeds goals from carry-overs and sprint context, confirms focus with the user. In wrap-up mode: compiles outcomes, surfaces unmet goals, prompts reflection, and enriches `resources/` with durable facts from the week.
+Acts as the user's weekly strategist and knowledge crystallizer. In planning mode: seeds goals from carry-overs and sprint context, confirms focus with the user. In wrap-up mode: compiles outcomes, surfaces unmet goals, prompts reflection, and enriches `resources/` with durable facts from the week.
 
 ## Inputs
 
@@ -23,6 +23,10 @@ Acts as the user's weekly strategist and knowledge crystalliser. In planning mod
 | Waiting-for list | `journal/waiting-for.md` | Required (wrap-up mode) |
 | Active projects | `context/context.md § Active Projects` | Required |
 | Jira sprint items | Jira (read-only) | Optional |
+
+## Complexity Tiers
+
+Not applicable. Fixed-procedure workflow.
 
 ## Steps — Monday Planning Mode
 
@@ -64,11 +68,21 @@ Write to `journal/weekly/<year>-W<nn>.md`:
 
 Done when: Focus, Goals, and Monday link written; remaining sections blank.
 
-### Step 3 — Close (Planning)
+### Step 3 — Close
 
 Commit: `Weekly plan: <YYYY-WNN>`.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Weekly goals set and linked to projects
+- [ ] Review actions from prior week documented
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: committed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ---
 
@@ -158,13 +172,24 @@ Update QMD index if new articles were created: `node .opencode/scripts/qmd-index
 
 Done when: durable facts routed or explicitly confirmed as none; stale articles surfaced; QMD index updated if needed.
 
-### Step 7 — Close (Wrap-Up)
+### Step 7 — Close
 
 1. Mark completed Weekly Goals with `- [x]`.
 2. Update `**Daily Notes:**` links — verify all five days are linked or marked `*(no note)*`.
 3. Commit: `Weekly wrap-up: <YYYY-WNN>`.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Week accomplishments documented
+- [ ] Unfinished items carried forward or explicitly dropped
+- [ ] Weekly note complete with all sections
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: goals marked; daily note links verified; committed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ---
 
@@ -203,10 +228,6 @@ Done when: goals marked; daily note links verified; committed.
 `general` receives: all daily note paths for the week, all meeting note paths for the week, all active project dev-log entry excerpts from this week, and the `resources/` directory listing for cross-reference.
 
 Run inline (no sub-agent) when ≤ 2 active projects had activity this week.
-
-## dev-log Update
-
-`/weekly` does not write a dev-log entry for itself. Individual projects' dev-logs are read as input; they are not modified by this workflow.
 
 ---
 

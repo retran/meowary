@@ -22,7 +22,7 @@ Search `resources/` with `qmd query "<topic>"` or browse the directory tree to i
 
 ### Tier 2 — when doing coding work in external repos
 
-Read `context/context.md § Codebases` to identify the active codebase. Read `codebases/<name>.md` for that codebase — it contains architecture, tech stack, build commands, test commands, coding conventions, CI context, and key decisions. If no `codebases/<name>.md` exists for the codebase you're working in, create one before proceeding.
+Read `context/context.md` `## Codebases` to identify the active codebase. Read `codebases/<name>.md` for that codebase — it contains architecture, tech stack, build commands, test commands, coding conventions, CI context, and key decisions. If no `codebases/<name>.md` exists for the codebase you're working in, create one before proceeding.
 
 Never invent conventions. If `codebases/<name>.md` is missing or a field is empty, ask the user before assuming anything.
 
@@ -32,14 +32,14 @@ Full directory tree and "What Goes Where" table: [`.opencode/reference/structure
 
 Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `context/`, `codebases/`, `.opencode/`.
 
-Workflow prompts live in `.opencode/workflows/` (23 files). Commands live in `.opencode/commands/`.
+Workflow prompts live in `.opencode/workflows/` (24 files). Commands live in `.opencode/commands/`. Sub-agent definitions live in `.opencode/agents/`. Reference files (conventions, structure, security rules) live in `.opencode/reference/`.
 
 ## Automation Tools
 
 ### Slash Commands
 
 **Lifecycle workflows** — `/do <phase>` dispatches to `.opencode/workflows/`:
-`scout`, `research`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
+`scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
 
 **Knowledge graph workflows** — `/r <operation>` dispatches to `.opencode/workflows/`:
 `enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`
@@ -59,7 +59,7 @@ Workflow prompts live in `.opencode/workflows/` (23 files). Commands live in `.o
 
 ### Proactive Resources Enrichment
 
-During every session — regardless of primary task — scan for resource gaps. Surface gaps as you work and fill them immediately.
+During every session — regardless of primary task — scan for resource gaps. When you encounter a person, team, process, or concept that should have a resource article but doesn't, create a stub immediately. Surface gaps as you work and fill them.
 
 ### Proactive Codebase Enrichment
 

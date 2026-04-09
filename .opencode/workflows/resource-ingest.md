@@ -26,7 +26,7 @@ Not applicable. Fixed-procedure workflow — all steps are mandatory.
 
 ### Step 0 — Load context
 
-1. Read the last entry in `dev-log.md` to understand current project and phase (if relevant).
+1. Read the active project's dev-log if invoked in project context; otherwise skip.
 2. Search `resources/` with `qmd query "<source topic>"` to identify related articles before fetching the source.
 3. Read today's daily note to identify any matching tasks.
 
@@ -34,7 +34,7 @@ Done when: related resource articles identified; daily note checked.
 
 ### Step 0.5 — Clarify
 
-Ask the user:
+**SOFT-GATE (all tiers):** Ask the user:
 1. What is the source? (URL, Confluence page ID, Jira issue key, file path)
 2. Is there a target resource article to update, or should a new article be created?
 3. Any specific aspects to focus on?
@@ -64,7 +64,7 @@ Done when: source content fetched; metadata noted.
    - Transient content to discard (meeting logistics, status updates, boilerplate)
 3. Ask yourself: is this source worth ingesting? If it contains only transient content, inform the user and stop.
 
-Done when: durable facts identified; transient content categorised; ingestion decision made.
+Done when: durable facts identified; transient content categorized; ingestion decision made.
 
 ### Step 3 — Map to resource articles
 
@@ -112,7 +112,7 @@ Done when: all back-links added; outbound links verified.
 
 Done when: `meta/confluence-sync.json` updated; tags registered.
 
-### Step 8 — Commit and close
+### Step 8 — Close
 
 1. Stage: modified/created resource articles, `meta/tags.md`, `meta/confluence-sync.json`.
 2. Commit: `Ingest resources: <source-title> → <N articles affected>`
@@ -121,19 +121,30 @@ Done when: `meta/confluence-sync.json` updated; tags registered.
 5. Append work log entry to `## Day` zone of today's daily note.
 6. Mark any matching task items as done.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All source notes created with proper front matter
+- [ ] Resource articles created or updated from source material
+- [ ] Links between sources and resources established
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: committed; log entry appended; QMD re-indexed; daily note updated.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
-| Output | Location |
-|--------|----------|
-| Updated resource articles | `resources/` |
-| New resource articles | `resources/<subfolder>/` |
-| `meta/confluence-sync.json` updates | `meta/` |
-| `meta/tags.md` updates | `meta/` |
-| `meta/resources-log.md` entry | `meta/` |
-| Daily note work log | `journal/daily/<date>.md` Day zone |
-| Commit | Git history |
+| Output | Location | Format |
+|--------|----------|--------|
+| Updated resource articles | `resources/` | Markdown |
+| New resource articles | `resources/<subfolder>/` | Markdown |
+| `meta/confluence-sync.json` updates | `meta/` | JSON registry |
+| `meta/tags.md` updates | `meta/` | Markdown |
+| `meta/resources-log.md` entry | `meta/` | Append entry |
+| Daily note work log | `journal/daily/<date>.md` Day zone | Append entry |
+| Commit | Git history | Git commit |
 
 ## Error Handling
 

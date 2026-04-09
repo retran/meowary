@@ -24,7 +24,7 @@ Not applicable. Fixed-procedure workflow — all steps are mandatory. No tiers. 
 
 ## Steps
 
-### Step 0 — Read context and plan
+### Step 0 — Load context
 
 1. Read today's daily note — find any tasks matching this article or topic.
 2. If `resources-actualize-plan.md` exists: read the `actualize` row for this article; note the `Details`, `Missing Cross-References`, and `Notes` columns.
@@ -33,6 +33,8 @@ Not applicable. Fixed-procedure workflow — all steps are mandatory. No tiers. 
 Done when: daily note checked; plan row read if present; article existence confirmed.
 
 ### Step 0.5 — Clarify
+
+**SOFT-GATE (all tiers):** Confirm target and scope before proceeding.
 
 1. If the article path is not fully specified, ask: which article? (search `resources/` to confirm the path)
 2. Confirm scope: full enrichment, or targeted update for a specific section?
@@ -68,7 +70,7 @@ Run all sub-steps. Do not stop after the first hit per sub-step.
 
 **2g. Entity and topic extraction** — scan all gathered material for named entities and concepts with no resource article; note them in `## Changelog` as `create` candidates for the next `resource-plan` pass.
 
-**Person-file priority:** For `resources/people/` articles, prioritise Confluence (team roster, org chart) and Jira (assignee/reporter). Codebase is lower priority unless the person owns specific technical areas.
+**Person-file priority:** For `resources/people/` articles, prioritize Confluence (team roster, org chart) and Jira (assignee/reporter). Codebase is lower priority unless the person owns specific technical areas.
 
 **Sub-agent triggers:** Spawn `url-fetcher` (`.opencode/agents/url-fetcher.md`) for web sources when source count > 3 in Step 2f — pass the URL, article topic context, and target path `resources/sources/<article-slug>-<date>.md`; returns path written plus 3–5 extracted facts. Spawn `confluence-fetcher` (`.opencode/agents/confluence-fetcher.md`) for each Confluence page in Step 2b — pass the page URL or ID, the matching resource article path, and article topic context; returns 3–7 extracted facts and GDPR notes. Both agents run in parallel when count > 3; run inline when ≤ 3.
 
@@ -81,7 +83,7 @@ Done when: all source channels queried; sub-agents returned; facts gathered.
 
 Done when: article body updated with new durable facts; no structural changes made.
 
-### Step 3b — Progressive summarization
+### Step 3.1 — Progressive summarization
 
 - **Layer 1 — Highlight:** bold the most important phrases in each section (~10–20% of body text). (10–20% preserves signal density without over-bolding; more than 20% dilutes emphasis.)
 - **Layer 2 — Summary:** if article body > ~80 lines, add/update a `## Summary` with 3–5 self-contained bullets. (~80 lines is the threshold where readers benefit from a navigation summary before diving in.)
@@ -89,13 +91,13 @@ Done when: article body updated with new durable facts; no structural changes ma
 
 Done when: highlights applied; summary added if body >~80 lines; synthesis note added if 3+ connections.
 
-### Step 3c — Evolution check
+### Step 3.2 — Evolution check
 
 If re-reading adds no new facts: find one claim to sharpen, one implied link to make explicit, or one thin section to expand. An article that is touched must be meaningfully different.
 
 Done when: at least one meaningful change confirmed.
 
-### Step 3d — Synthesis check
+### Step 3.3 — Synthesis check
 
 If any two newly linked articles suggest an insight neither contains alone: append a synthesis candidate note to `## Changelog`.
 
@@ -134,7 +136,7 @@ Done when: front matter updated; changelog appended; tags verified.
 
 Done when: orphan check done and fixed; tag consistency verified; stale neighbors flagged.
 
-### Step 8 — Commit and close
+### Step 8 — Close
 
 1. Stage: the article, back-linked articles, newly created articles, `meta/tags.md`, `meta/confluence-sync.json`.
 2. Commit: `Enrich resources: <subfolder>/<article-name>`
@@ -144,24 +146,36 @@ Done when: orphan check done and fixed; tag consistency verified; stale neighbor
 6. Mark any matching task items as done.
 7. **Stop.** Report completion. Do not auto-continue to the next article.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Article is meaningfully different from before (evolution check passed)
+- [ ] All outbound links target existing files
+- [ ] Back-links added for every new link
+- [ ] Tag consistency verified
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: committed; log entry appended; daily note updated; stopped.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
-| Output | Location |
-|--------|----------|
-| Enriched article | `resources/<path>.md` |
-| Back-linked articles | Various `resources/` paths |
-| `meta/tags.md` updates | `meta/` |
-| `meta/confluence-sync.json` updates | `meta/` |
-| `meta/resources-log.md` entry | `meta/` |
-| Daily note work log | `journal/daily/<date>.md` Day zone |
-| Commit | Git history |
+| Output | Location | Format |
+|--------|----------|--------|
+| Enriched article | `resources/<path>.md` | Markdown |
+| Back-linked articles | Various `resources/` paths | Markdown |
+| `meta/tags.md` updates | `meta/` | Markdown |
+| `meta/confluence-sync.json` updates | `meta/` | JSON registry |
+| `meta/resources-log.md` entry | `meta/` | Append entry |
+| Daily note work log | `journal/daily/<date>.md` Day zone | Append entry |
+| Commit | Git history | Git commit |
 
 ## Error Handling
 
 - **Article does not exist:** Ask the user whether to run `resource-ops create` first. Do not create an article here.
-- **All sources return no new facts:** Apply the evolution check (Step 3c) — at minimum sharpen one claim or make one link explicit. Never leave an article unchanged after touching it.
+- **All sources return no new facts:** Apply the evolution check (Step 3.2) — at minimum sharpen one claim or make one link explicit. Never leave an article unchanged after touching it.
 - **Confluence search returns no results for any strategy:** Note the failure; proceed without Confluence. Do not block.
 - **Broken inbound link found in orphan scan:** Fix by adding a link from the closest related article. If no close relative exists, note in `## Changelog` as a future `create` candidate.
 

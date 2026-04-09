@@ -1,6 +1,7 @@
 ---
 updated: {{DATE}}
 tags: [dev-log, {{PROJECT_SLUG}}]
+confluence: []
 ---
 
 # Dev Log: {{PROJECT_NAME}}

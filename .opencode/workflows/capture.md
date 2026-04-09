@@ -9,7 +9,7 @@ tags: []
 
 ## Role
 
-Acts as a zero-friction capture router. Takes raw input and routes it to the right destination with minimal questions. Does not process or analyse the captured content — that is the job of `resource-ingest`, `resource-plan`, and `evening`. Capture first; process later.
+Acts as a zero-friction capture router. Takes raw input and routes it to the right destination with minimal questions. Does not process or analyze the captured content — that is the job of `resource-ingest`, `resource-plan`, and `evening`. Capture first; process later.
 
 ## Inputs
 
@@ -18,6 +18,10 @@ Acts as a zero-friction capture router. Takes raw input and routes it to the rig
 | Capture content | User invocation | Required |
 | Active projects list | `context/context.md § Active Projects` | Optional (for tagging) |
 | Today's daily note | `journal/daily/<date>.md` | Required only if routing to Day > Inbox |
+
+## Complexity Tiers
+
+Not applicable. Fixed-procedure workflow.
 
 ## Routing Decision
 
@@ -32,7 +36,7 @@ When in doubt, default to `inbox/` — it is persistent and cannot be lost.
 
 ## Steps
 
-### Step 0 — Load context (lightweight)
+### Step 0 — Load context
 
 1. Read `context/context.md` for active project names — for tagging and linking only.
 2. Check whether today's daily note exists (`journal/daily/<YYYY-MM-DD>.md`) — needed only if routing to Day > Inbox.
@@ -84,7 +88,17 @@ Commit:
 
 For batch captures (multiple items in one invocation): write one file per item without asking questions between items. Use a single commit covering all items.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Capture routed to correct location (inbox/ or daily note)
+- [ ] Tags applied for discoverability
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: committed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -106,13 +120,9 @@ Done when: committed.
 1. Write one new `inbox/` file per capture item. Never overwrite an existing file.
 2. For Day > Inbox: append only. Never edit existing bullets.
 3. One clarifying question maximum. Capture must be near-instant.
-4. Never process or analyse captured content. Route only.
+4. Never process or analyze captured content. Route only.
 5. Commit format: `Capture: <slug>` (inbox) | `Note: <date> inline capture` (daily note).
 6. Default to `inbox/` when routing is ambiguous.
-
-## dev-log Update
-
-None. `/capture` does not write dev-log entries.
 
 ---
 

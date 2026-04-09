@@ -24,9 +24,9 @@ Acts as a quality verification specialist. Distinguishes automated regression ve
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Run automated suite; report results; no manual testing | End gate only |
-| **Standard** | Automated suite + targeted manual tests for changed areas | Mid-gate after automated + end gate |
-| **Full** | Automated suite + structured manual session + exploratory testing + risk-based session planning | HARD-GATE after session planning; HARD-GATE after each test area |
+| **Quick** | Run automated suite; report results; no manual testing | END-GATE only |
+| **Standard** | Automated suite + targeted manual tests for changed areas | SOFT-GATE after automated; END-GATE at close |
+| **Full** | Automated suite + structured manual session + exploratory testing + risk-based session planning | HARD-GATE (Full): after session planning; HARD-GATE (Full): after each test area |
 
 ## Steps
 
@@ -57,8 +57,8 @@ Done when: scope, manual testing requirement, and risk areas confirmed.
 ### Step 1 — Session planning (Full only)
 
 1. Identify test areas: which features, flows, and edge cases to cover.
-2. Prioritise by risk: recently changed code, critical paths, external boundaries.
-3. Write test plan to `projects/<name>/notes/test-session-<YYYY-MM-DD>.md` — include test areas, prioritisation rationale, and pass/fail criteria.
+2. Prioritize by risk: recently changed code, critical paths, external boundaries.
+3. Write test plan to `projects/<name>/notes/test-session-<YYYY-MM-DD>.md` — include test areas, prioritization rationale, and pass/fail criteria.
 
 **HARD-GATE (Full):** Present test plan to user; confirm before starting test execution.
 
@@ -75,18 +75,18 @@ Done when: test plan written; user confirmed (Full only).
 
 Done when: automated suite complete; results captured.
 
-### Step 3 — Analyse failures
+### Step 3 — Analyze failures
 
 For each failing test:
-1. Categorise: pre-existing failure / new regression / expected pending failure.
+1. Categorize: pre-existing failure / new regression / expected pending failure.
 2. For new regressions: identify the commit or change that introduced it.
 3. Surface to the user with full context: test name, error message, relevant code location.
 
 If failures are complex and require investigation: surface this clearly and suggest `debug` as next step.
 
-Done when: every failing test categorised and surfaced with context.
+Done when: every failing test categorized and surfaced with context.
 
-**Mid-gate (Standard):** Present automated results to user before proceeding to manual testing.
+**SOFT-GATE (Standard):** Present automated results to user before proceeding to manual testing.
 
 ### Step 4 — Manual test session (Standard + Full)
 
@@ -147,7 +147,18 @@ Done when: research complete (or confirmed not needed).
 5. Mark matching task items as done.
 6. If new regressions found: add `- [ ]` pending tasks to daily note — one per regression.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All test scenarios executed and results documented
+- [ ] Coverage gaps identified and logged
+- [ ] Regression risk assessed
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: summary written; dev-log entry appended; daily note updated; regression tasks filed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -182,4 +193,5 @@ Done when: summary written; dev-log entry appended; daily note updated; regressi
 | New regressions found | `debug` |
 | All tests pass | `self-review` |
 | Failures reveal scope-affecting issues | `plan replan` |
+| Test failures reveal fundamental design issues | `brainstorm` |
 | Test session reveals missing test coverage | `implement` (add tests) |

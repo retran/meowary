@@ -24,6 +24,7 @@ Arguments: `/do <intent> [project-slug] [quick|standard|full]`
 |----------------|---------|---------------|--------------|
 | "what do I know / what exists about X" | any | `scout` | quick |
 | "understand / research / deep dive into X" | any | `research` | full |
+| "brainstorm / ideate / what should we build / how should we approach" | any | `brainstorm` | standard |
 | "plan / scope / break down X" | any | `plan` | standard |
 | "replan / scope changed / new constraint" | any | `plan` (replan mode) | standard |
 | "design / decide how to build X" | any | `design` | standard |

@@ -5,7 +5,7 @@ tags: []
 
 # Evening
 
-> Daily end-of-day close-out. Completes the Evening zone of today's daily note, distils the day into a summary, routes waiting items, scans for resource enrichment opportunities, and optionally runs the Friday weekly wrap-up. Invoke at the end of each workday.
+> Daily end-of-day close-out. Completes the Evening zone of today's daily note, distills the day into a summary, routes waiting items, scans for resource enrichment opportunities, and optionally runs the Friday weekly wrap-up. Invoke at the end of each workday.
 
 ## Role
 
@@ -19,6 +19,10 @@ Acts as the user's structured end-of-day closer. Reviews what was done, routes d
 | Project dev-logs | `projects/<name>/dev-log.md` | Optional |
 | Waiting-for list | `journal/waiting-for.md` | Required |
 | Resource articles | `resources/` | Optional |
+
+## Complexity Tiers
+
+Not applicable. Fixed-procedure workflow.
 
 ## Steps
 
@@ -45,7 +49,7 @@ Done when: user has responded (or questions are not applicable).
 ### Step 1 — Review Day zone
 
 1. Read all content in `## Day > ### Inbox`, `## Day > ### Events`, and `## Day > ### Waiting`.
-2. Categorise each Inbox item as: **done**, **carry** (to a future date), or **drop**.
+2. Categorize each Inbox item as: **done**, **carry** (to a future date), or **drop**.
 3. Confirm all Events are linked to meeting notes — flag any unlinked meeting.
 4. Identify new Waiting items to route to `journal/waiting-for.md`.
 5. Flag any existing `journal/waiting-for.md` items with an overdue follow-up date.
@@ -110,7 +114,18 @@ Done when: weekly note completed and all sections filled.
 
 No dev-log entry required for `/evening` itself.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All inbox items processed or explicitly deferred
+- [ ] Daily note updated with accomplishments and reflections
+- [ ] Tomorrow's priorities identified
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: `context.md` updated; committed.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
@@ -138,10 +153,6 @@ Done when: `context.md` updated; committed.
 4. Do not rewrite or delete any Morning or Day content.
 5. Commit format: `Evening: <YYYY-MM-DD>`.
 6. Friday weekly wrap-up is opt-in. Always ask before running; never auto-trigger.
-
-## dev-log Update
-
-`/evening` does not write a dev-log entry for itself. Dev-log entries for lifecycle workflows run today may be appended here if they were missed during those sessions — append to the relevant `projects/<slug>/dev-log.md` with the correct timestamp.
 
 ---
 

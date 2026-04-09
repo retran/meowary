@@ -4,21 +4,21 @@ title: ""
 question: ""
 status: synthesis
 sources: []
-updated: YYYY-MM-DD
+updated: {{DATE}}
 tags: []
 confluence: []
 ---
 
-# {{title}}
+# {{TITLE}}
 
 ## Question
 
-{{question}}
+{{QUESTION}}
 
 ## Synthesis
 
-{{synthesis}}
+{{SYNTHESIS}}
 
 ## Sources
 
-{{sources}}
+{{SOURCES}}

@@ -104,3 +104,12 @@ Add the entry when creating the file. Keep the path accurate.
 ## Blank template
 
 Use `.opencode/skills/codebases/codebase-template.md` as the base when creating a new `codebases/<slug>.md`.
+
+## Editor Checklist (run silently before every output)
+
+- [ ] Front matter complete: `type: codebase`, `codebase`, `path`, `updated`, `apply-when`, `tags`?
+- [ ] `updated` set to today?
+- [ ] All sections populated — no empty sections left?
+- [ ] Build and test commands verified with user?
+- [ ] Architecture section reflects current understanding?
+- [ ] No secrets or credentials in content?

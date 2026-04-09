@@ -5,11 +5,11 @@ tags: []
 
 # Peer-Review
 
-> Structured review of external work — PRs, MRs, specs, RFCs, and ADRs. Produces findings organised by severity (Blocker / Major / Minor / Nit), a written review response for Standard and Full tiers, and a persisted review file for Full tier. Invoke when asked to review someone else's work.
+> Structured review of external work — PRs, MRs, specs, RFCs, and ADRs. Produces findings organized by severity (Blocker / Major / Minor / Nit), a written review response for Standard and Full tiers, and a persisted review file for Full tier. Invoke when asked to review someone else's work.
 
 ## Role
 
-Acts as a rigorous, constructive peer reviewer. Understands intent before analysing for issues. Grades every finding by severity — "here are some thoughts" without severity labels is not a review. Produces findings the author can act on: location, issue, and suggested fix. Does not review for scope creep unless explicitly asked. Separate from `self-review` (which reviews your own work) and `resolve` (which addresses incoming review comments on your work).
+Acts as a rigorous, constructive peer reviewer. Understands intent before analyzing for issues. Grades every finding by severity — "here are some thoughts" without severity labels is not a review. Produces findings the author can act on: location, issue, and suggested fix. Does not review for scope creep unless explicitly asked. Separate from `self-review` (which reviews your own work) and `resolve` (which addresses incoming review comments on your work).
 
 ## Inputs
 
@@ -25,9 +25,9 @@ Acts as a rigorous, constructive peer reviewer. Understands intent before analys
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Conventions check + obvious issues only; in-session comment | End gate only |
-| **Standard** | Full findings by severity + written review response | End gate |
-| **Full** | Standard + security, performance, and design analysis; formal written review + persisted file | HARD-GATE: present all findings before posting |
+| **Quick** | Conventions check + obvious issues only; in-session comment | END-GATE only |
+| **Standard** | Full findings by severity + written review response | END-GATE |
+| **Full** | Standard + security, performance, and design analysis; formal written review + persisted file | HARD-GATE (Full): present all findings before posting |
 
 Default tier: **Standard**.
 
@@ -70,15 +70,15 @@ Done when: diff or document content in hand; PR description and purpose noted.
 
 ### Step 2 — Understand intent
 
-Before analysing for issues, answer: "What is this change or document trying to achieve?"
+Before analyzing for issues, answer: "What is this change or document trying to achieve?"
 
-Summarise the intent in 1–2 sentences. This becomes the opening of the review response.
+Summarize the intent in 1–2 sentences. This becomes the opening of the review response.
 
 Do not evaluate for scope creep or gold-plating unless the user explicitly asks.
 
 Done when: intent summary written.
 
-### Step 3 — Analyse
+### Step 3 — Analyze
 
 **Code review mode** (PRs/MRs):
 - Correctness: does the code do what the PR description says?
@@ -99,7 +99,7 @@ Done when: all analysis complete; issues identified with location and descriptio
 
 ### Step 4 — Produce findings
 
-Organise findings by severity:
+Organize findings by severity:
 
 | Severity | Meaning |
 |----------|---------|
@@ -170,21 +170,32 @@ Done when: review file written (Full only).
 **Next:** <suggested action for the author or yourself>
 ```
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] All findings categorized by severity
+- [ ] No Blocker findings left unresolved
+- [ ] Review summary posted to MR/PR
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: daily note updated; dev-log entry appended if applicable.
+
+**END-GATE:** Present final deliverables to the user.
 
 ## Outputs
 
-| Output | Location | Tier |
-|--------|----------|------|
-| In-session findings summary | Inline | All |
-| Written review comments | PR/MR or inline in document | Standard, Full |
-| Persisted review file | `projects/<name>/notes/review-<date>-<slug>.md` | Full only |
-| Daily note work log | `journal/daily/<date>.md` Day zone | All |
+| Output | Location | Format |
+|--------|----------|--------|
+| In-session findings summary | Inline | Text |
+| Written review comments | PR/MR or inline in document | Markdown |
+| Persisted review file | `projects/<name>/notes/review-<date>-<slug>.md` | Markdown |
+| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 
 ## Error Handling
 
 - **PR not found or inaccessible:** Ask the user to confirm the PR number/URL or repo. Do not proceed without the diff.
-- **No PR description or stated purpose:** Do not assume intent. Ask the user what the change is trying to do before analysing.
+- **No PR description or stated purpose:** Do not assume intent. Ask the user what the change is trying to do before analyzing.
 - **Prior review found for the same target:** Surface it. Ask: full re-review or incremental review of changes since last review?
 - **User requests a Quick review for a security-sensitive change:** Warn that Quick tier does not include a security pass. Ask to confirm scope.
 - **Findings unclear in severity:** Escalate, not downgrade. If uncertain whether a finding is a Blocker or Major, classify it as Blocker and explain.
@@ -193,7 +204,7 @@ Done when: daily note updated; dev-log entry appended if applicable.
 
 1. Every finding must have a severity label. Ungraded feedback is not a review.
 2. Blocker = "I would reject this." Nit = cosmetic. Never downgrade to avoid extra work.
-3. Understand intent before analysing — do not review for scope creep unless asked.
+3. Understand intent before analyzing — do not review for scope creep unless asked.
 4. HARD-GATE (Full): present all findings before posting anything. Let the user see the complete picture first.
 5. `context/safety.md` violations are always Blockers, regardless of tier.
 
@@ -201,7 +212,7 @@ Done when: daily note updated; dev-log entry appended if applicable.
 
 | Step | Agent | Type | Parallel? | Trigger | Output |
 |------|-------|------|-----------|---------|--------|
-| Steps 3–4 — Analyse + Findings | `general` | built-in | No — single | Full tier only | Full findings by severity (Blocker / Major / Minor / Nit) + draft review response |
+| Steps 3–4 — Analyze + Findings | `general` | built-in | No — single | Full tier only | Full findings by severity (Blocker / Major / Minor / Nit) + draft review response |
 
 ---
 

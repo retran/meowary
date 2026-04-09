@@ -25,9 +25,9 @@ Acts as a structured project planner. Scopes explicitly — separates what is in
 
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Scout + clarify + scope + handoff; inline plan only; no charter | End gate only |
-| **Standard** | All steps; charter optional; milestone-level breakdown | Mid-gate after scope + end gate |
-| **Full** | All steps; charter required; full task breakdown with dependencies and risks | HARD-GATE after scope; HARD-GATE after breakdown; HARD-GATE before handoff |
+| **Quick** | Scout + clarify + scope + handoff; inline plan only; no charter | END-GATE only |
+| **Standard** | All steps; charter optional; milestone-level breakdown | SOFT-GATE after scope; END-GATE at close |
+| **Full** | All steps; charter required; full task breakdown with dependencies and risks | HARD-GATE (Full): after scope; HARD-GATE (Full): after breakdown; HARD-GATE (Full): before handoff |
 
 Replan mode always runs at Standard or Full regardless of original tier.
 
@@ -94,15 +94,28 @@ Done when: `charter.md` written with constraints, principles, and non-negotiable
 ### Step 4 — Breakdown (Standard + Full)
 
 1. Decompose into milestones (major deliverables) and tasks (actionable units).
-2. Each task: name, description, estimated effort, dependencies.
-3. Order tasks goal-backward: what must be TRUE first → what must EXIST → what must be WIRED. This ensures dependency-driven sequencing, not convenience-driven.
-4. Quick: one-line task list only.
+2. Each task uses this format:
+   ```markdown
+   - [ ] <task> (<effort>) [risk: high|medium|low] [depends: <task>]
+   ```
+3. Risk classification:
+
+   | Risk | Criteria | Example |
+   |------|----------|---------|
+   | **high** | Touches auth, security, data persistence, public API, shared infrastructure, or has no rollback | "Migrate user table schema" |
+   | **medium** | Touches multiple modules, requires coordination, or has limited test coverage | "Refactor config loading" |
+   | **low** | Self-contained, well-tested area, easy to revert | "Add tooltip to button" |
+
+   Three levels only. Catastrophic risk (data loss, security breaches) is handled by `context/safety.md` auto-Blocker rules at review time — a separate dimension from planning-time risk tags.
+4. Order tasks goal-backward: what must be TRUE first → what must EXIST → what must be WIRED. This ensures dependency-driven sequencing, not convenience-driven.
+5. Among tasks with no dependency order between them, prefer high-risk first (fail fast).
+6. Quick: one-line task list only (no risk tags).
 
 **HARD-GATE (Full):** Present breakdown; confirm before writing plan artifact.
 
 Skip for Quick tier.
 
-Done when: task list with effort and dependencies written; ordered goal-backward.
+Done when: task list with effort, risk tags, and dependencies written; ordered goal-backward.
 
 ### Step 5 — Roadmap (Standard + Full)
 
@@ -114,7 +127,7 @@ Skip for Quick tier.
 
 Done when: tasks sequenced; critical path identified; risks and deferrals noted.
 
-### Step 6 — Handoff
+### Step 6 — Close
 
 Write plan to `projects/<name>/plans/<slug>.md` using this format:
 
@@ -139,7 +152,7 @@ Write plan to `projects/<name>/plans/<slug>.md` using this format:
 1. <Milestone name> — <description>
 
 ## Tasks
-- [ ] <task> (<effort>) [depends: <task>]
+- [ ] <task> (<effort>) [risk: high|medium|low] [depends: <task>]
 
 ## Risks
 - <risk>: <mitigation>
@@ -164,7 +177,20 @@ Then:
 2. Append work log entry to `## Day` zone of today's daily note.
 3. Mark matching task items as done.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Every spec requirement maps to at least one task
+- [ ] No task depends on a task that depends on it (no circular chains)
+- [ ] Every task has an effort estimate and risk tag (Standard + Full)
+- [ ] Risk mitigations are actionable, not vague
+- [ ] Deferred items have explicit reasons
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: plan file written; dev-log entry appended; daily note updated.
+
+**END-GATE:** Present final deliverables to the user.
 
 ---
 
@@ -172,7 +198,7 @@ Done when: plan file written; dev-log entry appended; daily note updated.
 
 Triggered explicitly by the user with the word "replan". The user provides (or the agent reads from dev-log) the triggering context.
 
-### Step R0 — Load
+### Step 0 — Load context
 
 1. Read `projects/<name>/plans/<slug>.md` (current plan).
 2. Read `projects/<name>/dev-log.md` last entry for triggering context.
@@ -180,7 +206,7 @@ Triggered explicitly by the user with the word "replan". The user provides (or t
 
 Done when: current plan and triggering context loaded.
 
-### Step R1 — Assess
+### Step 1 — Assess
 
 1. Identify what changed and why the replan was triggered.
 2. Classify impact: scope change / priority change / approach change / new risk.
@@ -188,7 +214,7 @@ Done when: current plan and triggering context loaded.
 
 Done when: impact classified; valid and invalid sections identified.
 
-### Step R2 — Revise
+### Step 2 — Revise
 
 1. Update only the affected sections of the plan.
 2. Mark changed sections: `> **Revised <date>:** <reason>`.
@@ -197,7 +223,7 @@ Done when: impact classified; valid and invalid sections identified.
 
 Done when: affected sections revised; `## Deprecated` section written for all invalidated items.
 
-### Step R3 — Diff
+### Step 3 — Diff
 
 Produce a clear delta summary:
 - What's new
@@ -207,14 +233,25 @@ Produce a clear delta summary:
 
 Done when: delta summary written and presented to user.
 
-### Step R4 — Handoff
+### Step 4 — Close
 
 1. Update `projects/<name>/plans/<slug>.md`.
 2. Append dev-log entry noting what triggered the replan and what changed.
 3. Append work log entry to `## Day` zone of today's daily note.
 4. Mark matching task items as done.
 
+**Self-review checklist:**
+
+- [ ] All `Done when` criteria met for every step
+- [ ] Delta summary covers all changes
+- [ ] Deprecated items preserved with explanation
+- [ ] No silent scope reductions
+- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
+- [ ] All file paths in outputs are correct and targets exist
+
 Done when: plan file updated; dev-log entry appended; daily note updated.
+
+**END-GATE:** Present final deliverables to the user.
 
 ---
 
@@ -259,3 +296,4 @@ Done when: plan file updated; dev-log entry appended; daily note updated.
 | Output is a document, not code | `write` |
 | New constraint discovered during planning | `design` |
 | Research needed to validate assumptions | `research` |
+| Planning reveals the spec needs broader exploration | `brainstorm` |

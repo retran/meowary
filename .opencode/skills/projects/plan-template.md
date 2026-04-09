@@ -3,12 +3,13 @@ type: plan
 status: draft
 updated: {{DATE}}
 tags: [p-{{PROJECT_SLUG}}]
+confluence: []
 ---
 
 # Plan: {{TITLE}}
 
 **Project:** [{{PROJECT_NAME}}](../README.md)
-**Spec / ADR:** [<link>](<link>)
+**Spec / ADR:** [{{SPEC_LINK}}]({{SPEC_LINK}})
 **Status:** draft
 **Updated:** {{DATE}}
 
@@ -18,12 +19,12 @@ tags: [p-{{PROJECT_SLUG}}]
 
 ## Phases
 
-### Phase 1: <name>
+### Phase 1: {{PHASE_NAME}}
 
 - [ ] 
 - [ ] 
 
-### Phase 2: <name>
+### Phase 2: {{PHASE_NAME}}
 
 - [ ] 
 - [ ] 
