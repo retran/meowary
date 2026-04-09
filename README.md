@@ -230,6 +230,7 @@ These are all optional. Install the tools that match your workflow.
 | [jira-cli](https://github.com/ankitpokhrel/jira-cli) | Query Jira issues and sprints | `brew install ankitpokhrel/tap/jira-cli` |
 | [gh](https://cli.github.com) | GitHub CLI — PR lifecycle, Actions, issues | `brew install gh` |
 | [glab](https://gitlab.com/gitlab-org/cli) | GitLab CLI — MR lifecycle, CI pipelines, issues | `brew install glab` |
+| [rtk](https://github.com/rtk-ai/rtk) | Reduce LLM token consumption by 60-90% on shell commands | `brew install rtk` + `rtk init -g --opencode` |
 
 ### Env management — pick one
 
@@ -375,6 +376,7 @@ All integrations use CLI tools installed separately. Credentials go in `.env` (s
 | GitLab | `glab` | MR lifecycle, CI pipelines | `brew install glab` + `glab auth login` |
 | Web search | Exa (built-in) | Web search from OpenCode | Set `OPENCODE_ENABLE_EXA=1` in `.env` — no API key required |
 | Library docs | Context7 (built-in) | Framework and library documentation | Set `CONTEXT7_API_KEY` in `.env` (optional — public rate limits apply without it) |
+| Token optimization | [`rtk`](https://github.com/rtk-ai/rtk) | Compress shell output before it reaches the LLM — 60-90% token savings on git, test, build, ls, grep commands | `brew install rtk` + `rtk init -g --opencode` (global OpenCode plugin) |
 
 The Atlassian REST credentials (`ATLASSIAN_USERNAME`, `ATLASSIAN_API_TOKEN`, `JIRA_URL`, `CONFLUENCE_URL`) are also used by `.opencode/scripts/config.js` for direct API calls in the automation scripts — set them even if you use `jira-cli` and `confluence-cli`.
 
