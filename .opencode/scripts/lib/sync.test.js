@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { mkdtempSync, rmSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import {
@@ -17,6 +17,7 @@ let dir;
 
 beforeEach(() => {
   dir = mkdtempSync(resolve(tmpdir(), "sync-test-"));
+  mkdirSync(resolve(dir, "meta"), { recursive: true });
 });
 
 afterEach(() => {
