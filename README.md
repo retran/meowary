@@ -1,12 +1,14 @@
 # Meowary
 
-A second brain template for software developers — built on plain Markdown and an AI coding agent that maintains it with you.
+A second brain template for software developers — built on plain Markdown and an AI coding agent that maintains it with you. The name is a portmanteau of *meow* and *diary* — because every project needs a cat.
 
 ## What Meowary Is
 
-You absorb hundreds of decisions, trade-offs, and context fragments every week. Most of it evaporates. Six months later you can't remember why the team chose that architecture, who owns the billing service, or what you learned from that incident postmortem. You start every AI conversation from scratch because the AI has no memory of what you already know.
+Meowary is a structured work journal template for [OpenCode](https://opencode.ai), an AI coding agent that runs in your terminal. It gives the agent persistent, searchable memory of everything you capture — decisions, trade-offs, context fragments, architecture rationale — so you stop losing institutional knowledge and stop re-explaining yourself every session.
 
-Meowary fixes this. It is a structured work journal template for [OpenCode](https://opencode.ai) that gives your AI agent persistent, searchable memory of everything you capture. Clone the repo, fill in your `.env`, run `/bootstrap`, and start your first day with `/morning`.
+You absorb hundreds of decisions every week. Most of them evaporate. Six months later you can't remember why the team chose that architecture, who owns the billing service, or what you learned from that incident postmortem. You start every AI conversation from scratch because the AI has no memory of what you already know.
+
+Meowary fixes this. Clone the repo, fill in your `.env`, run `/bootstrap`, and start your first day with `/morning`.
 
 The repository is plain Markdown — you own every file, every note, every decision. The agent reads your notes before acting, so it stops asking you things you have already documented. Over time, your accumulated context makes every session more useful than the last.
 
@@ -34,25 +36,45 @@ Most developers use one tool for notes, another for tasks, another for code, and
 
 Four design choices hold the system together:
 
-- **Progressive disclosure.** The agent loads only what the current task needs. `AGENTS.md` is always loaded; skills load on demand; workflows load via slash commands; codebase context loads only during coding. A morning routine loads ~400 lines of context. An implementation session loads entirely different content. This keeps the context window sharp instead of bloated.
+- **Progressive disclosure.** The agent loads only what the current task needs. `AGENTS.md` is always loaded; skills load on demand; workflows load via slash commands; codebase context loads only during coding. A morning routine and an implementation session load entirely different content. This keeps the context window sharp instead of bloated.
 
-- **CLI tools over MCP.** Meowary uses standalone CLI tools (`jira`, `confluence`, `gh`, `glab`, `qmd`, `repomix`) instead of MCP server integrations. Every command is visible in your terminal, reproducible, and independently installable. No server lifecycle to manage, no opaque middleware.
+- **CLI tools over MCP (Model Context Protocol).** Meowary uses standalone CLI tools (`jira`, `confluence`, `gh`, `glab`, `qmd`, `repomix`) instead of MCP server integrations. Every command is visible in your terminal, reproducible, and independently installable. No server lifecycle to manage, no opaque middleware.
 
-- **Human control with composable workflows.** The agent suggests but never auto-dispatches. Slash commands are atomic. HARD-GATE checkpoints require your explicit confirmation. Tiered execution (quick / standard / full) lets you control depth. The AI is a skilled collaborator, not an autonomous actor.
+- **Human control with composable workflows.** The agent suggests but never auto-dispatches. Slash commands are atomic. HARD-GATE checkpoints — points where the workflow pauses and waits for your explicit "yes" before continuing — require your confirmation before the agent proceeds (for example, approving a spec before planning begins, or confirming a plan before implementation starts). Tiered execution (`quick` / `standard` / `full`) lets you control depth:
+
+  - **Quick** — minimal gates, no external lookups, fast output. Best for familiar tasks where you just need the agent to execute.
+  - **Standard** — the recommended default. Includes HARD-GATE checkpoints, source verification, and QMD searches.
+  - **Full** — comprehensive. More checkpoints, deeper research, manual testing phases, and multi-pass review.
+
+  The AI is a skilled collaborator, not an autonomous actor.
 
 - **Knowledge graph integrated with coding agent.** Your accumulated context feeds both journal and coding workflows. The agent reads architecture decisions from `resources/` before reviewing code. Coding sessions produce knowledge back — new conventions, discovered patterns, resolved decisions — that enriches the graph for future sessions.
 
 ## How the System Works
 
-Three layers, each more specific than the last:
+Six directories live in the repository. Each has a dedicated section below.
 
-**AGENTS.md** — the top-level contract. Defines session-start behavior (what to load and when), editing rules, security constraints, and how context flows. The agent reads this every session.
+**Journal** (`journal/`) — your daily and weekly notes. The [daily workflow](#daily-workflow) follows a three-zone structure: morning intent, daytime capture, evening reflection. The [weekly workflow](#weekly-workflow) adds planning on Monday and a retrospective on Friday.
 
-**Skills** (`.opencode/skills/`) — domain-specific instruction sets. Each skill covers one topic: journal formatting, resource graph rules, project lifecycle, QMD syntax, SCM commands. Skills carry the format rules, templates, and editor checklists for their domain. They load on demand — only when a workflow step needs them.
+**Projects** (`projects/`) — time-bound work with a clear end state. Each project gets a dashboard, dev-log, specs, plans, and drafts. [Lifecycle workflows](#lifecycle-workflows) (`/do scout`, `/do plan`, `/do implement`, etc.) move a project from idea to completion.
 
-**Workflows** (`.opencode/workflows/`) — step-by-step procedures. Each workflow is a numbered sequence of actions for one task: morning routine, implement a feature, enrich a resource article. Workflows reference skills for domain rules but never duplicate them.
+**Areas** (`areas/`) — ongoing responsibilities with no end date: architecture governance, mentoring, developer experience. Each area gets a dashboard with a focus section, task list, and log.
 
-The agent dispatches workflows through slash commands. `/do <phase>` routes to lifecycle workflows (scout, plan, implement, review). `/r <operation>` routes to knowledge graph workflows (enrich, sync, discover). Daily commands (`/morning`, `/evening`, `/capture`) dispatch directly.
+**Resources** (`resources/`) — your [knowledge graph](#the-knowledge-graph). One article per topic — people, teams, tools, processes, architectural decisions. Articles start thin and develop over time. The agent searches this graph before every action.
+
+**Context** (`context/`) — your identity and environment. `context/context.md` holds your name, team, active projects, and tooling. The agent reads it at session start.
+
+**Codebases** (`codebases/`) — per-repository context. Each `codebases/<name>.md` file holds architecture, build commands, test setup, and coding conventions for one repository you work in. The agent loads the relevant file during coding sessions.
+
+The agent ties these together through three layers of instructions: `AGENTS.md` (the top-level contract, read every session), **skills** (`.opencode/skills/` — domain-specific rules, loaded on demand), and **workflows** (`.opencode/workflows/` — step-by-step procedures dispatched via slash commands).
+
+### How the agent is instructed
+
+**`AGENTS.md`** is the top-level contract. It defines session-start behavior, editing rules, security constraints, and context flow. The agent reads it every session.
+
+**Skills** (`.opencode/skills/`) are domain-specific instruction sets that load on demand. See the [Skills](#skills) section for the full list.
+
+**Workflows** (`.opencode/workflows/`) are step-by-step procedures. Each workflow is a numbered sequence of actions for one task: morning routine, implement a feature, enrich a resource article. Slash commands dispatch them — `/do <phase>` for lifecycle workflows, `/r <operation>` for knowledge graph workflows, `/morning` and `/evening` for daily routines.
 
 ## Quick Start
 
@@ -60,7 +82,7 @@ The agent dispatches workflows through slash commands. `/do <phase>` routes to l
 
 | Tool | Version | Install |
 |------|---------|---------|
-| [Node.js](https://nodejs.org) | >= 22 | See platform instructions below |
+| [Node.js](https://nodejs.org) | >= 22 (required by OpenCode) | See platform instructions below |
 | [OpenCode](https://opencode.ai) | latest | `npm install -g opencode` or [opencode.ai](https://opencode.ai) |
 | [QMD](https://github.com/tobi/qmd) | latest | `npm install -g @tobilu/qmd` |
 | [repomix](https://github.com/yamadashy/repomix) | latest | `npm install -g repomix` |
@@ -103,6 +125,30 @@ cd my-journal
 cp .env.example .env   # edit with your credentials
 ```
 
+The `.env` file has four sections. Here is the structure — fill in the values that match your setup:
+
+```sh
+# Used by .opencode/scripts/ for direct Atlassian REST API calls
+ATLASSIAN_USERNAME=you@example.com
+ATLASSIAN_API_TOKEN=your-atlassian-api-token
+CONFLUENCE_URL=https://your-instance.atlassian.net/wiki
+JIRA_URL=https://your-instance.atlassian.net
+
+# confluence-cli — uses its own vars (same token value as above)
+CONFLUENCE_DOMAIN=your-instance.atlassian.net
+CONFLUENCE_EMAIL=you@example.com
+CONFLUENCE_API_TOKEN=your-atlassian-api-token
+
+# jira CLI — same Atlassian token again
+JIRA_API_TOKEN=your-atlassian-api-token
+
+# OpenCode built-ins
+OPENCODE_ENABLE_EXA=1              # web search
+OPENCODE_EXPERIMENTAL_LSP_TOOL=true # go-to-definition and hover in coding sessions
+```
+
+See `.env.example` for the full file with comments and optional keys (`CONTEXT7_API_KEY`, `CONFLUENCE_SPACES`, etc.).
+
 OpenCode reads credentials from the shell environment. Use [direnv](https://direnv.net) or [mise](https://mise.jdx.dev) to load `.env` automatically:
 
 - **direnv:** add `dotenv` to `.envrc` in the repo root, then run `direnv allow`
@@ -116,16 +162,66 @@ cd .opencode/scripts && npm install && cd ../..
 
 This installs `dotenv` (used by helper scripts) and `vitest` (for tests).
 
+### Optional integrations
+
+All integrations use CLI tools installed separately. Credentials go in `.env` (see `.env.example`). Every integration is optional — install what matches your workflow.
+
+| Integration | Tool | Install | What it gives you |
+|-------------|------|---------|-------------------|
+| Confluence | [`confluence-cli`](https://www.npmjs.com/package/confluence-cli) | `npm install -g confluence-cli` | Read Confluence pages into resource articles |
+| Jira | [`jira-cli`](https://github.com/ankitpokhrel/jira-cli) | `brew install jira-cli` | Query issues, sprints, and epics for daily notes and resources |
+| GitHub | [`gh`](https://cli.github.com) | `brew install gh` | PR lifecycle, Actions CI, code search |
+| GitLab | [`glab`](https://gitlab.com/gitlab-org/cli) | `brew install glab` | MR lifecycle, CI pipelines, issues |
+| Token optimization | [`rtk`](https://github.com/rtk-ai/rtk) | `brew install rtk` | Compress shell output before it reaches the LLM — 60-90% token savings |
+| Web search | Exa (built into OpenCode) | Set `OPENCODE_ENABLE_EXA=1` in `.env` | Real-time web search |
+| Library docs | [`ctx7`](https://github.com/upstash/context7) | `npm install -g ctx7` | Framework and library documentation lookup (optional `CONTEXT7_API_KEY` in `.env`) |
+
+<details>
+<summary>WSL / Ubuntu alternatives</summary>
+
+```sh
+# Jira CLI
+go install github.com/ankitpokhrel/jira-cli/cmd/jira@latest
+
+# GitHub CLI
+sudo apt install gh
+# or: https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+
+# GitLab CLI
+sudo apt install glab
+# or: https://gitlab.com/gitlab-org/cli#installation
+
+# RTK
+# See https://github.com/rtk-ai/rtk#installation for Linux binaries
+
+# Confluence and npm-based tools work the same on WSL:
+npm install -g confluence-cli
+```
+
+</details>
+
+After installing, authenticate each tool:
+
+```sh
+gh auth login                          # GitHub — interactive browser flow
+glab auth login                        # GitLab — interactive or token
+jira init                              # Jira — prompts for server URL and token
+```
+
+The Atlassian REST credentials (`ATLASSIAN_USERNAME`, `ATLASSIAN_API_TOKEN`, `JIRA_URL`, `CONFLUENCE_URL`) are also used by `.opencode/scripts/config.js` for direct API calls in automation scripts — set them even if you use the CLI tools.
+
 ### First day
 
-Open the directory in OpenCode, then:
+Open your terminal, `cd` into your Meowary directory (e.g. `cd my-journal`), and run `opencode`. The agent must be started from the Meowary root so it finds `AGENTS.md` and `.opencode/`. Then:
 
 ```
 /bootstrap     # set up your identity and context
 /morning       # start your first day
 ```
 
-`/bootstrap` creates `context/context.md` (your name, team, active projects, tooling) and registers QMD search collections. `/morning` creates today's daily note, sets your focus, and picks your most important tasks.
+`/bootstrap` walks you through an interactive setup. It asks your name, role, team, active projects, and preferred tooling — then writes `context/context.md`, which the agent reads at the start of every session. It also registers QMD semantic search collections so the agent can query your journal, resources, and project notes. You only need to run it once; update `context/context.md` directly as things change.
+
+`/morning` creates today's daily note, sets your focus, and picks your most important tasks.
 
 ## Daily Workflow
 
@@ -178,7 +274,11 @@ On **Fridays**, `/evening` also triggers the weekly wrap-up.
 
 Weekly notes live in `journal/weekly/YYYY-WNN.md`. The weekly cycle adds two review moments the daily cycle cannot provide: planning at the start and retrospective at the end.
 
-**Monday** — `/morning` creates the weekly note, sets the weekly focus and goals (seeded from last week's carry-overs).
+**Monday** — `/morning` creates the weekly note and runs a planning flow:
+
+- Reviews last week's carry-over items — asks which should become this week's goals and which to drop
+- Asks for a weekly focus theme — one line that anchors the week's priorities
+- Sets weekly goals seeded from carry-overs, project state, and your focus theme
 
 **Friday** — `/evening` triggers the wrap-up:
 
@@ -192,7 +292,7 @@ Run `/weekly` at any time for a manual review outside the Friday flow.
 
 ## The Knowledge Graph
 
-`resources/` is an evolving knowledge graph. Articles are nodes; cross-references are edges. It grows through three mechanisms:
+`resources/` is an evolving knowledge graph. Articles are nodes; cross-references (Markdown links between articles) are edges. It grows through three mechanisms:
 
 **Daily capture.** The `/evening` routine scans the day's Inbox, Events, and Waiting for durable facts and writes them into resource articles. Quick facts go directly. Richer sources (articles, books, talks) go through a source note first — you summarize what it argues in your own words and list candidate topics — then those concepts get promoted to the graph.
 
@@ -212,8 +312,43 @@ resources/synthesis/<insight>.md ← cross-cutting insight from multiple article
 
 Articles start thin (`status: stub`) and develop into `status: current` as facts accumulate. The `actualized` date and link density show maturity — there is no "done" state. Health scripts (`node .opencode/scripts/health-all.js`) flag orphans, stale articles, broken links, and tag inconsistencies.
 
-<details>
-<summary><strong>Commands Reference</strong></summary>
+## Lifecycle Workflows
+
+`/do <phase>` dispatches to the matching lifecycle workflow. Pass a project slug (a short identifier like `payment-service` or `mcp-client`) and an optional tier — `quick` (fast, minimal gates), `standard` (recommended default), or `full` (comprehensive, more checkpoints). The workflows chain naturally: scout feeds research, research feeds brainstorm, brainstorm produces a spec that feeds plan, plan feeds implement, and so on. You can enter the chain at any point.
+
+### Exploration and understanding
+
+**`/do scout`** — lightweight reconnaissance. Answers "what do I already know about X?" before committing to deeper work. Searches resources, the codebase, project notes, and the web. Produces a scout note summarizing what exists and recommends a next step. Always runs at Quick tier — no complexity choice needed.
+
+**`/do research`** — source-grounded deep dive. Follows a gather-ingest-analyze-brief pipeline: collects sources, asks questions across them, surfaces disagreements and gaps, and produces a research brief with explicit provenance (`[VERIFIED]`, `[CITED]`, `[ASSUMED]` tags on every claim). Invoke when scout reveals you need external knowledge.
+
+**`/do brainstorm`** — structured divergent thinking using the Socratic method. Challenges your framing before generating solutions, separates divergent from convergent phases, and outputs a problem spec as its sole artifact. The spec captures the problem, evaluated options, and a recommended approach — ready to feed directly into plan.
+
+### Planning and design
+
+**`/do plan`** — turns an approved spec into a structured implementation plan. Breaks work into milestones, tasks with effort estimates and risk tags, and dependency chains. Defines success criteria, a charter (constraints, principles, non-negotiables), and a critical-path roadmap. Also supports **replan mode** — invoke when new findings change scope or reveal unexpected complexity.
+
+**`/do design`** — architecture decision workflow. Explores at least three genuinely distinct options, builds a tradeoff matrix, and produces an Architecture Decision Record (ADR) documenting the chosen approach and all rejected alternatives with rationale. Invoke when a design question needs resolution before implementation.
+
+**`/do write`** — produces written artifacts: proposals, RFCs, ADRs, specs, postmortems, and documentation. Works in draft mode (outputs to the project's `drafts/` directory) or publish mode (outputs to the project's `docs/`). Sources content from existing knowledge first, marks gaps as `[DRAFT — needs input]`. Applies journal writing conventions throughout.
+
+### Implementation
+
+**`/do implement`** — executes planned coding work. Reads the plan and codebase context, clarifies before touching code, then works in small verifiable increments: implement one task, verify it works, commit. The only workflow that modifies production codebase files. Reads architecture decisions from `resources/` before coding and writes new conventions back after — the knowledge graph gets smarter as you build.
+
+**`/do test`** — structured verification. Reads success criteria from the plan, runs the applicable test suite, and at higher tiers executes manual exploratory testing sessions. Documents findings with actionable context — not just pass/fail, but what was tested and what coverage gaps remain.
+
+**`/do debug`** — structured failure investigation. Forms hypotheses, designs experiments, observes results, narrows the search. Captures investigation steps in a debug note, identifies root cause, applies a minimum fix, and adds a regression test where applicable. Distinguishes local bugs from systemic issues that need a replan.
+
+### Review and feedback
+
+**`/do self-review`** — pre-PR code review you run on your own changes. Checks plan compliance (did you build what the plan says?) and code quality (conventions, logic, edge cases, test coverage) independently. Classifies findings by severity: Blocker means "I would reject this PR," Nit means cosmetic. Invoke after implement, before raising a PR.
+
+**`/do peer-review`** — review someone else's PR, MR, spec, or RFC. Fetches the diff, reads it in full (not just changed lines), and produces severity-classified findings with file:line references and suggested fixes. At Standard tier, drafts a written review response ready to post.
+
+**`/do resolve`** — addresses review feedback. Triages each comment by type, develops a response plan, implements changes, and documents decisions. Every comment gets a deliberate response — agreed and fixed, or disagreed with reasoning. Invoke after receiving PR or document feedback.
+
+## Commands
 
 ### Daily rhythm
 
@@ -261,12 +396,9 @@ Examples: `/do scout payment-service`, `/do implement mcp-client full`, `/do wri
 
 Examples: `/r enrich ci-pipeline`, `/r sync`, `/r ingest https://example.com/article`.
 
-</details>
+## Skills
 
-<details>
-<summary><strong>Skills Reference</strong></summary>
-
-Skills are domain-specific instruction sets in `.opencode/skills/`. The agent loads them on demand when a task requires domain rules.
+Skills are domain-specific instruction sets in `.opencode/skills/`. Each skill is a Markdown file loaded into the agent's context on demand — when a workflow step or task requires that domain's rules. Parent skills may delegate to sub-skills for specific task types (for example, the `journal` skill routes to `daily`, `weekly`, or `meeting` sub-skills depending on which note you are working with).
 
 | Skill | What it covers |
 |-------|----------------|
@@ -292,10 +424,7 @@ Skills are domain-specific instruction sets in `.opencode/skills/`. The agent lo
 | `repomix` | Pack external repos for analysis, review, or planning |
 | `worktrunk` | Git worktree management via `wt` |
 
-</details>
-
-<details>
-<summary><strong>Structure</strong></summary>
+## Structure
 
 Files marked with `†` are created by `/bootstrap` or on first use — they do not ship with the template.
 
@@ -341,12 +470,13 @@ meowary/
 ├── .opencode/
 │   ├── commands/             # Slash command definitions
 │   ├── workflows/            # Step-by-step workflow procedures (24 files)
-│   ├── skills/               # Domain-specific instruction sets (14 directories)
+│   ├── skills/               # Domain-specific instruction sets
 │   ├── scripts/              # Helper scripts: health checks, sync, indexing
 │   ├── context-templates/    # Blank templates for context/ files
 │   ├── meta-templates/       # Blank templates for meta/ and journal/ operational files
 │   └── reference/            # Structure and security reference docs
 ├── AGENTS.md                 # Agent instructions — read every session
+├── opencode.json             # Agent permissions and external directory config
 ├── CONTRIBUTING.md           # How to contribute
 ├── CHANGELOG.md              # Release history
 ├── LICENSE                   # MIT
@@ -354,36 +484,17 @@ meowary/
 └── .env.example              # Credentials template
 ```
 
-</details>
-
-<details>
-<summary><strong>Integrations</strong></summary>
-
-All integrations use CLI tools installed separately. Credentials go in `.env` (see `.env.example`). Every integration is optional — install what matches your workflow.
-
-| Integration | Tool | What it gives you |
-|-------------|------|-------------------|
-| Confluence | [`confluence-cli`](https://www.npmjs.com/package/confluence-cli) | Read Confluence pages into resource articles |
-| Jira | [`jira-cli`](https://github.com/ankitpokhrel/jira-cli) | Query issues, sprints, and epics for daily notes and resources |
-| GitHub | [`gh`](https://cli.github.com) | PR lifecycle, Actions CI, code search |
-| GitLab | [`glab`](https://gitlab.com/gitlab-org/cli) | MR lifecycle, CI pipelines, issues |
-| Web search | Exa (built into OpenCode) | Real-time web search — set `OPENCODE_ENABLE_EXA=1` in `.env` |
-| Library docs | Context7 (built into OpenCode) | Framework and library documentation lookup |
-| Token optimization | [`rtk`](https://github.com/rtk-ai/rtk) | Compress shell output before it reaches the LLM — 60-90% token savings |
-
-The Atlassian REST credentials (`ATLASSIAN_USERNAME`, `ATLASSIAN_API_TOKEN`, `JIRA_URL`, `CONFLUENCE_URL`) are also used by `.opencode/scripts/config.js` for direct API calls in automation scripts — set them even if you use the CLI tools.
-
-</details>
-
 ## Source Code Access
 
-The `external_directory` permission in `opencode.json` controls which directories outside the journal the agent can read and modify. Set it to the path where your source code repositories live:
+The `external_directory` permission in `opencode.json` (in the root of your Meowary directory) controls which directories outside the journal the agent can read and modify. Set it to the path where your source code repositories live:
 
 ```json
 "external_directory": {
   "~/workspace/**": "allow"
 }
 ```
+
+Replace `~/workspace` with the actual path to your repositories.
 
 This lets the agent act as a coding agent in your actual projects — reviewing files, making changes, addressing MR comments — while using your accumulated journal context.
 
@@ -402,7 +513,7 @@ The knowledge management design builds on PARA, Bullet Journal, Zettelkasten, Ev
 
 ## Contributing
 
-Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to report issues, propose changes, and what makes a good pull request.
+Contributions are welcome — bug reports, new workflows, skill improvements, and documentation fixes are all valuable. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to propose changes and what makes a good pull request.
 
 ## License
 
