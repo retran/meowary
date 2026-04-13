@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-04-13
+
+### Fixed
+
+- README rewritten for publication quality across three review passes
+- Corrected Context7, RTK, and Jira CLI install instructions
+- Added `.env` excerpt, tier system explanation, and `/bootstrap` details to Quick Start
+- Moved integrations table into Quick Start section
+- Expanded lifecycle workflow descriptions with full per-phase detail
+- Added `opencode.json` to the structure tree
+- Removed stale skills directory count from structure tree
+- Softened `/do debug` regression test claim to match actual workflow behavior
+- Minor prose fixes: pronoun agreement, placeholder path note, reduced redundancy
+
 ## [0.1.0] - 2026-04-13
 
 ### Added
@@ -25,5 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Helper scripts for health checks, backlink detection, resource planning, and Confluence sync
 - macOS and WSL installation paths documented
 
-[Unreleased]: https://github.com/retran/meowary/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/retran/meowary/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/retran/meowary/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/retran/meowary/releases/tag/v0.1.0
