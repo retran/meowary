@@ -11,7 +11,7 @@
  * Output only pairs with score >= 1.
  *
  * Usage:
- *   node scripts/discover-connections.js [--scope <path>] [--limit N]
+ *   node .opencode/scripts/discover-connections.js [--scope <path>] [--limit N]
  *   Default scope: resources/
  *
  * Exit 0 always.

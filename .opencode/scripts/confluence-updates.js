@@ -7,7 +7,7 @@
  * tracked pages are stale (Confluence updated more recently than last synced).
  *
  * Usage:
- *   node scripts/confluence-updates.js YYYY-MM-DD [SPACE1 SPACE2 ...]
+ *   node .opencode/scripts/confluence-updates.js YYYY-MM-DD [SPACE1 SPACE2 ...]
  *   Default spaces: set CONFLUENCE_SPACES in .env (space-separated list)
  *
  * Exit 0 always.
@@ -130,7 +130,7 @@ async function main() {
   console.log(`Stale (Confluence newer)         : ${staleCount}`);
   console.log();
   if (staleCount > 0) {
-    console.log(`Run: node scripts/confluence-ingest.js   — to ingest stale pages`);
+    console.log(`Run: node .opencode/scripts/confluence-ingest.js   — to ingest stale pages`);
   }
 }
 

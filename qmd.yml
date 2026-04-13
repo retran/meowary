@@ -3,7 +3,7 @@
 # Defines collections for semantic querying via `qmd query "<question>"`.
 # Run `node .opencode/scripts/qmd-index.js` to build/update the index.
 #
-# Install: npm install -g qmd (requires Node >= 22)
+# Install: npm install -g @tobilu/qmd (requires Node >= 22)
 # First run downloads ~2GB embedding model.
 #
 # NOTE: qmd.yml is documentation — it does NOT drive the live index.

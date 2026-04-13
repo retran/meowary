@@ -10,11 +10,11 @@
  * underlinked and in which files.
  *
  * Usage:
- *   node scripts/unlinked-mentions.js [--min-score N]
+ *   node .opencode/scripts/unlinked-mentions.js [--min-score N]
  *   Default: --min-score 0.5  (N must be a float in (0, 1])
  *   Cap: 50 results per resource article — raise with -n if needed (edit runQmdQuery)
  *
- * Prerequisite: Run `node scripts/qmd-index.js --changed` first to ensure the
+ * Prerequisite: Run `node .opencode/scripts/qmd-index.js --changed` first to ensure the
  * index is current.
  *
  * Exit 0 always.
@@ -114,7 +114,7 @@ function warnIfStale() {
     console.warn(
       `WARNING: QMD index may be stale — newest .md is ${diffMin}min newer than the index.`
     );
-    console.warn(`Run: node scripts/qmd-index.js --changed\n`);
+    console.warn(`Run: node .opencode/scripts/qmd-index.js --changed\n`);
   }
 }
 

@@ -7,7 +7,7 @@
  * Does NOT modify context.md — that file is a committed template.
  *
  * Usage:
- *   node scripts/env-context.js
+ *   node .opencode/scripts/env-context.js
  *
  * Exit 0 always.
  */
@@ -78,7 +78,7 @@ const content = [
   "",
   "# CLI Environment Snapshot",
   "",
-  `_Last probed: ${today} via \`node scripts/env-context.js\`_`,
+  `_Last probed: ${today} via \`node .opencode/scripts/env-context.js\`_`,
   "",
   "| Tool | Installed | Version | Path |",
   "|------|-----------|---------|------|",

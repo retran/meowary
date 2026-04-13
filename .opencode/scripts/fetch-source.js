@@ -6,14 +6,14 @@
  * Strips navigation, sidebars, ads, and other non-content HTML heuristically.
  *
  * Usage:
- *   node scripts/fetch-source.js <url>
+ *   node .opencode/scripts/fetch-source.js <url>
  *
  * Exit 0 always.
  */
 
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  console.error("Usage: node scripts/fetch-source.js <url>");
+  console.error("Usage: node .opencode/scripts/fetch-source.js <url>");
   process.exit(0);
 }
 

@@ -7,7 +7,7 @@
  * 2. Missing back-links (A links to B in Related section, but B doesn't link back to A)
  *
  * Usage:
- *   node scripts/health-links.js [--scope resources|journal|all]
+ *   node .opencode/scripts/health-links.js [--scope resources|journal|all]
  *
  * Scope defaults to "resources".
  *

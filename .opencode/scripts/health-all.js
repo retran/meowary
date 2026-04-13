@@ -6,7 +6,7 @@
  * with issue counts per check type.
  *
  * Usage:
- *   node scripts/health-all.js
+ *   node .opencode/scripts/health-all.js
  *
  * Exit 0 always.
  */

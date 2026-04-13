@@ -6,17 +6,17 @@
  * resources skill).
  *
  * Usage:
- *   node scripts/run-operation.js <op-type> <target> <details>
+ *   node .opencode/scripts/run-operation.js <op-type> <target> <details>
  *
  * Op types: delete, merge, split, create, reclassify, actualize
  *
  * Examples:
- *   node scripts/run-operation.js delete  "resources/maia/stale.md" "Stub, no content"
- *   node scripts/run-operation.js merge   "resources/eng/a.md ← resources/eng/b.md" "Same concept"
- *   node scripts/run-operation.js split   "resources/eng/big.md → resources/eng/new1.md + resources/eng/new2.md" "Two concepts"
- *   node scripts/run-operation.js create  "resources/tools/new-tool.md" "Concept X; mentioned in a, b"
- *   node scripts/run-operation.js reclassify "resources/eng/wrong.md → resources/platform/right.md" "Platform concept"
- *   node scripts/run-operation.js actualize "resources/maia/copilot.md" "Enrich with latest facts"
+ *   node .opencode/scripts/run-operation.js delete  "resources/maia/stale.md" "Stub, no content"
+ *   node .opencode/scripts/run-operation.js merge   "resources/eng/a.md ← resources/eng/b.md" "Same concept"
+ *   node .opencode/scripts/run-operation.js split   "resources/eng/big.md → resources/eng/new1.md + resources/eng/new2.md" "Two concepts"
+ *   node .opencode/scripts/run-operation.js create  "resources/tools/new-tool.md" "Concept X; mentioned in a, b"
+ *   node .opencode/scripts/run-operation.js reclassify "resources/eng/wrong.md → resources/platform/right.md" "Platform concept"
+ *   node .opencode/scripts/run-operation.js actualize "resources/maia/copilot.md" "Enrich with latest facts"
  *
  * Exit 0 always.
  */
@@ -87,7 +87,7 @@ Reason: ${details}
 
 Follow the Workflow D Delete procedure exactly:
 1. Read the article to confirm deletion.
-2. Run \`node scripts/find-backlinks.js ${target}\` to find all inbound links.
+2. Run \`node .opencode/scripts/find-backlinks.js ${target}\` to find all inbound links.
 3. Remove or redirect every inbound link.
 4. Delete the file.
 5. Commit: \`Resources: delete ${target} — ${details}\``,
@@ -104,7 +104,7 @@ absorbs content from the absorbed one.
 
 Follow the Workflow D Merge procedure exactly — all mandatory steps. Do not just
     concatenate. Restructure sections to flow naturally. Run
-    \`node scripts/find-backlinks.js <absorbed-article>\` to find ALL inbound links
+    \`node .opencode/scripts/find-backlinks.js <absorbed-article>\` to find ALL inbound links
     and redirect them to the survivor.`,
 
   split: `${COMMON_PREAMBLE}
@@ -119,7 +119,7 @@ separate articles.
 
 Follow the Workflow D Split procedure exactly — all mandatory steps. Each new
     article must be real content, not a stub. Add bidirectional cross-references.
-    Run \`node scripts/find-backlinks.js <source>\` to find links referencing
+    Run \`node .opencode/scripts/find-backlinks.js <source>\` to find links referencing
     the extracted content and update them as appropriate.`,
 
   create: `${COMMON_PREAMBLE}
@@ -133,7 +133,7 @@ Follow the Workflow D Create procedure exactly — all mandatory steps. Search
     Confluence, Jira, codebase, and existing resource articles for facts about
     this concept. Write a real article with Overview and substantive sections.
     No stubs. Add bidirectional cross-references. After creation, run
-    \`node scripts/health-orphans.js\` to verify the new article has inbound links.`,
+    \`node .opencode/scripts/health-orphans.js\` to verify the new article has inbound links.`,
 
   reclassify: `${COMMON_PREAMBLE}
 
@@ -145,7 +145,7 @@ Rationale: ${details}
 The format is: \`old-path → new-path\`.
 
 Follow the Workflow D Reclassify procedure exactly — all mandatory steps. Run
-    \`node scripts/find-backlinks.js <old-path>\` to find ALL inbound links
+    \`node .opencode/scripts/find-backlinks.js <old-path>\` to find ALL inbound links
     to the old path and update them to the new path.`,
 
   actualize: `${COMMON_PREAMBLE}

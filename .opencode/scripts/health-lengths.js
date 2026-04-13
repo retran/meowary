@@ -6,7 +6,7 @@
  * Report articles over the threshold with their line count.
  *
  * Usage:
- *   node scripts/health-lengths.js [--lines N]
+ *   node .opencode/scripts/health-lengths.js [--lines N]
  *   Default: 80 lines
  *
  * Output format:

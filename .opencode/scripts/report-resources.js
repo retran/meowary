@@ -6,7 +6,7 @@
  *   path, line count, tag count, actualized date, inbound link count, outbound link count
  *
  * Usage:
- *   node scripts/report-resources.js [--sort actualized|lines|inlinks]
+ *   node .opencode/scripts/report-resources.js [--sort actualized|lines|inlinks]
  *   Default sort: actualized (oldest first)
  *
  * Exit 0 always.

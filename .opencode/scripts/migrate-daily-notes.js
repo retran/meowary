@@ -28,8 +28,8 @@
  *     ### Day Summary
  *
  * Usage:
- *   node scripts/migrate-daily-notes.js          # dry-run (default)
- *   node scripts/migrate-daily-notes.js --write  # apply changes in place
+ *   node .opencode/scripts/migrate-daily-notes.js          # dry-run (default)
+ *   node .opencode/scripts/migrate-daily-notes.js --write  # apply changes in place
  *
  * Behavior:
  *   - Dry-run by default — prints what would change without writing.

@@ -9,8 +9,8 @@
  *         run-operation.js.
  *
  * Usage:
- *   node scripts/plan-resources.js                   # review entire resources
- *   node scripts/plan-resources.js --subfolder maia  # scope to one subfolder
+ *   node .opencode/scripts/plan-resources.js                   # review entire resources
+ *   node .opencode/scripts/plan-resources.js --subfolder maia  # scope to one subfolder
  *
  * The plan must be reviewed before running run-operation.js.
  *
@@ -221,7 +221,7 @@ if (existsSync(PLAN_FILE)) {
   console.log();
   console.log(`Plan generated: ${PLAN_FILE}`);
   console.log(
-    "Review the plan, then run operations with: node scripts/run-operation.js <op-type> <target> <details>"
+    "Review the plan, then run operations with: node .opencode/scripts/run-operation.js <op-type> <target> <details>"
   );
 } else {
   console.log();

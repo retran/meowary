@@ -6,7 +6,7 @@
  * Report articles older than the threshold with age in days.
  *
  * Usage:
- *   node scripts/health-stale.js [--days N]
+ *   node .opencode/scripts/health-stale.js [--days N]
  *   Default: 90 days
  *
  * Output format:

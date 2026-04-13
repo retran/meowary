@@ -14,7 +14,7 @@
  *   3. Updates the `synced` date in confluence-sync.json to today.
  *
  * Usage:
- *   node scripts/confluence-ingest.js [--all] [pageId ...]
+ *   node .opencode/scripts/confluence-ingest.js [--all] [pageId ...]
  *
  *   --all         Process all stale entries (default if no pageIds given)
  *   pageId ...    Process only the listed page IDs

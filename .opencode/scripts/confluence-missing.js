@@ -9,7 +9,7 @@
  * To add a page: edit confluence-sync.json and add an entry with synced: null.
  *
  * Usage:
- *   node scripts/confluence-missing.js [SPACE1 SPACE2 ...]
+ *   node .opencode/scripts/confluence-missing.js [SPACE1 SPACE2 ...]
  *   Default spaces: set CONFLUENCE_SPACES in .env (space-separated list)
  *
  * Exit 0 always.

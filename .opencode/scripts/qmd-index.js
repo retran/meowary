@@ -5,11 +5,11 @@
  * Update the qmd semantic search index.
  *
  * Usage:
- *   node scripts/qmd-index.js              # incremental: re-index changed files,
+ *   node .opencode/scripts/qmd-index.js              # incremental: re-index changed files,
  *                                          #   embed new chunks only
- *   node scripts/qmd-index.js --changed    # git-aware: exit early if no indexed
+ *   node .opencode/scripts/qmd-index.js --changed    # git-aware: exit early if no indexed
  *                                          #   .md files changed; otherwise update
- *   node scripts/qmd-index.js --full       # force re-embed all chunks
+ *   node .opencode/scripts/qmd-index.js --full       # force re-embed all chunks
  *
  * `qmd update` is incremental by design — it hashes file content and skips
  * unchanged documents. `qmd embed` only processes chunks not yet embedded.

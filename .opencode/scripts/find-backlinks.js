@@ -5,7 +5,7 @@
  * Find all .md files in the repo that link to a given file.
  *
  * Usage:
- *   node scripts/find-backlinks.js <file>
+ *   node .opencode/scripts/find-backlinks.js <file>
  *
  * Output: one absolute file path per line for each file that links to <file>.
  *
@@ -25,7 +25,7 @@ const REPO_ROOT = resolve(fileURLToPath(import.meta.url), "../../..");
 
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  console.error("Usage: node scripts/find-backlinks.js <file>");
+  console.error("Usage: node .opencode/scripts/find-backlinks.js <file>");
   process.exit(0);
 }
 
