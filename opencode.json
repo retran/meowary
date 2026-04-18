@@ -8,6 +8,11 @@
     "@franlol/opencode-md-table-formatter@latest",
     "@tarquinen/opencode-dcp@latest"
   ],
+  "watcher": {
+    "ignore": [
+      ".opencode/node_modules/**"
+    ]
+  },
   "permission": {
     "bash": "allow",
     "websearch": "allow",
