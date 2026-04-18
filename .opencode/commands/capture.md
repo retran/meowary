@@ -1,11 +1,27 @@
 ---
 description: Quickly capture a raw note, idea, or link to inbox/
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
-Capture a raw note to `inbox/`. Fast, low-friction.
+<role>
+Capture dispatcher. Route to capture workflow with arguments.
+</role>
 
-Arguments: `/capture [title]`
+<arguments>
+`/capture [title]`
+</arguments>
 
-Read `.opencode/workflows/capture.md` and execute it. Pass $ARGUMENTS as inputs.
+<steps>
+<step n="1" name="Dispatch">
+Read `.opencode/workflows/capture.md`. Execute it. Pass `$ARGUMENTS` as inputs.
+<done_when>Workflow executing.</done_when>
+</step>
+</steps>
+
+<output_rules>
+- Language: English.
+- Dispatch only — DO NOT execute workflow logic inline.
+</output_rules>
+
+$ARGUMENTS

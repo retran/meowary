@@ -2,10 +2,16 @@
 name: scm/gitlab
 description: GitLab-specific commands — MR lifecycle (create, review, merge), CI pipeline monitoring, and issue management via glab CLI. Load alongside scm/SKILL.md when working in a GitLab repository.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Merge Requests
+<role>GitLab CLI operator — MRs, pipelines CI, issues via `glab`.</role>
 
+<summary>
+> Authoritative reference for GitLab MR, pipeline CI, and issue commands via `glab`. Load alongside `scm/SKILL.md` in any GitLab repository.
+</summary>
+
+<merge_requests>
 ### Create an MR
 
 ```bash
@@ -17,7 +23,7 @@ glab mr create --draft         # Open as draft (WIP)
 
 ### MR Description Template
 
-When using `--fill`, review the auto-generated body and ensure it includes:
+When using `--fill`, REVIEW auto-generated body and ensure includes:
 
 ```markdown
 ## Summary
@@ -30,7 +36,7 @@ When using `--fill`, review the auto-generated body and ensure it includes:
 <!-- How this was tested: manual steps, automated tests, CI checks -->
 ```
 
-Correct MR title if `--fill` doesn't match the required format:
+Correct MR title if `--fill` doesn't match required format:
 ```bash
 glab mr update <id> --title "[PROJ-42] add short description"
 ```
@@ -67,12 +73,10 @@ glab mr reopen 123
 
 ### Fix review comments
 
-Use `/do resolve` for a structured workflow to address unresolved MR discussion threads.
+USE `/do resolve` for structured workflow to address unresolved MR discussion threads.
+</merge_requests>
 
----
-
-## CI / Pipelines
-
+<ci_pipelines>
 ### Monitor pipelines
 
 ```bash
@@ -95,12 +99,10 @@ glab ci run              # Trigger a new pipeline
 glab ci artifact <ref> <job>  # Download job artifacts
 ```
 
-`glab ci trace` streams logs in real time — use this to monitor long-running jobs without waiting for completion.
+`glab ci trace` streams logs in real time — USE to monitor long-running jobs without waiting.
+</ci_pipelines>
 
----
-
-## Issues
-
+<issues>
 ```bash
 glab issue create --title "Bug: ..." --label bug
 glab issue list                    # Open issues
@@ -112,11 +114,9 @@ glab issue close 42
 glab issue reopen 42
 glab issue note 42 --message "Comment"
 ```
+</issues>
 
----
-
-## Common Workflows
-
+<common_workflows>
 ### Standard MR lifecycle
 
 ```bash
@@ -138,16 +138,14 @@ glab mr view 123           # Summary, status, CI
 glab mr diff 123           # Full diff
 wt switch mr:123           # Check out the branch locally (see worktrunk skill)
 ```
+</common_workflows>
 
----
-
-## Troubleshooting
-
+<troubleshooting>
 ### Authentication
 
 ```bash
 glab auth status         # Check current auth
-# glab auth login — interactive, run manually, not in agent
+# glab auth login — interactive, run manually, NOT in agent
 ```
 
 ### Common errors
@@ -156,28 +154,30 @@ glab auth status         # Check current auth
 |-------|-------|-----|
 | `could not find remote` | Branch not pushed or remote mismatch | `git push -u origin HEAD` first |
 | `404 Project Not Found` | Wrong project context or insufficient permissions | `glab repo view` to verify project |
-| `draft: true` blocking merge | MR is still in draft | `glab mr update <id> --draft=false` |
+| `draft: true` blocking merge | MR still in draft | `glab mr update <id> --draft=false` |
 | `pipeline failed` | CI check failed | `glab ci trace` to see logs |
 | `cannot merge: conflicts` | Branch has merge conflicts | Rebase locally, force-push, then retry |
 
 ### Pipeline debugging
 
 1. `glab ci status` — identify which pipeline and stage failed
-2. `glab ci trace <job-name>` — stream the failing job's logs
-3. Look for the first error, not the last — cascading failures obscure the root cause
-4. If the job is flaky, `glab ci retry <job-id>` to re-run just that job
+2. `glab ci trace <job-name>` — stream failing job's logs
+3. LOOK for FIRST error, not last — cascading failures obscure root cause
+4. If job is flaky, `glab ci retry <job-id>` to re-run just that job
+</troubleshooting>
 
----
-
-## Rules
-
+<rules>
 All rules from parent `scm/SKILL.md` apply. Additionally:
+- PREFER `--fill-commit-body` to pre-populate MR title/body from commits.
+- `glab` requires authentication. RUN `glab auth status` to verify.
+</rules>
 
-- Prefer `--fill-commit-body` to pre-populate MR title and body from commit messages.
-- `glab` requires authentication. Run `glab auth status` to verify.
-
-## Editor Checklist (run silently before every output)
-
+<self_review>
 - [ ] `glab auth status` verified before operations?
 - [ ] `--fill-commit-body` used to pre-populate from commits?
 - [ ] Labels and reviewers set appropriately?
+</self_review>
+
+<output_rules>
+Output language: English. Bash commands, CLI flags, URLs remain literal.
+</output_rules>

@@ -1,190 +1,176 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
 # Resource-Discover
 
-> Knowledge gap discovery workflow. Scans the journal, project notes, and codebase for concepts, entities, and topics that appear repeatedly but have no resource article. Produces a prioritized list of missing nodes and optionally seeds stub articles for the highest-priority gaps. Forward-looking complement to `resource-plan` (which reviews existing articles) and `resource-enrich` (which deepens individual articles). Invoke when you want to see what the knowledge graph doesn't know it's missing.
+<summary>
+> Knowledge gap discovery. Scans journal, projects, codebase for recurring concepts/entities with no resource article. Produces prioritized list and optionally seeds stub articles. Forward-looking complement to `resource-plan` (existing articles) and `resource-enrich` (deepens articles).
+</summary>
 
-## Role
+<role>
+Proactive knowledge graph scout. Scans what's been written to find recurring concepts deserving articles. NEVER enriches stubs (that's `resource-enrich`). Confirms stub creation before writing.
+</role>
 
-Acts as a proactive knowledge graph scout. Scans what has been written — not what is already captured — to find recurring concepts that deserve dedicated articles. Does not enrich stubs here; that is `resource-enrich`'s job. Confirms stub creation with the user before writing any files.
+<inputs>
+| Input | Source | Required |
+|-------|--------|----------|
+| Date range | User / last discover date | Yes |
+| `journal/daily/`, `journal/weekly/` | Repo | Yes |
+| `projects/` | Repo | Optional |
+| `codebases/<name>.md` | If active codebase | Optional |
+| `meta/resources-log.md` | `meta/` | For last-run date |
+</inputs>
 
-## Inputs
+<tiers>Not applicable. Fixed-procedure workflow — all steps mandatory.</tiers>
 
-| Input                                  | Source                                | Required          |
-| -------------------------------------- | ------------------------------------- | ----------------- |
-| Date range                             | User declaration / last discover date | Required          |
-| `journal/daily/` and `journal/weekly/` | Repo                                  | Required          |
-| `projects/`                            | Repo                                  | Optional          |
-| `codebases/<name>.md`                  | Loaded if codebase active             | Optional          |
-| `meta/resources-log.md`                     | `meta/`                               | For last-run date |
+<steps>
 
-## Complexity Tiers
+<step n="0" name="Load context">
+1. READ today's daily note for matching tasks.
+2. CHECK `meta/resources-log.md` for last `r-discover` entry.
 
-Not applicable. Fixed-procedure workflow — all steps are mandatory.
+<done_when>Daily note checked; last discover date noted.</done_when>
+</step>
 
-## Steps
+<step n="0.5" name="Clarify">
+ASK:
+1. Time range? (default: since last run, or last 30 days first time)
+2. Specific topic areas/subfolders to focus?
+3. Create stubs for high-priority gaps, or report only?
 
-### Step 0 — Load context
+DEFAULT if no preferences stated.
 
-1. Read today's daily note — find any tasks matching this workflow.
-2. Check `meta/resources-log.md` for the last `r-discover` entry — note the date range to scan.
+<done_when>Date range, focus, stub-creation preference confirmed.</done_when>
+</step>
 
-Done when: daily note checked; last discover date noted.
+<step n="1" name="Extract from journal">
+1. SCAN `journal/daily/` in target range.
+2. SCAN `journal/weekly/` same range.
+3. EXTRACT recurring proper nouns, technical terms, team/tool/project/process names.
+4. FLAG entities ≥ 3 mentions as high-priority (heuristic; promote significant low-frequency by judgment).
+5. QMD-query extracted terms to check existing articles.
 
-### Step 0.5 — Clarify
+<subagent_trigger>Date range > 14 days OR journal > ~200 files: spawn `explore` for Steps 1–3. Pass: scan range, paths (`journal/daily/`, `journal/weekly/`, `projects/*/notes/`, `projects/*/dev-log.md`, optionally `codebases/<name>.md`), `resources/` for cross-reference. Returns: candidate names, mention counts, source files+lines, article-exists flag. Inline if range ≤ 14 days or journal ≤ ~200 files.</subagent_trigger>
 
-Ask the user:
+<done_when>Recurring entities extracted; confirmed against `resources/`.</done_when>
+</step>
 
-1. What time range to scan? (default: since last discover run, or last 30 days — 30 days is the default window before the first ever run; afterward the last-run date takes over)
-2. Any specific topic areas or subfolders to focus on?
-3. Should stub articles be created for high-priority gaps, or produce a report only?
+<step n="2" name="Extract from project notes">
+1. SCAN `projects/*/notes/`, `dev-log.md`, `plans/`, `design/`.
+2. EXTRACT recurring entities not in `resources/`.
+3. FLAG entities in ≥ 2 project artifacts (breadth signal).
 
-If no preferences stated, proceed with defaults.
+<done_when>Project candidates extracted.</done_when>
+</step>
 
-Done when: date range, focus areas, and stub-creation preference confirmed.
+<step n="3" name="Extract from codebase" condition="Active codebase">
+1. SCAN `codebases/<name>.md` for components, services, patterns.
+2. CROSS-REFERENCE against `resources/` — named components without articles are candidates.
 
-### Step 1 — Extract entity candidates from journal
+<done_when>Codebase candidates extracted or skipped.</done_when>
+</step>
 
-1. Scan `journal/daily/` entries in the target date range.
-2. Scan `journal/weekly/` for the same range.
-3. Extract recurring proper nouns, technical terms, team names, tool names, project names, process names.
-4. Flag entities appearing 3+ times as high-priority candidates. (3+ mentions is the high-priority threshold — a heuristic. Some concepts appear once but are clearly important; use judgment to promote high-significance low-frequency items.)
-5. Use QMD query on the extracted terms to check if articles already exist.
+<step n="4" name="Validate">
+1. For top-priority: QMD + web search to confirm concept is real and distinct.
+2. REMOVE near-duplicates before listing.
 
-**Sub-agent trigger:** When date range > 14 days OR journal > ~200 files, spawn the `explore` agent for Steps 1–3. Pass: scan date range, paths to scan (`journal/daily/`, `journal/weekly/`, `projects/*/notes/`, `projects/*/dev-log.md`, and optionally `codebases/<name>.md`), and the existing `resources/` directory for cross-reference. The agent returns: candidate entity names, mention counts, source files with line references, and whether a `resources/` article already exists. Run inline when date range ≤ 14 days or journal ≤ ~200 files.
+<done_when>Top-priority validated; near-duplicates removed.</done_when>
+</step>
 
-Done when: recurring entities extracted; confirmed against existing `resources/`.
-
-### Step 2 — Extract candidates from project notes
-
-1. Scan `projects/*/notes/`, `projects/*/dev-log.md`, `projects/*/plans/`, `projects/*/design/`.
-2. Extract recurring entities and concepts not yet in `resources/`.
-3. Flag entities appearing in 2+ project artifacts as candidates. (2+ project artifacts as a threshold because a concept appearing in multiple project contexts has breadth beyond a single initiative.)
-
-Done when: project entity candidates extracted.
-
-### Step 3 — Extract candidates from codebase (if active)
-
-1. Scan `codebases/<name>.md` for component names, service names, architectural patterns.
-2. Cross-reference against `resources/` — any named component without a resource article is a candidate.
-
-Skip if no active codebase.
-
-Done when: codebase candidates extracted (or skipped).
-
-### Step 4 — Proactive web/source validation
-
-1. For top-priority candidates, run a quick QMD + web search to confirm the concept is real and distinct.
-2. Remove near-duplicates (e.g., two names for the same thing) before listing.
-
-Done when: top-priority candidates validated; near-duplicates removed.
-
-### Step 5 — Produce gap report
-
-Write `projects/<name>/notes/discover-<date>.md` (or output inline if no active project):
+<step n="5" name="Produce gap report">
+WRITE `projects/<name>/notes/discover-<date>.md` (or inline if no project):
 
 ```markdown
 # Knowledge Gap Report — <date>
 
 ## High Priority (3+ mentions, no article)
-
-| Concept   | Mentions | Example context      |
-| --------- | -------- | -------------------- |
-| <concept> | <count>  | <file:line or quote> |
+| Concept | Mentions | Example context |
 
 ## Medium Priority (2 mentions, no article)
-
 | Concept | Mentions | Example context |
-| ------- | -------- | --------------- |
 
 ## Low Priority (1 mention, worth noting)
-
 | Concept | Mentions | Example context |
-| ------- | -------- | --------------- |
 
 ## Already exists (confirmed)
-
 - <concept> → resources/<path>
 
-## Duplicates found (same concept, two names)
-
+## Duplicates found
 - <name A> / <name B> → suggest merge or alias
 ```
 
-Done when: gap report written.
+<done_when>Gap report written.</done_when>
+</step>
 
-### Step 6 — Create stubs (if user requested)
+<step n="6" name="Create stubs" condition="User requested" gate="SOFT-GATE">
+**SOFT-GATE:** Confirm stub creation list with user before writing.
 
-**SOFT-GATE (all tiers):** Confirm stub creation list with the user before writing any files.
+1. For each confirmed high-priority: CREATE minimal stub in `resources/<subfolder>/` using `.opencode/skills/resources/resources-template.md`.
+2. Stub: complete front matter + one-sentence summary + empty `## Related`.
+3. DO NOT enrich here — that's `resource-enrich`.
 
-1. For each high-priority candidate confirmed by the user: create a minimal stub article in the appropriate `resources/` subfolder using `.opencode/skills/resources/resources-template.md` as the base.
-2. Stub content: complete front matter + one-sentence summary + empty `## Related` section.
-3. Do not enrich stubs here — enrichment is `resource-enrich`'s job.
+<done_when>Stubs created or skipped.</done_when>
+</step>
 
-Skip if user requested report only.
+<step n="7" name="Close" gate="END-GATE">
+1. STAGE: gap report, new stubs, `meta/tags.md`.
+2. COMMIT: `Discover knowledge gaps: N candidates, M stubs created`
+3. APPEND to `meta/resources-log.md`: `- **YYYY-MM-DD:** r-discover | N candidates, M stubs`
+4. APPEND work log to `## Day` of today's daily note.
+5. MARK matching tasks done.
 
-Done when: stubs created for all confirmed high-priority candidates (or skipped).
+<self_review>
+- [ ] All `Done when` met
+- [ ] Findings documented
+- [ ] Stubs created for gaps
+- [ ] Cross-references added
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-### Step 7 — Close
+<done_when>Committed; log appended; daily note updated.</done_when>
+</step>
 
-1. Stage: gap report, any new stub articles, `meta/tags.md`.
-2. Commit: `Discover knowledge gaps: N candidates, M stubs created`
-3. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** r-discover | N candidates, M stubs`
-4. Append work log entry to `## Day` zone of today's daily note.
-5. Mark any matching task items as done.
+</steps>
 
-**Self-review checklist:**
+<outputs>
+| Output | Location | Format |
+|--------|----------|--------|
+| Gap report | `projects/<name>/notes/discover-<date>.md` | Markdown |
+| Stubs | `resources/<subfolder>/<slug>.md` | Markdown |
+| Log entry | `meta/resources-log.md` | Append |
+| Work log | `journal/daily/<date>.md` Day zone | Append |
+| Commit | Git | Commit |
+</outputs>
 
-- [ ] All `Done when` criteria met for every step
-- [ ] Discovery findings documented
-- [ ] Stub articles created for identified gaps
-- [ ] Cross-references added to related articles
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+<error_handling>
+- **No prior discover entry:** Default last 30 days; note in report header.
+- **No active project:** Inline gap report; commit stubs if created.
+- **Near-duplicates found:** Surface in "Duplicates found" section. NEVER stub near-duplicates — suggest `resource-ops merge`.
+- **User wants stub for existing concept:** Surface existing article; ask if updating instead.
+</error_handling>
 
-Done when: committed; log entry appended; daily note updated.
+<contracts>
+1. Read-only scan during Steps 1–4. No edits.
+2. Stub creation in Step 6 requires explicit confirmation.
+3. Stubs intentionally thin — front matter + summary + empty `## Related`.
+4. NEVER enrich inline. Queue for `resource-enrich`.
+</contracts>
 
-**END-GATE:** Present final deliverables to the user.
+<subagents>
+| Step | Agent | Type | Parallel? | Trigger | Output |
+|------|-------|------|-----------|---------|--------|
+| 1–3 Extract entities | `explore` | built-in | No | Range > 14 days OR journal > ~200 files | Candidates with mention counts, contexts per source |
+</subagents>
 
-## Outputs
+<next_steps>
+| Condition | Suggested next workflow |
+|-----------|------------------------|
+| High-priority stubs created | `resource-enrich` per stub |
+| Structural issues | `resource-plan` |
+| Duplicate candidates | `resource-ops merge` |
+</next_steps>
 
-| Output                       | Location                                   | Format       |
-| ---------------------------- | ------------------------------------------ | ------------ |
-| Gap report                   | `projects/<name>/notes/discover-<date>.md` | Markdown     |
-| Stub articles (if requested) | `resources/<subfolder>/<slug>.md`          | Markdown     |
-| `meta/resources-log.md` entry     | `meta/`                                  | Append entry |
-| Daily note work log          | `journal/daily/<date>.md` Day zone         | Append entry |
-| Commit                       | Git history                                | Git commit   |
-
-## Error Handling
-
-- **`meta/resources-log.md` has no prior discover entry:** Default to last 30 days. Note this in the gap report header.
-- **No active project:** Write the gap report inline (in-session) rather than to a project path. Still commit stubs if created.
-- **Near-duplicate candidates found:** Surface them explicitly in the report's "Duplicates found" section. Do not create separate stubs for near-duplicates — suggest `resource-ops merge` instead.
-- **User confirms stub creation for a concept that already has an article:** Surface the existing article; ask whether to update it instead.
-
-## Contracts
-
-1. Read-only scan during Steps 1–4; no article edits.
-2. Stub creation in Step 6 is only performed after explicit user confirmation.
-3. Stubs from this workflow are intentionally thin — front matter + one-sentence summary + empty `## Related`. Enrichment is a separate step.
-4. Do not enrich stubs inline. Queue them for `resource-enrich`.
-
-## Sub-Agents
-
-| Step                                  | Agent     | Type     | Parallel?   | Trigger                                      | Output                                                                    |
-| ------------------------------------- | --------- | -------- | ----------- | -------------------------------------------- | ------------------------------------------------------------------------- |
-| Steps 1–3 — Extract entity candidates | `explore` | built-in | No — single | Date range > 14 days OR journal > ~200 files | Candidate entity list with mention counts and example contexts per source |
-
----
-
-*Suggested next steps (present, do not run):*
-
-| Condition                            | Suggested next workflow                          |
-| ------------------------------------ | ------------------------------------------------ |
-| High-priority stubs created          | `resource-enrich` on each stub                   |
-| Gap report reveals structural issues | `resource-plan` to generate full operation queue |
-| Duplicate candidates found           | `resource-ops merge`                             |
+<output_rules>Output language: English.</output_rules>

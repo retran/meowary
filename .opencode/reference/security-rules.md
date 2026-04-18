@@ -1,73 +1,76 @@
 ---
 type: reference
-updated: 2026-04-09
+updated: 2026-04-18
 tags: [security, gdpr]
 ---
 
+<role>Security and GDPR rules — non-negotiable across all workflow phases.</role>
+
+<summary>
+> These rules apply to all workflow phases when working with real systems, credentials, or production environments. They are non-negotiable.
+</summary>
+
 # Security Rules
 
-These rules apply to all workflow phases when working with real systems, credentials, or production environments. They are non-negotiable.
+<hard_rules>
+1. **NO production mutations without explicit approval.** NEVER write to, delete from, or modify a production system unless user explicitly says "yes, do it in production." DESCRIBE the change; let user execute or confirm.
 
-## Hard Rules
+2. **NO secrets in code.** NEVER write credentials, tokens, API keys, or passwords into source files, commit messages, or log statements — even temporarily. Secrets belong in `.env` files or a secrets manager.
 
-1. **No production mutations without explicit approval.** Never write to, delete from, or modify a production system unless the user explicitly says "yes, do it in production." Describe the change; let the user execute it or confirm.
+3. **NO secrets in shell commands.** DO NOT pass secrets as inline arguments (they appear in process lists and shell history). USE environment variables or input piping.
 
-2. **No secrets in code.** Never write credentials, tokens, API keys, or passwords into source files, commit messages, or log statements — even temporarily. Secrets belong in `.env` files or a secrets manager.
+4. **NO `sudo` for application code.** If something requires elevated privileges, FLAG for user — DO NOT silently add `sudo`. Privilege escalation MUST be deliberate.
 
-3. **No secrets in shell commands.** Do not pass secrets as inline arguments (they appear in process lists and shell history). Use environment variables or input piping instead.
+5. **NO force-push to `main` or `master`.** Hard stop. If user asks, WARN explicitly and ask for confirmation. PREFER revert commits over force-push.
 
-4. **No `sudo` for application code.** If something requires elevated privileges, flag it for the user — do not silently add `sudo`. Privilege escalation must be deliberate.
+6. **NO bypassing security controls.** DO NOT add `--no-verify`, disable linting, or skip pre-commit hooks without explicit approval.
 
-5. **No force-push to `main` or `master`.** This is a hard stop. If the user asks for it, warn them explicitly and ask for confirmation. Prefer revert commits over force-push.
+7. **VERIFY before destructive operations.** Before any `rm -rf`, `DROP TABLE`, `delete_*`, or bulk update — SHOW what will be affected and CONFIRM with user.
 
-6. **No bypassing security controls.** Do not add `--no-verify`, disable linting, or skip pre-commit hooks without explicit approval. These exist for a reason.
+8. **NO exfiltration patterns.** NEVER pipe file contents or env vars to external services, URLs, or clipboard commands. Data stays in working environment.
 
-7. **Verify before destructive operations.** Before any `rm -rf`, `DROP TABLE`, `delete_*`, or bulk update — show what will be affected and confirm with the user.
+9. **Credential files are read-only.** `.env`, `credentials.json`, similar are for reading config. NEVER overwrite without user instruction. NEVER log contents.
+</hard_rules>
 
-8. **No exfiltration patterns.** Never pipe file contents or env vars to external services, URLs, or clipboard commands. Data stays in the working environment.
+<aws_cloud>
+- Default posture is **read-only**. USE `--dry-run` or equivalent before any mutating operation.
+- ALWAYS confirm target account/region before running — wrong account = incident.
+- PREFER IAM roles over long-lived access keys. If keys needed, FROM environment — NEVER hardcode.
+- TAG resources with project name when creating.
+- Every cloud command that creates/modifies/deletes resources REQUIRES explicit user approval.
+</aws_cloud>
 
-9. **Credential files are read-only.** `.env`, `credentials.json`, and similar files are for reading config. Never overwrite them without user instruction. Never log their contents.
+<secrets_in_repo>
+All credentials in `.env` at repo root. File is gitignored. NEVER commit, log, or include values in any file.
 
-## When Working with AWS / Cloud
-
-- Default posture is **read-only**. Use `--dry-run` or equivalent before any mutating operation.
-- Always confirm the target account/region before running commands — wrong account = incident.
-- Prefer IAM roles over long-lived access keys. If keys are needed, they come from the environment — never hardcode.
-- Tag resources with the project name when creating them.
-- Every cloud command that creates, modifies, or deletes resources requires explicit user approval.
-
-## Secrets in This Repo
-
-All credentials are in `.env` at the repo root. This file is gitignored. Never commit it, log it, or include its values in any file.
-
-To read a value from `.env` in a shell command:
+To read value from `.env` in shell:
 ```bash
 source .env && echo "loaded"   # source first, then use $VAR_NAME
 ```
 
-Do not use `cat .env` to inspect it — pipe it to `grep` if you need a specific value:
+DO NOT use `cat .env` to inspect — pipe to `grep` for specific value:
 ```bash
 grep "^GITLAB_TOKEN" .env
 ```
+</secrets_in_repo>
 
-## Red Flags — Hard Stops
-
-If any of these appear in a request or command, **stop and verify with the user** before proceeding:
+<red_flags>
+If any appear in request or command, **STOP and verify with user** before proceeding:
 
 | Red flag | What to do |
 |----------|------------|
 | `DROP`, `TRUNCATE`, `DELETE FROM` without `WHERE` | Show affected rows estimate first |
-| `rm -rf /` or similar root deletion | Refuse unless path is clearly safe and scoped |
+| `rm -rf /` or similar root deletion | Refuse unless path clearly safe and scoped |
 | `git push --force` to `main`/`master` | Warn and require explicit re-confirmation |
-| Any command writing to a production URL | Confirm environment and intent |
-| Exporting env vars to a file that will be committed | Stop and flag |
-| Credentials appearing in a planned commit | Stop and strip before committing |
+| Any command writing to production URL | Confirm environment and intent |
+| Exporting env vars to file that will be committed | Stop and flag |
+| Credentials appearing in planned commit | Stop and strip before committing |
+</red_flags>
 
-## GDPR — Personal Data
+<gdpr>
+The journal may contain personal data through meeting notes, Confluence imports, Jira issues.
 
-The journal may contain personal data encountered through meeting notes, Confluence imports, and Jira issues.
-
-**What counts as PII in this context:**
+**What counts as PII:**
 - Email addresses, phone numbers, home addresses (PII on their own)
 - Personal health or financial information
 - Full names combined with any contact or identifying data above
@@ -75,29 +78,32 @@ The journal may contain personal data encountered through meeting notes, Conflue
 **What is allowed (professional context):**
 - First name + professional role (e.g., "Alex, Engineering Lead")
 - Decisions and professional judgments attributed to a person
-- Work-related contact info that is publicly available (e.g., work email already on a Confluence page)
+- Work-related contact info publicly available (e.g., work email already on Confluence page)
 
 **Rules:**
 
-1. **No PII commits.** Before committing any file that may contain personal contact data, verify it contains professional context only.
-2. **Resource articles: professional context only.** When writing about a person, include role, team, and professional decisions — not personal contact details.
-3. **Confirm before writing to Confluence or Jira.** If a planned write would include personal data beyond name + role, stop and confirm with the user.
-4. **Confluence/Jira ingestion: strip contact info.** When ingesting pages, remove personal contact information (email addresses, phone numbers) before writing to resource articles.
-5. **No personal data in commit messages.** Issue keys and brief descriptions only.
+1. **NO PII commits.** Before committing any file that may contain personal contact data, VERIFY professional context only.
+2. **Resource articles: professional context only.** When writing about a person, INCLUDE role, team, professional decisions — NOT personal contact details.
+3. **CONFIRM before writing to Confluence/Jira.** If planned write would include personal data beyond name + role, STOP and confirm.
+4. **Confluence/Jira ingestion: STRIP contact info.** When ingesting pages, REMOVE personal contact information (emails, phones) before writing to resource articles.
+5. **NO personal data in commit messages.** Issue keys and brief descriptions only.
+</gdpr>
 
-## Shell Security Notes
-
-Patterns that carry security risk in shell usage:
-
+<shell_security>
 **`echo "password" | sudo -S` — PROHIBITED**
 
-Passing passwords via echo exposes them in the process list and shell history. Never pipe a literal password through echo in any command. Use `sudo` with a proper authenticated session (run manually by the user), or configure passwordless sudo for specific commands via `/etc/sudoers`. If the user asks to use this pattern, flag the risk.
+Passing passwords via echo exposes them in process list and shell history. NEVER pipe literal password through echo. USE `sudo` with proper authenticated session (run manually by user), or configure passwordless sudo for specific commands via `/etc/sudoers`. If user asks to use this pattern, FLAG the risk.
 
 **`ssh -o StrictHostKeyChecking=no` — EXCEPTION, USE WITH CAUTION**
 
-This flag disables SSH host key verification, making connections vulnerable to MITM attacks. Only use it when all three conditions hold:
-- The host is known and trusted
-- The connection is within a controlled network or a CI/CD environment with ephemeral hosts
-- Manual host key verification is not possible in the execution environment
+This flag disables SSH host key verification, making connections vulnerable to MITM attacks. ONLY use when ALL three hold:
+- Host is known and trusted
+- Connection is within controlled network or CI/CD with ephemeral hosts
+- Manual host key verification is not possible in execution environment
 
-Never use `StrictHostKeyChecking=no` against unknown or untrusted hosts.
+NEVER use `StrictHostKeyChecking=no` against unknown or untrusted hosts.
+</shell_security>
+
+<output_rules>
+Output language: English. Bash commands, file paths, error patterns remain literal.
+</output_rules>

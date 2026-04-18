@@ -2,10 +2,16 @@
 name: scm/github
 description: GitHub-specific commands — PR lifecycle (create, review, merge), Actions CI status, issue management, and repo API via gh CLI. Load alongside scm/SKILL.md when working in a GitHub repository.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Pull Requests
+<role>GitHub CLI operator — PRs, Actions CI, issues, repo API via `gh`.</role>
 
+<summary>
+> Authoritative reference for GitHub PR, Actions CI, issue, and API commands via `gh`. Load alongside `scm/SKILL.md` in any GitHub repository.
+</summary>
+
+<pull_requests>
 ### Create a PR
 
 ```bash
@@ -16,11 +22,11 @@ gh pr create --draft             # Open as draft
 gh pr create --title "Title" --body "Description"
 ```
 
-`--fill` reads branch name and commit messages to populate title and body automatically. This is the preferred way to create PRs.
+`--fill` reads branch name and commit messages. PREFERRED way to create PRs.
 
 ### PR Description Template
 
-When using `--fill`, review the auto-generated body and ensure it includes:
+When using `--fill`, REVIEW auto-generated body and ensure includes:
 
 ```markdown
 ## Summary
@@ -33,7 +39,7 @@ When using `--fill`, review the auto-generated body and ensure it includes:
 <!-- How this was tested: manual steps, automated tests, CI checks -->
 ```
 
-For simple PRs, `--fill` output is often sufficient. For complex changes, edit to add the Summary/Changes/Test Plan structure.
+For simple PRs, `--fill` output often sufficient. For complex changes, EDIT to add Summary/Changes/Test Plan structure.
 
 ### View and list
 
@@ -71,12 +77,10 @@ gh pr reopen 123
 
 ### Fix review comments
 
-Use `/do resolve` for a structured workflow to address unresolved PR discussion threads.
+USE `/do resolve` for structured workflow to address unresolved PR discussion threads.
+</pull_requests>
 
----
-
-## CI / Actions
-
+<ci_actions>
 ### Monitor runs
 
 ```bash
@@ -100,11 +104,9 @@ gh workflow view build.yml        # View workflow details
 gh run download 12345             # Download all artifacts
 gh run download 12345 -n artifact-name
 ```
+</ci_actions>
 
----
-
-## Issues
-
+<issues>
 ```bash
 gh issue create --title "Bug: ..." --label bug
 gh issue list                     # Open issues
@@ -116,11 +118,9 @@ gh issue close 42
 gh issue reopen 42
 gh issue comment 42 --body "Comment"
 ```
+</issues>
 
----
-
-## Repository and API Operations
-
+<repository_api>
 ```bash
 gh repo list <username> --limit 10
 gh repo view owner/repo
@@ -138,16 +138,14 @@ gh api repos/owner/repo/issues/42/comments
 gh api --method POST repos/owner/repo/dispatches -f event_type=deploy
 ```
 
-Use `gh api` with `--jq` for filtering:
+USE `gh api` with `--jq` for filtering:
 ```bash
 gh api repos/owner/repo/pulls --jq '.[].title'
 gh api /user/repos --jq '.[] | {name, visibility}'
 ```
+</repository_api>
 
----
-
-## Common Workflows
-
+<common_workflows>
 ### Standard PR lifecycle
 
 ```bash
@@ -169,15 +167,13 @@ gh pr view 123                 # Summary, status, CI
 gh pr diff 123                 # Full diff
 gh pr checkout 123             # Check out the branch locally
 ```
+</common_workflows>
 
----
-
-## Troubleshooting
-
+<troubleshooting>
 ### Authentication
 
 ```bash
-gh auth status           # Check — run this first if commands fail
+gh auth status           # Check — RUN this FIRST if commands fail
 ```
 
 ### CI failure
@@ -187,18 +183,20 @@ gh run list --branch my-branch        # Find the run
 gh run view 12345 --log-failed        # View failed logs
 gh run rerun 12345 --failed           # Retry failed jobs
 ```
+</troubleshooting>
 
----
-
-## Rules
-
+<rules>
 All rules from parent `scm/SKILL.md` apply. Additionally:
+- PREFER `--fill` to pre-populate PR title/body from commits.
+- `gh` requires authentication. RUN `gh auth status` to verify.
+</rules>
 
-- Prefer `--fill` to pre-populate PR title and body from commit messages.
-- `gh` requires authentication. Run `gh auth status` to verify.
-
-## Editor Checklist (run silently before every output)
-
+<self_review>
 - [ ] `gh auth status` verified before operations?
 - [ ] `--fill` used to pre-populate from commits?
 - [ ] Labels and reviewers set appropriately?
+</self_review>
+
+<output_rules>
+Output language: English. Bash commands, CLI flags, URLs remain literal.
+</output_rules>

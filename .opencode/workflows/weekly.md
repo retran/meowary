@@ -1,241 +1,226 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
 # Weekly
 
-> Weekly heartbeat review in two modes: Monday planning (sets focus and goals) and Friday wrap-up (compiles accomplishments, carry-overs, and reflections). Also runs an end-of-week resources scan to crystallize durable knowledge. Triggered automatically from `/morning` on Mondays and `/evening` on Fridays, or invoked explicitly.
+<summary>
+> Weekly review in two modes. Monday planning: sets focus and goals. Friday wrap-up: compiles accomplishments, carry-overs, reflections, runs end-of-week resources scan. Triggered from `/morning` (Mon) or `/evening` (Fri), or invoked explicitly.
+</summary>
 
-## Role
+<role>
+Weekly strategist and knowledge crystallizer. Planning: seeds goals from carry-overs and sprint, confirms focus. Wrap-up: compiles outcomes, surfaces unmet goals, prompts reflection, enriches `resources/`.
+</role>
 
-Acts as the user's weekly strategist and knowledge crystallizer. In planning mode: seeds goals from carry-overs and sprint context, confirms focus with the user. In wrap-up mode: compiles outcomes, surfaces unmet goals, prompts reflection, and enriches `resources/` with durable facts from the week.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Weekly note template | `.opencode/skills/journal/weekly-template.md` | Required if creating |
-| Previous weekly note | `journal/weekly/<year>-W<prev-nn>.md` | Optional (planning mode) |
-| This week's daily notes | `journal/daily/<date>.md` (Mon–Fri) | Required (wrap-up mode) |
-| Project dev-logs | `projects/<name>/dev-log.md` | Required (wrap-up mode) |
-| Meeting notes | `journal/meetings/<date>-<slug>.md` | Optional (wrap-up mode) |
-| Waiting-for list | `journal/waiting-for.md` | Required (wrap-up mode) |
-| Active projects | `context/context.md § Active Projects` | Required |
-| Jira sprint items | Jira (read-only) | Optional |
+| Weekly template | `.opencode/skills/journal/weekly-template.md` | If creating |
+| Previous weekly | `journal/weekly/<year>-W<prev-nn>.md` | Optional (planning) |
+| This week's daily notes | `journal/daily/<date>.md` (Mon–Fri) | Yes (wrap-up) |
+| Project dev-logs | `projects/<name>/dev-log.md` | Yes (wrap-up) |
+| Meeting notes | `journal/meetings/<date>-<slug>.md` | Optional (wrap-up) |
+| Waiting-for | `journal/waiting-for.md` | Yes (wrap-up) |
+| Active projects | `context/context.md § Active Projects` | Yes |
+| Jira sprint | Jira (read-only) | Optional |
+</inputs>
 
-## Complexity Tiers
+<tiers>Not applicable. Fixed-procedure workflow.</tiers>
 
-Not applicable. Fixed-procedure workflow.
+<steps>
 
-## Steps — Monday Planning Mode
+<step n="0-mon" name="Monday: Load context" condition="Monday planning mode">
+1. CONFIRM mode: Monday planning.
+2. CHECK `journal/weekly/<year>-W<nn>.md` exists; if not, create from template.
+3. READ last week's note for Carry-Over items.
+4. READ `context/context.md` for active projects.
 
-### Step 0 — Load context
+<done_when>Weekly note exists; carry-overs loaded; projects known.</done_when>
+</step>
 
-1. Confirm mode: Monday planning.
-2. Check if `journal/weekly/<year>-W<nn>.md` already exists.
-   - If not: create from `.opencode/skills/journal/weekly-template.md`.
-3. Read last week's weekly note (`journal/weekly/<year>-W<prev-nn>.md`) for Carry-Over items.
-4. Read `context/context.md` for active projects list.
-
-Done when: weekly note created or confirmed to exist; previous carry-overs loaded; active projects known.
-
-### Step 0.5 — Clarify
-
-Ask at most two questions:
-
+<step n="0.5-mon" name="Monday: Clarify" condition="Monday planning mode">
+ASK at most two:
 1. "What is this week's focus theme?"
-2. If last week's Carry-Over is non-empty: "Are there any carry-over items that should NOT be this week's goals?"
+2. If carry-over non-empty: "Any carry-overs that should NOT be this week's goals?"
 
-Done when: focus theme confirmed; carry-over scope confirmed.
+<done_when>Focus theme + carry-over scope confirmed.</done_when>
+</step>
 
-### Step 1 — Seed Weekly Goals
+<step n="1-mon" name="Monday: Seed Weekly Goals" condition="Monday planning mode">
+1. START from last week's Carry-Over.
+2. QUERY Jira sprint items due this week (read-only).
+3. PRESENT proposed goals; confirm before writing.
 
-1. Start from last week's Carry-Over items.
-2. Query open Jira sprint items assigned to the user that are due this week (read-only).
-3. Present proposed goal list to the user. Confirm additions or removals before writing.
+<done_when>User-confirmed goal list.</done_when>
+</step>
 
-Done when: user-confirmed goal list ready.
+<step n="2-mon" name="Monday: Write Focus and Goals" condition="Monday planning mode">
+WRITE to `journal/weekly/<year>-W<nn>.md`:
+- `**Weekly Focus:**` — one sentence (from Step 0.5).
+- `**Weekly Goals:**` — checkboxes per confirmed goal.
+- `**Daily Notes:**` — link Monday; mark Tue–Fri `*(no note)*`.
+- LEAVE Accomplishments, Failures & Setbacks, Carry-Over, Notes & Reflections blank.
 
-### Step 2 — Write Weekly Focus and Goals
+<done_when>Focus, Goals, Monday link written.</done_when>
+</step>
 
-Write to `journal/weekly/<year>-W<nn>.md`:
+<step n="3-mon" name="Monday: Close" condition="Monday planning mode" gate="END-GATE">
+COMMIT: `Weekly plan: <YYYY-WNN>`.
 
-- `**Weekly Focus:**` — one sentence, the main theme (from Step 0.5).
-- `**Weekly Goals:**` — task checkboxes, one per confirmed goal.
-- `**Daily Notes:**` — link Monday (today); mark Tuesday–Friday as `*(no note)*`.
-- Leave Accomplishments, Failures & Setbacks, Carry-Over, and Notes & Reflections blank.
+<self_review>
+- [ ] All `Done when` met
+- [ ] Goals set and linked to projects
+- [ ] Prior week review actions noted
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-Done when: Focus, Goals, and Monday link written; remaining sections blank.
+<done_when>Committed.</done_when>
+</step>
 
-### Step 3 — Close
+<step n="0-fri" name="Friday: Load context" condition="Friday wrap-up mode">
+1. CONFIRM mode: Friday wrap-up.
+2. OPEN `journal/weekly/<year>-W<nn>.md` (must exist from Monday). If missing: create from template, note Monday skipped.
+3. READ all daily notes Mon–Fri.
+4. READ all dev-log entries from this week.
+5. READ all meeting notes from this week.
+6. OPEN `journal/waiting-for.md`.
 
-Commit: `Weekly plan: <YYYY-WNN>`.
+<done_when>Weekly note open; all sources loaded.</done_when>
+</step>
 
-**Self-review checklist:**
+<step n="0.5-fri" name="Friday: Clarify" condition="Friday wrap-up mode">
+ASK at most two:
+1. "Significant accomplishments not in daily notes?"
+2. "Items that should NOT carry to next week?"
 
-- [ ] All `Done when` criteria met for every step
-- [ ] Weekly goals set and linked to projects
-- [ ] Review actions from prior week documented
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+<done_when>User responded.</done_when>
+</step>
 
-Done when: committed.
+<step n="1-fri" name="Friday: Compile Accomplishments" condition="Friday wrap-up mode">
+1. GATHER from daily notes `## Evening > ### Completed`.
+2. GATHER from dev-log `**Summary:**` for completed phases.
+3. DEDUPE and condense — one line per item.
+4. WRITE `**Accomplishments:**`.
 
-**END-GATE:** Present final deliverables to the user.
+<done_when>Section written.</done_when>
+</step>
 
----
+<step n="2-fri" name="Friday: Failures and Setbacks" condition="Friday wrap-up mode">
+1. COMPARE Goals (Mon) vs Accomplishments.
+2. IDENTIFY unmet goals and incomplete tasks.
+3. WRITE `**Failures & Setbacks:**`.
 
-## Steps — Friday Wrap-Up Mode
+<done_when>Section written.</done_when>
+</step>
 
-### Step 0 — Load context
+<step n="3-fri" name="Friday: Carry-Over" condition="Friday wrap-up mode">
+1. LIST incomplete goals/tasks.
+2. PRESENT to user; confirm carry vs drop.
+3. WRITE confirmed `**Carry-Over:**`.
+4. MARK dropped items per journal skill.
 
-1. Confirm mode: Friday wrap-up.
-2. Open `journal/weekly/<year>-W<nn>.md` (must exist; was created on Monday).
-   - If missing: create from template with a note that Monday planning was skipped.
-3. Read all daily notes for this week: Monday through Friday.
-4. Read all `dev-log.md` entries from this week for each active project.
-5. Read all meeting notes from this week in `journal/meetings/`.
-6. Open `journal/waiting-for.md`.
+<done_when>Section written with confirmation.</done_when>
+</step>
 
-Done when: weekly note open; all week's daily notes and dev-logs loaded; meeting notes loaded.
+<step n="4-fri" name="Friday: Notes and Reflections" condition="Friday wrap-up mode">
+PROMPT: "What did this week prove? What would you do differently?"
 
-### Step 0.5 — Clarify
+WRITE `**Notes & Reflections:**` per journal skill. If user declines: write placeholder noting fill-needed.
 
-Ask at most two questions:
+<done_when>Section written.</done_when>
+</step>
 
-1. "Were there any significant accomplishments this week not captured in the daily notes?"
-2. "Any items from this week that should NOT carry over to next week?"
+<step n="5-fri" name="Friday: Waiting-For review" condition="Friday wrap-up mode">
+1. OPEN `journal/waiting-for.md`.
+2. FLAG items with follow-up date ≤ today.
+3. NOTE in Reflections or surface as MIT candidates next week.
 
-Done when: user has responded.
+<done_when>Overdue surfaced.</done_when>
+</step>
 
-### Step 1 — Compile Accomplishments
-
-1. Gather from all daily notes: `## Evening > ### Completed` sections.
-2. Gather from dev-log entries: `**Summary:**` fields for completed phases.
-3. Deduplicate and condense — one line per item.
-4. Write to `**Accomplishments:**` section of weekly note.
-
-Done when: Accomplishments section written.
-
-### Step 2 — Identify Failures and Setbacks
-
-1. Compare Weekly Goals (set Monday) against Accomplishments.
-2. Identify unmet goals and incomplete tasks.
-3. Write to `**Failures & Setbacks:**` section.
-
-Done when: Failures & Setbacks section written.
-
-### Step 3 — Compile Carry-Over
-
-1. List incomplete goals and tasks.
-2. Present to user: confirm what carries vs. drops.
-3. Write confirmed carry-overs to `**Carry-Over:**` section.
-4. Mark dropped items as dropped per the journal skill.
-
-Done when: Carry-Over section written with user confirmation.
-
-### Step 4 — Notes and Reflections
-
-Prompt: "What did this week prove? What would you do differently?"
-
-Write the user's response to `**Notes & Reflections:**` per the journal skill. If the user declines: write a placeholder and note it should be filled.
-
-Done when: Notes & Reflections written.
-
-### Step 5 — Waiting-For review
-
-1. Open `journal/waiting-for.md`.
-2. Flag items whose follow-up date is on or before today.
-3. Note flagged items in Notes & Reflections or surface as MIT candidates for next week's goals.
-
-Done when: overdue waiting items surfaced.
-
-### Step 6 — Resources scan (mandatory)
-
-Scan all daily notes and meeting notes from this week for durable facts not yet in `resources/`:
-
+<step n="6-fri" name="Friday: Resources scan" condition="Friday wrap-up mode" gate="HARD-GATE">
+Scan daily/meeting notes from this week for durable facts not in `resources/`:
 - Role changes, team updates, process decisions, architecture choices.
-- Patterns identified across multiple sessions.
+- Patterns across sessions.
 - Post-mortem findings from debug sessions.
 
 For each fact:
-- Check if a resource article exists.
-- If yes: enrich it.
-- If no: create a stub (YAML front matter + H1 + one sentence), or flag for `resource-enrich`.
+- Article exists → enrich.
+- No article → stub (front matter + H1 + 1 sentence) or flag for `resource-enrich`.
 
-Run `node .opencode/scripts/health-stale.js` to surface recently-referenced articles that are stale.
+RUN `node .opencode/scripts/health-stale.js` to surface stale referenced articles.
 
-Update QMD index if new articles were created: `node .opencode/scripts/qmd-index.js --changed`.
+UPDATE QMD index if new articles: `node .opencode/scripts/qmd-index.js --changed`.
 
-**Sub-agent trigger:** If > 2 active projects had activity this week, offload the scan to a `general` agent. Pass: all daily note paths for the week, all meeting note paths, all active project dev-log entry excerpts from this week, and `resources/` directory listing. The agent returns a structured list: durable facts found, resource article paths to update, and new stub candidates. Run inline (no sub-agent) for ≤ 2 active projects.
+<subagent_trigger>If > 2 active projects had activity this week: offload to `general` agent. Pass: all daily note paths, all meeting note paths, all dev-log excerpts from week, `resources/` directory listing. Returns structured list: durable facts, paths to update, stub candidates. Inline (no agent) for ≤ 2 projects.</subagent_trigger>
 
-Done when: durable facts routed or explicitly confirmed as none; stale articles surfaced; QMD index updated if needed.
+<done_when>Durable facts routed or confirmed none; stale surfaced; QMD updated if needed.</done_when>
+</step>
 
-### Step 7 — Close
+<step n="7-fri" name="Friday: Close" condition="Friday wrap-up mode" gate="END-GATE">
+1. MARK completed Weekly Goals `- [x]`.
+2. UPDATE `**Daily Notes:**` links — verify all 5 days linked or `*(no note)*`.
+3. COMMIT: `Weekly wrap-up: <YYYY-WNN>`.
 
-1. Mark completed Weekly Goals with `- [x]`.
-2. Update `**Daily Notes:**` links — verify all five days are linked or marked `*(no note)*`.
-3. Commit: `Weekly wrap-up: <YYYY-WNN>`.
+<self_review>
+- [ ] All `Done when` met
+- [ ] Accomplishments documented
+- [ ] Unfinished items carried or dropped
+- [ ] All sections complete
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-**Self-review checklist:**
+<done_when>Goals marked; links verified; committed.</done_when>
+</step>
 
-- [ ] All `Done when` criteria met for every step
-- [ ] Week accomplishments documented
-- [ ] Unfinished items carried forward or explicitly dropped
-- [ ] Weekly note complete with all sections
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+</steps>
 
-Done when: goals marked; daily note links verified; committed.
-
-**END-GATE:** Present final deliverables to the user.
-
----
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
-| Weekly note | `journal/weekly/<year>-W<nn>.md` | Created (planning) or completed (wrap-up) |
-| Resource article updates | `resources/` | Varies |
-| QMD index | `.opencode/index/` | Updated if resources changed |
-| Commit | Git history | `Weekly plan: <YYYY-WNN>` or `Weekly wrap-up: <YYYY-WNN>` |
+| Weekly note | `journal/weekly/<year>-W<nn>.md` | Created (plan) or completed (wrap) |
+| Resource updates | `resources/` | Varies |
+| QMD index | `.opencode/index/` | Updated if changed |
+| Commit | Git | `Weekly plan: <YYYY-WNN>` or `Weekly wrap-up: <YYYY-WNN>` |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **Weekly note missing on Friday:** Create from template, note Monday skipped, proceed.
+- **Daily notes missing for days:** Note gap; compile from dev-log only.
+- **Jira unavailable:** Skip Jira query in planning Step 1 silently.
+- **Resources scan sub-agent fails:** Run inline; note fallback.
+- **User skips Reflections:** Write placeholder; NEVER omit section.
+</error_handling>
 
-- **Weekly note missing on Friday:** Create from template with a note that Monday planning was skipped; proceed with wrap-up.
-- **Daily notes missing for one or more days:** Note the gap; compile from dev-log entries only for those days.
-- **Jira unavailable:** Skip the Jira query in planning Step 1 silently.
-- **Resources scan sub-agent fails:** Run inline instead; note the fallback.
-- **User skips Notes & Reflections:** Write a placeholder; do not omit the section entirely.
+<contracts>
+1. `/weekly` creates and fills weekly note. Daily notes are read-only input.
+2. Resources scan MANDATORY in wrap-up. "Nothing" valid; omitting not.
+3. Carry-Over confirmed by user before writing. NEVER carry silently.
+4. Read Jira only. NEVER create/update/transition.
+5. Commit formats: `Weekly plan: <YYYY-WNN>` | `Weekly wrap-up: <YYYY-WNN>`.
+6. Built incrementally: Goals Mon, outcomes Fri. NEVER complete mid-week.
+</contracts>
 
-## Contracts
-
-1. `/weekly` creates and fills the weekly note. Daily notes are read-only input.
-2. Resources scan is mandatory in wrap-up mode. "Nothing found" is a valid outcome; omitting the step is not.
-3. Carry-Over items must be confirmed by the user before writing. Never carry over silently.
-4. Read Jira only. Never create, update, or transition Jira items.
-5. Commit formats: `Weekly plan: <YYYY-WNN>` (planning) | `Weekly wrap-up: <YYYY-WNN>` (wrap-up).
-6. Weekly note is built incrementally: Goals on Monday, outcomes on Friday. Never complete it mid-week.
-
-## Sub-Agents
-
+<subagents>
 | Step | Agent | Type | Parallel? | Trigger | Output |
 |------|-------|------|-----------|---------|--------|
-| Step 6 (Wrap-Up) — Resources scan | `general` | built-in | No | > 2 active projects with dev-log entries this week | Structured list: durable facts found, resource article paths, new stub candidates |
+| Step 6-fri Resources scan | `general` | built-in | No | > 2 active projects with dev-log entries this week | Structured list: durable facts, article paths, stub candidates |
 
-`general` receives: all daily note paths for the week, all meeting note paths for the week, all active project dev-log entry excerpts from this week, and the `resources/` directory listing for cross-reference.
+`general` receives: all daily note paths for week, all meeting note paths, dev-log excerpts from week, `resources/` directory listing.
 
-Run inline (no sub-agent) when ≤ 2 active projects had activity this week.
+Inline (no agent) when ≤ 2 active projects had activity.
+</subagents>
 
----
-
-*Suggested next steps (present, do not run):*
-
+<next_steps>
 | Condition | Suggested next workflow |
 |-----------|------------------------|
-| Wrap-up: new resource stubs created | `resource-enrich` to flesh them out |
-| Wrap-up: patterns identified across sessions | `resource-enrich` or `resource-ops` (merge related articles) |
-| Planning: carry-over items are substantial | Review and re-scope with `plan replan` |
-| Planning: stalled project identified | `scout` to re-orient |
+| Wrap: new resource stubs | `resource-enrich` |
+| Wrap: patterns identified | `resource-enrich` or `resource-ops` (merge) |
+| Plan: substantial carry-over | Re-scope with `plan replan` |
+| Plan: stalled project | `scout` |
+</next_steps>
+
+<output_rules>Output language: English.</output_rules>

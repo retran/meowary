@@ -1,11 +1,27 @@
 ---
 description: Morning review, daily note creation, and day planning
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
-Run the morning routine.
+<role>
+Morning dispatcher. Route to morning workflow.
+</role>
 
-Arguments: `/morning`
+<arguments>
+`/morning`
+</arguments>
 
-Read `.opencode/workflows/morning.md` and execute it. Pass $ARGUMENTS as inputs.
+<steps>
+<step n="1" name="Dispatch">
+Read `.opencode/workflows/morning.md`. Execute it. Pass `$ARGUMENTS` as inputs.
+<done_when>Workflow executing.</done_when>
+</step>
+</steps>
+
+<output_rules>
+- Language: English.
+- Dispatch only — DO NOT execute workflow logic inline.
+</output_rules>
+
+$ARGUMENTS

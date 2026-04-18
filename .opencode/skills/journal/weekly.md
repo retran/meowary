@@ -2,24 +2,19 @@
 name: journal/weekly
 description: Weekly note format and philosophy — sections, Monday planning flow, Friday wrap-up, and carry-over migration. Load when creating a weekly note, running Monday planning, running Friday wrap-up, or updating any weekly note section.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Philosophy
+<role>Weekly note steward — one-level-up summary of intent, accomplishment, learning, carry-over.</role>
 
-The weekly note is a **summary, not a log**. Its purpose is a one-level-up view of the week: what was intended, what was accomplished, what was learned, and what carries forward. Details live in daily notes — weekly notes link to them but never repeat them.
+<summary>
+> Weekly = summary, not log. Details live in dailies; weeklies link but never repeat. Friday wrap-up surfaces patterns invisible at daily scale and makes lessons explicit before the weekend erases them.
+</summary>
 
-The **weekly rhythm** surfaces patterns that are invisible at the daily scale. A single bad day might be noise. A recurring pattern across four Fridays is a signal worth acting on.
+<file_format>
+Location: `journal/weekly/`, named `YYYY-WNN.md` (ISO week, zero-padded). One file per week.
 
-The **Friday wrap-up** is a deliberate reflection ritual, not a chore. The questions — *What did this week prove? What would you do differently?* — are designed to make the week's lessons explicit before the weekend erases them.
-
----
-
-## File Format
-
-Weekly notes live in `journal/weekly/`, named `YYYY-WNN.md` (ISO week, zero-padded). One file per week.
-
-### Front Matter
-
+Front matter:
 ```yaml
 ---
 type: weekly
@@ -31,27 +26,18 @@ tags: []
 ---
 ```
 
-- `type`: always `weekly`.
-- `week`: full ISO week identifier (e.g. `"2026-W09"`).
-- `date_start`: Monday's date.
-- `date_end`: Friday's date.
-- `updated`: today's date — update on every edit.
-
-### H1 and Navigation Bar
-
+H1 + nav:
 ```markdown
 # Week NN: YYYY-MM-DD -- YYYY-MM-DD
 
 [← prev-week](../weekly/YYYY-WNN.md) | [next-week →](../weekly/YYYY-WNN.md)
 ```
 
-Verify link targets exist before writing them. Omit if target does not exist.
+VERIFY targets; OMIT if missing.
+</file_format>
 
----
-
-## Sections (in order)
-
-**Daily Notes** — links to each day's note, Monday through Friday:
+<sections>
+**Daily Notes** — Mon–Fri links:
 ```
 - [Monday YYYY-MM-DD](../daily/YYYY-MM-DD.md)
 - [Tuesday YYYY-MM-DD](../daily/YYYY-MM-DD.md)
@@ -59,67 +45,57 @@ Verify link targets exist before writing them. Omit if target does not exist.
 - [Thursday YYYY-MM-DD](../daily/YYYY-MM-DD.md)
 - [Friday YYYY-MM-DD](../daily/YYYY-MM-DD.md)
 ```
-Mark days with no note as `*(no note)*`.
+Mark missing days `*(no note)*`.
 
-**Weekly Focus** — single main theme for the week. One line. Tag with relevant `#p-`, `#t-`, or topic tags.
+**Weekly Focus** — single theme, one line, tagged with `#p-`/`#t-`/topic.
+**Weekly Goals** — task checkboxes, seeded from prior week's Carry-Over during Monday planning.
+**Accomplishments** — bullets, one short line each. Friday only.
+**Failures & Setbacks** — planned-not-done, missed goals. Friday only.
+**Carry-Over** — items moving forward, tagged. Friday only.
+**Notes & Reflections** — free-form, min 2 sentences. Friday only.
+</sections>
 
-**Weekly Goals** — task checkboxes. Seeded from previous week's Carry-Over during Monday planning.
-
-**Accomplishments** — bullet list. Each item one short line. Filled in during Friday wrap-up only.
-
-**Failures & Setbacks** — items planned but not completed, or goals missed. Filled in during Friday wrap-up only.
-
-**Carry-Over** — items moving to next week. Bullet list or checkboxes. Each item tagged. Filled in during Friday wrap-up only.
-
-**Notes & Reflections** — free-form. Minimum 2 sentences. Filled in during Friday wrap-up only.
-
----
-
-## Creating a New Weekly Note
-
+<creation_steps>
 1. Copy `.opencode/skills/journal/weekly-template.md`.
-2. Replace all placeholders: `{{WEEK_NUMBER}}`, `{{WEEK_ID}}`, `{{WEEK_START}}`, `{{WEEK_END}}`, `{{PREV_WEEK_FILE}}`, `{{NEXT_WEEK_FILE}}`, `{{MON_DATE}}` through `{{FRI_DATE}}`.
+2. Replace: `{{WEEK_NUMBER}}`, `{{WEEK_ID}}`, `{{WEEK_START}}`, `{{WEEK_END}}`, `{{PREV_WEEK_FILE}}`, `{{NEXT_WEEK_FILE}}`, `{{MON_DATE}}`–`{{FRI_DATE}}`.
 3. Created on Monday during weekly planning.
+</creation_steps>
 
----
+<monday_flow>
+Fill on Monday:
+- **Weekly Focus** — ask user for theme.
+- **Weekly Goals** — seed from prior Carry-Over; ask for additions/removals.
+- **Daily Notes** — populate Monday link; Tue–Fri `*(no note)*`.
 
-## Monday Planning Flow
+LEAVE EMPTY: Accomplishments, Failures, Carry-Over, Notes.
+</monday_flow>
 
-Fill in on Monday:
-- **Weekly Focus** — ask user for the main theme.
-- **Weekly Goals** — seed from previous week's Carry-Over, then ask if anything should be added or removed.
-- **Daily Notes** links — populate Monday's link; mark Tuesday–Friday as `*(no note)*` until notes are created.
+<friday_flow>
+Fill on Friday after daily evening close-out:
+- **Accomplishments** — compile from week's daily Evening > Completed.
+- **Failures & Setbacks** — unmet goals, uncompleted tasks.
+- **Carry-Over** — collect incomplete; confirm with user (carry vs drop).
+- **Notes & Reflections** — prompt: "What did this week prove? What would you do differently?" Min 2 sentences. NEVER blank.
+- Mark completed goals `- [x]`.
+- **Waiting-For review** — scan `journal/waiting-for.md` Active. Flag follow-ups on/before today.
 
-Leave empty: Accomplishments, Failures & Setbacks, Carry-Over, Notes & Reflections.
+### Resources Scan (end of wrap-up)
+1. Scan week's daily logs and meeting notes.
+2. Identify: role/team changes, process decisions, architecture choices, tool adoptions.
+3. For each fact: update existing article OR create new one.
+4. Run `node .opencode/scripts/health-stale.js` to surface stale articles referenced this week.
+</friday_flow>
 
----
-
-## Friday Wrap-Up Flow
-
-Fill in on Friday, after completing the daily evening close-out:
-- **Accomplishments** — compile from the week's daily notes Evening > Completed sections.
-- **Failures & Setbacks** — identify unmet goals and uncompleted tasks.
-- **Carry-Over** — collect incomplete tasks; confirm with user what carries vs. drops.
-- **Notes & Reflections** — prompt: "What did this week prove? What would you do differently?" Minimum 2 sentences. Do not leave blank.
-- Mark completed goals with `- [x]`.
-- **Waiting-For review** — scan `journal/waiting-for.md` Active items. Flag any whose follow-up date is on or before today.
-
-### Resources Scan (end of weekly wrap-up)
-
-Review the week's daily notes and meeting notes for durable facts not yet captured in resources:
-1. Scan all daily log entries and meeting discussions from the week.
-2. Identify: role changes, team updates, process decisions, architecture choices, tool adoptions.
-3. For each durable fact: check if a resource article exists. If yes, update it. If no, create one.
-4. Run `node .opencode/scripts/health-stale.js` to surface resource articles referenced this week but not updated recently.
-
----
-
-## Editor Checklist (run silently before every output)
-
-- [ ] Front matter complete: `type`, `week`, `date_start`, `date_end`, `updated`, `tags`?
-- [ ] H1 follows `Week NN: YYYY-MM-DD -- YYYY-MM-DD` format?
-- [ ] Navigation bar links verified (or omitted if target missing)?
+<self_review>
+- [ ] Front matter complete (`type`, `week`, `date_start`, `date_end`, `updated`, `tags`)?
+- [ ] H1 follows `Week NN: YYYY-MM-DD -- YYYY-MM-DD`?
+- [ ] Nav links verified or omitted?
 - [ ] All seven sections present in order?
-- [ ] Daily Notes links current for the week?
-- [ ] Weekly Goals use task checkbox format?
-- [ ] Items are one-line summaries (not logs)?
+- [ ] Daily Notes links current?
+- [ ] Weekly Goals use checkbox format?
+- [ ] Items are one-line summaries, not logs?
+</self_review>
+
+<output_rules>
+Output language: English. Frontmatter, section headers, tags remain English.
+</output_rules>

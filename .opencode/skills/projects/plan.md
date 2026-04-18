@@ -2,34 +2,32 @@
 name: projects/plan
 description: Implementation plan format — phased work breakdown, dependencies, risks, and linked spec or ADR. Load when writing or updating an implementation plan in projects/<slug>/plans/ during the plan or write workflow.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-A plan is an implementation guide produced during the `/plan` phase. It translates a spec or ADR into a concrete, phased work breakdown. Plans are task-oriented: they answer "how do we build this?" in actionable steps.
+<role>Implementation plan steward — phased work breakdown linked to a spec or ADR.</role>
 
----
+<summary>
+> Plan = implementation guide produced during `/plan`. Translates spec/ADR into concrete phased tasks. Task-oriented: answers "how do we build this?"
+</summary>
 
-## When to Write a Plan
+<when_to_write>
+- Work too large for flat task list in `README.md`.
+- Multiple phases with dependencies tracked across sessions.
+- Needs continuity separate from project README.
 
-- The work is large enough that a flat task list in `README.md` is insufficient.
-- Multiple phases with dependencies need to be tracked across sessions.
-- The work needs its own continuity separate from the project README.
+SKIP for small self-contained work — add tasks to project README instead.
+</when_to_write>
 
-Skip a plan for small, self-contained work. Add tasks directly to the project README instead.
-
----
-
-## File Location
-
+<file_location>
 ```
 projects/<slug>/plans/plan-<topic>.md
 ```
 
-One plan per implementation area. Use kebab-case for topic names (e.g. `plan-auth-implementation.md`, `plan-data-migration.md`).
+One plan per implementation area. Kebab-case topics (e.g. `plan-auth-implementation.md`, `plan-data-migration.md`).
+</file_location>
 
----
-
-## Front Matter
-
+<front_matter>
 ```yaml
 ---
 type: plan
@@ -41,11 +39,9 @@ tags: [p-<slug>]
 
 - `status`: `draft` → `approved` → `in-progress` → `done`
 - `updated`: set on creation; update on every edit.
+</front_matter>
 
----
-
-## Section Structure
-
+<section_structure>
 ```
 # Plan: <Title>
 
@@ -71,17 +67,17 @@ tags: [p-<slug>]
 ## Changelog
 ```
 
-**Overview:** 1–3 sentences summarizing the approach. What are we building and how?
+**Overview:** 1–3 sentences on approach. What we're building and how.
 
-**Phases:** One `###` subsection per phase. Each phase contains `- [ ]` task checkboxes. Tasks must be concrete and independently completable. Mark completed tasks `- [x]` in place — do not delete them.
+**Phases:** One `###` per phase. Each contains `- [ ]` task checkboxes — concrete and independently completable. Mark complete `- [x]` in place; NEVER delete.
 
-Each task should include a `[risk: high|medium|low]` tag to signal implementation difficulty:
+Each task includes `[risk: high|medium|low]`:
 
 | Risk | Criteria |
 |------|----------|
-| `high` | First-time patterns, cross-cutting changes (>5 files), or external dependencies |
-| `medium` | Known patterns with moderate scope or some ambiguity |
-| `low` | Mechanical/repetitive changes, single-file edits |
+| `high` | First-time patterns, cross-cutting changes (>5 files), external deps |
+| `medium` | Known patterns, moderate scope, some ambiguity |
+| `low` | Mechanical/repetitive, single-file edits |
 
 Example:
 ```
@@ -90,30 +86,31 @@ Example:
 - [ ] Update config schema with new fields [risk: low]
 ```
 
-**Dependencies:** External systems, teams, or decisions that must be resolved before or during implementation.
+**Dependencies:** External systems, teams, decisions that MUST resolve before/during implementation.
 
-**Risks:** Known risks with a mitigation note. Format: `- **Risk:** description. **Mitigation:** action.`
+**Risks:** Format: `- **Risk:** description. **Mitigation:** action.`
 
-**Open Questions:** Unanswered questions that affect implementation decisions.
+**Open Questions:** Unanswered questions affecting implementation decisions.
 
-**Changelog:** Bullets, newest first. Format: `- **YYYY-MM-DD:** Action.`
+**Changelog:** Bullets newest-first. Format: `- **YYYY-MM-DD:** Action.`
+</section_structure>
 
----
+<rules>
+- LINK to spec/ADR this plan implements. Plans without linked decision are harder to review.
+- KEEP phases coarse — 3–7 tasks per phase. Granular detail goes in project README or daily notes.
+- UPDATE `status` as plan progresses. Stale status misleads.
+- NEVER delete completed tasks — mark `- [x]` in place.
+</rules>
 
-## Rules
-
-- Link to the spec or ADR this plan implements. Plans without a linked decision record are harder to review.
-- Keep phases coarse — 3–7 tasks per phase. Move granular detail into the project README or daily notes.
-- Update `status` as the plan progresses. A stale status is misleading.
-- Never delete completed tasks — mark them `- [x]` in place.
-
----
-
-## Editor Checklist (run silently before every output)
-
-- [ ] Front matter complete: `type: plan`, `status`, `updated`, `tags`?
-- [ ] Linked to a spec or ADR?
-- [ ] Each phase has at least one concrete task checkbox?
-- [ ] Dependencies and Risks populated (or explicitly marked "none")?
+<self_review>
+- [ ] Front matter complete (`type: plan`, `status`, `updated`, `tags`)?
+- [ ] Linked to spec or ADR?
+- [ ] Each phase has ≥1 concrete task checkbox with `[risk:]` tag?
+- [ ] Dependencies and Risks populated (or "none" stated)?
 - [ ] `updated` set to today?
 - [ ] Changelog entry for today?
+</self_review>
+
+<output_rules>
+Output language: English. Frontmatter, section headers, status values remain English.
+</output_rules>

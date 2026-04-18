@@ -2,85 +2,59 @@
 name: confluence
 description: Read Confluence pages and maintain Confluence tracking — search, fetch, record page IDs in sync registry and article frontmatter, and transform page content into resource facts. Load when fetching a Confluence page, enriching a resource from Confluence, or updating meta/confluence-sync.json.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Write Policy
+<role>Confluence read/write CLI authority and Confluence → resource transformation rules.</role>
 
-**Never create, edit, or delete Confluence pages without explicit user approval.**
+<summary>
+> Read-only by default. NEVER create/edit/delete pages without explicit user approval. Distill durable facts into resource articles; record provenance in front matter `confluence:` and monitoring in `meta/confluence-sync.json`.
+</summary>
 
-Default posture is read-only. Before any write operation, stop and ask: "Should I write this to Confluence?" Proceed only if the user explicitly says yes.
+<write_policy>
+**NEVER create, edit, or delete Confluence pages without explicit user approval.**
 
-`CONFLUENCE_READ_ONLY=true` enforces this at the CLI level.
+Default: read-only. Before any write: ask "Should I write this to Confluence?" Proceed only on explicit yes.
 
-## Fetching Pages
+`CONFLUENCE_READ_ONLY=true` enforces at CLI level.
+</write_policy>
 
-### Before fetching
+<steps>
 
-1. Check the article's `confluence:` front matter for existing page IDs. If the article already cites the page and the content is sufficient, do not re-fetch.
-2. Check `meta/confluence-sync.json` for the page's last `synced` date. If synced recently, the local content may still be current.
-3. If neither check is sufficient, fetch.
+<step n="1" name="check_before_fetch" condition="considering fetch">
+1. Check article's `confluence:` front matter for existing page IDs. If cited and content sufficient, DO NOT re-fetch.
+2. Check `meta/confluence-sync.json` for last `synced` date. If recent, local content may be current.
+3. If neither sufficient, fetch.
+</step>
 
-### How to fetch
-
+<step n="2" name="fetch_page" condition="page ID known">
 ```bash
-# Read by page ID (preferred — unambiguous)
-confluence read PAGE_ID
-
-# Read in markdown format
-confluence read PAGE_ID --format markdown
+confluence read PAGE_ID                    # Preferred — unambiguous
+confluence read PAGE_ID --format markdown  # Markdown
+confluence info PAGE_ID                    # Metadata only
 ```
+</step>
 
-### Getting page info (metadata)
-
-```bash
-confluence info PAGE_ID
-```
-
-### Search strategies
-
-When a page ID is not known, use one of the following search commands:
-
-```bash
-# Text search (general keyword search)
-confluence search "deployment pipeline" --limit 10
-
-# Find by exact title in a specific space
-confluence find "Release Process" --space ENG
-
-# List child pages of a known page
-confluence children PAGE_ID --recursive --format tree
-
-# List all spaces (to discover space keys)
-confluence spaces
-```
-
+<step n="3" name="search_pages" condition="page ID unknown">
 | Goal | Command |
 |------|---------|
-| Search by keyword | `confluence search "keyword" --limit 10` |
-| Find by title in space | `confluence find "Title" --space SPACEKEY` |
-| Browse space pages | `confluence children ROOT_PAGE_ID --recursive` |
-| Discover space keys | `confluence spaces` |
+| Keyword search | `confluence search "keyword" --limit 10` |
+| Title in space | `confluence find "Title" --space SPACEKEY` |
+| Browse children | `confluence children ROOT_PAGE_ID --recursive --format tree` |
+| Discover spaces | `confluence spaces` |
 
-Use at least two strategies before concluding a page does not exist.
+USE ≥2 strategies before concluding page does not exist.
+</step>
 
-## Recording Pages
+<step n="4" name="record_page" condition="page fetched and used">
 
-After fetching a page, record it in two places:
-
-### 1. Article `confluence:` front matter (provenance)
-
-Add the page ID to the `confluence:` list in any resource article the page informed:
-
+**A. Article `confluence:` front matter (provenance):**
 ```yaml
 confluence: [123456789]
 ```
+Records which pages contributed facts. Many-to-many.
 
-This records which pages contributed facts to this article. One article may cite many pages; one page may inform many articles.
-
-### 2. `meta/confluence-sync.json` (monitoring registry)
-
-Add the page to the monitoring registry if you want to be notified when it changes:
-
+**B. `meta/confluence-sync.json` (monitoring):**
 ```json
 "PAGE_ID": {
   "title": "Page Title",
@@ -92,54 +66,56 @@ Add the page to the monitoring registry if you want to be notified when it chang
 
 | Field | Content |
 |-------|---------|
-| `title` | Exact Confluence page title |
-| `space` | Space key (e.g. `ENG`, `TEAM`) |
-| `synced` | Date we last ingested this page into resource articles (`YYYY-MM-DD`), or `null` |
-| `resources` | Optional hint list of resource article paths this page informs |
+| `title` | Exact Confluence title |
+| `space` | Space key (e.g. `ENG`) |
+| `synced` | Last ingest date `YYYY-MM-DD`, or `null` |
+| `resources` | Optional hint list of article paths |
 
-Not every fetched page needs to be in `meta/confluence-sync.json` — only pages worth monitoring for changes. Use `node .opencode/scripts/confluence-missing.js` to discover untracked pages in a space, and `node .opencode/scripts/confluence-updates.js YYYY-MM-DD` to check which tracked pages have changed since a given date.
+Only register pages worth monitoring. Discovery scripts:
+- `node .opencode/scripts/confluence-missing.js` — untracked pages in space
+- `node .opencode/scripts/confluence-updates.js YYYY-MM-DD` — changed since date
+</step>
 
-## Transforming Pages into Resource Source Material
+<step n="5" name="transform_to_resources" condition="building resource articles">
+**Extract:** durable facts only — decisions, process definitions, architecture, ownership, team structure.
+**Discard:** meeting logistics, status updates, changelogs, formatting boilerplate.
+**Condense:** 5-page Confluence doc → ~30-line resource article. Use tables/bullets. Quote numbers, dates, names.
+**Split:** one page → multiple articles when distinct topics. Cross-link them.
+**Merge:** multiple pages → one article when describing one topic. Track all IDs in `confluence:`.
 
-Confluence pages are raw material. Resource articles are refined output.
-
-**What to extract:** Durable facts only — decisions, process definitions, architecture, ownership, team structure. Discard meeting logistics, ephemeral status updates, changelogs, and formatting boilerplate.
-
-**Condensing:** A resource article is shorter than its source. Use tables and bullets. Quote specific numbers, dates, and names. A 5-page Confluence document might become 30 lines.
-
-**One page → multiple articles:** Split when the page covers distinct topics belonging in different resource folders. Each article links to the other.
-
-**Multiple pages → one article:** Merge when several pages describe aspects of one topic. Track all source page IDs in the article's `confluence:` front matter.
-
-**Source attribution:** Each resource article's `## Sources` section lists every Confluence page used:
-
+`## Sources` section format:
 ```
 - [Page Title](<confluence-url>/spaces/SPACE/pages/PAGE_ID) — reason this page was used
 ```
+</step>
 
-## Writing to Confluence (with approval)
-
-When the user explicitly approves a write, first ensure `CONFLUENCE_READ_ONLY=false` or unset.
+<step n="6" name="write_with_approval" condition="user explicitly approved write" gate="HARD-GATE">
+Ensure `CONFLUENCE_READ_ONLY=false` or unset.
 
 - **Create:** `confluence create "Title" SPACEKEY --file content.md --format markdown`
 - **Create child:** `confluence create-child "Title" PARENT_PAGE_ID --file content.md --format markdown`
-- **Update:** `confluence update PAGE_ID --file content.md --format markdown` — show full new content to user first.
-- **Delete:** `confluence delete PAGE_ID --yes` — confirm page ID and title. Irreversible.
+- **Update:** `confluence update PAGE_ID --file content.md --format markdown` — show full new content first.
+- **Delete:** `confluence delete PAGE_ID --yes` — confirm ID and title. Irreversible.
 - **Move:** `confluence move PAGE_ID NEW_PARENT_ID` — same space only.
 
-After any write, update `meta/confluence-sync.json` to reflect the change.
+After any write: update `meta/confluence-sync.json`.
+</step>
 
-## Rules
+</steps>
 
-- **Read-only by default.** Ask before any write.
-- **Check frontmatter and sync.json first.** Do not re-fetch a page whose content is sufficient.
-- **Distill, don't copy.** Extract durable facts. Discard ephemeral content.
-- **Record provenance.** Add page IDs to `confluence:` front matter whenever you extract facts.
-- **URL reads:** `confluence read` only accepts page IDs or URLs with a `pageId` query param — not display/pretty URLs.
+<rules>
+- Read-only by default. Ask before any write.
+- Check frontmatter and `sync.json` first. DO NOT re-fetch sufficient content.
+- Distill, never copy. Extract durable facts.
+- Record provenance: add page IDs to `confluence:` front matter when extracting facts.
+- `confluence read` accepts only page IDs or URLs with `pageId` query param — NOT display/pretty URLs.
+</rules>
 
-## Editor Checklist (run silently before every output)
-
-- [ ] Page ID recorded in article front matter `confluence:` field?
-- [ ] Page ID recorded in `meta/confluence-sync.json`?
-- [ ] PII stripped from fetched content before storing?
+<self_review>
+- [ ] Page ID in article front matter `confluence:`?
+- [ ] Page ID in `meta/confluence-sync.json` (if monitoring)?
+- [ ] PII stripped before storing?
 - [ ] No write operations without explicit user approval?
+</self_review>
+
+<output_rules>Output in English. Preserve verbatim CLI commands, page IDs, and JSON structure.</output_rules>

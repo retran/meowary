@@ -1,52 +1,58 @@
 ---
 description: First-time setup or update personal context and coding environment
-updated: 2026-04-09
+updated: 2026-04-18
 tags: [bootstrap, setup]
 ---
 
-Set up or revise `context/context.md`, `context/safety.md`, and any `codebases/<name>.md` files. Idempotent — safe to re-run anytime. Templates live in `.opencode/context-templates/` and `.opencode/skills/codebases/codebase-template.md`.
+<role>
+Bootstrap agent. Set up or revise `context/context.md`, `context/safety.md`, and `codebases/<name>.md` files. Idempotent — safe to re-run.
+</role>
 
-Arguments: `/bootstrap`
+<arguments>
+`/bootstrap`
+</arguments>
 
----
+<context>
+Templates:
+- `.opencode/context-templates/context.md`
+- `.opencode/context-templates/safety.md`
+- `.opencode/skills/codebases/codebase-template.md`
+- `.opencode/meta-templates/*` (tags, confluence-sync, resources-log, recurring-events)
 
-## Step 1: Check Current State
+Branching: existing `context/context.md` with non-empty Author section → revision flow (Step 2a). Empty/missing → fresh setup (Step 2b onward).
+</context>
 
-Read `context/context.md`. Branch:
-- **Has content** (non-empty Author section) → go to **Step 2a** (revision).
-- **Empty or missing** → go to **Step 2b** (fresh setup).
+<steps>
 
----
+<step n="1" name="Check current state">
+Read `context/context.md`. Branch: has content → Step 2a. Empty/missing → Step 2b.
+<done_when>Branch determined.</done_when>
+</step>
 
-## Step 2a: Revision Flow
+<step n="2a" name="Revision flow" condition="existing context">
+Display current context as readable summary. Ask: "Is this still accurate? What would you like to update?" Scan `projects/` and `areas/` (excluding `archive/`) to refresh Active lists. Apply updates. Skip to Step 5.
+<done_when>Revisions applied.</done_when>
+</step>
 
-Show the current context in a readable summary. Ask: "Is this still accurate? What would you like to update?"
-
-Scan `projects/` and `areas/` (excluding `archive/`) to refresh Active Projects/Areas lists. Apply updates, then skip to **Step 5**.
-
----
-
-## Step 2b: Fresh Setup
-
+<step n="2b" name="Fresh setup" condition="empty/missing context">
 Ask all questions in one prompt:
 
 1. **Name** — full name
 2. **Role** — job title
 3. **Team** — immediate team
 4. **Department / Product** — broader org unit and product
-5. **Jira URL** — base URL (e.g. `https://company.atlassian.net`); `n/a` if not used
-6. **Confluence URL** — base URL (e.g. `https://company.atlassian.net/wiki`); `n/a` if not used
+5. **Jira URL** — base URL (e.g. `https://company.atlassian.net`); `n/a` if unused
+6. **Confluence URL** — base URL (e.g. `https://company.atlassian.net/wiki`); `n/a` if unused
 7. **MCP integrations** — which are configured (Jira, Confluence, GitHub, etc.)
 8. **Language / work week / time format** — e.g. English, Mon–Fri, 24-hour
 9. **Jira project key** — primary key (e.g. `MYPROJ`); `n/a` if unused
 10. **Commit format** — e.g. `[PROJ-123] description` or `description only`
 11. **Preferences** — verbosity (concise/standard/detailed), risk tolerance (conservative/moderate/aggressive), commit granularity (atomic/grouped/manual)
+<done_when>All answers collected.</done_when>
+</step>
 
----
-
-## Step 2c: Bootstrap Meta Files (fresh only)
-
-Ensure the `meta/` directory files exist. For each file listed below, check if it exists. If not, copy from the template:
+<step n="2c" name="Bootstrap meta files" condition="fresh only">
+Ensure `meta/` files exist. For each, copy template if missing:
 
 | File | Template |
 |------|----------|
@@ -54,13 +60,11 @@ Ensure the `meta/` directory files exist. For each file listed below, check if i
 | `meta/confluence-sync.json` | `.opencode/meta-templates/confluence-sync-template.json` |
 | `meta/resources-log.md` | `.opencode/meta-templates/resources-log-template.md` |
 
----
+<done_when>All meta files exist.</done_when>
+</step>
 
-## Step 3: Write context/context.md
-
-If `context/context.md` does not exist, copy from `.opencode/context-templates/context.md` first.
-
-Write `context/context.md` with the collected values. Update `updated:` to today's date. Scan `projects/` and `areas/` (excluding `archive/`) for the Active lists.
+<step n="3" name="Write context/context.md">
+If file does not exist, copy from `.opencode/context-templates/context.md` first. Write with collected values. Update `updated:` to today. Scan `projects/` and `areas/` (excluding `archive/`) for Active lists.
 
 ```markdown
 ---
@@ -74,7 +78,6 @@ tags: []
 # Context
 
 ## Author
-
 - **Name:** <full name>
 - **Role:** <job title>
 - **Department:** <department, company>
@@ -82,14 +85,12 @@ tags: []
 - **Team:** <team name>
 
 ## Tooling
-
 - **Editor/Agent:** OpenCode
 - **MCP integrations:** <list>
 - **Jira URL:** <url> or n/a
 - **Confluence URL:** <url> or n/a
 
 ## Conventions
-
 - **Language:** <language>
 - **Work week:** <e.g. Monday–Friday>
 - **Time format:** <e.g. 24-hour>
@@ -99,48 +100,40 @@ tags: []
 - **Commit format (journal):** description only (no key, no type prefix)
 
 ## Active Projects
-
 <scan projects/ excluding archive/>
 
 ## Active Areas
-
 <scan areas/ excluding archive/>
 
 ## Preferences
-
 - **Verbosity:** <concise / standard / detailed>
 - **Risk tolerance:** <conservative / moderate / aggressive>
 - **Commit granularity:** <atomic / grouped / manual>
 ```
 
----
+<done_when>File written with correct values.</done_when>
+</step>
 
-## Step 4: Safety Rules File (fresh only)
+<step n="4" name="Safety rules" condition="fresh only">
+If `context/safety.md` missing, copy from `.opencode/context-templates/safety.md`. Universal rules — no questions. Remove Jira/Confluence rule if neither tool used. Update `updated:` and `path:` frontmatter.
+<done_when>Safety file present and updated.</done_when>
+</step>
 
-If `context/safety.md` does not exist, copy from `.opencode/context-templates/safety.md`. No questions needed — rules are universal. Remove the Jira/Confluence rule if neither tool is used.
-
-Update `updated:` and `path:` in the front matter.
-
----
-
-## Step 4b: Codebase File (fresh only)
-
+<step n="4b" name="Codebase file" condition="fresh only">
 Ask: "Are you currently working in a codebase? If so, what is its name and local path?"
 
 If yes:
-- Create `codebases/<name>.md` by copying `.opencode/skills/codebases/codebase-template.md`.
-- Collect: local path, primary language/framework, repo structure overview, build command, test command, CI system, source control host, any known linter/formatter.
-- Write the file with collected values. Leave unknown sections with `<!-- TBD -->`.
-- Add an entry to `context/context.md § Codebases`:
-  `**<name>:** <local path> — [codebases/<name>.md](../codebases/<name>.md)`
+- Copy `.opencode/skills/codebases/codebase-template.md` → `codebases/<name>.md`
+- Collect: local path, primary language/framework, repo structure, build command, test command, CI system, source control host, linter/formatter
+- Write file. Mark unknown sections `<!-- TBD -->`.
+- Add to `context/context.md § Codebases`: `**<name>:** <local path> — [codebases/<name>.md](../codebases/<name>.md)`
 
-If no, skip this step.
+If no, skip.
+<done_when>Codebase file written or step skipped.</done_when>
+</step>
 
----
-
-## Step 5: Verify Tooling
-
-Check required CLI tools:
+<step n="5" name="Verify tooling">
+Check CLI tools:
 
 | Tool | Version command | Required |
 |------|----------------|----------|
@@ -152,23 +145,22 @@ Check required CLI tools:
 | `repomix` | `repomix --version` | Yes — repo packing |
 | `glab` | `glab --version` | Optional — GitLab CLI |
 
-Report status (OK / MISSING / WARN). Don't block on failures — note for the user to fix.
+Report status (OK / MISSING / WARN). DO NOT block on failures.
 
-After checking tools, regenerate the environment snapshot:
+Regenerate environment snapshot:
 
 ```
 node .opencode/scripts/env-context.js
 ```
 
-This writes the CLI tool versions and paths to `context/env-snapshot.md`. If the script does not exist: manually note any tool gaps; skip the script step.
+This writes CLI versions/paths to `context/env-snapshot.md`. If script missing: note tool gaps manually, skip.
+<done_when>Tool report produced; snapshot regenerated or skip noted.</done_when>
+</step>
 
----
+<step n="5b" name="Register QMD collections" condition="fresh only AND qmd installed">
+qmd registry: `~/.cache/qmd/index.sqlite`. Collections must be registered before indexing.
 
-## Step 5b: Register QMD Collections (fresh only, if qmd is installed)
-
-qmd stores its collection registry in `~/.cache/qmd/index.sqlite`. Collections must be registered once before `qmd update` / `qmd-index.js` can index them.
-
-Run the following from the repo root to register all standard collections (idempotent — safe to re-run):
+Run from repo root (idempotent):
 
 ```bash
 qmd collection add meta ./meta
@@ -183,44 +175,50 @@ qmd collection add areas ./areas
 qmd collection add archive ./archive
 ```
 
-Then build the initial index:
+Build initial index:
 
 ```bash
 node .opencode/scripts/qmd-index.js
 ```
 
-Skip this step if `qmd` is not installed (will be noted in Step 5).
+Skip if `qmd` not installed (Step 5 noted).
+<done_when>Collections registered and initial index built, OR step skipped.</done_when>
+</step>
 
----
+<step n="6" name="Environment" condition="fresh only">
+Check `.env` at repo root. If missing, check `.env.example` and instruct user to copy and fill credentials.
+<done_when>Env state assessed.</done_when>
+</step>
 
-## Step 6: Environment (fresh only)
+<step n="7" name="Recurring events" condition="fresh only">
+Read `journal/recurring-events.md`. If missing, copy from `.opencode/meta-templates/recurring-events-template.md`. If empty, ask for recurring events (standups, 1-on-1s, ceremonies) with day and time. Write organized by weekday.
+<done_when>Recurring events recorded.</done_when>
+</step>
 
-Check for `.env` at repo root. If missing, check for `.env.example` and tell the user to copy and fill in credentials.
+<step n="8" name="Author resource entry" condition="fresh only">
+Offer to create `resources/people/<slug>.md` for author. If accepted: fill name, role, team. Register `#person-<slug>` in `meta/tags.md`.
 
----
+Pre-check: `meta/tags.md` exists; if not, copy from `.opencode/meta-templates/tags-template.md`.
+<done_when>Author resource created or declined.</done_when>
+</step>
 
-## Step 7: Recurring Events (fresh only)
-
-Read `journal/recurring-events.md`. If the file does not exist, copy it from `.opencode/meta-templates/recurring-events-template.md` first. If empty, ask for recurring events (standups, 1-on-1s, ceremonies) with day and time. Write organized by weekday.
-
----
-
-## Step 8: Author Resource Entry (fresh only)
-
-Offer to create `resources/people/<slug>.md` for the author. If accepted: fill name, role, team; register `#person-<slug>` in `meta/tags.md`.
-
-> **Before using `meta/tags.md`:** Check that it exists. If not, copy from `.opencode/meta-templates/tags-template.md`.
-
----
-
-## Step 9: Orientation (fresh only)
-
-Explain the command set:
-
-- **Daily rhythm:** `/morning` to start the day, `/evening` to close it, `/standup` for async updates, `/weekly` for planning and retrospectives
+<step n="9" name="Orientation" condition="fresh only">
+Explain command set:
+- **Daily rhythm:** `/morning`, `/evening`, `/standup`, `/weekly`
 - **Lifecycle work:** `/do <phase>` — phases: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
 - **Knowledge graph:** `/r <operation>` — operations: `enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`
-- **Quick capture:** `/capture <note>` — drops a timestamped note into today's daily Inbox
+- **Quick capture:** `/capture <note>` — timestamped note into today's daily Inbox
 - **Meeting notes:** `/meeting`
+<done_when>Orientation delivered.</done_when>
+</step>
+
+</steps>
+
+<output_rules>
+- Language: English.
+- Idempotent — every step safe to re-run.
+- Skip "fresh only" steps in revision flow.
+- DO NOT overwrite existing files except where step explicitly says "write" with collected values.
+</output_rules>
 
 $ARGUMENTS

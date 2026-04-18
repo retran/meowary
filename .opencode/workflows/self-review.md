@@ -1,18 +1,17 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
-# Self-Review
+<role>
+Rigorous internal code reviewer. Read changed files in full, NOT just diffs — context matters. Classify findings honestly by severity: Blocker = "I would reject this PR." Nit = "cosmetic, no correctness impact." NEVER downgrade findings to avoid extra work. Surface all findings before any are addressed (Full tier) so complete picture is visible.
+</role>
 
-> Structured pre-PR code review. Reads the plan's success criteria, applies codebase style and patterns conventions, checks for common anti-patterns, and produces a structured review report with severity-classified findings. Catches issues the author missed — not a rubber-stamp, but an honest check against the same standards an external reviewer would apply. Invoke after `implement` (Standard or Full tier) before raising a PR.
+<summary>
+Structured pre-PR code review. Reads plan's success criteria, applies codebase style and patterns conventions, checks for common anti-patterns, produces structured review report with severity-classified findings. Catches issues author missed — NOT a rubber-stamp, but honest check against same standards external reviewer would apply. Invoke after `implement` (Standard or Full tier) before raising PR.
+</summary>
 
-## Role
-
-Acts as a rigorous internal code reviewer. Reads changed files in full, not just diffs — context matters. Classifies findings honestly by severity: Blocker = "I would reject this PR." Nit = "cosmetic, no correctness impact." Does not downgrade findings to avoid extra work. Surfaces all findings before any are addressed (Full tier) so the complete picture is visible.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
 | Changed files or diff | Codebase | Required |
@@ -20,135 +19,125 @@ Acts as a rigorous internal code reviewer. Reads changed files in full, not just
 | Codebase context | `codebases/<name>.md` | Required |
 | Codebase conventions | `codebases/<name>.md`, `context/safety.md` | Required |
 | Complexity tier | User declaration | Required |
+</inputs>
 
-## Complexity Tiers
-
+<tiers>
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Conventions check + obvious issues; no deep logic review | END-GATE only |
-| **Standard** | Conventions + logic correctness + edge cases + test coverage | END-GATE |
-| **Full** | All Standard + security/performance analysis + simulated PR review comments | HARD-GATE (Full): present all findings before any are addressed |
+| Quick | Conventions check + obvious issues; no deep logic review | END-GATE only |
+| Standard | Conventions + logic correctness + edge cases + test coverage | END-GATE |
+| Full | All Standard + security/performance analysis + simulated PR review comments | HARD-GATE (Full): present all findings before any addressed |
 
-> Quick-tier `implement` sessions include a lightweight inline conventions check at Step 5 (Close) and do not require invoking `self-review` separately. Invoke `self-review` for Standard and Full tier sessions, or any change that touches a public API, auth, data persistence, or shared infrastructure.
+> Quick-tier `implement` sessions include lightweight inline conventions check at Step 5 (Close) and DO NOT require invoking `self-review` separately. Invoke `self-review` for Standard and Full tier sessions, OR any change touching public API, auth, data persistence, or shared infrastructure.
+</tiers>
 
-## Steps
+<definitions>
+Severity:
 
-### Step 0 — Load context
+| Severity | Definition |
+|----------|-----------|
+| **Blocker** | "I would reject this PR." Must fix before merge. |
+| **Major** | Significant issue; should fix before PR review. |
+| **Minor** | Clear improvement; fix if straightforward. |
+| **Nit** | Cosmetic; no correctness impact. |
+</definitions>
 
-1. Read `projects/<name>/dev-log.md` last entry — what was implemented in this session?
-2. Read `projects/<name>/plans/<slug>.md` — what are the success criteria?
+<steps>
+
+<step n="0" name="Load context">
+1. Read `projects/<name>/dev-log.md` last entry — what was implemented?
+2. Read `projects/<name>/plans/<slug>.md` — success criteria?
 3. Load `codebases/<name>.md` and `context/safety.md`.
-4. Read today's daily note — find any tasks matching this review.
+4. Read today's daily note — find tasks matching review.
+<done_when>Implementation scope, success criteria, all convention files loaded.</done_when>
+</step>
 
-Done when: implementation scope, success criteria, and all convention files loaded.
-
-### Step 0.5 — Clarify
-
-Ask the user:
-1. What changed? (if not clear from dev-log; ask for a diff summary or PR description)
-2. Any areas of concern or complexity to focus on?
+<step n="0.5" name="Clarify">
+Ask user:
+1. What changed? (if unclear from dev-log: ask for diff summary or PR description)
+2. Areas of concern or complexity to focus on?
 3. Complexity tier: Quick / Standard / Full?
 
 Also:
-- Run `git diff` or read the changed files to understand the scope.
-- Search `resources/` and `codebases/<name>.md` for the patterns that should apply.
-- Search the web for known anti-patterns in the approach if applicable.
+- Run `git diff` or read changed files to understand scope.
+- Search `resources/` and `codebases/<name>.md` for patterns that should apply.
+- Search web for known anti-patterns in the approach if applicable.
+<done_when>Scope of changes, focus areas, tier confirmed.</done_when>
+</step>
 
-Done when: scope of changes, focus areas, and tier confirmed.
-
-### Step 1 — Read the diff
-
-1. Read every changed file in full — not just the diff. Context matters; a change that looks correct in isolation may be wrong given surrounding code.
+<step n="1" name="Read the diff">
+1. Read every changed file in full — NOT just diff. Context matters; change correct in isolation may be wrong given surrounding code.
 2. Map changes to plan tasks: which task does each change implement?
+<done_when>All changed files read in full; changes mapped to plan tasks.</done_when>
+</step>
 
-Done when: all changed files read in full; changes mapped to plan tasks.
-
-### Step 2 — Conventions check
-
+<step n="2" name="Conventions check">
 Apply systematically:
 - Coding conventions from `codebases/<name>.md`: naming, formatting, imports, file structure, language idioms, project-specific patterns.
 
 List every convention violation, no matter how small. Severity: Minor or Nit.
+<done_when>All conventions checked; violations listed.</done_when>
+</step>
 
-Done when: all conventions checked; violations listed.
-
-### Step 3 — Logic and correctness (Standard + Full)
-
+<step n="3" name="Logic and correctness" condition="Standard + Full" skip_if="Quick">
 For each changed function or module:
-1. Does it do what the plan says it should?
-2. Are edge cases handled? (null inputs, empty collections, boundary values, error paths)
-3. Are error paths tested and handled gracefully?
-4. Are there race conditions, off-by-one errors, or logic inversions?
+1. Does it do what plan says?
+2. Edge cases handled? (null inputs, empty collections, boundary values, error paths)
+3. Error paths tested and handled gracefully?
+4. Race conditions, off-by-one errors, logic inversions?
+<done_when>All changed modules reviewed for correctness; findings categorized.</done_when>
+</step>
 
-Done when: all changed modules reviewed for correctness; findings categorized.
+<step n="4" name="Test coverage" condition="Standard + Full" skip_if="Quick">
+1. New code paths covered by tests?
+2. Existing tests still valid given changes?
+3. Test assertions meaningful — NOT just "it ran without error"?
+<done_when>Test coverage assessed; gaps identified.</done_when>
+</step>
 
-### Step 4 — Test coverage (Standard + Full)
-
-1. Are new code paths covered by tests?
-2. Are existing tests still valid given the changes?
-3. Are test assertions meaningful — not just "it ran without error"?
-
-Skip for Quick tier.
-
-Done when: test coverage assessed; gaps identified.
-
-### Step 5 — Security and performance (Full)
-
-1. Are there injection vulnerabilities, auth bypasses, or exposed secrets?
-2. Are there obvious performance regressions: N+1 queries, unnecessary re-renders, unbounded loops?
+<step n="5" name="Security and performance" condition="Full" skip_if="Quick OR Standard">
+1. Injection vulnerabilities, auth bypasses, exposed secrets?
+2. Obvious performance regressions: N+1 queries, unnecessary re-renders, unbounded loops?
 3. Reference `context/safety.md` for non-negotiable security rules — these are Blockers.
+<done_when>Security and performance analysis complete; `context/safety.md` rules verified.</done_when>
+</step>
 
-Skip for Quick and Standard tiers.
+<step n="6" name="Proactive research" condition="suspicious pattern not in codebases or resources">
+- Search web. Form position before report.
+- If dependency new or updated: check for known issues, deprecations, breaking changes.
 
-Done when: security and performance analysis complete; `context/safety.md` rules verified.
+DO NOT defer "I'm not sure about this" to PR reviewer. Investigate and form position.
+<done_when>All suspicious patterns investigated; findings added to report.</done_when>
+</step>
 
-### Step 6 — Proactive research (if needed)
-
-If a pattern or approach seems suspicious but isn't in `codebases/<name>.md` or `resources/`:
-- Search the web. Form a position before the report.
-- If a dependency is new or updated: check for known issues, deprecations, or breaking changes.
-
-Do not defer "I'm not sure about this" to the PR reviewer. Investigate and form a position.
-
-Done when: all suspicious patterns investigated; findings added to the report.
-
-### Step 7 — Produce review report
-
+<step n="7" name="Produce review report" gate="HARD-GATE (Full)">
 Structure findings in two independent sections:
 
 **7a. Plan compliance review:**
-- Does the implementation match the plan's requirements?
-- Are all plan tasks completed?
-- Are success criteria met?
+- Implementation matches plan requirements?
+- All plan tasks completed?
+- Success criteria met?
 - Missing implementation = Blocker.
 
-**Fallback:** If no plan exists (ad-hoc changes, no spec/plan), skip plan compliance. Note in the report: "No plan found — reviewing code quality only."
+**Fallback:** If no plan exists (ad-hoc changes, no spec/plan): skip plan compliance. Note in report: "No plan found — reviewing code quality only."
 
 **7b. Code quality review:**
 
-Structure findings by severity:
-
-| Severity | Definition |
-|----------|-----------|
-| **Blocker** | "I would reject this PR." Must be fixed before merge. |
-| **Major** | Significant issue; should be fixed before PR review. |
-| **Minor** | Clear improvement; fix if straightforward. |
-| **Nit** | Cosmetic; no correctness impact. |
+Structure findings by severity per `<definitions>` table.
 
 For each finding: file and line reference, issue description, suggested fix or recommendation.
 
-Both sections run regardless — they are independent concerns. Plan compliance surfaces *what's missing*. Code quality surfaces *what's wrong with what exists*. Report both sections in the review output.
+Both sections run regardless — independent concerns. Plan compliance surfaces *what's missing*. Code quality surfaces *what's wrong with what exists*. Report both sections in review output.
 
-**Sub-agent trigger (Full):** Offload review report generation to the `code-reviewer` custom agent. Pass: the diff or list of changed files with contents, plan file (if available), plan success criteria, and the loaded `codebases/<name>.md`, `context/safety.md`. The agent returns a structured review report with both sections (plan compliance + code quality), findings categorized by severity, with file:line references and suggested fixes. Agent file: `.opencode/agents/code-reviewer.md`.
+<subagent_trigger agent="code-reviewer" condition="Full tier">
+Offload review report generation to `code-reviewer` custom agent. Pass: diff or list of changed files with contents, plan file (if available), plan success criteria, loaded `codebases/<name>.md`, `context/safety.md`. Returns structured review report with both sections (plan compliance + code quality), findings categorized by severity, with file:line references and suggested fixes. Agent file: `.opencode/agents/code-reviewer.md`. Run inline for Quick and Standard tiers.
+</subagent_trigger>
 
-Run inline for Quick and Standard tiers.
+HARD-GATE (Full): Present all findings before any addressed. User decides priority. Addressing first finding often changes severity of subsequent findings — complete picture MUST be visible first.
+<done_when>All findings categorized and presented; user has reviewed complete report.</done_when>
+</step>
 
-**HARD-GATE (Full):** Present all findings to the user before any are addressed. Let the user decide priority. Addressing the first finding often changes the severity of subsequent findings — the complete picture must be visible first.
-
-Done when: all findings categorized and presented; user has reviewed the complete report.
-
-### Step 8 — Close
-
+<step n="8" name="Close" gate="END-GATE">
 1. After user addresses Blockers and Majors: write summary of what was fixed.
 2. Append dev-log entry:
 
@@ -163,9 +152,9 @@ Done when: all findings categorized and presented; user has reviewed the complet
 **Next:** raise PR | implement (fix blockers first)
 ```
 
-3. Append work log entry to `## Day` zone of today's daily note.
-4. Mark matching task items as done.
-5. **Learnings:** After the dev-log entry, actively reflect:
+3. Append work log to `## Day` zone of today's daily note.
+4. Mark matching task items done.
+5. **Learnings:** After dev-log entry, actively reflect:
 
    > "Did this review surface any pattern or anti-pattern not already documented in `resources/` or `codebases/<name>.md`?"
 
@@ -178,61 +167,67 @@ Done when: all findings categorized and presented; user has reviewed the complet
    ```
 
    Then:
-   1. Check if a relevant resource article exists in `resources/`.
-   2. If yes, add the learning as a fact.
-   3. If no, note it as a candidate for future resource creation.
+   1. Check if relevant resource article exists in `resources/`.
+   2. If yes: add learning as fact.
+   3. If no: note as candidate for future resource creation.
 
-**Self-review checklist:**
+<self_review>
+- All `<done_when>` criteria met
+- All findings categorized by severity
+- Plan compliance section completed (or noted as planless)
+- Learnings section addressed (new patterns documented or "none identified")
+- No placeholders (TBD, TODO, FIXME) in outputs
+- All output file paths correct, targets exist
+</self_review>
 
-- [ ] All `Done when` criteria met for every step
-- [ ] All findings categorized by severity
-- [ ] Plan compliance section completed (or noted as planless)
-- [ ] Learnings section addressed (new patterns documented or "none identified")
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+<done_when>Summary written; dev-log entry appended; daily note updated; learnings addressed.</done_when>
+</step>
 
-Done when: summary written; dev-log entry appended; daily note updated; learnings addressed.
+</steps>
 
-**END-GATE:** Present final deliverables to the user.
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
 | Review report (Quick + Standard) | In-session only | Structured text |
 | Review report (Full) | `projects/<name>/notes/review-<date>.md` | Markdown |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
 | Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **No diff available:** Ask user to list changed files. Read in full before proceeding.
+- **`codebases/<name>.md` missing:** Note gap. Ask user for relevant conventions. DO NOT skip conventions check.
+- **Finding severity unclear:** ESCALATE, DO NOT downgrade. If uncertain Blocker or Major: classify as Blocker and explain reasoning.
+- **User wants to skip Blockers:** Confirm explicitly. Raising PR with known Blockers is deliberate choice — NOT default.
+</error_handling>
 
-- **No diff available:** Ask the user to list the changed files. Read them in full before proceeding.
-- **`codebases/<name>.md` missing:** Note the gap; ask the user for the relevant conventions. Do not skip the conventions check.
-- **Finding severity unclear:** Escalate, do not downgrade. If uncertain whether a finding is a Blocker or Major, classify it as Blocker and explain the reasoning.
-- **User wants to skip Blockers:** Confirm explicitly. Raising a PR with known Blockers is a deliberate choice — not a default.
-
-## Contracts
-
-1. Blocker = "I would reject this PR." Nit = cosmetic. Never downgrade to avoid extra work.
-2. All findings presented before any are addressed (Full tier). Do not fix and re-review piecemeal.
-3. Read changed files in full, not just diffs.
-4. `context/safety.md` violations are always Blockers, regardless of tier.
+<contracts>
+1. Blocker = "I would reject this PR." Nit = cosmetic. NEVER downgrade to avoid extra work.
+2. All findings presented before any addressed (Full tier). DO NOT fix and re-review piecemeal.
+3. Read changed files in full, NOT just diffs.
+4. `context/safety.md` violations ALWAYS Blockers, regardless of tier.
 5. Full tier writes review report to `projects/<name>/notes/review-<date>.md`. Quick/Standard: in-session only.
+</contracts>
 
-## Sub-Agents
-
+<subagents>
 | Step | Agent | Type | Parallel? | Trigger | Output |
 |------|-------|------|-----------|---------|--------|
-| Step 7 — Review report | `code-reviewer` | custom | No — single | Full tier only | Structured report: findings by severity (Blocker / Major / Minor / Nit), file:line references, suggested fixes |
+| 7 | `code-reviewer` | custom | No — single | Full tier only | Structured report: findings by severity (Blocker / Major / Minor / Nit), file:line references, suggested fixes |
+</subagents>
 
----
-
-*Suggested next steps (present, do not run):*
-
-| Condition | Suggested next workflow |
-|-----------|------------------------|
+<next_steps>
+| Condition | Suggested workflow |
+|-----------|--------------------|
 | All Blockers resolved | Raise PR |
 | Blockers require code changes | `implement` to fix, then re-review |
 | Logic failures discovered | `debug` |
 | Review reveals fundamental approach issues | `brainstorm` |
 | Review reveals missing test cases | `test` |
+</next_steps>
+
+<output_rules>
+- Language: English.
+- Read changed files in full, NOT just diffs.
+- NEVER downgrade severity.
+- `context/safety.md` violations ALWAYS Blockers.
+</output_rules>

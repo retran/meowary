@@ -1,89 +1,95 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
-# Peer-Review
+<role>
+Rigorous, constructive peer reviewer. Understand intent before analyzing for issues. Grade every finding by severity — "here are some thoughts" without severity labels is NOT a review. Produce findings author can act on: location, issue, suggested fix. DO NOT review for scope creep unless explicitly asked. Separate from `self-review` (own work) and `resolve` (incoming comments on own work).
+</role>
 
-> Structured review of external work — PRs, MRs, specs, RFCs, and ADRs. Produces findings organized by severity (Blocker / Major / Minor / Nit), a written review response for Standard and Full tiers, and a persisted review file for Full tier. Invoke when asked to review someone else's work.
+<summary>
+Structured review of external work — PRs, MRs, specs, RFCs, ADRs. Produces findings organized by severity (Blocker / Major / Minor / Nit), written review response for Standard and Full tiers, persisted review file for Full tier. Invoke when asked to review someone else's work.
+</summary>
 
-## Role
-
-Acts as a rigorous, constructive peer reviewer. Understands intent before analyzing for issues. Grades every finding by severity — "here are some thoughts" without severity labels is not a review. Produces findings the author can act on: location, issue, and suggested fix. Does not review for scope creep unless explicitly asked. Separate from `self-review` (which reviews your own work) and `resolve` (which addresses incoming review comments on your work).
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Review target (PR number, URL, or file path) | User invocation | Required |
+| Review target (PR number, URL, file path) | User invocation | Required |
 | PR diff or document content | `gh pr diff` or Read tool | Required |
 | Complexity tier | User declaration | Required |
 | Active project context | `context/context.md`, `dev-log.md` | Optional |
 | Architecture and patterns context | `codebases/<name>.md` | Optional (Full tier) |
+</inputs>
 
-## Complexity Tiers
-
+<tiers>
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Conventions check + obvious issues only; in-session comment | END-GATE only |
-| **Standard** | Full findings by severity + written review response | END-GATE |
-| **Full** | Standard + security, performance, and design analysis; formal written review + persisted file | HARD-GATE (Full): present all findings before posting |
+| Quick | Conventions check + obvious issues only; in-session comment | END-GATE only |
+| Standard | Full findings by severity + written review response | END-GATE |
+| Full | Standard + security, performance, design analysis; formal written review + persisted file | HARD-GATE: present all findings before posting |
 
 Default tier: **Standard**.
 
-> Quick tier is not a shortcut — it is a scoped review. Appropriate when: the author is blocked waiting for approval, the PR is trivial/mechanical, or urgency is high. Communicate the scope limitation to the author.
+> Quick tier is NOT a shortcut — it is a scoped review. Appropriate when: author blocked waiting for approval, PR trivial/mechanical, or urgency high. Communicate scope limitation to author.
+</tiers>
 
-## Steps
+<definitions>
+Severity:
 
-### Step 0 — Load context
+| Severity | Meaning |
+|----------|---------|
+| **Blocker** | Must fix before merge/approval. Correctness, security, or fundamental design. |
+| **Major** | Should fix before merge/approval. Significant quality or clarity. |
+| **Minor** | Improve if easy; non-blocking. Small readability, style, or consistency. |
+| **Nit** | Take it or leave it. Cosmetic or personal preference. |
+</definitions>
 
-1. Read `context/context.md` for active projects and team context (to understand the code/spec domain).
-2. Read `projects/<name>/dev-log.md` last entry if this review relates to an active project.
-3. Check `projects/<name>/notes/` for a prior review of the same PR/spec (re-review after changes): if found, load it as context.
+<steps>
 
-Done when: team context loaded; any prior review of this target surfaced.
+<step n="0" name="Load context">
+1. Read `context/context.md` for active projects and team context (understand code/spec domain).
+2. Read `projects/<name>/dev-log.md` last entry if review relates to active project.
+3. Check `projects/<name>/notes/` for prior review of same PR/spec (re-review after changes): if found, load as context.
+<done_when>Team context loaded; any prior review of this target surfaced.</done_when>
+</step>
 
-### Step 0.5 — Clarify
-
-Ask the user:
+<step n="0.5" name="Clarify">
+Ask user:
 1. What is being reviewed? (PR number, URL, or file path)
-2. What is the context? (Draft review? Final review? Specific concerns to focus on?)
+2. Context? (Draft review? Final review? Specific concerns to focus on?)
 
-Maximum 2 questions. If tier was not specified: default to Standard. Confirm with user if Full seems warranted (large diff, security-sensitive change, major design decision).
+Maximum 2 questions. If tier not specified: default to Standard. Confirm if Full seems warranted (large diff, security-sensitive change, major design decision).
 
-If the review target is a PR/MR: infer the repo from context or ask.
+If review target is PR/MR: infer repo from context or ask.
+<done_when>Review target, context, tier confirmed.</done_when>
+</step>
 
-Done when: review target, context, and tier confirmed.
-
-### Step 1 — Fetch review material
-
+<step n="1" name="Fetch review material">
 **For PRs/MRs:**
 1. Run `gh pr view <number> --json title,body,additions,deletions,files` (or `glab` equivalent).
-2. Run `gh pr diff <number>` to fetch the diff.
-3. Note the PR description, linked issues, and stated purpose.
+2. Run `gh pr diff <number>` to fetch diff.
+3. Note PR description, linked issues, stated purpose.
 
 **For specs, docs, ADRs, RFCs:**
-1. Read the file directly.
-2. If a previous version or related document exists, read that too for context.
+1. Read file directly.
+2. If previous version or related document exists: read for context.
+<done_when>Diff or document content in hand; PR description and purpose noted.</done_when>
+</step>
 
-Done when: diff or document content in hand; PR description and purpose noted.
-
-### Step 2 — Understand intent
-
+<step n="2" name="Understand intent">
 Before analyzing for issues, answer: "What is this change or document trying to achieve?"
 
-Summarize the intent in 1–2 sentences. This becomes the opening of the review response.
+Summarize intent in 1–2 sentences. This becomes opening of review response.
 
-Do not evaluate for scope creep or gold-plating unless the user explicitly asks.
+DO NOT evaluate for scope creep or gold-plating unless user explicitly asks.
+<done_when>Intent summary written.</done_when>
+</step>
 
-Done when: intent summary written.
-
-### Step 3 — Analyze
-
+<step n="3" name="Analyze">
 **Code review mode** (PRs/MRs):
-- Correctness: does the code do what the PR description says?
+- Correctness: does code do what PR description says?
 - Edge cases and error handling.
-- Test coverage: are new paths covered? Are existing tests still valid?
+- Test coverage: new paths covered? Existing tests still valid?
 - Naming, readability, consistency with existing patterns (from `codebases/<name>.md`).
 - Full tier: security implications, performance implications, design coherence.
 
@@ -93,47 +99,38 @@ Done when: intent summary written.
 - Full tier: design tradeoffs, alternatives considered, long-term maintainability.
 - Alignment with established architecture and patterns (from `codebases/<name>.md`).
 
-**Sub-agent trigger (Full):** Offload Steps 3–4 to the `general` built-in agent. Pass: PR diff or document content, the intent summary from Step 2, and the loaded `codebases/<name>.md`, `context/safety.md`. The agent returns findings by severity with file:line refs and a draft review response. Run inline (no sub-agent) for Quick and Standard tiers.
+<subagent_trigger agent="general" condition="Full tier">
+Offload Steps 3–4 to `general` built-in agent. Pass: PR diff or document content, intent summary from Step 2, loaded `codebases/<name>.md`, `context/safety.md`. Returns findings by severity with file:line refs and draft review response. Run inline for Quick and Standard tiers.
+</subagent_trigger>
 
-Done when: all analysis complete; issues identified with location and description.
+<done_when>All analysis complete; issues identified with location and description.</done_when>
+</step>
 
-### Step 4 — Produce findings
+<step n="4" name="Produce findings">
+Organize findings by severity per `<definitions>` table.
 
-Organize findings by severity:
+For each finding: severity label, location (file:line or section name), description, and — where possible — suggested fix or alternative. Group by severity, most to least severe. OMIT severity level with zero findings.
+<done_when>All findings listed with severity, location, description, suggested fix.</done_when>
+</step>
 
-| Severity | Meaning |
-|----------|---------|
-| **Blocker** | Must be fixed before merge/approval. Correctness, security, or fundamental design issue. |
-| **Major** | Should be fixed before merge/approval. Significant quality or clarity issue. |
-| **Minor** | Improve if easy; non-blocking. Small readability, style, or consistency issue. |
-| **Nit** | Take it or leave it. Cosmetic or personal preference. |
-
-For each finding: severity label, location (file:line or section name), description, and — where possible — a suggested fix or alternative. Group by severity, most to least severe. Omit a severity level if there are no findings at that level.
-
-Done when: all findings listed with severity, location, description, and suggested fix.
-
-### Step 5 — Draft review response (Standard + Full)
-
-Write the review in comment/response form:
+<step n="5" name="Draft review response" condition="Standard + Full" skip_if="Quick" gate="HARD-GATE (Full)">
+Write review in comment/response form:
 - Open: 1–2 sentences on intent (from Step 2) and overall impression.
 - Findings: grouped by severity.
-- Close: a clear recommendation:
+- Close: clear recommendation:
   - **Approve** — no issues, ready to merge.
   - **Approve with nits** — cosmetic only, can merge.
   - **Request changes** — Blockers or Majors must be addressed first.
-  - **Needs discussion** — fundamental question before the review can proceed.
+  - **Needs discussion** — fundamental question before review can proceed.
 
 For PRs/MRs: format as PR review comments suitable for `gh pr review --body` or inline comment format.
-For specs/docs: format as a structured comment block to share with the author.
+For specs/docs: format as structured comment block to share with author.
 
-**HARD-GATE (Full):** Present all findings and the draft review to the user before posting anything.
+HARD-GATE (Full): Present all findings and draft review before posting anything.
+<done_when>Review response drafted; user has seen full findings.</done_when>
+</step>
 
-Skip for Quick tier (surface findings in-session only).
-
-Done when: review response drafted; user has seen the full findings.
-
-### Step 6 — Persist review file (Full only)
-
+<step n="6" name="Persist review file" condition="Full" skip_if="Quick OR Standard">
 Write findings to `projects/<name>/notes/review-<date>-<slug>.md`:
 
 ```yaml
@@ -149,17 +146,14 @@ tags: [peer-review]
 ```
 
 Body: full findings from Step 4 + review response from Step 5.
+<done_when>Review file written (Full only).</done_when>
+</step>
 
-Skip for Quick and Standard tiers.
-
-Done when: review file written (Full only).
-
-### Step 7 — Close
-
-1. Append work log entry to `## Day` zone of today's daily note.
-2. Mark any matching task items as done.
-3. No dev-log entry required unless this review is part of an active project's lifecycle.
-   - If dev-log entry is warranted:
+<step n="7" name="Close" gate="END-GATE">
+1. Append work log to `## Day` zone of today's daily note.
+2. Mark any matching task items done.
+3. NO dev-log entry required unless this review is part of active project's lifecycle.
+   - If dev-log entry warranted:
 
 ```markdown
 ## <YYYY-MM-DD> — peer-review — <subject>
@@ -167,60 +161,66 @@ Done when: review file written (Full only).
 **Duration:** <estimate>
 **Summary:** <what was reviewed and recommendation>
 **Blockers:** <blocker count, or "none">
-**Next:** <suggested action for the author or yourself>
+**Next:** <suggested action for author or yourself>
 ```
 
-**Self-review checklist:**
+<self_review>
+- All `<done_when>` criteria met
+- All findings categorized by severity
+- No Blocker findings left unresolved
+- Review summary posted to MR/PR
+- No placeholders (TBD, TODO, FIXME) in outputs
+- All output file paths correct, targets exist
+</self_review>
 
-- [ ] All `Done when` criteria met for every step
-- [ ] All findings categorized by severity
-- [ ] No Blocker findings left unresolved
-- [ ] Review summary posted to MR/PR
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+<done_when>Daily note updated; dev-log entry appended if applicable.</done_when>
+</step>
 
-Done when: daily note updated; dev-log entry appended if applicable.
+</steps>
 
-**END-GATE:** Present final deliverables to the user.
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
 | In-session findings summary | Inline | Text |
 | Written review comments | PR/MR or inline in document | Markdown |
 | Persisted review file | `projects/<name>/notes/review-<date>-<slug>.md` | Markdown |
 | Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **PR not found or inaccessible:** Ask user to confirm PR number/URL or repo. DO NOT proceed without diff.
+- **No PR description or stated purpose:** DO NOT assume intent. Ask user what change is trying to do before analyzing.
+- **Prior review found for same target:** Surface it. Ask: full re-review or incremental review of changes since last review?
+- **User requests Quick review for security-sensitive change:** Warn that Quick tier does NOT include security pass. Ask to confirm scope.
+- **Findings unclear in severity:** ESCALATE, NOT downgrade. If uncertain Blocker or Major: classify as Blocker and explain.
+</error_handling>
 
-- **PR not found or inaccessible:** Ask the user to confirm the PR number/URL or repo. Do not proceed without the diff.
-- **No PR description or stated purpose:** Do not assume intent. Ask the user what the change is trying to do before analyzing.
-- **Prior review found for the same target:** Surface it. Ask: full re-review or incremental review of changes since last review?
-- **User requests a Quick review for a security-sensitive change:** Warn that Quick tier does not include a security pass. Ask to confirm scope.
-- **Findings unclear in severity:** Escalate, not downgrade. If uncertain whether a finding is a Blocker or Major, classify it as Blocker and explain.
+<contracts>
+1. Every finding MUST have severity label. Ungraded feedback is NOT a review.
+2. Blocker = "I would reject this." Nit = cosmetic. NEVER downgrade to avoid extra work.
+3. Understand intent before analyzing. DO NOT review for scope creep unless asked.
+4. HARD-GATE (Full): present all findings before posting. User sees complete picture first.
+5. `context/safety.md` violations are ALWAYS Blockers, regardless of tier.
+</contracts>
 
-## Contracts
-
-1. Every finding must have a severity label. Ungraded feedback is not a review.
-2. Blocker = "I would reject this." Nit = cosmetic. Never downgrade to avoid extra work.
-3. Understand intent before analyzing — do not review for scope creep unless asked.
-4. HARD-GATE (Full): present all findings before posting anything. Let the user see the complete picture first.
-5. `context/safety.md` violations are always Blockers, regardless of tier.
-
-## Sub-Agents
-
+<subagents>
 | Step | Agent | Type | Parallel? | Trigger | Output |
 |------|-------|------|-----------|---------|--------|
-| Steps 3–4 — Analyze + Findings | `general` | built-in | No — single | Full tier only | Full findings by severity (Blocker / Major / Minor / Nit) + draft review response |
+| 3–4 | `general` | built-in | No — single | Full tier only | Full findings by severity (Blocker / Major / Minor / Nit) + draft review response |
+</subagents>
 
----
-
-*Suggested next steps (present, do not run):*
-
-| Condition | Suggested next workflow |
-|-----------|------------------------|
+<next_steps>
+| Condition | Suggested workflow |
+|-----------|--------------------|
 | Review has Blockers | Author needs `resolve` before re-review |
 | Review is Approve or Approve with nits | Merge or proceed |
 | Review surfaces architectural questions | `design` or `research` to dig deeper |
-| Review uncovered a bug outside the PR scope | `debug` to investigate |
+| Review uncovered bug outside PR scope | `debug` to investigate |
+</next_steps>
+
+<output_rules>
+- Language: English.
+- Every finding has severity label.
+- NEVER downgrade severity to avoid extra work.
+- `context/safety.md` violations ALWAYS Blockers.
+</output_rules>
