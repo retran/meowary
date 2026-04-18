@@ -1,207 +1,207 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
 # Resource-Enrich
 
-> Single-article enrichment workflow for the `resources/` knowledge graph. Takes one article, gathers data from all available sources (local resources, Confluence, Jira, codebase, journal, web), enriches content, applies progressive summarization, fixes cross-references, and updates metadata. One article per invocation. Always stops and waits after committing. Inside-out: starts from an existing article and gathers sources. Use `resource-ingest` instead when starting from a source.
+<summary>
+> Single-article enrichment of `resources/`. Gathers data from all sources (local, Confluence, Jira, codebase, journal, web), enriches content, applies progressive summarization, fixes cross-references, updates metadata. One article per invocation. Inside-out: starts from article. Use `resource-ingest` when starting from a source.
+</summary>
 
-## Role
+<role>
+Systematic knowledge graph curator. Enriches from all sources — NEVER stops after first hit per channel. Extracts durable facts only; discards transient. Touched articles MUST be meaningfully different — evolution check non-negotiable. Tracks provenance in `## Changelog`. Commits and stops; NEVER auto-continues.
+</role>
 
-Acts as a systematic knowledge graph curator. Enriches from all sources — never stops after the first hit per source channel. Extracts durable facts only; discards transient content (meeting logistics, expiring status). An article that is touched must be meaningfully different afterward — the evolution check is non-negotiable. Tracks all provenance changes in `## Changelog`. Commits and stops; does not auto-continue.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Article path | User invocation | Required |
-| `resources-actualize-plan.md` | Repo root | Optional (context only) |
+| Article path | User invocation | Yes |
+| `resources-actualize-plan.md` | Repo root | Optional |
+</inputs>
 
-## Complexity Tiers
+<tiers>Not applicable. All steps mandatory. No tiers, no skipping.</tiers>
 
-Not applicable. Fixed-procedure workflow — all steps are mandatory. No tiers. No skipping.
+<steps>
 
-## Steps
+<step n="0" name="Load context">
+1. READ today's daily note for matching tasks.
+2. If `resources-actualize-plan.md` exists: READ `actualize` row for this article — note `Details`, `Missing Cross-References`, `Notes`.
+3. If article does not exist: ASK user to run `resource-ops create` first, then return.
 
-### Step 0 — Load context
+<done_when>Daily note checked; plan row read; article existence confirmed.</done_when>
+</step>
 
-1. Read today's daily note — find any tasks matching this article or topic.
-2. If `resources-actualize-plan.md` exists: read the `actualize` row for this article; note the `Details`, `Missing Cross-References`, and `Notes` columns.
-3. If the article **does not exist**: ask the user whether to create it via `resource-ops create` first, then return here.
+<step n="0.5" name="Clarify" gate="SOFT-GATE">
+**SOFT-GATE:** Confirm target and scope.
 
-Done when: daily note checked; plan row read if present; article existence confirmed.
+1. If path not specified: ASK which article (search `resources/`).
+2. CONFIRM scope: full enrichment or targeted section update.
 
-### Step 0.5 — Clarify
+DO NOT proceed until target unambiguous.
 
-**SOFT-GATE (all tiers):** Confirm target and scope before proceeding.
+<done_when>Path and scope confirmed.</done_when>
+</step>
 
-1. If the article path is not fully specified, ask: which article? (search `resources/` to confirm the path)
-2. Confirm scope: full enrichment, or targeted update for a specific section?
+<step n="1" name="Read and understand">
+1. READ article in full: front matter, body, `## Related`, `## Changelog`.
+2. NOTE `status`, `updated`, `actualized`, `tags`, `confluence:`, outbound links.
+3. IDENTIFY 3–8 key terms for source searches.
+4. NOTE candidate new nodes (concepts mentioned with no article).
 
-Do not proceed until the target article is unambiguously identified.
+<done_when>Article read; terms and candidates identified.</done_when>
+</step>
 
-Done when: article path confirmed; enrichment scope confirmed.
+<step n="2" name="Gather from all sources">
+Run all sub-steps. NEVER stop after first hit.
 
-### Step 1 — Read and understand
+**2a Local:** QMD + ripgrep across `resources/`; check tag siblings, same-subfolder; identify missing back-links.
 
-1. Read the article in full: front matter, body, `## Related`, `## Changelog`.
-2. Note `status`, `updated`, `actualized`, `tags`, `confluence:` front matter, outbound links.
-3. Identify 3–8 key terms to drive source searches.
-4. Note candidate new nodes (concepts mentioned with no resource article).
+**2b Confluence:** ≥3 strategies (exact title, domain terms, synonyms, people/components, tags); extract durable facts; add page IDs to `confluence:` front matter and `meta/confluence-sync.json`.
 
-Done when: article read in full; key terms and new-node candidates identified.
+**2c Jira:** ≥2 strategies (component/feature, project key, epics, people); durable facts only (decisions, deadlines, ownership).
 
-### Step 2 — Gather data from all sources
+**2d Codebase:** Verify file paths, components, architecture against current code; correct stale technical details.
 
-Run all sub-steps. Do not stop after the first hit per sub-step.
+**2e Journal:** Search key terms across `journal/daily/`, `journal/weekly/`, `projects/`; extract durable facts; discard transient.
 
-**2a. Local resources** — QMD query + ripgrep across `resources/`; check tag siblings and same-subfolder articles; identify missing back-links and cross-references.
+**2f Web:** Proactively search for recent developments, official docs, external references. NEVER skip if topic has external dimension. Durable facts only.
 
-**2b. Confluence** — search using ≥3 strategies (exact title, domain terms, synonyms, people/component names, tags); extract durable facts; add page IDs to `confluence:` front matter and `meta/confluence-sync.json`. (≥3 strategies because Confluence search is keyword-based with no semantic fallback — multiple strategies compensate for vocabulary mismatches.)
+**2g Entity extraction:** Scan all material for named entities/concepts with no article; note in `## Changelog` as `create` candidates for next `resource-plan`.
 
-**2c. Jira** — search using ≥2 strategies (component/feature names, team project key, epics, people); extract durable facts only (decisions, deadlines, ownership changes). (≥2 strategies because Jira ticket titles vary widely; component + owner searches complement each other.)
+**Person-file priority:** For `resources/people/`, prioritize Confluence (roster, org chart) and Jira (assignee/reporter). Codebase lower unless person owns specific tech areas.
 
-**2d. Codebase** — verify file paths, component names, architecture descriptions against current code; correct stale technical details.
+<subagent_trigger>Spawn `url-fetcher` (`.opencode/agents/url-fetcher.md`) for web sources when count > 3 in 2f — pass URL, topic context, target `resources/sources/<article-slug>-<date>.md`; returns path + 3–5 facts. Spawn `confluence-fetcher` (`.opencode/agents/confluence-fetcher.md`) per Confluence page in 2b — pass URL/ID, matching article path, topic context; returns 3–7 facts + GDPR notes. Both parallel when count > 3; inline when ≤ 3.</subagent_trigger>
 
-**2e. Journal** — search key terms across `journal/daily/`, `journal/weekly/`, `projects/`; extract durable facts (decisions, ownership, concrete numbers/dates); discard transient content.
+<done_when>All channels queried; sub-agents returned; facts gathered.</done_when>
+</step>
 
-**2f. Web** — search the web proactively for recent developments, official documentation updates, or external references relevant to the article topic. Do not skip this step if the topic has an external dimension. Extract durable facts only.
+<step n="3" name="Enrich article">
+1. ADD durable facts; fill thin sections; replace inline explanations with links.
+2. DO NOT split, merge, rename, create here — note candidates in `## Changelog`.
 
-**2g. Entity and topic extraction** — scan all gathered material for named entities and concepts with no resource article; note them in `## Changelog` as `create` candidates for the next `resource-plan` pass.
+<done_when>Body updated with durable facts; no structural changes.</done_when>
+</step>
 
-**Person-file priority:** For `resources/people/` articles, prioritize Confluence (team roster, org chart) and Jira (assignee/reporter). Codebase is lower priority unless the person owns specific technical areas.
+<step n="3.1" name="Progressive summarization">
+- **Layer 1 Highlight:** Bold key phrases per section (~10–20% of body; more dilutes emphasis).
+- **Layer 2 Summary:** If body > ~80 lines, add/update `## Summary` with 3–5 self-contained bullets.
+- **Layer 3 Synthesize:** If connected to ≥ 3 articles on shared theme, add one-sentence synthesis note linking them.
 
-**Sub-agent triggers:** Spawn `url-fetcher` (`.opencode/agents/url-fetcher.md`) for web sources when source count > 3 in Step 2f — pass the URL, article topic context, and target path `resources/sources/<article-slug>-<date>.md`; returns path written plus 3–5 extracted facts. Spawn `confluence-fetcher` (`.opencode/agents/confluence-fetcher.md`) for each Confluence page in Step 2b — pass the page URL or ID, the matching resource article path, and article topic context; returns 3–7 extracted facts and GDPR notes. Both agents run in parallel when count > 3; run inline when ≤ 3.
+<done_when>Highlights applied; summary if > ~80 lines; synthesis if ≥ 3 connections.</done_when>
+</step>
 
-Done when: all source channels queried; sub-agents returned; facts gathered.
+<step n="3.2" name="Evolution check">
+If re-reading adds no new facts: sharpen one claim, make one implied link explicit, or expand one thin section. Touched articles MUST be meaningfully different.
 
-### Step 3 — Enrich the article
+<done_when>≥ 1 meaningful change confirmed.</done_when>
+</step>
 
-1. Add new durable facts; fill thin sections; replace inline concept explanations with links.
-2. Do **not** split, merge, rename, or create articles here — note candidates in `## Changelog`.
+<step n="3.3" name="Synthesis check">
+If two newly linked articles suggest insight neither contains alone: append synthesis candidate to `## Changelog`.
 
-Done when: article body updated with new durable facts; no structural changes made.
+<done_when>Synthesis candidate documented if applicable.</done_when>
+</step>
 
-### Step 3.1 — Progressive summarization
+<step n="4" name="Remove outdated">
+1. REMOVE facts contradicted by sources; remove disbanded teams, deprecated processes, renamed components, resolved speculation.
+2. If entirely obsolete: SET `status: outdated`; add blockquote at top.
 
-- **Layer 1 — Highlight:** bold the most important phrases in each section (~10–20% of body text). (10–20% preserves signal density without over-bolding; more than 20% dilutes emphasis.)
-- **Layer 2 — Summary:** if article body > ~80 lines, add/update a `## Summary` with 3–5 self-contained bullets. (~80 lines is the threshold where readers benefit from a navigation summary before diving in.)
-- **Layer 3 — Synthesize:** if connected to 3+ other articles on a shared theme, add a one-sentence synthesis note linking them. (3+ connections indicates a cluster worth articulating; fewer may be coincidental.)
+<done_when>Outdated removed or status updated.</done_when>
+</step>
 
-Done when: highlights applied; summary added if body >~80 lines; synthesis note added if 3+ connections.
+<step n="5" name="Fix cross-references">
+1. VERIFY every outbound link targets existing file; fix or remove broken.
+2. For every new link A → B: ADD back-link in B's `## Related`.
+3. DROP links to archived/deleted; FIX links to renamed/moved.
 
-### Step 3.2 — Evolution check
+<done_when>All outbound verified; back-links added.</done_when>
+</step>
 
-If re-reading adds no new facts: find one claim to sharpen, one implied link to make explicit, or one thin section to expand. An article that is touched must be meaningfully different.
+<step n="6" name="Update metadata">
+1. SET `updated` and `actualized` to today.
+2. APPEND to `## Changelog`: `- **YYYY-MM-DD:** <what changed>.`
+3. UPDATE `## Sources`; update `confluence:` front matter; verify tags; register new in `meta/tags.md`.
 
-Done when: at least one meaningful change confirmed.
+<done_when>Front matter updated; changelog appended; tags verified.</done_when>
+</step>
 
-### Step 3.3 — Synthesis check
+<step n="7" name="Graph health check">
+**7a Orphan scan:** `node .opencode/scripts/find-backlinks.js <article-path>`. Zero inbound = orphaned; fix by linking from closest related. (People exempt.)
 
-If any two newly linked articles suggest an insight neither contains alone: append a synthesis candidate note to `## Changelog`.
+**7b Tag consistency:** All tags in `meta/tags.md`. Inline `#tags` match front matter.
 
-Done when: synthesis candidate documented if applicable.
+**7c Staleness spot-check:** Same-subfolder articles sharing tags; flag (not fix) those with `actualized` > 2 weeks old or Confluence pages modified since `actualized`.
 
-### Step 4 — Remove outdated content
+<done_when>Orphan check done/fixed; tags verified; stale neighbors flagged.</done_when>
+</step>
 
-1. Remove facts contradicted by sources; remove disbanded teams, deprecated processes, renamed components, resolved speculation.
-2. If the entire article is obsolete: set `status: outdated`; add a blockquote at top.
+<step n="8" name="Close" gate="END-GATE">
+1. STAGE: article, back-linked articles, new articles, `meta/tags.md`, `meta/confluence-sync.json`.
+2. COMMIT: `Enrich resources: <subfolder>/<article-name>`
+3. If staleness found neighbors: append paths to commit body.
+4. APPEND to `meta/resources-log.md`: `- **YYYY-MM-DD:** enrich | <path> — <one-line summary>`
+5. APPEND work log to today's daily note `## Day`.
+6. MARK matching tasks done.
+7. **STOP.** Report completion. NEVER auto-continue.
 
-Done when: outdated content removed or status updated.
-
-### Step 5 — Fix cross-references
-
-1. Verify every outbound link targets an existing file; fix or remove broken links.
-2. For every new link A → B: add back-link in B's `## Related`.
-3. Drop links to archived/deleted articles; fix links to renamed/moved files.
-
-Done when: all outbound links verified; back-links added for new links.
-
-### Step 6 — Update metadata
-
-1. Set `updated` and `actualized` to today.
-2. Append to `## Changelog`: `- **YYYY-MM-DD:** <what changed>.`
-3. Update `## Sources`; update `confluence:` front matter; verify tags; register new tags in `meta/tags.md`.
-
-Done when: front matter updated; changelog appended; tags verified.
-
-### Step 7 — Graph health check
-
-**7a. Orphan scan:** Run `node .opencode/scripts/find-backlinks.js <article-path>`. Zero inbound links = orphaned; fix by linking from the closest related article. (People files are exempt.)
-
-**7b. Tag consistency:** All tags must exist in `meta/tags.md`. Inline `#tags` must match front matter.
-
-**7c. Staleness spot-check:** Check same-subfolder articles sharing tags; flag (do not fix) those with `actualized` > 2 weeks old or with Confluence pages modified since `actualized`.
-
-Done when: orphan check done and fixed; tag consistency verified; stale neighbors flagged.
-
-### Step 8 — Close
-
-1. Stage: the article, back-linked articles, newly created articles, `meta/tags.md`, `meta/confluence-sync.json`.
-2. Commit: `Enrich resources: <subfolder>/<article-name>`
-3. If staleness check found stale neighbors: append their paths to the commit message body.
-4. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** enrich | <path> — <one-line summary>`
-5. Append work log entry to `## Day` zone of today's daily note.
-6. Mark any matching task items as done.
-7. **Stop.** Report completion. Do not auto-continue to the next article.
-
-**Self-review checklist:**
-
-- [ ] All `Done when` criteria met for every step
-- [ ] Article is meaningfully different from before (evolution check passed)
+<self_review>
+- [ ] All `Done when` met
+- [ ] Article meaningfully different (evolution check passed)
 - [ ] All outbound links target existing files
 - [ ] Back-links added for every new link
 - [ ] Tag consistency verified
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-Done when: committed; log entry appended; daily note updated; stopped.
+<done_when>Committed; log appended; daily note updated; stopped.</done_when>
+</step>
 
-**END-GATE:** Present final deliverables to the user.
+</steps>
 
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
 | Enriched article | `resources/<path>.md` | Markdown |
 | Back-linked articles | Various `resources/` paths | Markdown |
-| `meta/tags.md` updates | `meta/` | Markdown |
-| `meta/confluence-sync.json` updates | `meta/` | JSON registry |
-| `meta/resources-log.md` entry | `meta/` | Append entry |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Append entry |
-| Commit | Git history | Git commit |
+| Tag updates | `meta/tags.md` | Markdown |
+| Sync registry | `meta/confluence-sync.json` | JSON |
+| Log entry | `meta/resources-log.md` | Append |
+| Work log | `journal/daily/<date>.md` Day zone | Append |
+| Commit | Git | Commit |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **Article missing:** Ask user to run `resource-ops create`. NEVER create here.
+- **All sources no new facts:** Apply evolution check (3.2) — sharpen one claim or make one link explicit. NEVER leave unchanged after touching.
+- **Confluence search no results:** Note failure; proceed without. DO NOT block.
+- **Broken inbound link in orphan scan:** Fix from closest related. If none: note in `## Changelog` as future `create` candidate.
+</error_handling>
 
-- **Article does not exist:** Ask the user whether to run `resource-ops create` first. Do not create an article here.
-- **All sources return no new facts:** Apply the evolution check (Step 3.2) — at minimum sharpen one claim or make one link explicit. Never leave an article unchanged after touching it.
-- **Confluence search returns no results for any strategy:** Note the failure; proceed without Confluence. Do not block.
-- **Broken inbound link found in orphan scan:** Fix by adding a link from the closest related article. If no close relative exists, note in `## Changelog` as a future `create` candidate.
+<contracts>
+1. All steps mandatory — no skipping.
+2. One article per invocation. Stop after commit.
+3. Durable facts only. Discard meeting logistics, boilerplate, expiring status.
+4. Touched articles MUST be meaningfully different.
+5. Confluence and Jira read-only — NEVER write back.
+6. Web search in 2f NOT optional for external-dimension articles.
+</contracts>
 
-## Contracts
-
-1. All steps are mandatory — no skipping.
-2. One article per invocation. Stop and wait after committing.
-3. Durable facts only. Discard meeting logistics, formatting boilerplate, and expiring status.
-4. An article that is touched must be meaningfully different afterward.
-5. Confluence and Jira are read-only sources — never write back.
-6. Web search in Step 2f is not optional for articles with an external dimension.
-
-## Sub-Agents
-
+<subagents>
 | Step | Agent | Type | Parallel? | Trigger | Output |
 |------|-------|------|-----------|---------|--------|
-| Step 2f — Web gather | `url-fetcher` | custom | Yes — one per URL | Source count > 3 in Step 2f | Source note written to `resources/sources/`; 3–5 bullet fact summary |
-| Step 2b — Confluence gather | `confluence-fetcher` | custom | Yes — one per page | Any Confluence page identified in Step 2b | Resource article update + 3–7 bullet facts; GDPR notes |
+| 2f Web gather | `url-fetcher` | custom | Yes (per URL) | Source count > 3 in 2f | Source note in `resources/sources/`; 3–5 fact bullets |
+| 2b Confluence gather | `confluence-fetcher` | custom | Yes (per page) | Any Confluence page in 2b | Article update + 3–7 facts; GDPR notes |
+</subagents>
 
----
-
-*Suggested next steps (present, do not run):*
-
+<next_steps>
 | Condition | Suggested next workflow |
 |-----------|------------------------|
-| Staleness spot-check found stale neighbors | `resource-enrich` on neighbor articles (next session) |
-| New node candidates identified in Step 2g | `resource-ops create` then `resource-enrich` |
-| Graph has accumulated many candidates | `resource-plan` to generate full operation queue |
-| Structural operation needed (merge, split) | `resource-ops` |
+| Stale neighbors flagged | `resource-enrich` on neighbors (next session) |
+| New node candidates in 2g | `resource-ops create` then `resource-enrich` |
+| Many candidates accumulated | `resource-plan` |
+| Structural op needed | `resource-ops` |
+</next_steps>
+
+<output_rules>Output language: English.</output_rules>

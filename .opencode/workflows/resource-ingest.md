@@ -1,180 +1,180 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
 # Resource-Ingest
 
-> Processes a single external source — a Confluence page, a web article, a document, a Jira issue, or a file — and distills it into the `resources/` knowledge graph. Outside-in: starts from a source and determines which resource articles to create or update. Use `resource-enrich` instead when starting from an existing article. One source per invocation. Invoke when external information arrives that warrants capturing in the knowledge graph.
+<summary>
+> Processes one external source (Confluence page, web article, doc, Jira issue, file) and distills it into `resources/`. Outside-in: starts from source. Use `resource-enrich` when starting from existing article. One source per invocation.
+</summary>
 
-## Role
+<role>
+Disciplined knowledge distiller. Reads source fully before mapping to articles. Extracts durable facts only — decisions, ownership, architecture, metrics, deadlines. Discards transient. Every fact traceable to source. NEVER writes back to external sources.
+</role>
 
-Acts as a disciplined knowledge distiller. Reads the source fully before mapping it to articles. Extracts durable facts only — decisions, ownership, architecture, metrics, deadlines. Discards transient content (meeting logistics, formatting boilerplate, expiring status). Every fact added to a resource article must be traceable to the source. Never writes back to external sources.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Source reference (URL, page ID, issue key, path) | User invocation | Required |
-| Target resource article(s) | User / QMD match | Optional |
+| Source ref (URL, page ID, issue key, path) | User invocation | Yes |
+| Target article(s) | User / QMD match | Optional |
+</inputs>
 
-## Complexity Tiers
+<tiers>Not applicable. All steps mandatory.</tiers>
 
-Not applicable. Fixed-procedure workflow — all steps are mandatory.
+<steps>
 
-## Steps
+<step n="0" name="Load context">
+1. READ active project's dev-log if invoked in project context.
+2. SEARCH `resources/` with `qmd query "<source topic>"` before fetching.
+3. READ today's daily note for matching tasks.
 
-### Step 0 — Load context
+<done_when>Related articles identified; daily note checked.</done_when>
+</step>
 
-1. Read the active project's dev-log if invoked in project context; otherwise skip.
-2. Search `resources/` with `qmd query "<source topic>"` to identify related articles before fetching the source.
-3. Read today's daily note to identify any matching tasks.
+<step n="0.5" name="Clarify" gate="SOFT-GATE">
+**SOFT-GATE:** ASK:
+1. What is the source? (URL, page ID, issue key, path)
+2. Target article to update, or create new?
+3. Specific aspects to focus?
 
-Done when: related resource articles identified; daily note checked.
+DO NOT proceed until source identified.
 
-### Step 0.5 — Clarify
+<done_when>Source, target intent, focus confirmed.</done_when>
+</step>
 
-**SOFT-GATE (all tiers):** Ask the user:
-1. What is the source? (URL, Confluence page ID, Jira issue key, file path)
-2. Is there a target resource article to update, or should a new article be created?
-3. Any specific aspects to focus on?
+<step n="1" name="Fetch source">
+- **Confluence:** fetch via `confluence` skill; record page ID and space.
+- **Web URL:** fetch via web tool; record URL and date.
+- **Jira:** fetch via `jira` skill; record issue key and project.
+- **File:** Read tool from local path.
+- NOTE metadata: title, author, date, URL/ID.
 
-Do not proceed until the source is identified.
+<subagent_trigger>For web URLs: spawn `url-fetcher` (`.opencode/agents/url-fetcher.md`) — pass URL, topic context, target `resources/sources/<slug>-<date>.md`; returns path + 3–5 facts + metadata. Inline (no agent) for Confluence/Jira/file (use respective skills/Read).</subagent_trigger>
 
-Done when: source reference, target intent, and focus confirmed.
+<done_when>Source fetched; metadata noted.</done_when>
+</step>
 
-### Step 1 — Fetch the source
-
-- **Confluence page:** fetch via `confluence` skill; record page ID and space.
-- **Web URL:** fetch via web fetch tool; record URL and retrieval date.
-- **Jira issue:** fetch via `jira` skill; record issue key and project.
-- **File:** read from local path.
-- Note source metadata: title, author, date, URL/ID.
-
-**Sub-agent trigger:** For web URLs, spawn `url-fetcher` (`.opencode/agents/url-fetcher.md`) — pass the URL, source topic context, and target path `resources/sources/<slug>-<date>.md`; returns path written, 3–5 extracted facts, and source metadata. Run inline (no sub-agent) for Confluence, Jira, and file sources — those use the `confluence` skill, `jira` skill, or the Read tool respectively.
-
-Done when: source content fetched; metadata noted.
-
-### Step 2 — Assess content
-
-1. Read the source in full.
-2. Identify:
-   - Core concepts covered
+<step n="2" name="Assess content">
+1. READ source in full.
+2. IDENTIFY:
+   - Core concepts
    - Durable facts (decisions, ownership, architecture, metrics, deadlines)
-   - Transient content to discard (meeting logistics, status updates, boilerplate)
-3. Ask yourself: is this source worth ingesting? If it contains only transient content, inform the user and stop.
+   - Transient to discard (logistics, status, boilerplate)
+3. ASK: worth ingesting? If transient-only: inform user, STOP.
 
-Done when: durable facts identified; transient content categorized; ingestion decision made.
+<done_when>Durable facts identified; transient categorized; ingestion decision made.</done_when>
+</step>
 
-### Step 3 — Map to resource articles
+<step n="3" name="Map to articles">
+1. RUN `qmd query "<core concepts>"` to find existing articles.
+2. For each: note what to add.
+3. For concepts without article: note as create candidates.
+4. Ambiguous mapping (two plausible targets): ASK user before proceeding.
 
-1. Run `qmd query "<core concepts>"` to find existing resource articles covering the same topics.
-2. For each relevant article found: note what can be added.
-3. For concepts with no existing article: note them as create candidates.
-4. If the mapping is ambiguous (e.g., two plausible target articles): ask the user to confirm before proceeding.
+<done_when>Targets identified; create candidates noted; ambiguities resolved.</done_when>
+</step>
 
-Done when: existing target articles identified; create candidates noted; ambiguities resolved.
+<step n="4" name="Update existing">
+For each target:
+1. ADD durable facts.
+2. FILL thin sections.
+3. REPLACE inline explanations with links.
+4. ADD source to `## Sources` with provenance: `[WEB]`, `[CONFLUENCE]`, `[JIRA]`, `[DOC]`.
+5. UPDATE `confluence:` front matter if Confluence source.
+6. UPDATE `updated` and `actualized`.
+7. APPEND `## Changelog`.
 
-### Step 4 — Update existing articles
+<done_when>All targets updated with facts and provenance.</done_when>
+</step>
 
-For each target resource article:
-1. Add new durable facts from the source.
-2. Fill thin sections.
-3. Replace inline explanations with links to the source's concepts.
-4. Add the source to `## Sources` with provenance type: `[WEB]`, `[CONFLUENCE]`, `[JIRA]`, `[DOC]`.
-5. Update `confluence:` front matter if the source is a Confluence page.
-6. Update `updated` and `actualized` dates.
-7. Append to `## Changelog`.
+<step n="5" name="Create new" condition="User-confirmed candidates">
+For each confirmed:
+1. CREATE `resources/<subfolder>/<slug>.md` with distilled content.
+2. APPLY progressive summarization (highlight + summary if > ~80 lines).
+3. ADD to `meta/tags.md` if new tags.
+4. LINK from nearest related article.
 
-Done when: all target articles updated with durable facts and provenance.
+<done_when>New articles created and linked.</done_when>
+</step>
 
-### Step 5 — Create new articles (if needed)
+<step n="6" name="Fix cross-references">
+1. For every new link A → B: ADD back-link in B's `## Related`.
+2. VERIFY all outbound links in modified articles target existing files.
 
-For each create candidate confirmed by the user:
-1. Create `resources/<subfolder>/<slug>.md` with the distilled content.
-2. Apply progressive summarization (highlight + summary if >80 lines — ~80 lines is the threshold where a navigation summary helps readers).
-3. Add to `meta/tags.md` if new tags are needed.
-4. Link from the nearest related article.
+<done_when>Back-links added; outbound verified.</done_when>
+</step>
 
-Done when: new articles created and linked from nearest relatives.
+<step n="7" name="Update registries">
+1. If Confluence: UPDATE `meta/confluence-sync.json` with page ID, space, `synced: today`.
+2. REGISTER new tags in `meta/tags.md`.
 
-### Step 6 — Fix cross-references
+<done_when>Registries updated.</done_when>
+</step>
 
-1. For every new link A → B: add back-link in B's `## Related`.
-2. Verify all outbound links in modified articles target existing files.
+<step n="8" name="Close" gate="END-GATE">
+1. STAGE: modified/created articles, `meta/tags.md`, `meta/confluence-sync.json`.
+2. COMMIT: `Ingest resources: <source-title> → <N articles affected>`
+3. APPEND to `meta/resources-log.md`: `- **YYYY-MM-DD:** ingest | <source-type>: <source-title> → <N articles>`
+4. RUN `node .opencode/scripts/qmd-index.js`
+5. APPEND work log to today's daily note `## Day`.
+6. MARK matching tasks done.
 
-Done when: all back-links added; outbound links verified.
-
-### Step 7 — Update registries
-
-1. If source is Confluence: update `meta/confluence-sync.json` with page ID, space, and `synced: today`.
-2. Register any new tags in `meta/tags.md`.
-
-Done when: `meta/confluence-sync.json` updated; tags registered.
-
-### Step 8 — Close
-
-1. Stage: modified/created resource articles, `meta/tags.md`, `meta/confluence-sync.json`.
-2. Commit: `Ingest resources: <source-title> → <N articles affected>`
-3. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** ingest | <source-type>: <source-title> → <N articles>`
-4. Run QMD re-index: `node .opencode/scripts/qmd-index.js`
-5. Append work log entry to `## Day` zone of today's daily note.
-6. Mark any matching task items as done.
-
-**Self-review checklist:**
-
-- [ ] All `Done when` criteria met for every step
-- [ ] All source notes created with proper front matter
-- [ ] Resource articles created or updated from source material
+<self_review>
+- [ ] All `Done when` met
+- [ ] Source notes have proper front matter
+- [ ] Articles created/updated from source
 - [ ] Links between sources and resources established
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-Done when: committed; log entry appended; QMD re-indexed; daily note updated.
+<done_when>Committed; log appended; QMD re-indexed; daily note updated.</done_when>
+</step>
 
-**END-GATE:** Present final deliverables to the user.
+</steps>
 
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
-| Updated resource articles | `resources/` | Markdown |
-| New resource articles | `resources/<subfolder>/` | Markdown |
-| `meta/confluence-sync.json` updates | `meta/` | JSON registry |
-| `meta/tags.md` updates | `meta/` | Markdown |
-| `meta/resources-log.md` entry | `meta/` | Append entry |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Append entry |
-| Commit | Git history | Git commit |
+| Updated articles | `resources/` | Markdown |
+| New articles | `resources/<subfolder>/` | Markdown |
+| Sync registry | `meta/confluence-sync.json` | JSON |
+| Tag updates | `meta/tags.md` | Markdown |
+| Log entry | `meta/resources-log.md` | Append |
+| Work log | `journal/daily/<date>.md` Day zone | Append |
+| Commit | Git | Commit |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **Transient-only source:** Inform user; STOP. NEVER create from low-value sources.
+- **QMD finds no relevant articles:** Treat as new article. Confirm subfolder/slug with user before creating.
+- **Ambiguous mapping:** Ask user. NEVER infer when two plausible.
+- **Web fetch fails:** Note; ask whether to try another method or skip.
+- **Confluence requires auth:** Note; ask user to confirm `.env` credentials.
+</error_handling>
 
-- **Source contains only transient content:** Inform the user; stop. Do not create or update articles from low-value sources.
-- **QMD finds no relevant existing articles:** Treat the source as creating a new article. Confirm the subfolder and slug with the user before creating.
-- **Ambiguous mapping (two plausible target articles):** Ask the user to confirm. Do not infer the target when two plausible choices exist.
-- **Web URL fetch fails:** Note the failure; ask the user whether to try another fetch method or skip this source.
-- **Confluence page requires authentication:** Note the failure; ask the user to confirm credentials are set in `.env`.
-
-## Contracts
-
+<contracts>
 1. One source per invocation — batching obscures provenance.
-2. Never write to external sources (Confluence, Jira) — read-only.
-3. Ask before creating new articles if the mapping is ambiguous.
-4. Every fact added must be traceable to the source — use `[WEB]`, `[CONFLUENCE]`, `[JIRA]`, `[DOC]` provenance tags.
-5. Distill, don't mirror. A 10-page document may add 5 bullets to an existing article and create one new stub.
+2. NEVER write to external sources (Confluence, Jira) — read-only.
+3. Ask before creating if mapping ambiguous.
+4. Every fact traceable — use `[WEB]`/`[CONFLUENCE]`/`[JIRA]`/`[DOC]` provenance.
+5. Distill, don't mirror. 10-page doc may add 5 bullets + 1 stub.
+</contracts>
 
-## Sub-Agents
-
+<subagents>
 | Step | Agent | Type | Parallel? | Trigger | Output |
 |------|-------|------|-----------|---------|--------|
-| Step 1 — Fetch | `url-fetcher` | custom | No — single source | Source is a web URL | Source note written to `resources/sources/`; extracted facts and source metadata |
+| 1 Fetch | `url-fetcher` | custom | No (single source) | Source is web URL | Source note in `resources/sources/`; facts + metadata |
+</subagents>
 
----
-
-*Suggested next steps (present, do not run):*
-
+<next_steps>
 | Condition | Suggested next workflow |
 |-----------|------------------------|
-| New stub articles created | `resource-enrich` on each stub |
-| Source referenced related concepts worth tracking | `resource-discover` for a broader gap scan |
-| Many Confluence pages queued | `resource-sync` for batch sync |
-| Graph health questionable after additions | `resource-plan` |
+| New stubs created | `resource-enrich` per stub |
+| Source referenced related concepts | `resource-discover` |
+| Many Confluence pages queued | `resource-sync` |
+| Graph health questionable | `resource-plan` |
+</next_steps>
+
+<output_rules>Output language: English.</output_rules>

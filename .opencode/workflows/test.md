@@ -1,133 +1,117 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
-# Test
+<role>
+Quality verification specialist. Distinguish automated regression verification from exploratory quality investigation. NEVER guess at test coverage — read from plan's success criteria. Document every session for accumulated findings. Surface failures with actionable context.
+</role>
 
-> First-class testing workflow covering automated and manual/exploratory testing. Reads success criteria from the plan, runs the applicable test suite, executes manual test sessions for features requiring human judgment, documents findings, and surfaces failures with actionable context. Invoke after `implement` completes a milestone, or to verify a bug fix.
+<summary>
+First-class testing workflow covering automated and manual/exploratory testing. Reads success criteria from plan, runs applicable test suite, executes manual sessions for features requiring human judgment, documents findings, surfaces failures with actionable context. Invoke after `implement` completes a milestone OR to verify a bug fix.
+</summary>
 
-## Role
-
-Acts as a quality verification specialist. Distinguishes automated regression verification from exploratory quality investigation. Does not guess at test coverage — reads it from the plan's success criteria. Documents every session so findings accumulate across sessions. Surfaces failures with enough context to drive immediate action.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
 | Plan and success criteria | `projects/<name>/plans/<slug>.md` | Required |
 | Codebase context | `codebases/<name>.md` | Required |
 | Testing framework info | `codebases/<name>.md` | Required |
 | Complexity tier | User declaration | Required |
+</inputs>
 
-## Complexity Tiers
-
+<tiers>
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Run automated suite; report results; no manual testing | END-GATE only |
-| **Standard** | Automated suite + targeted manual tests for changed areas | SOFT-GATE after automated; END-GATE at close |
-| **Full** | Automated suite + structured manual session + exploratory testing + risk-based session planning | HARD-GATE (Full): after session planning; HARD-GATE (Full): after each test area |
+| Quick | Run automated suite; report results; no manual testing | END-GATE only |
+| Standard | Automated suite + targeted manual tests for changed areas | SOFT-GATE after automated; END-GATE at close |
+| Full | Automated suite + structured manual session + exploratory testing + risk-based session planning | HARD-GATE after session planning, after each test area |
+</tiers>
 
-## Steps
+<steps>
 
-### Step 0 — Load context
-
+<step n="0" name="Load context">
 1. Read `projects/<name>/dev-log.md` last entry — what was implemented?
 2. Read `projects/<name>/plans/<slug>.md` — identify success criteria and test strategy.
-3. Load `codebases/<name>.md` for test framework, file structure, coverage policy, and codebase context.
-4. Read today's daily note — find any tasks matching this testing work.
+3. Load `codebases/<name>.md` for test framework, file structure, coverage policy, codebase context.
+4. Read today's daily note — find tasks matching testing work.
+<done_when>Implemented scope, success criteria, test framework, codebase context loaded.</done_when>
+</step>
 
-Done when: implemented scope, success criteria, test framework, and codebase context loaded.
-
-### Step 0.5 — Clarify
-
-Ask the user:
-1. What is the scope of testing? (specific feature, full regression, exploratory)
-2. Standard or Full: is manual testing required?
-3. Are there specific risk areas? (recently changed code, known fragility, external integrations)
+<step n="0.5" name="Clarify">
+Ask user:
+1. Scope of testing? (specific feature, full regression, exploratory)
+2. Standard or Full: manual testing required?
+3. Specific risk areas? (recently changed code, known fragility, external integrations)
 
 Also:
 - Search `projects/<name>/notes/` for prior test session notes and known issues.
-- Search `resources/` for testing patterns applicable to this codebase.
+- Search `resources/` for testing patterns applicable to codebase.
 
-Do not assume the test strategy — read it from the plan and confirm with the user.
+DO NOT assume test strategy — read from plan and confirm with user.
+<done_when>Scope, manual testing requirement, risk areas confirmed.</done_when>
+</step>
 
-Done when: scope, manual testing requirement, and risk areas confirmed.
-
-### Step 1 — Session planning (Full only)
-
-1. Identify test areas: which features, flows, and edge cases to cover.
+<step n="1" name="Session planning" condition="Full" skip_if="Quick OR Standard" gate="HARD-GATE (Full)">
+1. Identify test areas: features, flows, edge cases to cover.
 2. Prioritize by risk: recently changed code, critical paths, external boundaries.
-3. Write test plan to `projects/<name>/notes/test-session-<YYYY-MM-DD>.md` — include test areas, prioritization rationale, and pass/fail criteria.
+3. Write test plan to `projects/<name>/notes/test-session-<YYYY-MM-DD>.md` — areas, prioritization rationale, pass/fail criteria.
 
-**HARD-GATE (Full):** Present test plan to user; confirm before starting test execution.
+HARD-GATE (Full): Present test plan; confirm before starting test execution.
+<done_when>Test plan written; user confirmed (Full only).</done_when>
+</step>
 
-Skip for Quick and Standard tiers.
-
-Done when: test plan written; user confirmed (Full only).
-
-### Step 2 — Run automated tests
-
-1. Run the full test suite or targeted suite for the changed area.
+<step n="2" name="Run automated tests">
+1. Run full test suite OR targeted suite for changed area.
    - Command: per `codebases/<name>.md` for this project.
 2. Capture output: pass/fail counts, failing test names, error messages.
-3. Do not proceed past failures without either addressing them or explicitly deferring with user approval.
+3. DO NOT proceed past failures without addressing them OR explicitly deferring with user approval.
+<done_when>Automated suite complete; results captured.</done_when>
+</step>
 
-Done when: automated suite complete; results captured.
-
-### Step 3 — Analyze failures
-
+<step n="3" name="Analyze failures" gate="SOFT-GATE (Standard)">
 For each failing test:
 1. Categorize: pre-existing failure / new regression / expected pending failure.
-2. For new regressions: identify the commit or change that introduced it.
-3. Surface to the user with full context: test name, error message, relevant code location.
+2. For new regressions: identify commit or change that introduced.
+3. Surface to user with full context: test name, error message, relevant code location.
 
-If failures are complex and require investigation: surface this clearly and suggest `debug` as next step.
+If failures complex and require investigation: surface clearly and suggest `debug` as next step.
 
-Done when: every failing test categorized and surfaced with context.
+SOFT-GATE (Standard): Present automated results before proceeding to manual testing.
+<done_when>Every failing test categorized and surfaced with context.</done_when>
+</step>
 
-**SOFT-GATE (Standard):** Present automated results to user before proceeding to manual testing.
-
-### Step 4 — Manual test session (Standard + Full)
-
-Execute manual tests following the test plan (Full) or a targeted checklist for changed areas (Standard).
+<step n="4" name="Manual test session" condition="Standard + Full" skip_if="Quick" gate="HARD-GATE (Full)">
+Execute manual tests following test plan (Full) OR targeted checklist for changed areas (Standard).
 
 For each test case:
-1. State the precondition.
-2. Execute the action.
-3. Note the actual result vs. expected.
+1. State precondition.
+2. Execute action.
+3. Note actual result vs expected.
 4. Mark: pass / fail / blocked / unexpected behavior.
 
 Document all results in `projects/<name>/notes/test-session-<YYYY-MM-DD>.md`.
 
-**HARD-GATE (Full):** After each test area, present results to user before proceeding to the next area.
+HARD-GATE (Full): After each test area, present results before proceeding to next area.
+<done_when>All manual test cases executed and documented.</done_when>
+</step>
 
-Skip for Quick tier.
-
-Done when: all manual test cases executed and documented.
-
-### Step 5 — Exploratory testing (Full only)
-
-After structured tests: explore edge cases not in the test plan.
+<step n="5" name="Exploratory testing" condition="Full" skip_if="Quick OR Standard">
+After structured tests: explore edge cases not in test plan.
 
 Focus areas: boundary conditions, error paths, unusual inputs, performance at load, concurrent use.
 
-Note any unexpected behaviors — these are potential bugs even if they do not count as formal failures.
+Note unexpected behaviors — potential bugs even if not formal failures.
+<done_when>Exploratory session complete; unexpected behaviors noted.</done_when>
+</step>
 
-Skip for Quick and Standard tiers.
+<step n="6" name="Proactive research" condition="failure suggests systemic issue OR unfamiliar behavior">
+Search `resources/`, codebase history, web for prior context BEFORE reporting.
+DO NOT report "unknown failure" without searching first.
+<done_when>Research complete (or confirmed not needed).</done_when>
+</step>
 
-Done when: exploratory session complete; unexpected behaviors noted.
-
-### Step 6 — Proactive research (if needed)
-
-If a test failure suggests a systemic issue or unfamiliar behavior:
-- Search `resources/`, codebase history, and the web for prior context before reporting.
-- Do not report "unknown failure" without searching first.
-
-Done when: research complete (or confirmed not needed).
-
-### Step 7 — Close
-
+<step n="7" name="Close" gate="END-GATE">
 1. Produce test summary: total tests run, pass/fail/blocked, new regressions, open issues.
 2. Write summary to `projects/<name>/notes/test-session-<YYYY-MM-DD>.md`.
 3. Append dev-log entry:
@@ -143,55 +127,61 @@ Done when: research complete (or confirmed not needed).
 **Next:** debug (if failures) | self-review (if clean) | plan replan (if scope-affecting failures)
 ```
 
-4. Append work log entry to `## Day` zone of today's daily note.
-5. Mark matching task items as done.
+4. Append work log to `## Day` zone of today's daily note.
+5. Mark matching task items done.
 6. If new regressions found: add `- [ ]` pending tasks to daily note — one per regression.
 
-**Self-review checklist:**
+<self_review>
+- All `<done_when>` criteria met
+- All test scenarios executed and results documented
+- Coverage gaps identified and logged
+- Regression risk assessed
+- No placeholders (TBD, TODO, FIXME) in outputs
+- All output file paths correct, targets exist
+</self_review>
 
-- [ ] All `Done when` criteria met for every step
-- [ ] All test scenarios executed and results documented
-- [ ] Coverage gaps identified and logged
-- [ ] Regression risk assessed
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+<done_when>Summary written; dev-log entry appended; daily note updated; regression tasks filed.</done_when>
+</step>
 
-Done when: summary written; dev-log entry appended; daily note updated; regression tasks filed.
+</steps>
 
-**END-GATE:** Present final deliverables to the user.
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
 | Test session notes | `projects/<name>/notes/test-session-<date>.md` | Markdown |
 | Test summary | Inline + appended to session file | Text |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
 | Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **Test suite command not in `codebases/<name>.md`:** Ask user for correct command. DO NOT guess. Update `codebases/<name>.md` with confirmed command before running.
+- **Test suite fails to run (infrastructure failure, NOT test failures):** Note infrastructure failure. DO NOT proceed. Ask user to resolve test environment.
+- **Pre-existing failures in automated suite:** Document. DO NOT block on them. Surface clearly as pre-existing — NOT confused with new regressions.
+- **Test session file already exists for today:** Append to existing file with `---` separator and timestamp header.
+</error_handling>
 
-- **Test suite command not in `codebases/<name>.md`:** Ask the user for the correct command. Do not guess. Update `codebases/<name>.md` with the confirmed command before running.
-- **Test suite fails to run (not test failures — infrastructure failure):** Note the infrastructure failure; do not proceed. Ask the user to resolve the test environment.
-- **Pre-existing failures in the automated suite:** Document them; do not block on them. Surface clearly as pre-existing so they are not confused with new regressions.
-- **Test session file already exists for today:** Append to the existing file with a `---` separator and a timestamp header.
+<contracts>
+1. ALWAYS read success criteria and test strategy from `projects/<name>/plans/<slug>.md` before testing.
+2. Test session notes are cumulative — record across sessions. NEVER delete prior entries.
+3. New regressions block the session OR require explicit user approval to defer.
+4. Manual and exploratory testing are first-class activities, NOT optional extras.
+5. NEVER report "unknown failure" without searching `resources/`, codebase, and web first.
+</contracts>
 
-## Contracts
-
-1. Always read success criteria and test strategy from `projects/<name>/plans/<slug>.md` before testing.
-2. Test session notes are cumulative — they form a record across sessions. Never delete prior entries.
-3. New regressions block the session or require explicit user approval to defer.
-4. Manual and exploratory testing are first-class activities, not optional extras.
-5. Never report "unknown failure" without searching `resources/`, codebase, and the web first.
-
----
-
-*Suggested next steps (present, do not run):*
-
-| Condition | Suggested next workflow |
-|-----------|------------------------|
+<next_steps>
+| Condition | Suggested workflow |
+|-----------|--------------------|
 | New regressions found | `debug` |
 | All tests pass | `self-review` |
 | Failures reveal scope-affecting issues | `plan replan` |
 | Test failures reveal fundamental design issues | `brainstorm` |
 | Test session reveals missing test coverage | `implement` (add tests) |
+</next_steps>
+
+<output_rules>
+- Language: English.
+- Read test strategy from plan; NEVER assume.
+- Test session notes cumulative; NEVER delete prior entries.
+- NEVER report "unknown failure" without searching first.
+</output_rules>

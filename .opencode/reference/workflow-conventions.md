@@ -1,27 +1,28 @@
 ---
 type: reference
-updated: 2026-04-09
+updated: 2026-04-18
 tags: [p-meowary]
 ---
 
+<role>Workflow conventions reference — canonical structure, gates, sections, and language for all `.opencode/workflows/` files.</role>
+
+<summary>
+> Canonical structure, format, and vocabulary for all workflow files in `.opencode/workflows/`. Every workflow MUST conform. Load when writing or editing workflows.
+</summary>
+
 # Workflow Conventions
 
-Canonical structure, format, and vocabulary for all workflow files in `.opencode/workflows/`. Every workflow must conform. Load this reference when writing or editing workflows.
-
----
-
-## 1. Step Numbering
-
+<step_numbering>
 - Format: `### Step N — Name`
-- Step 0 is always `### Step 0 — Load context`
-- Step 0.5 is always `### Step 0.5 — Clarify`
-- The final step is always named `Close`: `### Step N — Close`
-- Every step ends with a `Done when:` line
+- Step 0 ALWAYS `### Step 0 — Load context`
+- Step 0.5 ALWAYS `### Step 0.5 — Clarify`
+- Final step ALWAYS named `Close`: `### Step N — Close`
+- Every step ENDS with `Done when:` line
 - Sub-steps: see §5 for decimal vs letter-suffix formats
+</step_numbering>
 
-## 2. Gate Vocabulary
-
-Three gate types. Every workflow that uses gates must use these exact formats:
+<gate_vocabulary>
+Three gate types. Every workflow with gates MUST use these exact formats:
 
 | Gate | Behavior | Format | When |
 |------|----------|--------|------|
@@ -29,13 +30,13 @@ Three gate types. Every workflow that uses gates must use these exact formats:
 | **SOFT-GATE** | Output intermediate results. Run self-check. Continue without pausing. | `**SOFT-GATE (Tier):**` | Mid-workflow quality checkpoints |
 | **END-GATE** | Present final deliverables at Close step. | `**END-GATE:**` | Always present at Close step |
 
-- Tier annotation is required for HARD-GATE and SOFT-GATE: `(Full)`, `(Standard + Full)`, etc.
-- END-GATE has no tier annotation — it applies to all tiers.
-- No other gate terms (Mid-gate, End gate, "hard contract") are valid.
+- Tier annotation REQUIRED for HARD-GATE and SOFT-GATE: `(Full)`, `(Standard + Full)`, etc.
+- END-GATE has NO tier annotation — applies to all tiers.
+- NO other gate terms (Mid-gate, End gate, "hard contract") are valid.
+</gate_vocabulary>
 
-## 3. Structural Sections
-
-Every workflow file must include these sections in this order:
+<structural_sections>
+Every workflow file MUST include these sections in this order:
 
 1. YAML front matter (`updated`, `tags`)
 2. `# Title` — workflow name as H1
@@ -47,28 +48,28 @@ Every workflow file must include these sections in this order:
 8. `## Outputs` — table: `Output | Location | Format`
 9. `## Error Handling` — bullet list of failure scenarios and responses
 10. `## Contracts` — numbered list of non-negotiable rules
-11. `## Sub-Agents` — table: `Step | Agent | Type | Parallel? | Trigger | Output` (include only when the workflow uses agents; omitting means no agents)
+11. `## Sub-Agents` — table: `Step | Agent | Type | Parallel? | Trigger | Output` (include only when workflow uses agents; omitting means none)
 12. `---` horizontal rule
 13. `*Suggested next steps (present, do not run):*` — italic (asterisk), then table: `Condition | Suggested next workflow`
+</structural_sections>
 
-## 4. Workflow Modes
+<workflow_modes>
+When workflow has multiple modes (e.g., initial plan + replan, Monday + Friday), each mode has own step sequence under `## Steps — <Mode>` heading. Step numbering RESTARTS at Step 0 within each mode.
 
-When a workflow has multiple modes (e.g., initial plan + replan, Monday + Friday), each mode has its own step sequence under a `## Steps — <Mode>` heading. Step numbering restarts at Step 0 within each mode.
+When workflow has multiple discrete operation types sharing contracts but differing in sub-steps (e.g., resource-ops: create, rename, merge, split, delete, archive), USE `## Steps — <Operation>` headings with prefixed step names (e.g., `### Create Step 0 — Clarify`). A shared Close section is valid but MUST be a numbered step.
+</workflow_modes>
 
-When a workflow has multiple discrete operation types that share contracts but differ in sub-steps (e.g., resource-ops: create, rename, merge, split, delete, archive), use `## Steps — <Operation>` headings with prefixed step names (e.g., `### Create Step 0 — Clarify`). A shared Close section is valid but must be a numbered step.
+<sub_step_numbering>
+Two valid formats:
 
-## 5. Sub-Step Numbering
+- **Decimal:** `### Step 3.1 — Name` — for sub-steps that are separate procedural steps with own `Done when:` line.
+- **Letter-suffix:** `**2a. Name**` / `**2b. Name**` — for parallel or grouped sub-activities within single step sharing one `Done when:` line.
 
-Two sub-step formats are valid:
+DO NOT mix formats within same step.
+</sub_step_numbering>
 
-- **Decimal:** `### Step 3.1 — Name` — for sub-steps that are separate procedural steps with their own `Done when:` line.
-- **Letter-suffix:** `**2a. Name**` / `**2b. Name**` — for parallel or grouped sub-activities within a single step that share one `Done when:` line.
-
-Do not mix formats within the same step.
-
-## 6. Self-Review Checklist
-
-Every workflow must include a self-review checklist as the **second-to-last sub-step of the Close step**, before the END-GATE. Format:
+<self_review_checklist>
+Every workflow MUST include self-review checklist as **second-to-last sub-step of Close step**, before END-GATE. Format:
 
 ```markdown
 **Self-review checklist:**
@@ -80,23 +81,28 @@ Every workflow must include a self-review checklist as the **second-to-last sub-
 - [ ] All file paths in outputs are correct and targets exist
 ```
 
-The agent runs this checklist and outputs results as a visible mini-report. Failed checks must be fixed before the END-GATE presents final deliverables.
+The agent runs checklist and outputs results as visible mini-report. FAILED checks MUST be fixed before END-GATE presents final deliverables.
+</self_review_checklist>
 
-## 7. Language
-
-- American English throughout. No British spellings (analyze, not analyse; organize, not organise).
+<language>
+- American English throughout. NO British spellings (analyze, not analyse; organize, not organise).
 - Imperative voice for instructions.
-- No filler words, no marketing language.
+- NO filler words, NO marketing language.
+</language>
 
-## 8. Formatting
-
-- Asterisk italic for emphasized text: `*text*`, not `_text_`
+<formatting>
+- Asterisk italic for emphasized text: `*text*`, NOT `_text_`
 - Compact pipe tables (no extra whitespace padding)
 - 3-column Outputs table: `Output | Location | Format`
 - Code blocks with language identifiers
+</formatting>
 
-## 9. Dev-Log and Daily Note
+<dev_log_daily_note>
+Lifecycle workflows (those with `## Complexity Tiers` table declaring Quick/Standard/Full) write dev-log and daily note entries at Close. All other workflows (fixed-procedure, daily) DO NOT write dev-log entries.
 
-Lifecycle workflows (those with a `## Complexity Tiers` table declaring Quick/Standard/Full) write dev-log and daily note entries at Close. All other workflows (fixed-procedure, daily) do not write dev-log entries.
+DO NOT include `## dev-log Update` section. Handle dev-log writes inside the Close step.
+</dev_log_daily_note>
 
-Do not include a `## dev-log Update` section. Handle dev-log writes inside the Close step.
+<output_rules>
+Output language: English. Headings, gate names, section labels remain literal.
+</output_rules>

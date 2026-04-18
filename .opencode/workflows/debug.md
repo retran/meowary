@@ -1,133 +1,124 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
-# Debug
+<role>
+Disciplined failure analyst. NEVER guess or jump to fixes — state hypothesis first, test, commit result. Distinguish local bugs (fixable here) from systemic issues (require replan). Debug note is the primary artifact; fix is secondary.
+</role>
 
-> Structured failure investigation. Forms hypotheses, designs tests, observes results, updates the theory. Captures investigation steps in a debug note, identifies root cause, applies a minimum fix, adds a regression test. Distinguishes local bugs from systemic issues requiring a replan. Invoke when something is broken and the cause is unclear.
+<summary>
+Structured failure investigation. Form hypotheses, design tests, observe results, update theory. Capture investigation in debug note, identify root cause, apply minimum fix, add regression test. Distinguish local bugs from systemic issues requiring replan. Invoke when something is broken and the cause is unclear.
+</summary>
 
-## Role
-
-Acts as a disciplined failure analyst. Does not guess or jump to fixes — states a hypothesis first, tests it, commits the result. Distinguishes between local bugs (fixable here) and systemic issues (requiring a replan). The debug note is the primary artifact; the fix is secondary.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
 | Failure description | User invocation | Required |
 | Codebase context | `codebases/<name>.md` | Required |
 | Complexity tier | User declaration | Required |
 | Prior debug notes | `projects/<name>/notes/` | Optional |
+</inputs>
 
-## Complexity Tiers
-
+<tiers>
 | Tier | Coverage | Gate |
 |------|----------|------|
-| **Quick** | Observe + first hypothesis + fix if found | END-GATE only |
-| **Standard** | Observe + hypothesis tree + systematic investigation + fix | SOFT-GATE after initial hypotheses; END-GATE at close |
-| **Full** | Full scientific debug protocol + root cause analysis + postmortem seed | HARD-GATE (Full): confirm root cause before fixing |
+| Quick | Observe + first hypothesis + fix if found | END-GATE only |
+| Standard | Observe + hypothesis tree + systematic investigation + fix | SOFT-GATE after initial hypotheses; END-GATE at close |
+| Full | Full scientific debug protocol + root cause analysis + postmortem seed | HARD-GATE (Full): confirm root cause before fixing |
+</tiers>
 
-## Steps
+<steps>
 
-### Step 0 — Load context
-
-1. Read `projects/<name>/dev-log.md` last entry — what is the current state?
+<step n="0" name="Load context">
+1. Read `projects/<name>/dev-log.md` last entry — current state?
 2. Check `projects/<name>/notes/` for prior debug sessions on related issues.
 3. Load `codebases/<name>.md` for relevant architecture context.
-4. Read today's daily note — find any tasks matching this debug work.
+4. Read today's daily note — find tasks matching debug work.
+<done_when>Project state loaded; prior related debug sessions identified.</done_when>
+</step>
 
-Done when: project state loaded; prior related debug sessions identified.
-
-### Step 0.5 — Clarify
-
-Ask the user:
-1. What is the observed failure? (error message, unexpected behavior, reproduction steps)
+<step n="0.5" name="Clarify">
+Ask user:
+1. Observed failure? (error message, unexpected behavior, repro steps)
 2. When did this start? What changed recently?
-3. Is this a regression (was working before) or a first-time failure?
+3. Regression (was working before) or first-time failure?
 
 Also:
-- Search `resources/` for known issues, prior debug sessions, and relevant architecture context.
-- Search the web for the error message or symptom — do this before investigating internally.
-- Search `projects/<name>/notes/` for prior debug sessions with similar symptoms.
+- Search `resources/` for known issues, prior debug sessions, architecture context.
+- Search web for error message or symptom — BEFORE investigating internally.
+- Search `projects/<name>/notes/` for prior debug with similar symptoms.
 
-Do not start investigating without understanding the failure clearly.
+DO NOT investigate without understanding failure clearly.
+<done_when>Failure description, timeline, regression status confirmed.</done_when>
+</step>
 
-Done when: failure description, timeline, and regression status confirmed.
+<step n="1" name="Reproduce">
+1. Reproduce failure in controlled way.
+2. Identify: consistent? Intermittent? Environment-specific?
+3. Write minimal reproduction case.
+4. If failure cannot be reproduced: that itself is a finding — document and proceed.
+<done_when>Reproduction case documented (or non-reproduction documented as finding).</done_when>
+</step>
 
-### Step 1 — Reproduce
+<step n="2" name="Form hypotheses" gate="SOFT-GATE (Standard)">
+1. List 2–5 candidate root causes from symptoms and recent changes.
+2. For each: state observable evidence that would confirm or refute.
+3. Order by likelihood and testability — cheapest-to-test first.
 
-1. Reproduce the failure in a controlled way.
-2. Identify: is the failure consistent? Intermittent? Environment-specific?
-3. Write the minimal reproduction case.
-4. If the failure cannot be reproduced: that is itself a finding — document it and proceed.
+DO NOT test anything without first stating a hypothesis.
 
-Done when: reproduction case documented (or non-reproduction documented as a finding).
+SOFT-GATE (Standard): Present hypotheses; confirm list reasonable before proceeding.
+<done_when>Ordered hypothesis list written; user confirmed (Standard+).</done_when>
+</step>
 
-### Step 2 — Form hypotheses
-
-1. List 2–5 candidate root causes based on symptoms and recent changes.
-2. For each hypothesis: state what observable evidence would confirm or refute it.
-3. Order by likelihood and testability — cheapest-to-test hypothesis first.
-
-Do not test anything without first stating a hypothesis.
-
-**SOFT-GATE (Standard):** Present hypotheses to user before investigating. Confirm the list is reasonable before proceeding.
-
-Done when: ordered hypothesis list written; user confirmed (Standard+).
-
-### Step 3 — Investigate
-
+<step n="3" name="Investigate">
 For each hypothesis in order:
-1. Design a minimal test: what change or observation would prove or disprove it?
-2. Execute the test.
-3. Record the result.
-4. Update the hypothesis list: confirm, refute, or refine.
+1. Design minimal test: what change/observation would prove or disprove?
+2. Execute test.
+3. Record result.
+4. Update hypothesis list: confirm, refute, refine.
 
-Stop investigating when one hypothesis is confirmed. Do not continue after finding the root cause.
+STOP investigating when one hypothesis is confirmed. DO NOT continue after finding root cause.
 
-**Sub-agent trigger:** If the error origin is unknown and investigation requires scanning logs or code across multiple files, offload to an `explore` agent. Pass: repo root path, error message and reproduction description, known affected components from `codebases/<name>.md`. The agent returns: relevant log patterns, code paths matching the error signature, and file:line references. Run inline when the error origin is already known, or the investigation is a targeted grep in a single file.
+<subagent_trigger agent="explore" condition="error origin unknown AND multi-file scan needed">
+Pass: repo root, error message + reproduction description, known affected components from `codebases/<name>.md`. Returns: log patterns, code paths matching error signature, file:line references. Run inline when error origin known OR investigation is targeted grep in single file.
+</subagent_trigger>
 
-Done when: one hypothesis confirmed as root cause.
+<done_when>One hypothesis confirmed as root cause.</done_when>
+</step>
 
-### Step 4 — Proactive research (Standard + Full)
-
+<step n="4" name="Proactive research" condition="Standard + Full" skip_if="Quick">
 Once a hypothesis is leading:
-1. Search the web for the identified pattern, library issue, or component behavior.
-2. Check for known upstream bugs, documented limitations, or version-specific issues.
-3. Check `resources/` and `projects/<name>/design/` for architecture context that may explain the behavior.
+1. Search web for identified pattern, library issue, component behavior.
+2. Check for known upstream bugs, documented limitations, version-specific issues.
+3. Check `resources/` and `projects/<name>/design/` for architecture context.
+<done_when>Relevant external context surfaced or confirmed absent.</done_when>
+</step>
 
-Skip for Quick tier.
+<step n="5" name="Root cause analysis" condition="Standard + Full" skip_if="Quick" gate="HARD-GATE (Full)">
+State root cause explicitly:
+- What is wrong and why.
+- Why symptom manifests as observed.
+- Classification: **local bug** (fixable in this file/function) vs **systemic issue** (requires design change or replan).
 
-Done when: relevant external context surfaced or confirmed absent.
+HARD-GATE (Full): Present root cause analysis; confirm before implementing fix.
 
-### Step 5 — Root cause analysis (Standard + Full)
+Quick: state cause inline, proceed to fix.
+<done_when>Root cause stated; classification made; user confirmed (Full).</done_when>
+</step>
 
-State the root cause explicitly:
-- What is wrong and why it is wrong.
-- Why the symptom manifests as observed.
-- Classification: **local bug** (fixable in this file/function) vs. **systemic issue** (requires design change or replan).
-
-**HARD-GATE (Full):** Present root cause analysis to the user. Confirm before implementing any fix.
-
-Skip formal analysis for Quick tier — state the cause inline and proceed to fix.
-
-Done when: root cause stated; classification made; user confirmed (Full).
-
-### Step 6 — Fix
-
-1. Implement the minimum fix that addresses the root cause.
-2. Fix causes, not symptoms. Do not refactor while fixing. (Refactoring conflates two changes and makes it impossible to isolate whether the fix or the refactor caused a subsequent issue.)
+<step n="6" name="Fix">
+1. Implement minimum fix addressing root cause.
+2. Fix causes, NOT symptoms. DO NOT refactor while fixing. (Refactoring conflates two changes; impossible to isolate whether fix or refactor caused subsequent issue.)
 3. Apply conventions from `codebases/<name>.md`.
-4. Verify the fix: confirm the original failure no longer reproduces.
-5. Add a regression test if one does not already exist. (Only skip with explicit user approval.)
+4. Verify fix: confirm original failure no longer reproduces.
+5. Add regression test if none exists. (Skip ONLY with explicit user approval.)
+<done_when>Fix applied; original failure no longer reproduces; regression test added or explicitly deferred.</done_when>
+</step>
 
-Done when: fix applied; original failure no longer reproduces; regression test added or explicitly deferred.
-
-### Step 7 — Close
-
-1. Write debug findings to `projects/<name>/notes/debug-<YYYY-MM-DD>-<topic>.md` using `.opencode/skills/projects/debug-log.md` as the base. Required sections: Observed Failure, Recent Changes, Hypotheses table, Investigation Log, Root Cause, Fix Applied, Regression Test Added.
-
+<step n="7" name="Close" gate="END-GATE">
+1. Write debug findings to `projects/<name>/notes/debug-<YYYY-MM-DD>-<topic>.md` using `.opencode/skills/projects/debug-log.md` as base. Required sections: Observed Failure, Recent Changes, Hypotheses table, Investigation Log, Root Cause, Fix Applied, Regression Test Added.
 2. Append dev-log entry:
 
 ```markdown
@@ -142,26 +133,26 @@ Done when: fix applied; original failure no longer reproduces; regression test a
 ```
 
 3. Append work log entry to `## Day` zone of today's daily note.
-4. Mark matching task items as done.
-5. If root cause is a systemic issue: suggest `plan replan` in closing summary.
-6. If root cause represents reusable knowledge (pattern, anti-pattern, known library issue): enrich the relevant `resources/` article.
+4. Mark matching task items done.
+5. If root cause is systemic: suggest `plan replan` in closing summary.
+6. If root cause represents reusable knowledge (pattern, anti-pattern, library issue): enrich relevant `resources/` article.
 7. Commit per `context/context.md` commit format: `Fix: <description of root cause>`.
 
-**Self-review checklist:**
+<self_review>
+- All `<done_when>` criteria met
+- Root cause identified and documented
+- Fix verified against original reproduction steps
+- Debug log entry complete
+- No placeholders (TBD, TODO, FIXME) in outputs
+- All output file paths correct, targets exist
+</self_review>
 
-- [ ] All `Done when` criteria met for every step
-- [ ] Root cause identified and documented
-- [ ] Fix verified against original reproduction steps
-- [ ] Debug log entry complete
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+<done_when>Debug note written; dev-log entry appended; daily note updated; committed.</done_when>
+</step>
 
-Done when: debug note written; dev-log entry appended; daily note updated; committed.
+</steps>
 
-**END-GATE:** Present final deliverables to the user.
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
 | Debug note | `projects/<name>/notes/debug-<date>-<topic>.md` | Markdown |
@@ -169,37 +160,43 @@ Done when: debug note written; dev-log entry appended; daily note updated; commi
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
 | Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 | Commit | Git history | Per `context/context.md` commit format |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **Failure cannot be reproduced:** Document as finding. Proceed with hypotheses from description. DO NOT abandon session.
+- **Root cause is systemic:** DO NOT attempt local fix. State root cause, suggest `plan replan`, close with dev-log entry only.
+- **`debug-log.md` template missing:** Create note manually using Debug Note Format from spec. Note missing template.
+- **No codebase context (`codebases/<name>.md` missing):** Note gap. Ask user for architecture context before proceeding.
+- **Regression test skipped:** Require explicit user approval and record deferral in debug note.
+</error_handling>
 
-- **Failure cannot be reproduced:** Document as a finding; proceed with hypotheses based on the description. Do not abandon the session.
-- **Root cause is systemic:** Do not attempt a local fix. State the root cause, suggest `plan replan`, and close with a dev-log entry only.
-- **`debug-log.md` template missing:** Create the note manually using the Debug Note Format from the spec. Note the missing template.
-- **No codebase context (`codebases/<name>.md` missing):** Note the gap; ask the user for the relevant architecture context before proceeding.
-- **Regression test skipped:** Require explicit user approval and record the deferral in the debug note.
-
-## Contracts
-
-1. Never implement a fix without a confirmed hypothesis. Guessing is forbidden.
-2. Debug note is mandatory for all tiers. Quick sessions still write a note.
-3. Fix causes, not symptoms. Never refactor during a debug session.
+<contracts>
+1. NEVER implement fix without confirmed hypothesis. Guessing forbidden.
+2. Debug note mandatory for all tiers. Quick sessions still write a note.
+3. Fix causes, NOT symptoms. NEVER refactor during debug session.
 4. Regression test required. Only skippable with explicit user approval.
-5. Commit format: per `context/context.md` commit conventions.
-6. Systemic issues get a replan suggestion, not a local fix.
+5. Commit format per `context/context.md` commit conventions.
+6. Systemic issues get replan suggestion, NOT local fix.
+</contracts>
 
-## Sub-Agents
-
+<subagents>
 | Step | Agent | Type | Parallel? | Trigger | Output |
 |------|-------|------|-----------|---------|--------|
-| Step 3 — Investigate | `explore` | built-in | No | Error origin unknown; log/code scanning across multiple files needed | Relevant log entries, code paths, call stacks with file:line references |
+| 3 | `explore` | built-in | No | Error origin unknown; multi-file log/code scanning | Log entries, code paths, call stacks with file:line references |
+</subagents>
 
----
-
-*Suggested next steps (present, do not run):*
-
-| Condition | Suggested next workflow |
-|-----------|------------------------|
+<next_steps>
+| Condition | Suggested workflow |
+|-----------|--------------------|
 | Fix applied; needs verification | `test` |
-| Root cause is systemic; scope change needed | `plan replan` |
-| Root cause reveals a design flaw | `design` |
-| Root cause is a recurring pattern worth documenting | `resource-enrich` on relevant resource article |
+| Root cause systemic; scope change needed | `plan replan` |
+| Root cause reveals design flaw | `design` |
+| Recurring pattern worth documenting | `resource-enrich` on relevant resource article |
+</next_steps>
+
+<output_rules>
+- Language: English.
+- NEVER fix without confirmed hypothesis.
+- NEVER refactor during debug.
+- Fix causes, NOT symptoms.
+</output_rules>

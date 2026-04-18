@@ -1,167 +1,164 @@
 ---
-updated: 2026-04-08
+updated: 2026-04-18
 tags: []
 ---
 
 # Morning
 
-> Daily start-of-day orientation. Creates today's daily note, surfaces project state from dev-log entries, checks inbox, pulls calendar from `journal/recurring-events.md` and sprint context, and sets 1–3 Most Important Tasks. Triggers weekly planning on Mondays. Invoke at the start of each workday.
+<summary>
+> Daily start-of-day orientation. Creates today's daily note, surfaces project state from dev-logs, checks inbox, pulls calendar from `journal/recurring-events.md` and sprint context, sets 1–3 MITs. Triggers weekly planning on Mondays.
+</summary>
 
-## Role
+<role>
+Structured morning planner. Surfaces project state from multiple sources, triages inbox, establishes priorities. NEVER make autonomous decisions — present context, confirm before writing.
+</role>
 
-Acts as the user's structured morning planner. Surfaces current project state from multiple sources, triages inbox, and establishes the day's priorities. Does not make autonomous decisions — presents context and asks for confirmation before writing.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Active projects | `context/context.md § Active Projects` | Required |
-| Daily note template | `.opencode/skills/journal/daily-template.md` | Required if creating |
-| Weekly note template | `.opencode/skills/journal/weekly-template.md` | Required on Mondays |
-| Project dev-logs | `projects/<slug>/dev-log.md` | Required |
+| Active projects | `context/context.md § Active Projects` | Yes |
+| Daily template | `.opencode/skills/journal/daily-template.md` | If creating |
+| Weekly template | `.opencode/skills/journal/weekly-template.md` | Mondays |
+| Project dev-logs | `projects/<slug>/dev-log.md` | Yes |
 | Recurring events | `journal/recurring-events.md` | Optional |
-| Inbox captures | `inbox/` | Optional |
+| Inbox | `inbox/` | Optional |
 | Waiting items | `journal/waiting-for.md` | Optional |
 | Jira sprint | Jira (read-only) | Optional |
+</inputs>
 
-## Complexity Tiers
+<tiers>Not applicable. Fixed-procedure workflow.</tiers>
 
-Not applicable. Fixed-procedure workflow.
+<steps>
 
-## Steps
+<step n="0" name="Load context">
+1. READ `context/context.md`. If missing/empty: STOP and direct user to `/bootstrap`.
+2. FIND `## Active Projects`. If absent/empty: ask which project to focus on.
+3. EXTRACT active projects (slug, phase, priority) per projects skill.
+4. CHECK today's daily note exists.
+   - Yes: READ — Morning may be partially filled.
+   - No: CREATE from `.opencode/skills/journal/daily-template.md`.
+5. READ `journal/waiting-for.md`; note items with follow-up date ≤ today.
 
-### Step 0 — Load context
+<done_when>Active projects established; daily note exists.</done_when>
+</step>
 
-1. Read `context/context.md`. If entirely missing or empty: stop and direct the user to run `/bootstrap`. Do not proceed.
-2. Find `## Active Projects`. If the section is absent or empty: ask the user which project to focus on.
-3. Extract active projects (slug, phase, priority) per the projects skill.
-4. Check if today's daily note (`journal/daily/<YYYY-MM-DD>.md`) exists.
-   - If yes: read it — Morning zone may already be partially filled.
-   - If no: create it from `.opencode/skills/journal/daily-template.md` per the journal skill.
-5. Read `journal/waiting-for.md` — note any items with a follow-up date on or before today.
+<step n="0.5" name="Clarify">
+ASK: "Any specific focus or constraint for today?" SKIP if provided.
 
-Done when: active projects list established; daily note created or confirmed to exist.
+<done_when>User responded or context clear.</done_when>
+</step>
 
-### Step 0.5 — Clarify
-
-Ask the user one question: "Any specific focus or constraint for today?" (e.g. "deep work only", "meetings-heavy day"). Skip if already provided in the invocation.
-
-Done when: user has responded, or context is clear enough to proceed.
-
-### Step 1 — Surface project state
-
+<step n="1" name="Surface project state">
 For each active project:
-1. Read `projects/<slug>/dev-log.md` — last entry only. Extract current phase and next action.
-2. Summarize as one line: `<Project>: <phase> — <next action>`.
-3. Flag any project whose last dev-log entry is more than 3 working days old as "potentially stalled".
+1. READ `projects/<slug>/dev-log.md` last entry. Extract phase + next action.
+2. SUMMARIZE: `<Project>: <phase> — <next action>`.
+3. FLAG projects with last entry > 3 working days old as "potentially stalled".
 
-Done when: one-liner surfaced for each active project; stalled projects flagged.
+<done_when>One-liner per project; stalled flagged.</done_when>
+</step>
 
-### Step 2 — Check and triage inbox
+<step n="2" name="Triage inbox">
+1. LIST `inbox/` files without `processed: true`.
+2. SURFACE count and titles.
+3. If count ≤ 5: route each:
+   - **Task** → append `- [ ] <title>` to `## Day > ### Inbox`, link to project.
+   - **Source to ingest** → add `Ingest: <title>` to Day > Inbox.
+   - **Discard** → add `processed: true` + one-line discard note to front matter.
+   Mark each `processed: true`.
+4. If count > 5: add Day task `Process inbox (N items)`. NO inline triage.
+5. SURFACE overdue `waiting-for.md` items.
 
-1. List files in `inbox/` without `processed: true` in their front matter.
-2. Surface the count and titles.
-3. If count ≤ 5: make a routing decision for each item:
-   - **Task** → append `- [ ] <title>` to `## Day > ### Inbox` in today's daily note, linked to the relevant project.
-   - **Source to ingest** → add `Ingest: <title>` note to Day > Inbox.
-   - **Discard** → add `processed: true` and a one-line discard note to the item's front matter.
-   Mark each processed item with `processed: true`.
-4. If count > 5: add a Day zone task `Process inbox (N items)` — do not triage inline.
-5. Surface any `journal/waiting-for.md` items overdue as of today.
+<done_when>Every item routed or bulk deferred; overdue waiting surfaced.</done_when>
+</step>
 
-Done when: every inbox item has a routing decision, or bulk deferral noted; overdue waiting items surfaced.
+<step n="3" name="Calendar and sprint">
+1. READ `journal/recurring-events.md` for today's weekday → populate `### Calendar`.
+2. QUERY open Jira sprint items assigned to user; flag due today/overdue.
+3. SURFACE up to 5 Jira items: priority, key, summary, status. DO NOT write as MITs.
 
-### Step 3 — Pull calendar and sprint context
+If `recurring-events.md` missing: leave Calendar blank, note gap.
+If Jira unavailable: skip silently.
 
-1. Read `journal/recurring-events.md` for today's weekday — populate `### Calendar` in the Morning zone.
-2. Query open Jira sprint items assigned to the user; flag any due today or overdue.
-3. Surface up to 5 Jira items as context: priority, key, summary, status. Do not write them as MITs.
+<done_when>Calendar populated or noted; Jira surfaced or skipped.</done_when>
+</step>
 
-If `journal/recurring-events.md` does not exist: leave Calendar blank and note the gap.
-If Jira is unavailable or unconfigured: skip silently.
+<step n="4" name="Set MITs">
+1. PRESENT: project state, inbox count, calendar, Jira items.
+2. ASK user to choose/confirm 1–3 MITs per journal skill.
 
-Done when: Calendar populated (or gap noted); Jira items surfaced (or skipped).
+<done_when>1–3 MITs confirmed.</done_when>
+</step>
 
-### Step 4 — Set MITs
+<step n="5" name="Weekly planning" condition="Today is Monday">
+1. PERFORM Monday planning per journal skill.
+2. If last week's Carry-Over non-empty: ask "Any carry-overs that should NOT be this week's goals?"
+3. ASK: "What is this week's focus theme?"
 
-1. Present: project state summary, inbox count, calendar, Jira items.
-2. Ask the user to choose or confirm 1–3 Most Important Tasks. Apply MIT rules per the journal skill.
+<done_when>Weekly note exists with Focus and Goals; Monday link present.</done_when>
+</step>
 
-Done when: 1–3 MITs confirmed by user.
+<step n="6" name="Write Morning zone">
+COMPLETE `## Morning`: Focus line, MITs, Calendar.
 
-### Step 5 — Weekly planning [Mondays only]
+DO NOT write `## Day` or `## Evening`. If Morning already filled: confirm before overwriting.
 
-Skip if today is not Monday.
+<done_when>Focus, MITs, Calendar written.</done_when>
+</step>
 
-1. Perform the Monday planning flow per the journal skill.
-2. If last week's Carry-Over is non-empty, ask: "Any carry-over items that should NOT be this week's goals?"
-3. Ask: "What is this week's focus theme?"
+<step n="7" name="Close" gate="END-GATE">
+COMMIT: `Morning: <YYYY-MM-DD>`.
 
-Done when: weekly note exists with Focus and Goals filled; Monday link present.
+No dev-log entry — `/morning` reads dev-logs but never writes them.
 
-### Step 6 — Write Morning zone
+<self_review>
+- [ ] All `Done when` met
+- [ ] MITs ≤ 3
+- [ ] Calendar checked
+- [ ] Daily note has correct front matter
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-Complete the `## Morning` zone in today's daily note per the journal skill: Focus line, MITs, Calendar.
+<done_when>Committed.</done_when>
+</step>
 
-Do not write to `## Day` or `## Evening` zones.
-If Morning zone is already filled: confirm with user before overwriting any section.
+</steps>
 
-Done when: Focus, MITs, and Calendar written to the Morning zone.
-
-### Step 7 — Close
-
-Commit: `Morning: <YYYY-MM-DD>`.
-
-No dev-log entry — `/morning` reads project dev-logs but does not write to them.
-
-**Self-review checklist:**
-
-- [ ] All `Done when` criteria met for every step
-- [ ] MIT set with at most 3 items
-- [ ] Calendar checked for today's meetings
-- [ ] Daily note created with correct front matter
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
-
-Done when: committed.
-
-**END-GATE:** Present final deliverables to the user.
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
-| Daily note Morning zone | `journal/daily/<YYYY-MM-DD>.md` | Written/filled |
-| Weekly note (Mondays only) | `journal/weekly/<year>-W<nn>.md` | Focus + Goals |
-| Inbox items marked processed | `inbox/` | Front matter updated |
-| Commit | Git history | `Morning: <YYYY-MM-DD>` |
+| Morning zone | `journal/daily/<YYYY-MM-DD>.md` | Written |
+| Weekly note (Mon) | `journal/weekly/<year>-W<nn>.md` | Focus + Goals |
+| Inbox marked processed | `inbox/` | Front matter |
+| Commit | Git | `Morning: <YYYY-MM-DD>` |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **`context.md` missing/empty:** STOP at Step 0; direct to `/bootstrap`.
+- **`daily-template.md` missing:** Cannot create note. Ask user to verify journal skill dir.
+- **`dev-log.md` missing:** Note gap per project; continue.
+- **`recurring-events.md` missing:** Leave Calendar blank. Restore from `.opencode/meta-templates/recurring-events-template.md`.
+- **Jira unavailable:** Skip silently, note "Jira unavailable" in output.
+- **Morning zone complete:** Confirm before re-running. NEVER silently overwrite.
+- **Scope creep (full planning request):** Surface as next step. Append deferred to `projects/<slug>/deferred-items.md`.
+</error_handling>
 
-- **`context/context.md` missing or empty:** Stop at Step 0 and direct the user to run `/bootstrap`. Do not proceed.
-- **`daily-template.md` missing:** Cannot create the daily note. Ask the user to verify the journal skill directory.
-- **`projects/<slug>/dev-log.md` missing:** Note the gap per project; continue with remaining projects.
-- **`journal/recurring-events.md` missing:** Leave Calendar blank; note the gap. To restore, copy from `.opencode/meta-templates/recurring-events-template.md`.
-- **Jira unavailable:** Skip Jira in Step 3 silently. Note "Jira unavailable" in session output.
-- **Morning zone already complete:** Confirm before re-running. Never silently overwrite.
-- **Scope creep** (user asks for a full planning session): surface as a next step suggestion. Append deferred work to `projects/<slug>/deferred-items.md`.
-
-## Contracts
-
-1. Owns `## Morning` zone in `journal/daily/<date>.md` only. Never writes to `## Day` or `## Evening`.
-2. Creates the daily note from template if it does not exist.
-3. Does not write to project dev-logs.
-4. Reads Jira only. Never creates, updates, or transitions Jira items.
+<contracts>
+1. Owns `## Morning` only. NEVER writes `## Day`/`## Evening`.
+2. Creates daily note from template if missing.
+3. NEVER writes project dev-logs.
+4. Reads Jira only. NEVER creates/updates/transitions.
 5. Commit format: `Morning: <YYYY-MM-DD>`.
-6. MITs capped at 3 per the journal skill. Warn if the user requests more.
+6. MITs capped at 3. Warn if user requests more.
+</contracts>
 
----
-
-*Suggested next steps (present, do not run):*
-
+<next_steps>
 | Condition | Suggested next workflow |
 |-----------|------------------------|
-| Active project with clear next action | appropriate lifecycle workflow |
-| Inbox had unprocessed items | `resource-ingest` when ready |
-| Stalled project | `scout` to re-orient |
-| Monday | weekly note already handled in Step 5 |
+| Active project clear next action | Appropriate lifecycle workflow |
+| Inbox unprocessed | `resource-ingest` |
+| Stalled project | `scout` |
+| Monday | Weekly handled in Step 5 |
+</next_steps>
+
+<output_rules>Output language: English.</output_rules>

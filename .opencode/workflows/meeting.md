@@ -1,151 +1,149 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
 # Meeting
 
-> Captures meeting notes for any meeting type, routes every action item before closing, cross-links to today's daily note, and scans for durable facts to enrich `resources/`. Produces a single structured file at `journal/meetings/<date>-<slug>.md`. Invoke before, during, or immediately after any meeting.
+<summary>
+> Captures meeting notes for any type, routes every action item before close, cross-links to today's daily note, scans for durable facts. Produces `journal/meetings/<date>-<slug>.md`.
+</summary>
 
-## Role
+<role>
+Meeting note-taker and action item router. Creates file, populates per type-specific section rules, routes every action item, extracts durable knowledge. **HARD-GATE (all tiers):** every action item routed before close.
+</role>
 
-Acts as the user's meeting note-taker and action item router. Creates the meeting file, populates it per type-specific section rules, routes every action item to a tracked location, and extracts durable knowledge. Does not leave action items unrouted — **HARD-GATE (all tiers):** every action item must be routed before closing.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Meeting title, type, attendees | User invocation | Required |
-| Meeting content / notes | User-provided | Required |
-| Active projects list | `context.md § Active Projects` | Optional (for tagging) |
-| Attendee resource articles | `resources/people/` | Optional (for linking) |
-| Today's daily note | `journal/daily/<date>.md` | Required (for cross-link) |
-| Waiting-for list | `journal/waiting-for.md` | Required (for routing) |
+| Title, type, attendees | User invocation | Yes |
+| Meeting content | User-provided | Yes |
+| Active projects | `context.md § Active Projects` | Optional |
+| Attendee articles | `resources/people/` | Optional |
+| Today's daily note | `journal/daily/<date>.md` | Yes (cross-link) |
+| Waiting-for list | `journal/waiting-for.md` | Yes (routing) |
+</inputs>
 
-## Complexity Tiers
+<tiers>Not applicable. Fixed-procedure workflow.</tiers>
 
-Not applicable. Fixed-procedure workflow.
+<steps>
 
-## Steps
+<step n="0" name="Load context">
+1. READ `context/context.md` for active projects and people.
+2. CHECK today's daily note exists.
+3. SEARCH `resources/people/` for attendee matches.
+4. **If type=`1-1`:** READ `resources/people/<other-person-slug>.md` if exists — surface role, team, recent context, open follow-ups.
 
-### Step 0 — Load context
+<done_when>Projects/people loaded; attendee articles located; daily note checked.</done_when>
+</step>
 
-1. Read `context/context.md` for active projects list and people context (for linking attendees to resource articles).
-2. Check if today's daily note (`journal/daily/<YYYY-MM-DD>.md`) exists — needed for cross-linking.
-3. Search `resources/people/` for articles matching attendee names.
-4. **If meeting type is `1-1`:** also read `resources/people/<other-person-slug>.md` if it exists — surface their role, team, recent context, and any open follow-ups from previous 1-1s.
+<step n="0.5" name="Clarify">
+ASK at most three questions:
+1. Title, type (`general`|`1-1`|`standup`|`retro`|`kickoff`), attendees?
+2. Recurrence (`once`|`daily`|`weekly`|`biweekly`|`monthly`)?
+3. If meeting happened: "Provide notes/key points." If pre-meeting: "Create template for live notes, or provide notes after?"
 
-Done when: active projects and people context loaded; attendee resource articles located; daily note existence confirmed.
+<done_when>Title, type, attendees, recurrence, note-taking mode confirmed.</done_when>
+</step>
 
-### Step 0.5 — Clarify
+<step n="1" name="Create meeting file">
+1. Filename: `journal/meetings/<YYYY-MM-DD>-<slug>.md` (`<slug>`: 1–4 word kebab-case).
+2. CREATE from `.opencode/skills/journal/meeting-template.md`.
+3. APPLY front matter and header per meeting skill.
+4. **Recurring:** add `**Previous:** [<date>](../meetings/<prev-date>-<slug>.md)` to header if previous exists.
 
-Ask at most three questions:
+<done_when>File created with front matter and header.</done_when>
+</step>
 
-1. Meeting title, type (`general` | `1-1` | `standup` | `retro` | `kickoff`), and attendees?
-2. Recurrence: `once` | `daily` | `weekly` | `biweekly` | `monthly`?
-3. If meeting already happened: "Please provide notes or key points to capture." If invoked before the meeting: "Should I create a template for live note-taking, or will you provide notes after?"
+<step n="2" name="Capture content">
+WRITE sections required for type per meeting skill rules. Apply all content rules (decisions in active voice, action item format, per-person standup format).
 
-Done when: meeting title, type, attendees, and recurrence confirmed; note-taking mode determined.
+For `1-1`: also write 1-1 additional sections per skill.
 
-### Step 1 — Create meeting file
+<done_when>All required sections written; none blank.</done_when>
+</step>
 
-1. Determine filename: `journal/meetings/<YYYY-MM-DD>-<slug>.md`
-   - `<slug>`: 1–4 word kebab-case from the meeting title.
-2. Create the file using `.opencode/skills/journal/meeting-template.md` as the base.
-3. Apply front matter and header block per the meeting skill.
-4. **For recurring meetings:** add `**Previous:** [<date>](../meetings/<prev-date>-<slug>.md)` to the header block if a previous file exists.
+<step n="3" name="Route action items" gate="HARD-GATE">
+For each action item in `### Action Items`: ROUTE to exactly one destination per meeting skill routing table.
 
-Done when: meeting file created with front matter and header.
+**HARD-GATE:** Every action item MUST be routed.
 
-### Step 2 — Capture content
+<done_when>Every action item has routing destination.</done_when>
+</step>
 
-Write the sections required for this meeting type per the meeting skill section rules. Apply all content rules (decisions in active voice, action item format, per-person standup format) as defined in the skill.
+<step n="4" name="Cross-link to daily note">
+APPEND cross-link entry to `## Day > ### Events` in today's daily note per meeting skill. Tag with `#p-` and `#person-` tags.
 
-For `meeting-type: 1-1`: also write the 1-1 additional sections defined in the meeting skill.
+If `### Events` missing under `## Day`: create it.
 
-Done when: all required sections written; no required section left blank.
+<done_when>Cross-link written.</done_when>
+</step>
 
-### Step 3 — Route action items
+<step n="5" name="Resources scan">
+Scan notes for durable facts; route per meeting skill resources scan procedure.
 
-For each action item in `### Action Items`, route it to exactly one destination per the meeting skill routing table.
+For `1-1`: UPDATE `resources/people/<other-person-slug>.md` per skill 1-1 update procedure. Create stub if missing.
 
-**HARD-GATE (all tiers):** Every action item must be routed. Do not leave action items unrouted.
+If nothing durable: note explicitly.
 
-Done when: every action item has a routing destination written.
+<done_when>Durable facts routed or confirmed none; 1-1 article updated if applicable.</done_when>
+</step>
 
-### Step 4 — Cross-link to daily note
+<step n="6" name="Close" gate="END-GATE">
+1. APPLY meeting note editor checklist.
+2. COMMIT: `Meeting: <YYYY-MM-DD> <slug>`.
 
-Add a cross-link entry to `## Day > ### Events` in today's daily note per the meeting skill. Tag with relevant `#p-` and `#person-` tags.
+<self_review>
+- [ ] All `Done when` met
+- [ ] All action items routed
+- [ ] Attendees and date complete
+- [ ] Decisions documented
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-If `### Events` does not exist under `## Day`: create it.
+<done_when>Checklist passed; committed.</done_when>
+</step>
 
-Done when: cross-link written to daily note.
+</steps>
 
-### Step 5 — Resources scan
-
-Scan the meeting notes for durable facts and route them per the meeting skill resources scan procedure.
-
-For `meeting-type: 1-1`: update `resources/people/<other-person-slug>.md` per the meeting skill 1-1 update procedure. If no person article exists: create a stub first.
-
-If nothing durable was learned: note this explicitly.
-
-Done when: durable facts routed or confirmed as none; 1-1 person article updated if applicable.
-
-### Step 6 — Close
-
-1. Apply the meeting note editor checklist.
-2. Commit: `Meeting: <YYYY-MM-DD> <slug>`.
-
-**Self-review checklist:**
-
-- [ ] All `Done when` criteria met for every step
-- [ ] All action items routed to projects or daily notes
-- [ ] Meeting note has complete attendees and date
-- [ ] Key decisions documented
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
-
-Done when: checklist passed; committed.
-
-**END-GATE:** Present final deliverables to the user.
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
-| Meeting note | `journal/meetings/<date>-<slug>.md` | Markdown file |
-| Daily note cross-link | `journal/daily/<date>.md` Day > Events | Appended |
-| Own tasks routed | `journal/daily/<date>.md` Day > Inbox | Appended |
-| Waiting items routed | `journal/waiting-for.md` | Appended |
-| Project tasks routed | `projects/<slug>/README.md` | Appended |
-| Resource article updates or stubs | `resources/` | Varies |
-| Commit | Git history | `Meeting: <YYYY-MM-DD> <slug>` |
+| Meeting note | `journal/meetings/<date>-<slug>.md` | Markdown |
+| Daily cross-link | `journal/daily/<date>.md` Day > Events | Appended |
+| Own tasks | `journal/daily/<date>.md` Day > Inbox | Appended |
+| Waiting items | `journal/waiting-for.md` | Appended |
+| Project tasks | `projects/<slug>/README.md` | Appended |
+| Resource updates | `resources/` | Varies |
+| Commit | Git | `Meeting: <YYYY-MM-DD> <slug>` |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **`meeting-template.md` missing:** Create manually with required schema/sections. Note missing.
+- **Today's daily note missing:** Create from `.opencode/skills/journal/daily-template.md` before cross-link.
+- **`waiting-for.md` missing:** Create from `.opencode/meta-templates/waiting-for-template.md` before routing.
+- **Attendee no resource article:** Create stub `resources/people/<slug>.md` before resources scan.
+- **Action item no clear routing:** DEFAULT `→ Parking Lot`. Surface at end of Step 3.
+- **Pre-meeting template mode:** Create file with empty structural sections. Run Steps 3–6 after meeting.
+</error_handling>
 
-- **`meeting-template.md` missing:** Create the file manually with the required front matter schema and sections. Note the missing template.
-- **Today's daily note missing:** Create from `.opencode/skills/journal/daily-template.md` before writing the cross-link.
-- **`journal/waiting-for.md` missing:** Create from `.opencode/meta-templates/waiting-for-template.md` before routing waiting items.
-- **Attendee has no resource article:** Create a stub (`resources/people/<slug>.md`) before the resources scan step.
-- **Action item has no clear routing:** Default to `→ Parking Lot`. Surface to user at end of Step 3 for confirmation.
-- **Pre-meeting template mode:** Create the file with all structural sections empty (except front matter and header). Run Steps 3–6 after the meeting when the user provides notes.
-
-## Contracts
-
-1. Create one meeting file per invocation. File must be complete before committing.
-2. Every action item must be routed. No unrouted action items.
-3. Cross-link to today's daily note is mandatory. Never omit Step 4.
-4. Resources scan runs on every meeting. "Nothing durable" is a valid outcome; skipping the scan is not.
-5. For 1-1 meetings: update or create the person resource article.
+<contracts>
+1. One meeting file per invocation. Complete before commit.
+2. Every action item routed. No exceptions.
+3. Cross-link MANDATORY. NEVER omit Step 4.
+4. Resources scan on every meeting. "Nothing" valid; skipping not.
+5. For 1-1: update or create person article.
 6. Commit format: `Meeting: <YYYY-MM-DD> <slug>`.
+</contracts>
 
----
-
-*Suggested next steps (present, do not run):*
-
+<next_steps>
 | Condition | Suggested next workflow |
 |-----------|------------------------|
-| Resource stubs created | `resource-enrich` to flesh them out |
-| Action items include own tasks for today | Work through Day > Inbox in the current session |
-| Meeting generated a project decision | `design` or `plan` to formalize it |
-| Meeting notes contain source material for research | `resource-ingest` |
+| Resource stubs created | `resource-enrich` |
+| Own tasks for today | Work Day > Inbox in current session |
+| Project decision | `design` or `plan` |
+| Source material in notes | `resource-ingest` |
+</next_steps>
+
+<output_rules>Output language: English.</output_rules>

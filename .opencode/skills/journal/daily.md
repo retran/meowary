@@ -2,26 +2,19 @@
 name: journal/daily
 description: Daily note format and philosophy — three-zone structure (Morning/Day/Evening), MIT system, rapid logging, task migration, and Monday/Friday special flows. Load when creating a daily note, filling Morning intent or Evening reflection, or updating any daily note section.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Philosophy
+<role>Daily note steward — atomic unit of the journal, three-zone structured record.</role>
 
-The daily note is the atomic unit of the journal — the raw log of a single day. It is not a todo list or a diary. It is a structured record of intent (Morning), activity (Day), and reflection (Evening).
+<summary>
+> Daily note = single-day record with three epistemic modes: Morning (intent), Day (activity log), Evening (reflection). MIT forces prioritization. Append-only — past notes are immutable evidence, not drafts.
+</summary>
 
-The **three-zone structure** exists because these are genuinely different epistemic modes. Planning what to do, logging what happened, and reflecting on what it means require different content and different permissions. Mixing them destroys the record's clarity.
+<file_format>
+Location: `journal/daily/`, named `YYYY-MM-DD.md`. One file per day.
 
-The **MIT system** is a forcing function for prioritization. Writing three MITs and starring one is not a time-management trick — it is a practice that surfaces the question: *if I only get one thing done today, what must it be?* Without that forcing function, everything feels equally important and nothing gets decided.
-
-The **append-only rule** exists because daily notes are immutable historical records. Editing a past daily note destroys its value as evidence of what you actually thought and did. The past is a record, not a draft.
-
----
-
-## File Format
-
-Daily notes live in `journal/daily/`, named `YYYY-MM-DD.md`. One file per day.
-
-### Front Matter
-
+Front matter:
 ```yaml
 ---
 type: daily
@@ -33,32 +26,18 @@ tags: []
 ---
 ```
 
-- `type`: always `daily`.
-- `date`: ISO 8601 date.
-- `weekday`: full weekday name.
-- `week`: ISO week identifier (e.g. `"2026-W09"`).
-- `updated`: today's date — update on every edit.
-- `tags`: usually `[]` unless specific project/team tags are warranted.
-
-### H1 and Navigation Bar
-
+H1 + nav:
 ```markdown
 # YYYY-MM-DD: Weekday
 
 [← prev-date](prev-date.md) | [Week NN](../weekly/YYYY-WNN.md) | [next-date →](next-date.md)
 ```
 
-- Omit the previous-day link if no previous daily note exists.
-- Omit the next-day link if the next day's note does not exist yet.
-- Always verify link targets exist before writing them.
+OMIT prev/next links if target file does not exist. ALWAYS verify before writing.
+</file_format>
 
----
-
-## Three-Zone Structure
-
-### `## Morning` — intent zone
-
-Filled once, at the start of the day. Owned by `/morning`.
+<zones>
+### `## Morning` — intent zone (filled by `/morning`)
 
 ```
 ## Morning
@@ -72,83 +51,66 @@ Calendar: <events for the day>
 ```
 
 **MIT rules:**
-- Soft limit of 3. If a 4th MIT is requested, warn: "4 MITs defeats the forced-selection purpose. Consider dropping or deferring one."
-- The primary MIT is prefixed with `★`. It is the one thing that makes today a success.
-- At least one MIT should link to an active project tag (e.g. `Complete auth retry logic #p-myproject`).
-- Completed MITs are ticked in `### Completed` during Evening — never edited in place.
+- Soft limit 3. If 4th requested, WARN: "4 MITs defeats the forced-selection purpose. Drop or defer one."
+- Primary MIT prefixed `★`.
+- At least one MIT links to active project tag (e.g. `Complete auth retry logic #p-myproject`).
+- Completed MITs ticked in `### Completed` during Evening — NEVER edited in place.
 
-**Calendar format:** Times in bold (`**10:00–10:30**`). Link to meeting note files where they exist.
+Calendar: times bold (`**10:00–10:30**`); link meeting note files where exist.
 
----
-
-### `## Day` — log zone
-
-Populated throughout the day. Three sub-sections:
+### `## Day` — log zone (populated throughout)
 
 ```
 ## Day
 
 ### Inbox
-(ephemeral bullets — raw captures: ideas, observations, requests, quick notes)
+(ephemeral bullets — raw captures)
 (processed in /evening)
 
 ### Events
-(meetings logged as they happen — link to meeting note files)
+(meetings logged as they happen — link meeting files)
 
 ### Waiting
-(items delegated or blocked on others)
+(items delegated/blocked)
 (format: - [ ] @Person — item — YYYY-MM-DD delegated — follow-up by YYYY-MM-DD)
 ```
 
-**Work log entry format** (appended by lifecycle workflows):
-
+Work log entry (appended by lifecycle workflows):
 ```
 - <time or context> — /<workflow> — <topic>: <one-line summary>
 ```
 
-Examples:
-- `- 14:30 — /implement — auth-retry: exponential backoff implemented, all tests green`
-- `- /debug — payment-timeout: root cause found (DNS cache); fix applied`
+ALWAYS append to `## Day > ### Inbox`; NEVER overwrite.
 
-Lifecycle workflows append work log entries to `## Day > ### Inbox`. Always append; never overwrite.
-
-**Inbox vs. `inbox/` folder:**
-
-| Channel | What it's for | Lifetime | How to add |
+| Channel | Purpose | Lifetime | How |
 |---|---|---|---|
-| `## Day > ### Inbox` | Raw same-day thoughts, reminders, quick ideas | Same-day; processed in `/evening` | Direct edit |
-| `inbox/` folder | Richer captures: URLs, ideas to develop, references | Until processed via `/r ingest` | `/capture` command |
+| `## Day > ### Inbox` | Raw same-day thoughts | Same-day; processed in `/evening` | Direct edit |
+| `inbox/` folder | Richer captures, URLs, ideas | Until processed via `/r ingest` | `/capture` |
 
----
-
-### `## Evening` — reflection zone
-
-Filled once, at the end of the day. Owned by `/evening`.
+### `## Evening` — reflection zone (filled by `/evening`)
 
 ```
 ## Evening
 
 ### Completed
-(MITs ticked off + any additional done tasks)
+(MITs ticked + additional done tasks)
 
 ### Carried / Dropped
-(unfinished MITs — each with decision: carried to [date] or dropped + reason)
+(unfinished MITs — each with: carried to [date] OR dropped + reason)
 
 ### Insights → Resources
-(durable facts distilled from today; each linked to the resource article updated or created)
+(durable facts; each linked to resource updated/created)
 
 ### Day Summary
-(1–2 sentences on how the day went)
+(1–2 sentences)
 (**Done: N | Carried: N | Dropped: N**)
-(End-of-day scan: [items actioned, or "nothing pending"])
+(End-of-day scan: [actioned items, or "nothing pending"])
 ```
 
-**Insights → Resources** is mandatory. Every evening, look for at least one durable fact from the day's Inbox, Events, or Waiting that belongs in `resources/`. If none, write `nothing to promote today.`
+**Insights → Resources is mandatory.** Every evening identify ≥1 durable fact. If none: write `nothing to promote today.`
+</zones>
 
----
-
-## Task State Formats
-
+<task_states>
 | State | Format | Example |
 |---|---|---|
 | Open | `- [ ] text` | `- [ ] Review Alice's MR` |
@@ -156,65 +118,53 @@ Filled once, at the end of the day. Owned by `/evening`.
 | Moved | `- [ ] ~~text~~ → [date](link)` | `- [ ] ~~Write ADR~~ → [2026-02-25](2026-02-25.md)` |
 | Dropped | `- [ ] ~~text~~ *(dropped: reason)*` | `- [ ] ~~Upgrade libs~~ *(dropped: superseded)*` |
 | Blocked | `- [ ] text *(blocked: reason)*` | `- [ ] Deploy *(blocked: waiting on infra)*` |
+</task_states>
 
----
-
-## Creating a New Daily Note
-
+<creation_steps>
 1. Copy `.opencode/skills/journal/daily-template.md`.
-2. Replace all placeholders: `{{DATE}}`, `{{DAY}}`, `{{WEEK_NUMBER}}`, `{{WEEK_FILE}}`, `{{PREV_DATE}}`, `{{NEXT_DATE}}`.
-3. Populate `### Calendar` from `journal/recurring-events.md` — include events scheduled for this weekday.
+2. Replace placeholders: `{{DATE}}`, `{{DAY}}`, `{{WEEK_NUMBER}}`, `{{WEEK_FILE}}`, `{{PREV_DATE}}`, `{{NEXT_DATE}}`.
+3. Populate `### Calendar` from `journal/recurring-events.md` (events for this weekday). If file missing, copy from `.opencode/meta-templates/recurring-events-template.md`.
+4. VERIFY navigation links exist before writing.
+</creation_steps>
 
-> **Before using this file:** Check that `journal/recurring-events.md` exists. If not, copy from `.opencode/meta-templates/recurring-events-template.md`.
-4. Verify navigation links (prev/next) exist before writing them.
+<monday_planning>
+On Monday, also perform weekly planning:
+1. Check `journal/weekly/<year>-W<nn>.md`. Create from `.opencode/skills/journal/weekly-template.md` if missing.
+2. Review last week's **Carry-Over**; seed this week's **Weekly Goals**.
+3. Ask user for **Weekly Focus**.
+4. Check Jira for sprint status; surface MIT candidates.
+5. Populate `**Daily Notes:**` — link Monday today; mark Tue–Fri `*(no note)*`.
+</monday_planning>
 
----
+<friday_wrapup>
+On Friday during evening:
+1. Complete daily evening routine first.
+2. Switch to weekly note; run Friday Wrap-Up Flow (defined in `journal/weekly`).
+</friday_wrapup>
 
-## Monday: Weekly Planning
+<resource_scan>
+At end of every daily update:
+- Meeting reveal role/team/process change? Update relevant resource.
+- Work produce architectural knowledge? Capture in `resources/`.
+- Concept/person/team/tool with no article? Flag for creation.
 
-When creating a daily note on **Monday**, also perform weekly planning:
+DO NOT wait for explicit task. Surface gaps; fill during Evening > Insights → Resources.
+</resource_scan>
 
-1. Check if `journal/weekly/<year>-W<nn>.md` exists. If not, create from `.opencode/skills/journal/weekly-template.md`.
-2. Review last week's **Carry-Over** items. Seed this week's **Weekly Goals** from them.
-3. Ask the user for the **Weekly Focus** (main theme for the week).
-4. Check Jira for sprint status and upcoming deadlines — surface relevant items as MIT candidates.
-5. Populate `**Daily Notes:**` — link Monday (today); mark Tuesday–Friday as `*(no note)*`.
-
----
-
-## Friday: Weekly Wrap-Up
-
-When updating a daily note on **Friday** during the evening routine:
-
-1. Complete the daily evening routine first.
-2. Switch to the weekly note and run the Friday Wrap-Up Flow (defined in `journal/weekly`).
-
----
-
-## Proactive Resource Scan
-
-At the end of every daily note update, scan for resource enrichment:
-
-- Did a meeting reveal a role change, team structure update, or process decision? Update the relevant resource article.
-- Did work produce architectural knowledge or component ownership facts? Capture in `resources/`.
-- Did you mention a concept, person, team, or tool with no resource article? Flag for creation.
-
-Do not wait for an explicit resources task. Surface gaps and fill them during Evening > Insights → Resources.
-
----
-
-## Editor Checklist (run silently before every output)
-
-- [ ] Front matter complete: `type`, `date`, `weekday`, `week`, `updated`, `tags`?
-- [ ] H1 follows `YYYY-MM-DD: Weekday` format?
-- [ ] Navigation bar links verified to exist (or omitted if target missing)?
-- [ ] All three zones present in order: Morning, Day, Evening?
-- [ ] MITs: primary starred `★`, soft limit 3, at least one project tag?
-- [ ] Day > Waiting uses correct format (`@Person — item — date — follow-up`)?
-- [ ] Evening > Insights → Resources not left blank (minimum: "nothing to promote today")?
+<self_review>
+- [ ] Front matter complete (`type`, `date`, `weekday`, `week`, `updated`, `tags`)?
+- [ ] H1 follows `YYYY-MM-DD: Weekday`?
+- [ ] Nav links verified or omitted?
+- [ ] All three zones present in order?
+- [ ] MITs: primary `★`, soft limit 3, ≥1 project tag?
+- [ ] Day > Waiting uses `@Person — item — date — follow-up`?
+- [ ] Evening > Insights → Resources not blank (min: "nothing to promote today")?
 - [ ] Day Summary ends with `End-of-day scan:` line?
-- [ ] Monday: weekly note created/updated with focus and goals?
+- [ ] Monday: weekly note created/updated?
 - [ ] Friday: weekly wrap-up completed?
-- [ ] `journal/waiting-for.md` updated with any new Waiting items from today?
+- [ ] `journal/waiting-for.md` updated with new Waiting items? (If missing, copy from `.opencode/meta-templates/waiting-for-template.md`.)
+</self_review>
 
-> **Before using this file:** Check that `journal/waiting-for.md` exists. If not, copy from `.opencode/meta-templates/waiting-for-template.md`.
+<output_rules>
+Output language: English. Frontmatter, section headers, tags remain English.
+</output_rules>

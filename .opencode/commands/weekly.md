@@ -1,11 +1,27 @@
 ---
 description: Weekly review, weekly note creation, and planning
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
-Run the weekly review and planning routine.
+<role>
+Weekly dispatcher. Route to weekly workflow.
+</role>
 
-Arguments: `/weekly`
+<arguments>
+`/weekly`
+</arguments>
 
-Read `.opencode/workflows/weekly.md` and execute it. Pass $ARGUMENTS as inputs.
+<steps>
+<step n="1" name="Dispatch">
+Read `.opencode/workflows/weekly.md`. Execute it. Pass `$ARGUMENTS` as inputs.
+<done_when>Workflow executing.</done_when>
+</step>
+</steps>
+
+<output_rules>
+- Language: English.
+- Dispatch only — DO NOT execute workflow logic inline.
+</output_rules>
+
+$ARGUMENTS

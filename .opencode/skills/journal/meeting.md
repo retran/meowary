@@ -2,26 +2,19 @@
 name: journal/meeting
 description: Meeting note format and philosophy — file naming, sections by meeting type, action item routing to project/daily/waiting-for, and resource scan. Load when recording a meeting, editing meeting notes, or routing action items after a meeting.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Philosophy
+<role>Meeting note steward — record + routed commitments + durable knowledge capture.</role>
 
-Meetings produce two outputs: a **record** and **commitments**. The record is the meeting note; the commitments are the action items. Both must be complete before the workflow closes.
+<summary>
+> Meetings produce two outputs: record (the note) and commitments (action items). Both MUST complete before workflow closes. Unrouted action = forgotten commitment. Resources scan is mandatory — meetings are where durable knowledge first surfaces.
+</summary>
 
-An unrouted action item is a commitment that will be forgotten. The routing step exists not as a formality but because unrouted work disappears. The person who said "I'll look into that" will not remember by next week unless it is written somewhere trackable.
+<file_format>
+Location: `journal/meetings/`, named `YYYY-MM-DD-<slug>.md`. One file per meeting.
 
-The **resources scan** is mandatory because meetings are where durable knowledge is created first. Role changes, architectural decisions, team restructures, and process shifts surface in conversation before they appear anywhere else. If you do not capture them at the meeting, they may never be captured.
-
-Meeting notes are not meeting minutes. They are a distillation of what matters: decisions made, actions committed, questions opened.
-
----
-
-## File Format
-
-Meeting notes live in `journal/meetings/`, named `YYYY-MM-DD-<slug>.md`. One file per meeting.
-
-### Front Matter
-
+Front matter:
 ```yaml
 ---
 type: meeting
@@ -37,11 +30,10 @@ tags: []
 
 - `meeting-type`: `general` | `1-1` | `standup` | `retro` | `kickoff`
 - `recurrence`: `once` | `daily` | `weekly` | `biweekly` | `monthly`
-- `attendees`: leave as `[]` — attendees are listed in the body instead.
-- `tags`: include relevant `p-`, `t-`, and `person-` tags (no `#` prefix).
+- `attendees`: leave `[]` — list in body instead.
+- `tags`: include `p-`, `t-`, `person-` (no `#`).
 
-### H1 and Header Block
-
+H1 + header:
 ```markdown
 # YYYY-MM-DD: Meeting Title
 
@@ -51,13 +43,11 @@ tags: []
 **Tags:** #p-project #t-team #person-name
 ```
 
-Link attendees to their resource people entries using relative links where they exist.
+Link attendees to resource people entries via relative links where available.
+</file_format>
 
----
-
-## Sections
-
-Seven sections, in this order. Required vs. optional depends on `meeting-type`:
+<sections>
+Seven sections, in order. Required vs optional depends on `meeting-type`:
 
 | Section | general | 1-1 | standup | retro | kickoff |
 |---|:---:|:---:|:---:|:---:|:---:|
@@ -69,27 +59,27 @@ Seven sections, in this order. Required vs. optional depends on `meeting-type`:
 | Open Questions | optional | optional | — | — | required |
 | Next Meeting | optional | required | — | — | — |
 
-*Standups use per-person format for Discussion.
+*Standups use per-person Discussion format.
 
-Omit sections marked `—`. Sections marked `optional` include only if there is content.
+OMIT sections marked `—`. Include `optional` only when content exists.
 
 ### Objective
-One sentence: what this meeting is trying to achieve. Omit for 1-1s and standups.
+One sentence; what the meeting achieves. OMIT for 1-1s and standups.
 
 ### Discussion
-Bullet list of main topics. Each bullet names a topic or summarizes a point. Distill — not verbatim notes.
+Bullets of main topics. Distill — NOT verbatim notes.
 
-For **standups**, use per-person format:
+For **standups**, per-person:
 ```
 - **Name:** Yesterday: X | Today: Y | Blockers: Z (or none)
 ```
 
 ### Decisions
-Bullet list of decisions made. Each decision in active voice. If none, write `*(none)*`.
+Active voice bullets. If none: `*(none)*`.
 
 ### Action Items
 Checkboxes. Each item:
-- Assigns to a person: tag with `#person-<slug>`.
+- Assigns to person via `#person-<slug>`.
 - Notes routing intent: `→ own task`, `→ waiting-for`, or `→ project tasks`.
 
 ```markdown
@@ -99,83 +89,77 @@ Checkboxes. Each item:
 ```
 
 ### Parking Lot
-Topics raised but not resolved. Format: `- Topic: [next step or owner]`. If none, write `*(none)*`.
+Format: `- Topic: [next step or owner]`. If none: `*(none)*`.
 
 ### Open Questions
-Questions needing an answer from a specific person by a deadline. Format: `- Question? → [who answers, by when]`.
+Format: `- Question? → [who answers, by when]`.
 
 ### Next Meeting
-Date and focus for recurring meetings. Format: `Date: YYYY-MM-DD | Focus: [topic]`. If one-off: `*(n/a)*`.
+Format: `Date: YYYY-MM-DD | Focus: [topic]`. One-off: `*(n/a)*`.
+</sections>
 
----
-
-## 1-1 Additional Sections
-
-For `meeting-type: 1-1`, add these sections below Decisions:
+<one_on_one_extras>
+For `meeting-type: 1-1`, ADD below Decisions:
 
 | Section | Description |
 |---|---|
 | `### Wins` | What went well since last 1-1? |
-| `### Blockers` | What is slowing them down? What do they need help with? |
-| `### Growth` | Career conversations, learning goals, feedback exchange. |
-| `### Follow-ups` | Open items from this meeting and carry-overs from the previous 1-1. |
+| `### Blockers` | What slows them down? What help do they need? |
+| `### Growth` | Career, learning, feedback exchange. |
+| `### Follow-ups` | Open items + carry-overs from prior 1-1. |
+</one_on_one_extras>
 
----
-
-## Action Item Routing
-
+<action_routing gate="HARD-GATE">
 Route every action item before closing:
 
 | Item type | Route to |
 |---|---|
-| Own task for today or tomorrow | Today's `### Inbox` in daily note |
-| Waiting on someone else | `journal/waiting-for.md` (append to `## Active`) |
-| Task belonging to a project | `projects/<slug>/README.md` Open Tasks |
-| Deferred (no clear owner or date) | `### Parking Lot` |
+| Own task today/tomorrow | Today's `### Inbox` in daily note |
+| Waiting on someone | `journal/waiting-for.md` (`## Active`) |
+| Belongs to a project | `projects/<slug>/README.md` Open Tasks |
+| Deferred (no owner/date) | `### Parking Lot` |
 
-Every action item must be routed. **HARD-GATE (all tiers):** do not close until all action items are routed.
+**HARD-GATE (all tiers):** DO NOT close until all action items are routed.
+</action_routing>
 
----
+<cross_linking>
+After creating meeting file:
+1. Add entry to `## Day > ### Events` in today's daily note (relative link + one-line summary).
+2. Tag entry with `#p-` and `#person-` tags.
+3. Route all action items per table above.
+4. Update relevant resource articles; create stubs if needed.
+</cross_linking>
 
-## Cross-Linking
+<resources_scan>
+Scan for durable facts:
+- Team/role/reporting changes.
+- Process/policy decisions.
+- Architecture/technology adoption decisions.
+- New projects or status changes.
 
-After creating the meeting file:
+For each: enrich existing article OR create stub.
 
-1. Add an entry to `## Day > ### Events` in today's daily note: relative link to the meeting file + one-line summary.
-2. Tag the entry with relevant `#p-` and `#person-` tags.
-3. Route all action items per the table above.
-4. Update relevant resource articles with durable facts learned. Create stubs if needed.
+For **1-1 meetings**: also update `resources/people/<person-slug>.md` with:
+- Role/team/reporting changes mentioned.
+- Blockers revealing context.
+- Open follow-ups from `### Follow-ups` (as "Last 1-1" note with date).
 
----
+If nothing durable: state explicitly. NEVER leave scan implicit.
+</resources_scan>
 
-## Resources Scan
-
-Scan the meeting notes for durable facts:
-- Team changes, role updates, reporting structure changes.
-- Process decisions, policy changes.
-- Architectural choices, technology adoption decisions.
-- New projects or project status changes.
-
-For each durable fact: check if a resource article exists. If yes, enrich it. If no, create a stub.
-
-For **1-1 meetings**: after the general scan, update `resources/people/<person-slug>.md` with:
-- Role, team, or reporting changes mentioned.
-- Blockers revealing important context about their situation.
-- Open follow-ups from `### Follow-ups` — add as a "Last 1-1" note with date.
-
-If nothing durable was learned: note this explicitly. Do not leave the scan implicit.
-
----
-
-## Editor Checklist (run silently before every output)
-
-- [ ] Front matter complete: `type`, `date`, `title`, `meeting-type`, `recurrence`, `updated`, `tags`?
-- [ ] H1 follows `YYYY-MM-DD: Title` format?
-- [ ] Attendees linked to resource people entries where they exist?
-- [ ] Correct sections present for this `meeting-type`?
+<self_review>
+- [ ] Front matter complete (`type`, `date`, `title`, `meeting-type`, `recurrence`, `updated`, `tags`)?
+- [ ] H1 follows `YYYY-MM-DD: Title`?
+- [ ] Attendees linked to resource people where available?
+- [ ] Correct sections present for `meeting-type`?
 - [ ] Decisions in active voice?
-- [ ] Action items are checkboxes with `#person-` tags and routing intent marked?
-- [ ] Every action item routed to daily note / waiting-for / project tasks?
-- [ ] Daily note cross-linked (entry in `### Events`)?
-- [ ] Resources scan completed (even if result is "nothing durable")?
-- [ ] For 1-1: person resource article updated?
+- [ ] Action items: checkboxes + `#person-` + routing intent?
+- [ ] Every action routed (daily / waiting-for / project)?
+- [ ] Daily note cross-linked in `### Events`?
+- [ ] Resources scan completed (or "nothing durable" stated)?
+- [ ] For 1-1: person resource updated?
+</self_review>
+
+<output_rules>
+Output language: English. Frontmatter, section headers, tags remain English.
+</output_rules>

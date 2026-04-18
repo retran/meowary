@@ -2,131 +2,122 @@
 name: worktrunk
 description: Manage git worktrees via wt — create, switch, list, merge, and remove worktrees; check out MR/PR branches in isolation. Load when working on multiple branches simultaneously, checking out a PR/MR branch for review, or managing worktree lifecycle.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-`wt` (worktrunk) is installed and available. Use it for all worktree operations.
+<role>`wt` (worktrunk) authority for all git worktree operations.</role>
+
+<summary>
+> USE `wt` for all worktree operations, NOT raw `git worktree`. `wt switch --create` makes branch + worktree in one step. `wt merge` merges current → target (opposite of `git merge`).
+</summary>
 
 ## Commands
 
-### `wt switch` — Switch to a worktree; create if needed
+### `wt switch` — switch/create worktree
 
 ```bash
-wt switch <branch>            # Switch to existing worktree (creates one if absent)
-wt switch --create <branch>   # Create new branch and worktree
-wt switch --create <branch> --base <base>  # New branch from specific base
-wt switch -                   # Previous worktree (like cd -)
+wt switch <branch>            # Switch (creates if absent)
+wt switch --create <branch>   # New branch + worktree
+wt switch --create <branch> --base <base>
+wt switch -                   # Previous worktree
 wt switch ^                   # Default branch worktree
-wt switch mr:<N>              # Check out GitLab MR !N's branch
-wt switch pr:<N>              # Check out GitHub PR #N's branch
+wt switch mr:<N>              # GitLab MR !N branch (requires glab)
+wt switch pr:<N>              # GitHub PR #N branch (requires gh)
 ```
-
-`mr:<N>` and `pr:<N>` require `glab` (GitLab) or `gh` (GitHub) CLI to be authenticated.
-
-**Useful flags:**
 
 | Flag | Effect |
 |------|--------|
-| `--create` / `-c` | Create a new branch |
-| `--base <branch>` / `-b` | Base branch for `--create` (default: default branch) |
-| `--execute <cmd>` / `-x` | Run a command after switching (replaces `wt` process) |
+| `--create` / `-c` | Create new branch |
+| `--base <branch>` / `-b` | Base for `--create` (default: default branch) |
+| `--execute <cmd>` / `-x` | Run command after switching (replaces `wt` process) |
 | `--branches` | Include branches without worktrees in picker |
 | `--clobber` | Remove stale path at target |
 | `-y` | Skip approval prompts |
 
-Arguments after `--` are forwarded to the `--execute` command:
+Args after `--` forwarded to `--execute`:
 
 ```bash
 wt switch -x claude -c feature-a -- 'Add user authentication'
 ```
 
-**Interactive picker:** `wt switch` with no arguments opens a picker. Preview tabs (toggle with `1`–`5`): HEAD diff, log, diff vs main, remote diff, LLM summary. `Alt-c` creates a new worktree from the query.
+**Picker:** `wt switch` no args opens interactive picker. Preview tabs (`1`–`5`): HEAD diff, log, diff vs main, remote diff, LLM summary. `Alt-c` creates new from query.
 
-### `wt list` — List worktrees and their status
+### `wt list` — worktree status
 
 ```bash
-wt list             # Table of all worktrees
-wt list --full      # Include CI status, line diffs, LLM summaries
+wt list             # Table
+wt list --full      # CI status, line diffs, LLM summaries
 wt list --branches  # Include branches without worktrees
-wt list --format=json  # JSON output for scripting
+wt list --format=json
 ```
-
-**Status symbols:**
 
 | Symbol | Meaning |
 |--------|---------|
 | `+` | Staged files |
-| `!` | Modified files (unstaged) |
-| `?` | Untracked files |
-| `⊂` | Content integrated into default branch (safe to remove) |
-| `_` | Same commit as default branch (safe to remove) |
-| `↑` | Ahead of default branch |
-| `↓` | Behind default branch |
+| `!` | Modified (unstaged) |
+| `?` | Untracked |
+| `⊂` | Content integrated into default branch (safe remove) |
+| `_` | Same commit as default branch (safe remove) |
+| `↑` | Ahead of default |
+| `↓` | Behind default |
 
 Rows dimmed when safe to delete (`_` or `⊂`).
 
-### `wt merge` — Merge current branch into target
+### `wt merge` — merge current → target
 
 ```bash
-wt merge            # Merge into default branch (squash + rebase + FF + cleanup)
-wt merge develop    # Merge into a different branch
+wt merge            # Into default (squash + rebase + FF + cleanup)
+wt merge develop    # Into different branch
 wt merge --no-squash   # Keep individual commits
-wt merge --no-ff       # Create merge commit (semi-linear history)
+wt merge --no-ff       # Merge commit (semi-linear)
 wt merge --no-remove   # Keep worktree after merge
 ```
 
-**Pipeline:** squash → rebase → pre-merge hooks → fast-forward merge → pre-remove hooks → cleanup → post-merge hooks.
+**Pipeline:** squash → rebase → pre-merge hooks → FF merge → pre-remove hooks → cleanup → post-merge hooks.
 
-Cleanup removes the worktree and branch. Branch deletion only happens when merging would add nothing (checks: same commit, ancestor, no added changes, trees match, merge adds nothing).
+Cleanup removes worktree + branch. Branch deletion only when merging adds nothing (checks: same commit, ancestor, no added changes, trees match).
 
-### `wt remove` — Remove worktree; delete branch if merged
-
-```bash
-wt remove                    # Remove current worktree
-wt remove <branch>           # Remove specific worktree
-wt remove --no-delete-branch # Keep branch after removal
-wt remove -D                 # Force-delete unmerged branch
-wt remove -f                 # Force removal (ignore untracked files)
-```
-
-Removal runs in the background by default. Logs at `.git/wt/logs/<branch>-remove.log`.
-
-### `wt step` — Run individual operations
-
-Building blocks of `wt merge`, plus standalone utilities.
+### `wt remove`
 
 ```bash
-wt step commit              # Stage all changes and commit with LLM-generated message
-wt step commit --stage=tracked  # Stage only tracked files before committing
-wt step squash              # Squash all branch commits into one with LLM message
-wt step rebase              # Rebase onto target branch
-wt step push                # Fast-forward target to current branch
-wt step diff                # Show all changes since branching (committed + staged + unstaged + untracked)
-wt step diff -- --stat      # Pass extra args to git diff
-wt step copy-ignored        # Copy gitignored files (build caches, node_modules) from primary worktree
-wt step prune               # Remove worktrees and branches merged into default branch
-wt step prune --dry-run     # Preview what would be removed
-wt step for-each -- git status --short  # Run a command in every worktree
+wt remove                    # Current worktree
+wt remove <branch>
+wt remove --no-delete-branch # Keep branch
+wt remove -D                 # Force-delete unmerged
+wt remove -f                 # Force (ignore untracked)
 ```
 
-**`wt step commit` staging options:**
+Background by default. Logs at `.git/wt/logs/<branch>-remove.log`.
+
+### `wt step` — individual operations
+
+```bash
+wt step commit                  # Stage all + commit with LLM message
+wt step commit --stage=tracked  # Stage only tracked
+wt step squash                  # Squash branch commits with LLM message
+wt step rebase                  # Rebase onto target
+wt step push                    # FF target to current
+wt step diff                    # All changes since branching
+wt step diff -- --stat          # Pass args to git diff
+wt step copy-ignored            # Copy gitignored files from primary
+wt step prune                   # Remove worktrees+branches merged into default
+wt step prune --dry-run         # Preview
+wt step for-each -- git status --short  # Run command in every worktree
+```
 
 | `--stage` | Behavior |
 |-----------|----------|
-| `all` (default) | Stage all changes including untracked files |
-| `tracked` | Stage only modified tracked files |
-| `none` | Commit only what's already staged |
+| `all` (default) | Stage all including untracked |
+| `tracked` | Only modified tracked |
+| `none` | Only what's already staged |
 
-### `wt hook` — Run configured hooks
-
-Hooks are shell commands that run automatically at lifecycle events.
+### `wt hook` — lifecycle hooks
 
 ```bash
-wt hook pre-merge           # Run all pre-merge hooks manually
-wt hook pre-start --yes     # Skip approval prompts (for CI)
-wt hook show                # Show all configured hooks
+wt hook pre-merge           # Run all pre-merge manually
+wt hook pre-start --yes     # Skip approval (CI)
+wt hook show
 ```
-
-**Hook types:**
 
 | Event | `pre-` (blocking) | `post-` (background) |
 |-------|-------------------|----------------------|
@@ -136,7 +127,7 @@ wt hook show                # Show all configured hooks
 | merge | `pre-merge` | `post-merge` |
 | remove | `pre-remove` | `post-remove` |
 
-**Configuration** (`.config/wt.toml` in project root, committed to repo):
+**Config (`.config/wt.toml` in project root, committed):**
 
 ```toml
 [pre-start]
@@ -153,85 +144,75 @@ test = "npm test"
 kill-server = "lsof -ti :{{ branch | hash_port }} -sTCP:LISTEN | xargs kill 2>/dev/null || true"
 ```
 
-**Template variables in hooks:**
-
 | Variable | Value |
 |----------|-------|
-| `{{ branch }}` | Active branch name |
+| `{{ branch }}` | Active branch |
 | `{{ worktree_path }}` | Active worktree path |
 | `{{ primary_worktree_path }}` | Primary worktree path |
-| `{{ repo }}` | Repository directory name |
-| `{{ branch \| hash_port }}` | Deterministic port 10000–19999 for branch |
-| `{{ branch \| sanitize }}` | Branch name with `/` replaced by `-` |
-| `{{ branch \| sanitize_db }}` | Database-safe identifier with hash suffix |
+| `{{ repo }}` | Repo directory name |
+| `{{ branch \| hash_port }}` | Deterministic port 10000–19999 |
+| `{{ branch \| sanitize }}` | `/` replaced by `-` |
+| `{{ branch \| sanitize_db }}` | DB-safe identifier with hash suffix |
 
-### `wt config` — Configuration and shell integration
+### `wt config`
 
 ```bash
-wt config shell install     # Install shell integration (required for cd on switch)
-wt config create            # Create user config with documented examples
-wt config create --project  # Create project config (.config/wt.toml)
-wt config show              # Show current config and file locations
+wt config shell install     # Required for cd-on-switch
+wt config create            # User config with examples
+wt config create --project  # .config/wt.toml
+wt config show
 ```
-
-**Config files:**
 
 | File | Location | Purpose |
 |------|----------|---------|
-| User config | `~/.config/worktrunk/config.toml` | Personal preferences, LLM commit setup |
-| Project config | `.config/wt.toml` | Hooks, dev URL — committed to repo |
+| User | `~/.config/worktrunk/config.toml` | Personal preferences, LLM commit setup |
+| Project | `.config/wt.toml` | Hooks, dev URL — committed |
 
 ---
 
 ## Common Workflows
 
-### Work on a feature branch
-
+### Feature branch
 ```bash
-wt switch --create feature-xyz   # Create worktree + branch
-# … do work …
-wt merge                         # Squash, rebase, merge, cleanup
+wt switch --create feature-xyz
+# … work …
+wt merge
 ```
 
-### Review a GitLab MR or GitHub PR
-
+### Review GitLab MR / GitHub PR
 ```bash
-wt switch mr:101                 # Check out MR !101's branch
-wt switch pr:42                  # Check out PR #42's branch
+wt switch mr:101    # or pr:42
 # … review, test …
-wt remove                        # Clean up when done
+wt remove
 ```
 
-### Run multiple agents in parallel
-
+### Parallel agents
 ```bash
 wt switch -x claude -c feature-a -- 'Add user authentication'
 wt switch -x claude -c feature-b -- 'Fix the pagination bug'
 wt switch -x claude -c feature-c -- 'Write tests for the API'
-wt list --full                   # Monitor all worktrees with CI status
+wt list --full
 ```
 
-### See what's in flight
-
+### See in-flight
 ```bash
-wt list --full                   # All worktrees with CI status
+wt list --full
 ```
 
-### Clean up merged worktrees
-
+### Clean up merged
 ```bash
-wt step prune --dry-run          # Preview
-wt step prune                    # Remove all merged worktrees
+wt step prune --dry-run
+wt step prune
 ```
 
----
+<rules>
+- USE `wt` for worktree operations, NOT raw `git worktree`.
+- `wt switch --create` makes branch + worktree in one step.
+- `wt merge` merges current → target (opposite of `git merge`).
+- `mr:<N>` / `pr:<N>` require `glab` / `gh` authenticated.
+- `-x` / `--execute` runs command after switching. Args after `--` forwarded.
+- `wt step commit` LLM messages require commit-gen command in `~/.config/worktrunk/config.toml`.
+- Shell integration (`wt config shell install`) required for `wt switch` to change directories.
+</rules>
 
-## Rules
-
-- **Use `wt` for worktree operations**, not raw `git worktree` commands.
-- **`wt switch --create`** creates both the branch and worktree in one step.
-- **`wt merge`** merges current → target (opposite direction from `git merge`).
-- **`mr:<N>` / `pr:<N>` shortcuts** require the respective CLI (`glab` or `gh`) to be authenticated.
-- **`-x` / `--execute`** runs a command after switching — useful for launching editors or agents. Arguments after `--` are forwarded to the command.
-- **`wt step commit`** generates LLM commit messages — requires a commit generation command configured in `~/.config/worktrunk/config.toml`.
-- **Shell integration** (`wt config shell install`) is required for `wt switch` to change directories.
+<output_rules>Output in English. Preserve verbatim CLI commands, flags, and config TOML.</output_rules>

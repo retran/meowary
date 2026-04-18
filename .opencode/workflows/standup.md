@@ -1,79 +1,77 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
 # Standup
 
-> Read-only daily standup preparation. Synthesizes Yesterday / Today / Blockers from dev-log entries and the current daily note, then formats a standup update ready to read aloud or paste. Writes nothing to the journal. Invoke before or during daily standup.
+<summary>
+> Read-only standup prep. Synthesizes Yesterday/Today/Blockers from dev-logs and current daily note. Formats output ready to read or paste. Writes nothing.
+</summary>
 
-## Role
+<role>
+Standup synthesizer. Reads dev-logs, daily note MITs, waiting-for; produces clean Yesterday/Today/Blockers. NEVER writes. NEVER editorializes — surfaces facts only.
+</role>
 
-Acts as a standup synthesizer. Reads available sources — dev-logs, daily note MITs, waiting-for list — and produces a clean Yesterday / Today / Blockers summary. Does not write to any file. Does not interpret or editorialize; surfaces facts only.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Active projects list | `context/context.md § Active Projects` | Required |
-| Project dev-logs | `projects/<name>/dev-log.md` | Required |
+| Active projects | `context/context.md § Active Projects` | Yes |
+| Project dev-logs | `projects/<name>/dev-log.md` | Yes |
 | Today's daily note | `journal/daily/<date>.md` | Optional |
 | Waiting-for list | `journal/waiting-for.md` | Optional |
+</inputs>
 
-## Complexity Tiers
+<tiers>Not applicable. Fixed-procedure workflow.</tiers>
 
-Not applicable. Fixed-procedure workflow.
+<steps>
 
-## Steps
+<step n="0" name="Load context">
+1. READ `context/context.md` for active projects. If absent or empty: glob `projects/*/dev-log.md` and use those. DO NOT stop — standup is read-only.
+2. READ today's daily note if exists — Morning MITs and Day zone.
+3. READ last entry of `dev-log.md` per active project.
 
-### Step 0 — Load context
+<done_when>Active projects + recent dev-log entries loaded; today's MITs loaded if available.</done_when>
+</step>
 
-1. Read `context/context.md` for active projects list. If absent or has no active projects: glob `projects/*/dev-log.md` and use those projects instead. Do not stop — standup is read-only and can proceed from dev-log alone.
-2. Read today's daily note (`journal/daily/<YYYY-MM-DD>.md`) if it exists — Morning MITs and Day zone.
-3. Read the last entry of `dev-log.md` for each active project.
+<step n="0.5" name="Clarify">
+ASK at most one question, only if ambiguous:
+- "Which projects to include?" — only if `context.md` lists > 2–3 active projects.
 
-Done when: active projects and most recent dev-log entries loaded; today's MIT list loaded if available.
+If `/morning` not run: note gap, "No morning note — working from dev-log only." DO NOT block.
 
-### Step 0.5 — Clarify
+If standup is for specific audience: incorporate into summary level.
 
-Ask at most one question, only if genuinely ambiguous:
+<done_when>Scope confirmed or defaulted to all active.</done_when>
+</step>
 
-- "Which project(s) should I include in the standup?" — ask only if `context.md` lists more than 2–3 active projects.
+<step n="1" name="Extract Yesterday">
+1. From each project's dev-log last entry: extract `**Summary:**` and `**Key decisions:**`.
+2. From yesterday's daily note `## Evening > ### Completed` if accessible.
+3. CONDENSE to 1–3 bullets. Remove project-internal detail.
 
-If `/morning` was not run today: note the gap — "No morning note found — working from dev-log only." Do not block on this; proceed.
+<done_when>Yesterday drafted (1–3 bullets).</done_when>
+</step>
 
-If the standup is for a specific audience (e.g. one team among several), incorporate that into the summary level.
+<step n="2" name="Extract Today">
+1. From today's daily note `## Morning` MITs if `/morning` ran.
+2. From each dev-log most recent `**Next:**`.
+3. CONDENSE to 1–3 bullets. Prioritize ★ primary MIT.
 
-Done when: scope confirmed (or defaulted to all active projects).
+<done_when>Today drafted (1–3 bullets).</done_when>
+</step>
 
-### Step 1 — Extract Yesterday
-
-1. From each project's `dev-log.md` last entry: extract `**Summary:**` and `**Key decisions:**` fields.
-2. From yesterday's daily note `## Evening > ### Completed` (if accessible).
-3. Condense to 1–3 bullets. Remove project-internal detail not relevant to the standup audience.
-
-Done when: Yesterday section drafted (1–3 bullets).
-
-### Step 2 — Extract Today
-
-1. From today's daily note `## Morning` MITs (if `/morning` was run).
-2. From each active project dev-log `**Next:**` field in the most recent entry.
-3. Condense to 1–3 bullets. Prioritize the ★ primary MIT if set.
-
-Done when: Today section drafted (1–3 bullets).
-
-### Step 3 — Extract Blockers
-
-1. From `dev-log.md` entries: any `**Deferred:**` items caused by an external dependency.
+<step n="3" name="Extract Blockers">
+1. From dev-log: `**Deferred:**` items with external dependency.
 2. From today's daily note `## Day > ### Waiting`: items waiting on others.
-3. From `journal/waiting-for.md`: items with overdue follow-up date.
+3. From `journal/waiting-for.md`: overdue follow-ups.
 4. If none: "No blockers."
 
-Done when: Blockers section drafted.
+<done_when>Blockers drafted.</done_when>
+</step>
 
-### Step 4 — Close
-
-Output the standup in standard format:
+<step n="4" name="Close" gate="END-GATE">
+OUTPUT standup format:
 
 ```
 **Yesterday:**
@@ -86,51 +84,52 @@ Output the standup in standard format:
 - <item or "None">
 ```
 
-Keep each section to 1–3 bullets. Do not include internal project detail not relevant to the standup audience. Summarize at the right level for the team.
+Each section 1–3 bullets. No internal detail. Summarize at right level.
 
-This is the final output. No writes. No commits.
+Final output. No writes. No commits.
 
-**Self-review checklist:**
+<self_review>
+- [ ] All `Done when` met
+- [ ] Yesterday/Today/Blockers format
+- [ ] Concise (< 2 min reading)
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-- [ ] All `Done when` criteria met for every step
-- [ ] Yesterday/today/blockers format followed
-- [ ] Output is concise (under 2 minutes reading time)
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+<done_when>Formatted standup displayed.</done_when>
+</step>
 
-Done when: formatted standup displayed to user.
+</steps>
 
-**END-GATE:** Present final deliverables to the user.
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
-| Standup text | In-session only | Yesterday / Today / Blockers |
+| Standup text | In-session | Yesterday/Today/Blockers |
+</outputs>
 
-**`/standup` is read-only. No journal writes, no commits, no dev-log entries.**
+**`/standup` is read-only. NO writes, NO commits, NO dev-log entries.**
 
-## Error Handling
+<error_handling>
+- **No dev-log entries:** Note "No recent entries for `<project>`." Include project in Today if MITs exist.
+- **No daily note:** Proceed from dev-log; note gap.
+- **> 3 active projects:** Ask which, or default to top 3 by priority in `context.md`.
+</error_handling>
 
-- **No dev-log entries:** Note "No recent dev-log entries found for `<project>`." Include the project name in Today if MITs exist.
-- **No daily note:** Proceed from dev-log only; note the gap.
-- **More than 3 active projects:** Ask which to include, or default to the top 3 by priority in `context.md`.
+<contracts>
+1. Write nothing.
+2. NEVER create/update daily note.
+3. NEVER commit.
+4. NEVER write dev-log entries.
+5. One clarifying question max — time-sensitive.
+6. In-session output only. User decides what to paste.
+</contracts>
 
-## Contracts
-
-1. Write nothing to any file.
-2. Do not create or update the daily note.
-3. Do not commit.
-4. Do not write dev-log entries.
-5. One clarifying question maximum — standup is time-sensitive.
-6. Output is in-session only. The user decides what to paste or read aloud.
-
----
-
-*Suggested next steps (present, do not run):*
-
+<next_steps>
 | Condition | Suggested next workflow |
 |-----------|------------------------|
-| Standup reveals a clear top priority | Start the appropriate lifecycle workflow |
-| Blocker identified that needs escalation | `capture` the blocker; note in `journal/waiting-for.md` |
-| `morning` was not run yet | `morning` to set up the day |
+| Clear top priority surfaced | Appropriate lifecycle workflow |
+| Blocker needs escalation | `capture`; note in `journal/waiting-for.md` |
+| `morning` not run | `morning` |
+</next_steps>
+
+<output_rules>Output language: English.</output_rules>

@@ -1,136 +1,129 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
 # Capture
 
-> Frictionless quick-capture. Routes a raw idea, note, URL, question, or observation to either `inbox/<timestamp>-<topic>.md` (persistent capture for later processing) or `## Day > ### Inbox` in today's daily note (same-day ephemeral). One question maximum. Commit and close. Invoke whenever something surfaces that needs capturing.
+<summary>
+> Frictionless capture router. Routes raw input to `inbox/<timestamp>-<topic>.md` (persistent) or `## Day > ### Inbox` in today's daily note (ephemeral). One question max. Capture; never process.
+</summary>
 
-## Role
+<role>
+Zero-friction capture router. Route input with minimal questions. NEVER process or analyze content — that is the job of `resource-ingest`, `resource-plan`, `evening`. Capture first, process later.
+</role>
 
-Acts as a zero-friction capture router. Takes raw input and routes it to the right destination with minimal questions. Does not process or analyze the captured content — that is the job of `resource-ingest`, `resource-plan`, and `evening`. Capture first; process later.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Capture content | User invocation | Required |
-| Active projects list | `context/context.md § Active Projects` | Optional (for tagging) |
-| Today's daily note | `journal/daily/<date>.md` | Required only if routing to Day > Inbox |
+| Capture content | User invocation | Yes |
+| Active projects list | `context/context.md § Active Projects` | Optional (tagging) |
+| Today's daily note | `journal/daily/<date>.md` | Only if routing to Day > Inbox |
+</inputs>
 
-## Complexity Tiers
+<tiers>Not applicable. Fixed-procedure workflow.</tiers>
 
-Not applicable. Fixed-procedure workflow.
-
-## Routing Decision
-
-Before writing, determine destination:
+<definitions>
+**Routing decision:**
 
 | Type | Destination | Lifetime |
 |------|-------------|----------|
-| Rich capture: URL, idea to develop, reference to file, concept to research | `inbox/<timestamp>-<topic>.md` (new file) | Until processed via `resource-plan` or `resource-ingest` |
-| Ephemeral same-day: quick thought, reminder, raw observation | `## Day > ### Inbox` inline in today's daily note | Same-day; processed in `/evening` |
+| Rich: URL, idea, reference, concept | `inbox/<timestamp>-<topic>.md` (new file) | Until processed via `resource-plan`/`resource-ingest` |
+| Ephemeral same-day: thought, reminder, observation | `## Day > ### Inbox` in today's daily note | Same-day; processed in `/evening` |
 
-When in doubt, default to `inbox/` — it is persistent and cannot be lost.
+DEFAULT to `inbox/` when ambiguous — persistent and cannot be lost.
+</definitions>
 
-## Steps
+<steps>
 
-### Step 0 — Load context
+<step n="0" name="Load context">
+1. READ `context/context.md` for active project names (tagging/linking only).
+2. CHECK if `journal/daily/<YYYY-MM-DD>.md` exists (only if routing to Day > Inbox).
 
-1. Read `context/context.md` for active project names — for tagging and linking only.
-2. Check whether today's daily note exists (`journal/daily/<YYYY-MM-DD>.md`) — needed only if routing to Day > Inbox.
+DO NOT load project dev-logs. `/capture` is fast.
 
-Do not load project dev-logs. `/capture` is fast.
+<done_when>Project names known; daily note existence checked.</done_when>
+</step>
 
-Done when: project names known; daily note existence checked.
-
-### Step 0.5 — Clarify
-
-Ask at most one question:
-
+<step n="0.5" name="Clarify">
+ASK at most one question:
 - "Is this for development later (`inbox/`) or a quick same-day note?"
 
-If the user's invocation contains enough context to determine routing automatically (e.g. "save this URL", "quick note"), skip the question and route immediately. Never ask more than one question.
+SKIP if invocation contains routing context (e.g. "save this URL", "quick note"). NEVER ask more than one question.
 
-Done when: routing destination determined.
+<done_when>Routing destination determined.</done_when>
+</step>
 
-### Step 1 — Route and tag
+<step n="1" name="Route and tag">
+1. DETERMINE destination from routing table.
+2. ASSIGN exactly one type tag: `idea`, `task`, `reference`, `question`, `bug`.
+3. LINK to active project if clearly related. DO NOT force-tag ambiguous items.
 
-1. Determine destination using the Routing Decision table above.
-2. Assign exactly one type tag: `idea`, `task`, `reference`, `question`, or `bug`.
-3. Link to an active project if the capture is clearly related. Do not force-tag ambiguous items.
+<done_when>Destination and type tag determined.</done_when>
+</step>
 
-Done when: destination and type tag determined.
+<step n="2" name="Write">
+**inbox/ route:** Create `inbox/<YYYY-MM-DDTHHMM>-<topic>.md` per inbox skill capture format.
+- `<topic>`: 1–3 word kebab-case slug.
+- Set `project` if related to active project.
+- Body: raw capture content, no processing.
 
-### Step 2 — Write
+**Day > Inbox route:** Append bullet `- <content>` to `## Day > ### Inbox` in today's daily note. Create note from template if missing.
 
-**If routing to `inbox/`:**
+<done_when>File created or bullet appended.</done_when>
+</step>
 
-Create `inbox/<YYYY-MM-DDTHHMM>-<topic>.md` per the inbox skill capture format.
-- `<topic>`: 1–3 word kebab-case slug from the capture content.
-- Set `project` field if the capture is clearly related to an active project.
-- Body: the raw capture content as received. No processing, no restructuring.
+<step n="3" name="Close" gate="END-GATE">
+COMMIT:
+- inbox: `Capture: <topic-slug>`
+- Day > Inbox: `Note: <date> inline capture`
 
-**If routing to `## Day > ### Inbox`:**
+For batch captures: write one file per item, no questions between items, single commit covering all.
 
-- Append a bullet to `## Day > ### Inbox` in today's daily note.
-- Format: `- <content>` (no additional structure — ephemeral).
-- If the daily note doesn't exist, create it from template first.
+<self_review>
+- [ ] All `Done when` met
+- [ ] Routed to correct location
+- [ ] Tags applied
+- [ ] No placeholders (TBD/TODO/FIXME)
+- [ ] All file paths correct, targets exist
+</self_review>
 
-Done when: file created or bullet appended.
+<done_when>Committed.</done_when>
+</step>
 
-### Step 3 — Close
+</steps>
 
-Commit:
-- `inbox/` route: `Capture: <topic-slug>`
-- Day > Inbox route: `Note: <date> inline capture`
-
-For batch captures (multiple items in one invocation): write one file per item without asking questions between items. Use a single commit covering all items.
-
-**Self-review checklist:**
-
-- [ ] All `Done when` criteria met for every step
-- [ ] Capture routed to correct location (inbox/ or daily note)
-- [ ] Tags applied for discoverability
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
-
-Done when: committed.
-
-**END-GATE:** Present final deliverables to the user.
-
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
 | Inbox capture | `inbox/<timestamp>-<topic>.md` | Markdown file |
-| Daily note inline capture | `journal/daily/<date>.md` Day > Inbox | Appended bullet |
-| Commit | Git history | `Capture: <slug>` or `Note: <date> inline capture` |
+| Daily inline capture | `journal/daily/<date>.md` Day > Inbox | Bullet |
+| Commit | Git | `Capture: <slug>` or `Note: <date> inline capture` |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **`capture-template.md` missing:** Create file with front matter schema only + raw content body. Note missing template.
+- **Daily note missing (Day > Inbox):** Create from `.opencode/skills/journal/daily-template.md` first, then append.
+- **Project tag unclear:** Leave `project: null`. DO NOT block.
+- **Multiple captures one invocation:** One file per item, single commit. NEVER ask between items.
+</error_handling>
 
-- **`capture-template.md` missing:** Create the file with front matter schema only and the raw content in the body. Note the missing template.
-- **Daily note missing (Day > Inbox route):** Create from `.opencode/skills/journal/daily-template.md` first; then append the bullet.
-- **Project tag unclear:** Leave `project: null`. Do not block on tagging.
-- **User provides multiple captures in one invocation:** Write one file per item; single commit at the end. Do not ask between items.
+<contracts>
+1. One new `inbox/` file per item. NEVER overwrite existing.
+2. Day > Inbox: append-only. NEVER edit existing bullets.
+3. One clarifying question max. Capture is near-instant.
+4. NEVER process or analyze. Route only.
+5. Commit format: `Capture: <slug>` (inbox) | `Note: <date> inline capture` (daily).
+6. DEFAULT to `inbox/` when ambiguous.
+</contracts>
 
-## Contracts
-
-1. Write one new `inbox/` file per capture item. Never overwrite an existing file.
-2. For Day > Inbox: append only. Never edit existing bullets.
-3. One clarifying question maximum. Capture must be near-instant.
-4. Never process or analyze captured content. Route only.
-5. Commit format: `Capture: <slug>` (inbox) | `Note: <date> inline capture` (daily note).
-6. Default to `inbox/` when routing is ambiguous.
-
----
-
-*Suggested next steps (present, do not run):*
-
+<next_steps>
 | Condition | Suggested next workflow |
 |-----------|------------------------|
-| Capture is a URL or reference source | `resource-ingest` when ready to process |
-| Capture is a knowledge gap to investigate | `research` when ready |
-| Capture is a task for a project | Add to project task list during next session |
-| `inbox/` has accumulated many unprocessed items | `resource-plan` to plan a processing pass |
+| URL or reference source | `resource-ingest` |
+| Knowledge gap | `research` |
+| Project task | Add to project task list next session |
+| Many unprocessed inbox items | `resource-plan` |
+</next_steps>
+
+<output_rules>Output language: English. Present next steps; DO NOT execute.</output_rules>

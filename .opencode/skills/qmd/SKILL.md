@@ -2,95 +2,94 @@
 name: qmd
 description: QMD CLI mechanics -- query types (lex/vec/hyde), query syntax, multi-get, and index maintenance. Load when issuing a qmd query, choosing query types for better recall, or re-indexing after bulk changes.
 compatibility: Requires qmd CLI. Install via `npm install -g @tobilu/qmd`.
+updated: 2026-04-18
 ---
 
-# QMD — Quick Markdown Search
+<role>QMD CLI mechanics: query types, syntax, multi-get, index maintenance.</role>
 
-Local semantic search engine for journal content.
+<summary>
+> Local semantic search for journal/resources/projects content. Three query types (lex/vec/hyde) for different intents. Re-index after bulk changes.
+</summary>
 
 ## Status
 
 !`qmd status 2>/dev/null || echo "Not installed: npm install -g @tobilu/qmd"`
 
-## CLI
+<cli>
 
 ```bash
 qmd query "question"              # Auto-expand + rerank
 qmd query $'lex: X\nvec: Y'       # Structured multi-type query
 qmd query $'expand: question'     # Explicit expand
-qmd query --json --explain "q"    # Show score traces (RRF + rerank blend)
+qmd query --json --explain "q"    # Score traces (RRF + rerank blend)
 qmd search "keywords"             # BM25 only (no LLM)
 qmd get "#abc123"                 # By docid
-qmd multi-get "journals/2026-*.md" -l 40  # Batch pull snippets by glob
-qmd multi-get notes/foo.md,notes/bar.md   # Comma-separated list, preserves order
+qmd multi-get "journals/2026-*.md" -l 40  # Batch snippets by glob
+qmd multi-get notes/foo.md,notes/bar.md   # Comma list, preserves order
 ```
 
-## Query Types
+</cli>
 
-| Type   | Method | Input                                       |
-| ------ | ------ | ------------------------------------------- |
-| `lex`  | BM25   | Keywords — exact terms, names, code         |
-| `vec`  | Vector | Question — natural language                 |
-| `hyde` | Vector | Answer — hypothetical result (50-100 words) |
+<query_types>
 
-### Writing Good Queries
+| Type | Method | Input |
+|------|--------|-------|
+| `lex` | BM25 | Keywords — exact terms, names, code |
+| `vec` | Vector | Question — natural language |
+| `hyde` | Vector | Answer — hypothetical result (50–100 words) |
+
+### Writing good queries
 
 **lex (keyword)**
-
-- 2–5 terms, no filler words
+- 2–5 terms, no filler
 - Exact phrase: `"connection pool"` (quoted)
-- Exclude terms: `performance -sports` (minus prefix)
+- Exclude: `performance -sports` (minus prefix)
 - Code identifiers work: `handleError async`
 
 **vec (semantic)**
-
 - Full natural language question
 - Be specific: `"how does the rate limiter handle burst traffic"`
 - Include context: `"in the payment service, how are refunds processed"`
 
 **hyde (hypothetical document)**
-
-- Write 50–100 words of what the _answer_ looks like
-- Use the vocabulary you expect in the result
+- 50–100 words of what the *answer* looks like
+- Use vocabulary expected in result
 
 **expand (auto-expand)**
+- Single-line query — local LLM generates lex/vec/hyde variations
+- DO NOT mix with other typed lines
 
-- Single-line query — lets the local LLM generate lex/vec/hyde variations
-- Do not mix with other typed lines
+### Combining types
 
-### Combining Types
+| Goal | Approach |
+|------|----------|
+| Know exact terms | `lex` only |
+| Don't know vocabulary | Single-line (implicit `expand:`) or `vec` |
+| Best recall | `lex` + `vec` |
+| Complex topic | `lex` + `vec` + `hyde` |
+| Ambiguous | Add `intent:` to any combination |
 
-| Goal                  | Approach                                        |
-| --------------------- | ----------------------------------------------- |
-| Know exact terms      | `lex` only                                      |
-| Don't know vocabulary | Single-line query (implicit `expand:`) or `vec` |
-| Best recall           | `lex` + `vec`                                   |
-| Complex topic         | `lex` + `vec` + `hyde`                          |
-| Ambiguous query       | Add `intent:` to any combination                |
+First query gets 2× weight in fusion — put best guess first.
 
-First query gets 2× weight in fusion — put your best guess first.
+### Lex syntax
 
-### Lex Query Syntax
+| Syntax | Meaning | Example |
+|--------|---------|---------|
+| `term` | Prefix match | `perf` matches "performance" |
+| `"phrase"` | Exact phrase | `"rate limiter"` |
+| `-term` | Exclude | `performance -sports` |
 
-| Syntax     | Meaning      | Example                      |
-| ---------- | ------------ | ---------------------------- |
-| `term`     | Prefix match | `perf` matches "performance" |
-| `"phrase"` | Exact phrase | `"rate limiter"`             |
-| `-term`    | Exclude      | `performance -sports`        |
+`-term` works only in lex queries.
 
-Note: `-term` only works in lex queries.
-
-### Intent (Disambiguation)
-
-Add an `intent:` line to steer results when a term is ambiguous:
+### Intent (disambiguation)
 
 ```bash
 qmd query $'lex: performance\nintent: web page load times and Core Web Vitals'
 ```
 
-Intent affects expansion, reranking, and snippet extraction. It does not search on its own.
+Intent affects expansion, reranking, snippet extraction. Does not search alone.
 
-### Collection Filtering
+### Collection filtering
 
 ```bash
 qmd query --collections docs "question"
@@ -99,22 +98,30 @@ qmd query --collections docs,notes "question"
 
 Omit to search all collections.
 
-## Maintenance
+</query_types>
+
+<maintenance>
 
 Re-index after bulk changes: `node .opencode/scripts/qmd-index.js`
 
-- Default (no flag): incremental update — re-indexes changed/new files only
-- `--changed`: git-aware early exit — skips entirely if no indexed `.md` files changed (fastest; use in automated hooks)
-- `--full`: force re-embed all chunks — use only when switching embedding models or recovering a corrupt index
+| Flag | Behavior |
+|------|----------|
+| (none) | Incremental — re-indexes changed/new files only |
+| `--changed` | Git-aware early exit — skips entirely if no indexed `.md` changed (fastest; automated hooks) |
+| `--full` | Force re-embed all chunks — only when switching embedding models or recovering corrupt index |
 
-Collections must be registered in the qmd index before they can be updated. The `/bootstrap` command registers all standard collections. To register a new collection manually:
+Collections must be registered before update. `/bootstrap` registers standard collections. Manual:
 
 ```bash
 qmd collection add <name> <path>   # e.g. qmd collection add context ./context
 ```
 
-## Editor Checklist (run silently before every output)
+</maintenance>
 
-- [ ] Query type appropriate for the search intent (lex for exact, vec for semantic, hyde for conceptual)?
-- [ ] Collection exists and is indexed before querying?
-- [ ] Re-index triggered after bulk file changes?
+<self_review>
+- [ ] Query type appropriate (lex=exact, vec=semantic, hyde=conceptual)?
+- [ ] Collection exists and indexed?
+- [ ] Re-index triggered after bulk changes?
+</self_review>
+
+<output_rules>Output in English. Preserve verbatim CLI commands, flags, and bash status block.</output_rules>

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-04-18
+
+### Changed
+
+- Rewrote all 57 prompt files (agents, commands, workflows, skills, reference docs, AGENTS.md) with structured XML schema for improved machine-readability and token efficiency
+- Applied definitive directive verbs (DO, NEVER, MUST, USE) throughout, replacing soft modal language
+- Added `<role>`, `<summary>`, `<inputs>`, `<steps>`, `<contracts>`, `<error_handling>`, `<output_rules>` sections to every file
+- Embedded `<done_when>`, `<self_review>`, and `<subagent_trigger>` blocks inside workflow steps
+- Added `<trigger_table>` to AGENTS.md for fast condition-to-action lookup
+- Updated `updated:` frontmatter to 2026-04-18 on all converted files
+- Templates (`*-template.md`, `meta-templates/`) left untouched
+
 ## [0.1.1] - 2026-04-13
 
 ### Fixed
@@ -39,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Helper scripts for health checks, backlink detection, resource planning, and Confluence sync
 - macOS and WSL installation paths documented
 
-[Unreleased]: https://github.com/retran/meowary/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/retran/meowary/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/retran/meowary/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/retran/meowary/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/retran/meowary/releases/tag/v0.1.0

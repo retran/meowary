@@ -1,401 +1,385 @@
 ---
-updated: 2026-04-07
+updated: 2026-04-18
 tags: []
 ---
 
 # Resource-Ops
 
-> Executes structural operations on the `resources/` knowledge graph: create, rename/move, merge, split, delete, and archive. Handles the mechanical work — file creation/deletion/moves, link updates, backlink fixes, tag registry updates, and QMD re-indexing. One operation per invocation. Always confirms before any destructive action. Invoke after `resource-plan` produces structural operation entries, or directly when a specific structural change is needed.
+<summary>
+> Structural operations on `resources/`: create, rename/move, merge, split, delete, archive. Mechanical work — file ops, link updates, backlink fixes, tag registry, QMD re-index. One operation per invocation. Always confirms before destructive actions.
+</summary>
 
-## Role
+<role>
+Disciplined knowledge graph restructuring operator. NEVER leaves broken inbound links. ALWAYS runs `find-backlinks.js` before any move/rename/merge/delete. Shows scope and stops for explicit confirmation before destructive ops. One operation, one commit.
+</role>
 
-Acts as a disciplined knowledge graph restructuring operator. Never leaves a broken inbound link behind. Always runs `find-backlinks.js` before any move, rename, merge, or delete. Shows the user what will change before any destructive operation and stops for explicit confirmation. One operation, one commit.
-
-## Inputs
-
+<inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Operation type | User invocation | Required |
-| Source/target paths | User invocation | Required |
-| `find-backlinks.js` output | Script | Required for rename/merge/delete/split |
-| `meta/confluence-sync.json` | `meta/` | Required for rename/merge/delete |
+| Operation type | User invocation | Yes |
+| Source/target paths | User invocation | Yes |
+| `find-backlinks.js` output | Script | Yes for rename/merge/delete/split |
+| `meta/confluence-sync.json` | `meta/` | Yes for rename/merge/delete |
+</inputs>
 
-## Complexity Tiers
-
-Not applicable. Fixed-procedure workflow. Operation type determines which sub-steps apply.
+<tiers>Not applicable. Operation type determines sub-steps.</tiers>
 
 ## Steps — Create
 
-### Create Step 0 — Clarify
+<steps>
 
-1. Ask: what concept? Which subfolder? Does a similar article already exist?
-2. Run `qmd query "<concept>"` to check for near-duplicates before creating.
-3. Confirm the slug (filename) with the user.
+<step n="c0" name="Create: Clarify">
+1. ASK: what concept? subfolder? near-duplicate exists?
+2. RUN `qmd query "<concept>"` to check.
+3. CONFIRM slug.
 
-Done when: concept, subfolder, and slug confirmed; no near-duplicate exists.
+<done_when>Concept, subfolder, slug confirmed; no near-duplicate.</done_when>
+</step>
 
-### Create Step 1 — Create article
-
-Write `resources/<subfolder>/<slug>.md` with:
+<step n="c1" name="Create: Article">
+WRITE `resources/<subfolder>/<slug>.md`:
 - Front matter: `updated`, `tags`, `status: stub`
 - `# Title`
 - One-sentence summary
-- Empty `## Related` section
-- `## Changelog` with creation entry: `- **YYYY-MM-DD:** Created.`
+- Empty `## Related`
+- `## Changelog` with `- **YYYY-MM-DD:** Created.`
 
-Done when: article file written with front matter, summary, and changelog.
+<done_when>File written.</done_when>
+</step>
 
-### Create Step 2 — Register tags
+<step n="c2" name="Create: Register tags">
+ADD new tags to `meta/tags.md`.
 
-Add any new tags to `meta/tags.md`.
+<done_when>Tags registered.</done_when>
+</step>
 
-Done when: all tags registered.
+<step n="c3" name="Create: Link">
+Find closest related; add link to new article in its `## Related`.
 
-### Create Step 3 — Link from nearest relative
+<done_when>Linked from nearest relative.</done_when>
+</step>
 
-Find the most closely related existing article; add a link to the new article in its `## Related` section.
+<step n="c4" name="Create: Commit">
+`git add resources/<path> meta/tags.md && git commit -m "Create resources: <subfolder>/<slug>"`
 
-Done when: new article linked from nearest relative.
+<done_when>Committed.</done_when>
+</step>
 
-### Create Step 4 — Commit
-
-```
-git add resources/<path> tags.md && git commit -m "Create resources: <subfolder>/<slug>"
-```
-
-Done when: committed; log entry appended (see Close below); daily note updated.
-
----
+</steps>
 
 ## Steps — Rename / Move
 
-### Rename Step 0 — Clarify
+<steps>
 
-1. Confirm old path and new path.
-2. Check that the new path doesn't already exist.
-3. Run `node .opencode/scripts/find-backlinks.js resources/<old-path>.md` — show the user all inbound links.
-4. **HARD-GATE (all tiers):** Output the pending rename (`<old-path>` → `<new-path>`) and the inbound link count. Do not proceed until the user confirms in this turn.
+<step n="r0" name="Rename: Clarify" gate="HARD-GATE">
+1. CONFIRM old and new paths.
+2. CHECK new path is free.
+3. RUN `node .opencode/scripts/find-backlinks.js resources/<old-path>.md` — show all inbound links.
+4. **HARD-GATE:** Output pending rename + inbound count. DO NOT proceed without confirmation.
 
-Done when: old and new paths confirmed; new path is free; user has confirmed the rename.
+<done_when>Paths confirmed; new free; user confirmed.</done_when>
+</step>
 
-### Rename Step 1 — Move file
+<step n="r1" name="Rename: Move">
+`git mv resources/<old-path>.md resources/<new-path>.md`
 
-```
-git mv resources/<old-path>.md resources/<new-path>.md
-```
+<done_when>Moved.</done_when>
+</step>
 
-Done when: file moved.
+<step n="r2" name="Rename: Fix inbound links">
+1. RE-RUN `find-backlinks.js` (fresh run for fix pass — DO NOT reuse Step 0 output).
+2. UPDATE every inbound link.
 
-### Rename Step 2 — Fix all inbound links
+<done_when>All inbound updated.</done_when>
+</step>
 
-1. Re-run `node .opencode/scripts/find-backlinks.js resources/<old-path>.md` — do not reuse the Step 0 output; this is a fresh run used for the actual fix pass.
-2. Update every inbound link to the new path.
+<step n="r3" name="Rename: Update sync registry">
+If in `meta/confluence-sync.json` `resources` fields: update path.
 
-Done when: all inbound links updated to new path.
+<done_when>Registry updated.</done_when>
+</step>
 
-### Rename Step 3 — Update `meta/confluence-sync.json`
+<step n="r4" name="Rename: Commit">
+`git add -A && git commit -m "Rename resources: <old-slug> → <new-slug>"`
 
-If the article appears in `meta/confluence-sync.json` `resources` fields, update the path.
+<done_when>Committed.</done_when>
+</step>
 
-Done when: sync registry updated.
+<step n="r5" name="Rename: Re-index">
+`node .opencode/scripts/qmd-index.js`
 
-### Rename Step 4 — Commit
+<done_when>QMD rebuilt.</done_when>
+</step>
 
-```
-git add -A && git commit -m "Rename resources: <old-slug> → <new-slug>"
-```
-
-Done when: committed.
-
-### Rename Step 5 — Re-index
-
-```
-node .opencode/scripts/qmd-index.js
-```
-
-Done when: QMD index rebuilt.
-
----
+</steps>
 
 ## Steps — Merge
 
-### Merge Step 0 — Clarify
+<steps>
 
-1. Confirm: which article is kept (target), which is absorbed (source)?
-2. Confirm: is there unique content in source that must be preserved?
-3. **HARD-GATE (all tiers):** Show the user what will be deleted before proceeding.
+<step n="m0" name="Merge: Clarify" gate="HARD-GATE">
+1. CONFIRM target (kept) vs source (absorbed).
+2. CONFIRM unique source content to preserve.
+3. **HARD-GATE:** Show what will be deleted before proceeding.
 
-Done when: target and source confirmed; user has seen what will be deleted and confirmed.
+<done_when>Target/source confirmed; user saw deletion scope and confirmed.</done_when>
+</step>
 
-### Merge Step 1 — Merge content
+<step n="m1" name="Merge: Content">
+1. READ both fully.
+2. ADD unique source content into target; remove redundant.
+3. UPDATE target `## Related`, `## Sources`, `## Changelog`.
+4. ADD `- **YYYY-MM-DD:** Merged from <source-slug>.`
 
-1. Read both articles in full.
-2. Add unique content from source into target; remove redundant content.
-3. Update `## Related`, `## Sources`, `## Changelog` in target.
-4. Add merge note to `## Changelog`: `- **YYYY-MM-DD:** Merged from <source-slug>.`
+<done_when>Unique content absorbed; changelog updated.</done_when>
+</step>
 
-Done when: unique source content absorbed into target; target changelog updated.
+<step n="m2" name="Merge: Fix inbound links">
+1. RUN `node .opencode/scripts/find-backlinks.js resources/<source-path>.md`
+2. UPDATE every inbound to target.
 
-### Merge Step 2 — Fix all inbound links
+<done_when>All inbound point to target.</done_when>
+</step>
 
-1. Run `node .opencode/scripts/find-backlinks.js resources/<source-path>.md`
-2. Update every inbound link to point to target.
+<step n="m3" name="Merge: Delete source">
+`git rm resources/<source-path>.md`
 
-Done when: all inbound links updated to target.
+<done_when>Source deleted.</done_when>
+</step>
 
-### Merge Step 3 — Delete source
+<step n="m4" name="Merge: Update sync registry">
+1. MERGE `confluence:` page IDs from source into target.
+2. REMOVE source entry from `meta/confluence-sync.json` if present.
 
-```
-git rm resources/<source-path>.md
-```
+<done_when>Registry updated.</done_when>
+</step>
 
-Done when: source file deleted.
+<step n="m5" name="Merge: Commit">
+`git add -A && git commit -m "Merge resources: <source-slug> → <target-slug>"`
 
-### Merge Step 4 — Update `meta/confluence-sync.json`
+<done_when>Committed.</done_when>
+</step>
 
-1. Merge `confluence:` front matter page IDs from source into target.
-2. Remove source entry from `meta/confluence-sync.json` if present.
+<step n="m6" name="Merge: Re-index">
+`node .opencode/scripts/qmd-index.js`
 
-Done when: sync registry updated.
+<done_when>QMD rebuilt.</done_when>
+</step>
 
-### Merge Step 5 — Commit
-
-```
-git add -A && git commit -m "Merge resources: <source-slug> → <target-slug>"
-```
-
-Done when: committed.
-
-### Merge Step 6 — Re-index
-
-```
-node .opencode/scripts/qmd-index.js
-```
-
-Done when: QMD index rebuilt.
-
----
+</steps>
 
 ## Steps — Split
 
-### Split Step 0 — Clarify
+<steps>
 
-1. Confirm: what are the two (or more) new articles? What concept does each cover?
-2. Confirm slugs and subfolders for each new article.
-3. **HARD-GATE (all tiers):** Show the proposed split to the user before creating files.
+<step n="s0" name="Split: Clarify" gate="HARD-GATE">
+1. CONFIRM new articles, concepts each covers.
+2. CONFIRM slugs and subfolders.
+3. **HARD-GATE:** Show proposed split before creating.
 
-Done when: new article concepts, slugs, and subfolders confirmed; user has approved the split.
+<done_when>Concepts/slugs/subfolders confirmed; user approved.</done_when>
+</step>
 
-### Split Step 1 — Create new articles
+<step n="s1" name="Split: Create new articles">
+WRITE each new article with appropriate section. Add `## Changelog`: `- **YYYY-MM-DD:** Created by splitting from <original-slug>.`
 
-Write each new article with the appropriate section of the original content. Add `## Changelog` entry noting the split origin: `- **YYYY-MM-DD:** Created by splitting from <original-slug>.`
+<done_when>All new articles written.</done_when>
+</step>
 
-Done when: all new articles written.
+<step n="s2" name="Split: Update original">
+- Replaced entirely: delete after creating replacements.
+- Partially extracted: remove extracted content; add links to new articles.
 
-### Split Step 2 — Update the original article
+<done_when>Original updated or deleted.</done_when>
+</step>
 
-- If original article is being replaced entirely: delete it after creating replacements.
-- If original article is being partially extracted: remove extracted content; add links to new articles.
+<step n="s3" name="Split: Fix inbound links">
+1. RUN `node .opencode/scripts/find-backlinks.js resources/<original-path>.md`
+2. UPDATE inbound to correct new article.
 
-Done when: original article updated or deleted.
+<done_when>All inbound updated.</done_when>
+</step>
 
-### Split Step 3 — Fix all inbound links
+<step n="s4" name="Split: Register tags">
+ADD new tags to `meta/tags.md`.
 
-1. Run `node .opencode/scripts/find-backlinks.js resources/<original-path>.md`
-2. Update inbound links to point to the correct new article.
+<done_when>Tags registered.</done_when>
+</step>
 
-Done when: all inbound links updated.
+<step n="s5" name="Split: Commit">
+`git add -A && git commit -m "Split resources: <original-slug> → <new1-slug> + <new2-slug>"`
 
-### Split Step 4 — Register tags
+<done_when>Committed.</done_when>
+</step>
 
-Add any new tags to `meta/tags.md`.
+<step n="s6" name="Split: Re-index">
+`node .opencode/scripts/qmd-index.js`
 
-Done when: all tags registered.
+<done_when>QMD rebuilt.</done_when>
+</step>
 
-### Split Step 5 — Commit
-
-```
-git add -A && git commit -m "Split resources: <original-slug> → <new1-slug> + <new2-slug>"
-```
-
-Done when: committed.
-
-### Split Step 6 — Re-index
-
-```
-node .opencode/scripts/qmd-index.js
-```
-
-Done when: QMD index rebuilt.
-
----
+</steps>
 
 ## Steps — Delete
 
-### Delete Step 0 — Clarify
+<steps>
 
-1. Confirm the article to delete.
-2. Run `node .opencode/scripts/find-backlinks.js <path>` — show the user all inbound links.
-3. **HARD-GATE (all tiers):** Confirm deletion explicitly. Never delete without showing inbound link count.
+<step n="d0" name="Delete: Clarify" gate="HARD-GATE">
+1. CONFIRM article.
+2. RUN `node .opencode/scripts/find-backlinks.js <path>` — show all inbound.
+3. **HARD-GATE:** Confirm deletion explicitly. NEVER delete without inbound count shown.
 
-Done when: user has seen all inbound links and confirmed deletion.
+<done_when>User saw inbound and confirmed.</done_when>
+</step>
 
-### Delete Step 1 — Fix inbound links
+<step n="d1" name="Delete: Fix inbound">
+For every inbound: remove or replace with inline text. If superseded: replace with superseding article.
 
-For every inbound link: remove the link or replace with inline text. If the article is superseded by another: replace inbound links with the superseding article.
+<done_when>All inbound removed/redirected.</done_when>
+</step>
 
-Done when: all inbound links removed or redirected.
+<step n="d2" name="Delete: File">
+`git rm resources/<path>.md`
 
-### Delete Step 2 — Delete
+<done_when>Deleted.</done_when>
+</step>
 
-```
-git rm resources/<path>.md
-```
+<step n="d3" name="Delete: Update sync registry">
+Remove from `resources` fields in `meta/confluence-sync.json`.
 
-Done when: file deleted.
+<done_when>Registry updated.</done_when>
+</step>
 
-### Delete Step 3 — Update `meta/confluence-sync.json`
+<step n="d4" name="Delete: Commit">
+`git add -A && git commit -m "Delete resources: <subfolder>/<slug>"`
 
-Remove the article from any `resources` fields in `meta/confluence-sync.json`.
+<done_when>Committed.</done_when>
+</step>
 
-Done when: sync registry updated.
+<step n="d5" name="Delete: Re-index">
+`node .opencode/scripts/qmd-index.js`
 
-### Delete Step 4 — Commit
+<done_when>QMD rebuilt.</done_when>
+</step>
 
-```
-git add -A && git commit -m "Delete resources: <subfolder>/<slug>"
-```
-
-Done when: committed.
-
-### Delete Step 5 — Re-index
-
-```
-node .opencode/scripts/qmd-index.js
-```
-
-Done when: QMD index rebuilt.
-
----
+</steps>
 
 ## Steps — Archive
 
-### Archive Step 0 — Clarify
+<steps>
 
-1. Confirm the article to archive.
-2. Run `node .opencode/scripts/find-backlinks.js <path>` — show the user all inbound links.
-3. **HARD-GATE (all tiers):** Confirm archival explicitly. Show inbound link count.
+<step n="a0" name="Archive: Clarify" gate="HARD-GATE">
+1. CONFIRM article.
+2. RUN `node .opencode/scripts/find-backlinks.js <path>` — show all inbound.
+3. **HARD-GATE:** Confirm archival explicitly. Show inbound count.
 
-Done when: user has seen all inbound links and confirmed archival.
+<done_when>User saw inbound and confirmed.</done_when>
+</step>
 
-### Archive Step 1 — Move to archive
+<step n="a1" name="Archive: Move">
+`git mv resources/<path>.md archive/resources/<path>.md`
 
-```
-git mv resources/<path>.md archive/resources/<path>.md
-```
+Create intermediate dirs if needed.
 
-Create intermediate directories if needed.
+<done_when>Moved to `archive/resources/`.</done_when>
+</step>
 
-Done when: file moved to `archive/resources/`.
+<step n="a2" name="Archive: Update front matter">
+1. SET `status: archived`.
+2. UPDATE `updated`.
 
-### Archive Step 2 — Update front matter
+<done_when>Front matter updated.</done_when>
+</step>
 
-1. Set `status: archived` in the moved file's front matter.
-2. Update `updated` date.
+<step n="a3" name="Archive: Fix inbound">
+Update every inbound from Step 0 to new archive path, or remove with inline text.
 
-Done when: front matter updated.
+<done_when>All inbound updated/removed.</done_when>
+</step>
 
-### Archive Step 3 — Fix inbound links
+<step n="a4" name="Archive: Update sync registry">
+Update path in `resources` fields, or mark archived.
 
-Update every inbound link found in Step 0 to the new archive path, or remove the link with inline text replacement.
+<done_when>Registry updated.</done_when>
+</step>
 
-Done when: all inbound links updated or removed.
+<step n="a5" name="Archive: Commit">
+`git add -A && git commit -m "Archive resources: <subfolder>/<slug>"`
 
-### Archive Step 4 — Update `meta/confluence-sync.json`
+<done_when>Committed.</done_when>
+</step>
 
-Update the article's path in any `resources` fields; or mark as archived.
+<step n="a6" name="Archive: Re-index">
+`node .opencode/scripts/qmd-index.js`
 
-Done when: sync registry updated.
+<done_when>QMD rebuilt.</done_when>
+</step>
 
-### Archive Step 5 — Commit
-
-```
-git add -A && git commit -m "Archive resources: <subfolder>/<slug>"
-```
-
-Done when: committed.
-
-### Archive Step 6 — Re-index
-
-```
-node .opencode/scripts/qmd-index.js
-```
-
-Done when: QMD index rebuilt.
-
----
+</steps>
 
 ## Close (all operations)
 
-### Close Step 0 — Close
+<steps>
 
-After committing:
-1. Append to `meta/resources-log.md`: `- **YYYY-MM-DD:** <operation> | <subject-slug> — <one-line summary>`
+<step n="z0" name="Close" gate="END-GATE">
+After commit:
+1. APPEND to `meta/resources-log.md`: `- **YYYY-MM-DD:** <operation> | <subject-slug> — <one-line summary>`
    - Example: `- **2026-04-07:** archive | resources/teams/old-team.md — archived; team disbanded`
-2. Append work log entry to `## Day` zone of today's daily note.
-3. Mark any matching task items as done.
-4. Stop.
+2. APPEND work log to today's daily note `## Day`.
+3. MARK matching tasks done.
+4. STOP.
 
-**Self-review checklist:**
-
-- [ ] All `Done when` criteria met for every step
-- [ ] All inbound links updated for renamed/moved files
+<self_review>
+- [ ] All `Done when` met
+- [ ] All inbound links updated for renamed/moved
 - [ ] Sync registry updated if applicable
-- [ ] QMD re-indexed after changes
-- [ ] No placeholders (TBD, TODO, FIXME) in output artifacts
-- [ ] All file paths in outputs are correct and targets exist
+- [ ] QMD re-indexed
+- [ ] No placeholders
+- [ ] All file paths correct
+</self_review>
 
-Done when: log entry appended; daily note updated; stopped.
+<done_when>Log appended; daily note updated; stopped.</done_when>
+</step>
 
-**END-GATE:** Present final deliverables to the user.
+</steps>
 
-## Outputs
-
+<outputs>
 | Output | Location | Format |
 |--------|----------|--------|
 | New/modified/deleted article(s) | `resources/` | Markdown |
-| Updated `meta/tags.md` | `meta/` | Markdown |
-| Updated `meta/confluence-sync.json` | `meta/` | JSON registry |
-| `meta/resources-log.md` entry | `meta/` | Append entry |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Append entry |
-| Commit | Git history | Git commit |
+| Tag updates | `meta/tags.md` | Markdown |
+| Sync registry | `meta/confluence-sync.json` | JSON |
+| Log entry | `meta/resources-log.md` | Append |
+| Work log | `journal/daily/<date>.md` Day zone | Append |
+| Commit | Git | Commit |
+</outputs>
 
-## Error Handling
+<error_handling>
+- **Near-duplicate during Create:** Surface; ask if user wants new vs updating existing.
+- **Many inbound for Delete/Archive:** Show all. DO NOT proceed without user reviewing impact.
+- **New path exists during Rename:** STOP. Ask user — merge, rename, or abort.
+- **Merge content conflicts (contradicting claims):** Surface both; ask which to keep. NEVER silently discard.
+</error_handling>
 
-- **Near-duplicate found during Create:** Surface it; ask the user to confirm they want a new article rather than updating the existing one.
-- **`find-backlinks.js` returns many inbound links for Delete/Archive:** Show them all. Do not proceed without the user confirming they have reviewed the link impact.
-- **New path already exists during Rename/Move:** Stop. Ask the user how to resolve — merge, choose a different name, or abort.
-- **Merge produces content conflicts (overlapping claims that contradict each other):** Surface both versions to the user; ask which to keep. Do not silently discard either.
-
-## Contracts
-
+<contracts>
 1. One operation per invocation — one commit per operation.
-2. Never leave an inbound link pointing to a deleted or moved file.
-3. Run `find-backlinks.js` before every destructive operation (rename, merge, delete, split, archive).
-4. HARD-GATE before any destructive operation (merge, delete, archive) — always show scope and confirm.
-5. Always re-index after operations that change file paths.
+2. NEVER leave inbound link to deleted/moved file.
+3. ALWAYS run `find-backlinks.js` before destructive ops.
+4. HARD-GATE before destructive ops — show scope, confirm.
+5. ALWAYS re-index after path-changing ops.
+</contracts>
 
-## Sub-Agents
+<subagents>
+None. All operations run inline — file-manipulation procedures benefit from main context where user reviews HARD-GATE confirmations in real time.
+</subagents>
 
-None. All operations run inline — the operations are file-manipulation procedures that benefit from staying in the main context where the user can review HARD-GATE confirmations in real time.
-
----
-
-*Suggested next steps (present, do not run):*
-
+<next_steps>
 | Condition | Suggested next workflow |
 |-----------|------------------------|
-| Structural ops complete; articles need enrichment | `resource-enrich` on affected articles |
-| More operations remain in the plan queue | Next `resource-ops` operation (user decides) |
-| New stubs created | `resource-enrich` to populate them |
-| After a batch of ops, graph health should be checked | `resource-plan` |
+| Structural ops complete; need enrichment | `resource-enrich` on affected |
+| More ops in queue | Next `resource-ops` operation |
+| New stubs | `resource-enrich` |
+| After batch ops | `resource-plan` |
+</next_steps>
+
+<output_rules>Output language: English.</output_rules>

@@ -2,26 +2,24 @@
 name: projects/dev-log
 description: Dev-log entry format — canonical entry structure, append procedure, and phase-specific field sets. Load when writing a dev-log entry at the close of any lifecycle workflow phase.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Purpose
+<role>Dev-log steward — sole persistent cross-session record of project work.</role>
 
-`dev-log.md` is the **sole persistent cross-session record** for a project. It is an append-only episodic log. Each lifecycle workflow writes one entry at its Close step. The entry records what phase was run, what was accomplished, and what the suggested next step is. The next session reads the last entry to re-establish context without requiring the user to explain the project state.
+<summary>
+> `dev-log.md` is append-only episodic log. Each lifecycle workflow writes one entry at Close. Entry records phase run, accomplishment, suggested next step. Next session reads last entry to re-establish context without user explanation.
+</summary>
 
----
-
-## File Location
-
+<file_location>
 ```
 projects/<name>/dev-log.md
 ```
 
-One `dev-log.md` per project. Created when the project is created. Never deleted.
+One per project. Created when project is created. NEVER deleted.
+</file_location>
 
----
-
-## File Structure
-
+<file_structure>
 ```markdown
 ---
 updated: YYYY-MM-DD
@@ -40,13 +38,11 @@ tags: [dev-log, <project-slug>]
 ...
 ```
 
-Entries are in **reverse-chronological order** — newest entry at the top. This allows Step 0 of any lifecycle workflow to read "last entry" by reading the first `##`-level heading after the front matter.
+Entries in **reverse-chronological order** — newest at top. Step 0 reads "last entry" via first `##`-level heading after front matter.
+</file_structure>
 
----
-
-## Entry Format
-
-Every lifecycle workflow writes exactly one entry at the Close step. The entry format varies slightly per workflow but follows this skeleton:
+<entry_format>
+Every lifecycle workflow writes exactly one entry at Close. Skeleton:
 
 ```markdown
 ## <date> — /<workflow> — <topic>
@@ -56,62 +52,56 @@ Every lifecycle workflow writes exactly one entry at the Close step. The entry f
 **Next:** <suggested workflow or action>
 ```
 
-### Common field values
+### Field rules
 
 | Field | Rules |
 |-------|-------|
 | `<date>` | ISO 8601 (`YYYY-MM-DD`) |
 | `/<workflow>` | Workflow name, e.g. `/scout`, `/implement`, `/debug` |
-| `<topic>` | 2–6 words describing the subject; kebab-case |
-| `**Phase:**` | Matches the workflow name: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review` |
+| `<topic>` | 2–6 words; kebab-case |
+| `**Phase:**` | Matches workflow: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review` |
 | `**Duration:**` | Rough estimate: `~15 min`, `~1 hr`, `~3 hrs` |
-| `**Summary:**` | Present tense, 1–2 sentences: what was produced, decided, or found |
-| `**Next:**` | The workflow or action that logically follows — a suggestion, not a command |
+| `**Summary:**` | Present tense, 1–2 sentences |
+| `**Next:**` | Workflow/action that logically follows — suggestion, not command |
 
 ### Workflow-specific optional fields
 
-Some workflows add extra fields between `**Summary:**` and `**Next:**`:
+Some workflows add fields between `**Summary:**` and `**Next:**`:
 
 | Workflow | Extra fields |
 |----------|-------------|
-| `/scout` | `**Gaps:**` — what is missing or unknown |
-| `/debug` | `**Root cause:**` — one sentence; `**Fix applied:**` — what was changed; `**Systemic issue:**` yes/no |
-| `/implement` | `**Commit:**` — commit hash or message |
-| `/design` | `**Decision:**` — one sentence on what was chosen |
-| `/plan` | `**Scope:**` — what is in scope; `**Next action:**` — first implementation step |
-| `/test` | `**Outcome:**` — pass/fail summary; `**Regressions:**` — count or "none" |
+| `/scout` | `**Gaps:**` — what's missing/unknown |
+| `/debug` | `**Root cause:**` — one sentence; `**Fix applied:**`; `**Systemic issue:**` yes/no |
+| `/implement` | `**Commit:**` — hash or message |
+| `/design` | `**Decision:**` — one sentence |
+| `/plan` | `**Scope:**`; `**Next action:**` |
+| `/test` | `**Outcome:**` pass/fail; `**Regressions:**` count or "none" |
 
-Do not add fields not listed here without a good reason. Keep entries lean.
+DO NOT add fields not listed without good reason. KEEP entries lean.
+</entry_format>
 
----
+<append_procedure>
+1. Prepare new entry as Markdown block.
+2. Read current `dev-log.md`.
+3. Insert immediately after front matter `---` and `# Dev Log:` H1, before all existing entries.
+4. Update `updated` in front matter to today.
+5. NEVER remove or edit existing entries.
+</append_procedure>
 
-## Append Procedure
-
-1. Prepare the new entry as a Markdown block (see format above).
-2. Read the current `dev-log.md`.
-3. Insert the new entry **immediately after the front matter block** (after the closing `---` and the `# Dev Log: <name>` heading), before all existing entries.
-4. Update the `updated` field in the front matter to today's date.
-5. Do not remove or edit existing entries.
-
----
-
-## Reading the Last Entry
-
-Step 0 of every lifecycle workflow reads the last `dev-log.md` entry. Since entries are newest-first, "last entry" = the first `##`-level heading encountered after the front matter and H1.
+<reading_last_entry>
+Step 0 of every lifecycle workflow reads last `dev-log.md` entry. Newest-first → "last entry" = first `##` heading after front matter and H1.
 
 Extract:
 - Current phase (`**Phase:**`)
-- What was last accomplished (`**Summary:**`)
-- Suggested next action (`**Next:**`)
-- Any workflow-specific fields (e.g. `**Gaps:**` from `/scout`)
+- Last accomplished (`**Summary:**`)
+- Suggested next (`**Next:**`)
+- Workflow-specific fields (e.g. `**Gaps:**` from `/scout`)
 
-If `dev-log.md` does not exist or is empty, the project has no prior work recorded. Treat as a fresh start and ask the user for context.
+If `dev-log.md` missing/empty: no prior work. Treat as fresh start; ASK user for context.
+</reading_last_entry>
 
----
-
-## `meta/resources-log.md` — Knowledge Graph Variant
-
-Knowledge graph workflows (`/r`) write to `meta/resources-log.md` instead of a project `dev-log.md`.
+<resources_log_variant>
+Knowledge graph workflows (`/r`) write to `meta/resources-log.md` instead of project `dev-log.md`.
 
 Format:
 ```
@@ -123,14 +113,17 @@ Example:
 - **2026-04-07:** r-enrich | resources/tools/github.md — enriched with API rate limit facts from Confluence
 ```
 
-This is a flat bullet log, not a structured entry format. The `/r` router reads it on startup if it exists.
+Flat bullet log, NOT structured entry. The `/r` router reads on startup if exists.
+</resources_log_variant>
 
----
-
-## Editor Checklist (run silently before writing any dev-log entry)
-
-- [ ] Entry uses `## YYYY-MM-DD — /<workflow> — <topic>` heading format?
-- [ ] `**Phase:**`, `**Duration:**`, `**Summary:**`, `**Next:**` fields all present?
-- [ ] Entry is inserted at the top (newest-first order)?
-- [ ] `updated` in front matter updated to today?
+<self_review>
+- [ ] Heading uses `## YYYY-MM-DD — /<workflow> — <topic>` format?
+- [ ] `**Phase:**`, `**Duration:**`, `**Summary:**`, `**Next:**` all present?
+- [ ] Inserted at top (newest-first)?
+- [ ] `updated` in front matter set to today?
 - [ ] No existing entries modified or deleted?
+</self_review>
+
+<output_rules>
+Output language: English. Frontmatter, headings, fields remain English.
+</output_rules>

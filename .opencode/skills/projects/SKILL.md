@@ -2,23 +2,25 @@
 name: projects
 description: Project dashboard format, lifecycle, and Step 0 state-reading protocol — tasks, dev log, status, companion file structure, cross-linking, and archiving. Load when creating a project, updating a dashboard, reading project state at the start of any lifecycle workflow, or archiving a completed project.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Philosophy
+<role>Project dashboard steward — persistent contract of what a project is, where it stands, what's next.</role>
 
-A project is a time-bound deliverable with a defined end. The dashboard is not just task management — it is a persistent contract with your future self about what this project is, where it stands, and what comes next. The dev log is the memory; the README is the current state.
+<summary>
+> A project = time-bound deliverable with a defined end. README is canonical state; dev-log is continuity layer. Every session ends with dev-log entry; every session starts by reading the last one. Done = archived state, not a feeling.
+</summary>
 
-- **Dashboards over notes.** The README is the canonical source of project state. Daily notes and meeting notes reference it; they do not replace it.
-- **The dev log is the continuity layer.** Every session ends with a dev-log entry. Every session starts by reading the last one. Without this, context is rebuilt from scratch each time.
-- **Done is a state, not a feeling.** A project is not done until it is archived. Unarchived projects in `projects/` are active.
+<principles>
+- **Dashboards over notes.** README is canonical. Daily/meeting notes reference; never replace.
+- **Dev log = continuity layer.** Every session ends with entry; next session starts by reading last.
+- **Done = state.** Unarchived projects in `projects/` are active.
+</principles>
 
----
+<structure>
+Every project at `projects/<slug>/README.md`. Slug = lowercase kebab-case (e.g. `mcp-client`, `release-tooling`).
 
-## Structure
-
-Every project lives at `projects/<slug>/README.md`. The slug is lowercase kebab-case (e.g. `mcp-client`, `release-tooling`).
-
-### Required sections, in order
+**Required sections, in order:**
 
 ```
 # <Project Name>
@@ -33,100 +35,87 @@ Every project lives at `projects/<slug>/README.md`. The slug is lowercase kebab-
 ## Open Tasks
 ```
 
-### Optional sections
+**Optional:** Insert **Completed Tasks** section after Open Tasks once `- [x]` items accumulate.
 
-Insert a **Completed Tasks** section after Open Tasks once completed tasks accumulate and clutter Open Tasks.
-
-### Companion files
-
-Store companion files alongside the README in the same folder:
+**Companion files:**
 
 | File | Purpose |
 |------|---------|
-| `dev-log.md` | Persistent cross-session work log (append-only) |
+| `dev-log.md` | Persistent cross-session log (append-only) |
 | `resources.md` | Links, snippets, references |
-| `specs/` | Brainstorm output — problem specs with options |
+| `specs/` | Brainstorm output — problem specs |
 | `plans/` | Implementation plans linked to specs |
-| `drafts/` | Document brainstorm output (proposals, RFCs, ADRs) |
-| `adr-<slug>.md` | Architecture Decision Records specific to this project |
+| `drafts/` | Document brainstorms (proposals, RFCs, ADRs) |
+| `adr-<slug>.md` | Architecture Decision Records project-specific |
 | `<topic>.md` | Design docs, spike notes |
+</structure>
 
----
-
-## Creating a Project
-
+<creation_steps>
 1. Create `projects/<slug>/` folder.
 2. Copy `.opencode/skills/projects/project-template.md` → `projects/<slug>/README.md`.
-3. Replace all placeholders: `{{PROJECT_NAME}}`, `{{PROJECT_SLUG}}`, `{{DEADLINE}}`, `{{DATE}}`.
-4. Write a real **Overview** — what the project is, what it delivers, why it exists. No placeholder text.
-5. Add at least one concrete **Open Task**.
+3. Replace placeholders: `{{PROJECT_NAME}}`, `{{PROJECT_SLUG}}`, `{{DEADLINE}}`, `{{DATE}}`.
+4. Write substantive **Overview** — what it is, what it delivers, why exists. NO placeholder text.
+5. Add ≥1 concrete **Open Task**.
 6. Register `#p-<slug>` in `meta/tags.md` (projects table).
 7. Create `projects/<slug>/dev-log.md` from `.opencode/skills/projects/dev-log-template.md`.
-8. If today's daily note exists, add a log entry linking to the new README.
-9. If a weekly note exists, consider adding a weekly goal.
+8. If today's daily exists, add log entry linking new README.
+9. If weekly note exists, consider adding weekly goal.
+</creation_steps>
 
----
-
-## Reading Project State (Step 0)
-
-Run this at the start of any lifecycle workflow to re-establish context without asking the user.
+<step_zero_protocol>
+Run at start of any lifecycle workflow to re-establish context without asking the user.
 
 ### 1. Read active projects
 
-Open `context/context.md`. Find the `## Active Projects` section. Each entry follows this format:
-
+Open `context/context.md`. Find `## Active Projects`. Format:
 ```
 - **<slug>:** <description> | phase: <phase> | priority: high|medium|low
 ```
 
-Extract: slug, current phase, priority for each entry.
+Extract: slug, current phase, priority for each.
 
-**Fallback:** If `context/context.md` is absent, has no `## Active Projects` section, or the section is empty:
-- Glob `projects/*/dev-log.md` and read the last entry from each to identify active projects.
-- If still ambiguous, ask the user: "Which project is this session for?"
+**Fallback:** If `context/context.md` absent, no `## Active Projects` section, or empty:
+- Glob `projects/*/dev-log.md`; read last entry from each to identify active projects.
+- If still ambiguous, ASK: "Which project is this session for?"
 
-**If `context/context.md` is empty or missing entirely:** stop and direct the user to run `/bootstrap`.
+**If `context/context.md` empty/missing:** STOP and direct user to run `/bootstrap`.
 
-### 2. Determine the active project for this session
+### 2. Determine active project
 
-- If the user specified a project slug at invocation, use it.
-- If only one project is listed in `context/context.md`, use it without asking.
-- If multiple projects are active and the user did not specify: read the last `dev-log.md` entry across all projects; use the most recently updated one. If still unclear, ask once: "Which project?" — do not guess.
+- User specified slug at invocation → use it.
+- One project listed → use without asking.
+- Multiple active + unspecified → read last `dev-log.md` entry across all; use most recent. If still unclear, ASK once: "Which project?" — DO NOT guess.
 
-### 3. Read the dev-log last entry
+### 3. Read dev-log last entry
 
-Open `projects/<slug>/dev-log.md`. Read the first `##`-level heading after the front matter — this is the most recent entry.
+Open `projects/<slug>/dev-log.md`. Read first `##`-level heading after front matter — most recent entry.
 
 Extract:
 - `**Phase:**` — current phase
-- `**Summary:**` — what was last accomplished
+- `**Summary:**` — last accomplished
 - `**Next:**` — suggested next action
-- Any workflow-specific fields (`**Gaps:**`, `**Root cause:**`, `**Decision:**`, etc.)
+- Workflow-specific fields (`**Gaps:**`, `**Root cause:**`, `**Decision:**`, etc.)
 
-If `dev-log.md` does not exist or is empty: treat as a fresh start. Note this and ask the user for context.
+If `dev-log.md` missing/empty: treat as fresh start; note this; ASK user for context.
 
 ### 4. Read today's daily note (if exists)
 
-Open `journal/daily/<date>.md` if it exists. Scan for tasks or notes relevant to the current workflow topic. Do not create the daily note in Step 0 — that is the responsibility of `/morning`.
+Open `journal/daily/<date>.md` if exists. Scan for relevant tasks/notes. DO NOT create the daily note — that is `/morning`'s job.
 
 ### 5. Surface context before clarification
 
-Before any clarification step, present:
+Before any clarification, present:
 - Active project: `<slug>` — Phase: `<phase>` — Last: `<summary>`
 - Suggested next from dev-log: `<next>`
-- Any relevant daily note tasks
+- Relevant daily note tasks
 - Whether `dev-log.md` was missing (fresh start)
 
-Do not ask questions yet — just present context.
+DO NOT ask questions yet — present context first.
 
-**Notes:** Do not load `codebases/<name>.md` in Step 0 — load it just-in-time in the step that needs it. If the workflow is a `/r` (knowledge graph) workflow, read `meta/resources-log.md` instead of a project `dev-log.md`.
+**Notes:** DO NOT load `codebases/<name>.md` in Step 0 — load just-in-time. For `/r` workflows, read `meta/resources-log.md` instead of `dev-log.md`.
+</step_zero_protocol>
 
----
-
-## Task Management
-
-Use these formats consistently across Open Tasks and any tasks in Dev Log entries:
-
+<task_management>
 | State | Format | Example |
 |-------|--------|---------|
 | Open | `- [ ] text` | `- [ ] Write spike doc` |
@@ -136,82 +125,68 @@ Use these formats consistently across Open Tasks and any tasks in Dev Log entrie
 | Blocked | `- [ ] text *(blocked: reason)*` | `- [ ] Deploy *(blocked: waiting on infra)*` |
 
 Rules:
-- Never delete a task to change its state — mark it in place.
-- Moved tasks must link to the target daily note. Add the task there too.
-- Dropped and blocked require a short reason in italics.
+- NEVER delete to change state — mark in place.
+- Moved tasks MUST link to target daily note + add task there.
+- Dropped/blocked require short reason in italics.
 
-When Open Tasks accumulates more than ~8 items (including done items), move all `- [x]` items to a **Completed Tasks** section placed after Open Tasks.
+When Open Tasks > ~8 items (incl. done), MOVE all `- [x]` to **Completed Tasks** section after Open Tasks.
+</task_management>
 
----
+<after_session>
+1. **Write dev-log entry.** See [dev-log.md](dev-log.md).
+2. **Update Open Tasks.** Mark complete; add new; mark blocked.
+3. **Update Overview if scope changed.** Reflect current reality.
+4. **Update `updated` front matter** to today.
+5. **Update daily note.** Log entry MUST link to README.
+6. **Update resources** if durable facts emerged.
+</after_session>
 
-## After Every Work Session
-
-1. **Write a dev-log entry.** Append a new entry to `dev-log.md` summarizing what was done, decisions made, and blockers hit. See [dev-log.md](dev-log.md) for the format.
-2. **Update Open Tasks.** Mark completed items `- [x]`. Add new tasks discovered. Mark blocked tasks.
-3. **Update Overview if scope changed.** Overview must reflect current reality, not original intent.
-4. **Update `updated` in front matter** to today's date.
-5. **Update the daily note.** Log entry in today's daily note must link to this README.
-6. **Update resources if durable facts emerged.** Team changes, architectural decisions, new process knowledge → create or update the relevant resource article.
-
----
-
-## Status Transitions, Archiving, and Cross-Linking
-
-### Status Transitions
-
+<status_transitions>
 | From | To | When | Action |
 |------|----|------|--------|
-| Active | Paused | No activity for 2+ weeks and no planned work | Set `status: Paused` in front matter and `**Status:**` line. Add Dev Log entry explaining why. |
-| Paused | Active | Work resumes | Set `status: Active`. Add Dev Log entry. |
-| Active / Paused | Done | All tasks complete, no further work expected | Set `status: Done`. Add final Dev Log entry. Move folder to `archive/projects/`. |
+| Active | Paused | 2+ weeks no activity, no planned work | Set `status: Paused`; add Dev Log entry explaining. |
+| Paused | Active | Work resumes | Set `status: Active`; add Dev Log entry. |
+| Active/Paused | Done | All tasks complete, no further work | Set `status: Done`; final Dev Log entry; move to `archive/projects/`. |
+</status_transitions>
 
-### Archiving
-
+<archiving>
 1. Set `status: Done` in front matter and `**Status:** Done` inline.
-2. Set `deadline` in front matter to the actual completion date if not already set.
-3. Add a final dev-log entry (see [dev-log.md](dev-log.md)): `**Phase:** done`, `**Summary:** <what was completed>`, `**Next:** project archived`.
-4. Move entire folder: `git mv projects/<slug> archive/projects/<slug>`.
-5. Update any links pointing to the old path (daily notes, weekly notes, resource articles).
+2. Set `deadline` to actual completion date if not set.
+3. Add final dev-log entry: `**Phase:** done`, `**Summary:** <what completed>`, `**Next:** project archived`.
+4. Move folder: `git mv projects/<slug> archive/projects/<slug>`.
+5. Update inbound links (daily, weekly, resources).
+</archiving>
 
-### Cross-Linking
-
+<cross_linking>
 | Direction | Where | What |
 |-----------|-------|------|
-| Daily note → project | Daily note Log & Notes | `[Project Name](../projects/<slug>/README.md)` |
-| Project → daily note | Dev Log entry | `[2026-03-25](../../journal/daily/2026-03-25.md)` |
-| Project → resource article | Overview or Dev Log | Link when referencing a durable concept |
-| Weekly note → project | Weekly Goals / Accomplishments | `#p-<slug>` tag on the line |
-| Meeting → project | Meeting Action Items | Add action item to project Open Tasks |
+| Daily → project | Daily Log & Notes | `[Project Name](../projects/<slug>/README.md)` |
+| Project → daily | Dev Log entry | `[2026-03-25](../../journal/daily/2026-03-25.md)` |
+| Project → resource | Overview/Dev Log | Link when referencing durable concept |
+| Weekly → project | Goals/Accomplishments | `#p-<slug>` tag on line |
+| Meeting → project | Action Items | Add action to project Open Tasks |
+</cross_linking>
 
----
+<health_rules>
+- `updated` front matter MUST change on every edit.
+- `**Status:**` inline MUST match front matter `status`.
+- NO stubs: Overview substantive; Open Tasks ≥1 concrete item on Active.
+- `#p-<slug>` MUST be in front matter `tags` AND `**Tags:**` line.
+- Tag MUST be registered in `meta/tags.md`.
+- `dev-log.md` MUST exist with ≥1 entry.
+</health_rules>
 
-## Health Rules
-
-Apply on every edit:
-
-- `updated` front matter must change on every edit.
-- `**Status:**` inline line must match front matter `status`.
-- No stubs: Overview must be substantive, Open Tasks must have at least one concrete item on Active projects.
-- `#p-<slug>` tag must be present in front matter `tags` and in the `**Tags:**` line.
-- Tag must be registered in `meta/tags.md`.
-- `dev-log.md` must exist and have at least one entry.
-
----
-
-## Sub-skills
-
-| Content type | Sub-skill file |
+<sub_skills>
+| Content type | Sub-skill |
 |---|---|
 | Architecture Decision Records | [adr.md](adr.md) |
 | Dev log entries | [dev-log.md](dev-log.md) |
 | Problem specs | [spec.md](spec.md) |
 | Implementation plans | [plan.md](plan.md) |
 | Requests for Comments | [rfc.md](rfc.md) |
+</sub_skills>
 
----
-
-## Templates
-
+<templates>
 | Template | Use for |
 |---|---|
 | [project-template.md](project-template.md) | New project README |
@@ -221,16 +196,19 @@ Apply on every edit:
 | [plan-template.md](plan-template.md) | New implementation plans |
 | [rfc-template.md](rfc-template.md) | New RFCs |
 | [draft-template.md](draft-template.md) | Other drafts and proposals |
+</templates>
 
----
-
-## Editor Checklist (run silently before every output)
-
-- [ ] Front matter complete: `type: project`, `status`, `deadline`, `updated`, `tags`?
+<self_review>
+- [ ] Front matter complete (`type: project`, `status`, `deadline`, `updated`, `tags`)?
 - [ ] `**Status:**` matches front matter `status`?
-- [ ] `**Dev Log:**` link present and pointing to `dev-log.md`?
-- [ ] `#p-<slug>` tag present in both front matter `tags` and `**Tags:**` line?
-- [ ] `updated` front matter set to today?
-- [ ] Overview is substantive — not a placeholder?
-- [ ] At least one concrete Open Task present on Active projects?
+- [ ] `**Dev Log:**` link present pointing to `dev-log.md`?
+- [ ] `#p-<slug>` in front matter `tags` AND `**Tags:**` line?
+- [ ] `updated` set to today?
+- [ ] Overview substantive — not placeholder?
+- [ ] ≥1 concrete Open Task on Active projects?
 - [ ] `#p-<slug>` registered in `meta/tags.md`?
+</self_review>
+
+<output_rules>
+Output language: English. Frontmatter, section headers, tags remain English.
+</output_rules>

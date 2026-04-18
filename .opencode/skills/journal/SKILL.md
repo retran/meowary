@@ -2,131 +2,91 @@
 name: journal
 description: Journal layer philosophy and sub-skill index — append-only principles, front matter rules, reading list management, waiting-for list management, and routing to daily, weekly, and meeting sub-skills. Load when creating or updating any journal file, adding items to the reading list or waiting-for list, or routing to a sub-skill for format details.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-## Philosophy
+<role>Journal layer steward — append-only temporal record of work, decisions, and learning.</role>
 
-The journal is the **episodic layer** of the second brain — the append-only temporal record of what happened, what was done, and what was learned. Unlike `resources/` (permanent knowledge graph, concept-indexed, freely restructured) and `projects/` (active work toward a defined end), the journal is immutable once written. The past is a record, not a draft.
+<summary>
+> The journal is the episodic layer of the second brain: daily notes (atomic unit, three zones), weekly notes (rhythmic summaries), meeting notes (records + routed actions). Once written, it is immutable. Distill durable facts into `resources/`; never edit the past.
+</summary>
 
-Three formats live in the journal:
+<principles>
+1. **Append-only.** NEVER edit or delete past notes. Mark tasks complete; add new content; DO NOT remove existing lines.
+2. **Distill → resources.** Every journal update includes a resources scan. Durable facts (role changes, decisions, architecture) belong in `resources/`, not the journal.
+3. **Format serves recall.** Rigid section structures keep notes machine-readable.
+4. **Write for your future self.** Assume reader is you in 6 months with no other context.
+5. **Routing is mandatory.** Meeting actions, waiting items, and captures MUST be routed before workflow closes.
+</principles>
 
-- **Daily notes** (`journal/daily/`) — the atomic unit. One file per day, three temporal zones (Morning, Day, Evening).
-- **Weekly notes** (`journal/weekly/`) — rhythmic summaries compiled from daily notes. One file per week.
-- **Meeting notes** (`journal/meetings/`) — conversation records, complete with routed action items. One file per meeting.
+<front_matter>
+- `updated` — mandatory; set on creation, update on every edit.
+- `tags` — mandatory; may be `[]`. Lowercase kebab-case, no `#` prefix.
+- Inline `#tags` in body MUST match front matter tags.
+- Navigation links: VERIFY targets exist before writing. OMIT links to non-existent files.
+- USE relative Markdown links (`[text](../path/file.md)`); NEVER Wikilinks.
+</front_matter>
 
----
-
-## Principles
-
-1. **Append-only.** Past notes are never edited or deleted. Mark tasks complete; add new content; never remove existing lines.
-2. **Distill → resources.** Every journal update includes a resources scan. Durable facts — role changes, process decisions, architectural choices — belong in `resources/`, not the journal. The journal is raw material; resources distill the permanent layer.
-3. **Format serves recall.** Rigid section structures make notes machine-readable and scannable. Deviating makes future retrieval harder.
-4. **Write for your future self.** Assume the reader is you in 6 months with no other context.
-5. **Routing is not optional.** Meeting action items, waiting items, and captured tasks must be routed before a workflow closes. An unrouted action is a commitment that will be forgotten.
-
----
-
-## Front Matter
-
-Every journal file begins with a YAML front matter block.
-
-- `updated` — mandatory. Set on creation; update on every edit.
-- `tags` — mandatory. May be `[]`. Lowercase kebab-case, no `#` prefix.
-- Inline `#tags` in body text must match front matter tags.
-- Navigation links (prev/next day, prev/next week): verify targets exist before writing. Omit links to non-existent files.
-- Use relative Markdown links — `[text](../path/file.md)` — never Wikilinks.
-
----
-
-## Sub-skills
-
-| Content type | Sub-skill file |
+<sub_skills>
+| Content type | Sub-skill |
 |---|---|
 | Daily notes (`journal/daily/`) | [daily.md](daily.md) |
 | Weekly notes (`journal/weekly/`) | [weekly.md](weekly.md) |
 | Meeting notes (`journal/meetings/`) | [meeting.md](meeting.md) |
+</sub_skills>
 
----
-
-## Templates
-
+<templates>
 | Template | Use for |
 |---|---|
 | [daily-template.md](daily-template.md) | New daily notes |
 | [weekly-template.md](weekly-template.md) | New weekly notes |
 | [meeting-template.md](meeting-template.md) | New meeting notes |
+</templates>
 
----
+<reading_list>
+File: `journal/reading-list.md`. If missing, copy from `.opencode/meta-templates/reading-list-template.md`.
 
-## Reading List
-
-The reading list lives at `journal/reading-list.md`. It is a simple table of books, articles, and other material to read or that has been read.
-
-> **Before using this file:** Check that `journal/reading-list.md` exists. If not, copy from `.opencode/meta-templates/reading-list-template.md`.
-
-### Format
-
-Each item is a row in the table:
-
+Format (table row):
 ```markdown
 | Title | Type | Status | Notes |
 | ----- | ---- | ------ | ----- |
-| [Title](url-or-path) | book / article / paper / video | to-read / reading / done | Why it matters; key insight; connects to |
+| [Title](url-or-path) | book / article / paper / video | to-read / reading / done | Why it matters; key insight |
 ```
 
-- **Type:** `book`, `article`, `paper`, `video`, or `thread`
-- **Status:** `to-read`, `reading`, or `done`
-- **Notes:** not optional — capture at minimum *why* you added it
+- **Type:** `book`, `article`, `paper`, `video`, `thread`
+- **Status:** `to-read`, `reading`, `done`
+- **Notes:** required — capture *why* added at minimum
 
-### Adding an item
+**Add:** When user mentions material to read, append row with `to-read` status; populate Notes with reason.
+**Update:** `to-read` → `reading` on start; `reading` → `done` on finish (add key insight).
+</reading_list>
 
-When the user mentions a book, article, or resource they want to read or have just encountered:
+<waiting_for_list>
+File: `journal/waiting-for.md`. If missing, copy from `.opencode/meta-templates/waiting-for-template.md`.
 
-1. Check that `journal/reading-list.md` exists; create from template if not.
-2. Append a new row to the table with status `to-read`.
-3. Populate Notes with the reason for adding (context from the conversation or the user's stated reason).
+Two sections: `## Active` (open) and `## Resolved` (closed).
 
-### Updating an item
-
-When the user finishes or starts a resource:
-
-- Change `to-read` → `reading` when they start.
-- Change `reading` → `done` when they finish; add the key insight to Notes.
-
----
-
-## Waiting-For List
-
-The waiting-for list lives at `journal/waiting-for.md`. It tracks every item delegated, blocked, or waiting on someone else — a durable list that persists across sessions until each item is resolved.
-
-> **Before using this file:** Check that `journal/waiting-for.md` exists. If not, copy from `.opencode/meta-templates/waiting-for-template.md`.
-
-### Format
-
-Two sections: `## Active` (open items) and `## Resolved` (closed items).
-
-Each active item is one line:
-
+Active line format:
 ```markdown
-- **YYYY-MM-DD** | **<context>** | <what I am waiting for> | follow-up: <YYYY-MM-DD> | @<person-or-system>
+- **YYYY-MM-DD** | **<context>** | <what waiting for> | follow-up: <YYYY-MM-DD> | @<person-or-system>
 ```
 
-Example:
-- `- **2026-04-08** | **PROJ-123** | PR review from Alice | follow-up: 2026-04-10 | @alice`
+Example: `- **2026-04-08** | **PROJ-123** | PR review from Alice | follow-up: 2026-04-10 | @alice`
 
-When an item is resolved: move the line from `## Active` to `## Resolved` and append ` → resolved YYYY-MM-DD`.
-
-### Routing rules
+On resolve: move line to `## Resolved`, append ` → resolved YYYY-MM-DD`.
 
 | Source | Action |
 |--------|--------|
-| Meeting action item (waiting on someone) | Append to `## Active` |
-| Daily note `## Day > ### Waiting` item | Append to `## Active` (evening close-out) |
-| Weekly wrap-up overdue review | Surface flagged items; close or extend follow-up dates |
+| Meeting action (waiting on someone) | Append to `## Active` |
+| Daily `## Day > ### Waiting` item | Append to `## Active` (evening close-out) |
+| Weekly overdue review | Surface flagged items; close or extend follow-up |
 | Item resolved | Move to `## Resolved` |
 
-### Append rules
+- NEVER edit/delete lines in `## Resolved`.
+- CHECK for duplicates before appending.
+- ALWAYS include `follow-up:` date.
+</waiting_for_list>
 
-- Never edit or delete past lines in `## Resolved`.
-- Check for duplicates before appending — do not add an item already in `## Active`.
-- Always include a `follow-up:` date so the morning and evening workflows can surface overdue items.
+<output_rules>
+Output language: English. Match user's language for ad-hoc replies; structural elements (frontmatter, section headers, tags) remain English.
+</output_rules>

@@ -2,212 +2,149 @@
 name: jira
 description: Read Jira issues — query assigned issues, sprint boards, and epics; extract facts for daily notes and resource articles. Load when pulling Jira context for a standup, daily note, or resource enrichment, or when looking up a Jira issue key.
 compatibility: opencode
+updated: 2026-04-18
 ---
 
-**Agent output flags:**
-- Always use `--plain` for non-interactive list output.
-- Always use `--no-input` for create/edit commands.
-- `jira issue view` uses `less` pager by default — prefix with `PAGER=cat` for non-interactive use.
+<role>Jira read CLI authority. Read-only by default; writes require explicit approval.</role>
 
----
+<summary>
+> Use `--plain` for list output, `--no-input` for create/edit, `PAGER=cat` before `jira issue view`. NEVER write without explicit user approval.
+</summary>
 
-## Write Policy
+<agent_flags>
+- `--plain` — non-interactive list output
+- `--no-input` — non-interactive create/edit
+- `PAGER=cat` — disables `less` pager on `jira issue view`
+</agent_flags>
 
-**Never create, edit, delete, or transition Jira issues without explicit user approval.**
+<write_policy>
+**NEVER create, edit, delete, or transition Jira issues without explicit user approval.**
 
-Default posture is read-only. Before any write operation, stop and ask: "Should I write this to Jira?" Proceed only if the user explicitly says yes. When in doubt, describe the change — let the user apply it.
+Default: read-only. Before any write: ask "Should I write this to Jira?" Proceed only on explicit yes.
 
 ### Safety rules
+- NEVER transition without showing current status and confirming target.
+- NEVER edit description without showing current content first.
+- NEVER create without confirming project key, type, summary, description.
+- ALWAYS show comment text before adding.
+</write_policy>
 
-- **Never transition an issue** without first showing the current status and confirming the target status with the user.
-- **Never edit a description** without showing the user the current content first.
-- **Never create an issue** without confirming project key, issue type, summary, and description with the user.
-- **Always show the comment text** before adding a comment.
+<steps>
 
----
+<step n="1" name="search_issues" condition="finding issues">
 
-## Searching Issues
-
-**Project key:** Read `context/context.md` → **Conventions → Jira project key** to find your project key.
+Project key: read `context/context.md → Conventions → Jira project key`.
 
 ```bash
-# Your open issues
-jira issue list -a$(jira me) --plain
-
-# Current sprint issues (assigned to me)
-jira sprint list --current -a$(jira me) --plain
-
-# Use raw JQL for complex queries
-jira issue list -q "assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC" --plain
-jira issue list -q "sprint in openSprints() AND assignee = currentUser()" --plain
-jira issue list -q "assignee = currentUser() AND priority in (Blocker, Critical) AND statusCategory != Done" --plain
-jira issue list -q "project = PROJ AND updated >= -7d ORDER BY updated DESC" --plain
-jira issue list -q "assignee = currentUser() AND updated >= -1d" --plain
+jira issue list -a$(jira me) --plain                          # Open issues
+jira sprint list --current -a$(jira me) --plain               # Current sprint
+jira issue list -q "<JQL>" --plain                            # Raw JQL
 ```
 
-### Common JQL patterns
+### Common JQL
 
 | Goal | JQL |
 |------|-----|
-| Open assigned issues | `assignee = currentUser() AND statusCategory != Done` |
+| Open assigned | `assignee = currentUser() AND statusCategory != Done` |
 | Current sprint | `assignee = currentUser() AND sprint in openSprints()` |
-| Issues in a project | `project = PROJ AND statusCategory != Done` |
-| High-priority | `assignee = currentUser() AND priority in (Blocker, Critical) AND statusCategory != Done` |
+| In project | `project = PROJ AND statusCategory != Done` |
+| High priority | `assignee = currentUser() AND priority in (Blocker, Critical) AND statusCategory != Done` |
 | Recently updated | `project = PROJ AND updated >= -7d ORDER BY updated DESC` |
 | By label | `labels = "my-label" AND project = PROJ` |
 | By epic | `parent = PROJ-123` |
 
-### Search strategies
-
-When looking for issues on a topic, try at least two strategies:
-
-1. Text search: `jira issue list -q "text ~ \"keyword\"" --plain`
-2. Label search: `jira issue list -q "labels = \"keyword\"" --plain`
-3. Summary search: `jira issue list -q "summary ~ \"keyword\"" --plain`
-
----
-
-## Getting Issue Details
-
+### Topic search — try ≥2 strategies
 ```bash
-# View issue (non-interactive — avoids less pager)
-PAGER=cat jira issue view PROJ-123
-
-# View with recent comments
-PAGER=cat jira issue view PROJ-123 --comments 5
+jira issue list -q "text ~ \"keyword\"" --plain
+jira issue list -q "labels = \"keyword\"" --plain
+jira issue list -q "summary ~ \"keyword\"" --plain
 ```
+</step>
 
----
-
-## Sprint and Board Queries
-
+<step n="2" name="get_issue_details">
 ```bash
-# List all boards
+PAGER=cat jira issue view PROJ-123                # Non-interactive
+PAGER=cat jira issue view PROJ-123 --comments 5   # With recent comments
+```
+</step>
+
+<step n="3" name="sprint_board" condition="sprint queries">
+```bash
 jira board list --plain
-
-# List sprints (explorer view — use --table for non-interactive)
-jira sprint list --table --plain
-
-# Current active sprint issues
-jira sprint list --current --plain
-
-# Current sprint, assigned to me
-jira sprint list --current -a$(jira me) --plain
-
-# Previous sprint
-jira sprint list --prev --plain
-
-# Issues in a specific sprint (get ID from sprint list)
-jira sprint list SPRINT_ID --plain
+jira sprint list --table --plain                   # Non-interactive sprint list
+jira sprint list --current --plain                 # Active sprint
+jira sprint list --current -a$(jira me) --plain    # My current sprint
+jira sprint list --prev --plain                    # Previous sprint
+jira sprint list SPRINT_ID --plain                 # Specific sprint
 ```
+</step>
 
----
+<step n="4" name="extract_facts" condition="building daily notes or resources">
 
-## Extracting Facts for Resources and Daily Notes
-
-**What to extract (durable facts):**
-- Decisions recorded in issue descriptions or comments
-- Deadlines and milestone dates
+**Extract (durable):**
+- Decisions in descriptions/comments
+- Deadlines, milestones
 - Ownership changes (assignee, team)
-- Acceptance criteria that clarify architectural requirements
-- Epic-level goals and scope
+- Acceptance criteria clarifying requirements
+- Epic-level goals/scope
 
-**What to discard:**
-- Current status (changes frequently — link, don't copy)
-- Meeting logistics in comments
-- Speculative discussion not yet resolved
-- Full issue descriptions verbatim
+**Discard:**
+- Current status (link, don't copy)
+- Meeting logistics
+- Speculative discussion
+- Verbatim descriptions
 
-**Format for daily notes:** Summarize and link. Use the issue key for traceability.
-
+**Daily note format:**
 ```markdown
 - Investigated PROJ-456 (short description) — decision or outcome. #p-project-tag
 ```
 
-**Format for resource articles `## Sources` section:**
+**Resource `## Sources`:**
 ```
 - [PROJ-456](<jira-url>/browse/PROJ-456) — decision or outcome
 ```
 
-Replace `<jira-url>` with the Jira URL from `context/context.md` → **Tooling → Jira URL**.
+`<jira-url>` from `context/context.md → Tooling → Jira URL`.
+</step>
 
----
-
-## Morning Planning Queries
-
-During `/morning` or `/week-plan`, run these to surface MIT candidates:
-
+<step n="5" name="morning_planning" condition="/morning or /week-plan">
 ```bash
-# Assigned open issues
 jira issue list -q "assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC" --plain
-
-# Current sprint
 jira sprint list --current -a$(jira me) --plain
-
-# Blockers
 jira issue list -q "assignee = currentUser() AND priority = Blocker AND statusCategory != Done" --plain
 ```
+Skip silently if `jira` not installed or config error.
+</step>
 
-Skip silently if `jira` is not installed or returns a config error.
+<step n="6" name="write_with_approval" condition="user explicitly approved" gate="HARD-GATE">
 
----
+- **Comment:** `jira issue comment add PROJ-123 "Comment text"` — show text first.
+- **Edit:** `jira issue edit PROJ-123 -s"New summary" --no-input` — show field changes.
+- **Transition:** `jira issue move PROJ-123 "In Progress"` — confirm target status (project-specific).
+- **Create:** `jira issue create -tStory -s"Summary" -yHigh -b"Description" --no-input` — confirm project/type/summary/description.
+- **Assign:** `jira issue assign PROJ-123 $(jira me)`
 
-## Writing to Jira (with approval)
+After write: note issue key in daily note log.
+</step>
 
-When the user explicitly approves a write:
+</steps>
 
-- **Add comment:**
-  ```bash
-  jira issue comment add PROJ-123 "Comment text here"
-  ```
-  Show the comment text to the user first.
+<rules>
+- Read-only by default. Ask before any write.
+- ALWAYS `--plain` for list commands.
+- ALWAYS `PAGER=cat` before `jira issue view`.
+- ALWAYS `--no-input` for create/edit.
+- Summarize, never copy. Daily notes = summary + issue key link.
+- USE issue key (`PROJ-123`) in references — not search URLs.
+- Search before suggesting new issues.
+- Extract durable architectural decisions to resources.
+</rules>
 
-- **Update issue:**
-  ```bash
-  jira issue edit PROJ-123 -s"New summary" --no-input
-  jira issue edit PROJ-123 --label new-label --no-input
-  ```
-  Show what fields will change.
+<self_review>
+- [ ] Issue key format `PROJ-123`?
+- [ ] No writes without explicit user approval?
+- [ ] Sprint/board names match team context?
+- [ ] PII stripped before storing?
+</self_review>
 
-- **Transition status:**
-  ```bash
-  jira issue move PROJ-123 "In Progress"
-  # With comment and resolution
-  jira issue move PROJ-123 Done -RFixed --comment "Completed"
-  ```
-  Confirm the target status name before running (status names are project-specific).
-
-- **Create issue:**
-  ```bash
-  jira issue create -tStory -s"Summary" -yHigh -b"Description" --no-input
-  # Attach to epic
-  jira issue create -tStory -s"Summary" -PEPIC-42 --no-input
-  ```
-  Confirm project key, type, summary, and description with the user first.
-
-- **Assign:**
-  ```bash
-  jira issue assign PROJ-123 $(jira me)
-  ```
-
-After any write, note the issue key in the daily note log.
-
----
-
-## Rules
-
-- **Read-only by default.** Ask before any write.
-- **Always use `--plain`** for list commands — avoids interactive TUI.
-- **Always use `PAGER=cat`** before `jira issue view` — avoids `less` pager.
-- **Always use `--no-input`** for create/edit — skips interactive prompts.
-- **Summarize, don't copy.** Issue descriptions in daily notes are summaries + issue key links.
-- **Use the issue key** (e.g. `PROJ-123`) in all references — not search URLs.
-- **Check before creating.** Search for existing issues before suggesting a new one.
-- **Extract facts to resources.** If a Jira issue contains a durable architectural decision or process, note it as a resource candidate.
-
-## Editor Checklist (run silently before every output)
-
-- [ ] Issue key format correct (`PROJ-123`)?
-- [ ] No write operations without explicit user approval?
-- [ ] Sprint and board names match current team context?
-- [ ] PII stripped from fetched content before storing?
+<output_rules>Output in English. Preserve verbatim CLI commands, JQL, and issue key formats.</output_rules>

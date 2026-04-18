@@ -1,11 +1,18 @@
 ---
 type: reference
-updated: 2026-04-09
+updated: 2026-04-18
 tags: []
 ---
 
+<role>Repository structure reference — canonical directory tree and content placement table.</role>
+
+<summary>
+> Canonical directory tree of the repository (PARA + journal + automation) and what content goes where. Used for routing, structure validation, and onboarding.
+</summary>
+
 # Repository Structure
 
+<directory_tree>
 ```
 <root>/
 ├── journal/                   # Time-based notes
@@ -73,9 +80,9 @@ tags: []
 │   │   └── env-snapshot-template.md
 └── AGENTS.md                  # Agent instructions
 ```
+</directory_tree>
 
-## What Goes Where
-
+<what_goes_where>
 | Content type | Where it lives |
 |---|---|
 | What I did today, task outcomes, reflections | `journal/daily/` |
@@ -84,7 +91,7 @@ tags: []
 | Meeting action items (waiting on someone) | `journal/waiting-for.md` |
 | Meeting action items (project tasks) | `projects/<name>/README.md` Open Tasks |
 | Persistent facts: person roles, team structure, process, architecture | `resources/` |
-| Notes about a specific source before promoting concepts to resources | `inbox/` (source note, `type: source-note`) |
+| Notes about specific source before promoting concepts to resources | `inbox/` (source note, `type: source-note`) |
 | Project tasks, status, dev log | `projects/<name>/README.md` |
 | Area tasks, focus, ongoing log | `areas/<name>/README.md` |
 | Unprocessed captures and raw notes | `inbox/` |
@@ -100,4 +107,8 @@ tags: []
 | CLI environment snapshot | `context/env-snapshot.md` |
 | Workflow formatting conventions | `.opencode/reference/workflow-conventions.md` |
 | Security and GDPR rules | `.opencode/reference/security-rules.md` |
+</what_goes_where>
 
+<output_rules>
+Output language: English. File paths and directory names remain literal.
+</output_rules>
