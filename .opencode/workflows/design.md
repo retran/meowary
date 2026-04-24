@@ -50,6 +50,8 @@ Ask user:
 Pass: design topic and project name. Search `resources/` for prior ADRs and architecture patterns; scan codebase for existing implementations and precedents. Merge results before Step 2.
 </subagent_trigger>
 
+Run `qmd query "<design topic>"` to surface relevant resource articles, prior ADRs, and architecture context from the knowledge graph.
+
 Search web for best practices on this design problem if internal sources sparse.
 
 DO NOT proceed until decision question concrete.
@@ -177,7 +179,10 @@ Then:
 
 2. Append work log to `## Day` zone of today's daily note.
 3. Mark matching task items done.
-4. Enrich `resources/` with new architecture patterns discovered.
+4. **Resource enrichment** — scan session for durable knowledge (architecture patterns, design tradeoffs, evaluation criteria, component boundaries). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -188,7 +193,7 @@ Then:
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Decision record written; dev-log entry appended; daily note updated.</done_when>
+<done_when>Decision record written; dev-log entry appended; daily note updated; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

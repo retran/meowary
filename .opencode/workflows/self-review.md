@@ -60,6 +60,7 @@ Ask user:
 
 Also:
 - Run `git diff` or read changed files to understand scope.
+- Run `qmd query "<feature or change topic>"` to surface relevant resource articles, architecture patterns, and conventions from the knowledge graph.
 - Search `resources/` and `codebases/<name>.md` for patterns that should apply.
 - Search web for known anti-patterns in the approach if applicable.
 <done_when>Scope of changes, focus areas, tier confirmed.</done_when>
@@ -154,22 +155,15 @@ HARD-GATE (Full): Present all findings before any addressed. User decides priori
 
 3. Append work log to `## Day` zone of today's daily note.
 4. Mark matching task items done.
-5. **Learnings:** After dev-log entry, actively reflect:
+5. **Resource enrichment** — after dev-log entry, actively reflect:
 
-   > "Did this review surface any pattern or anti-pattern not already documented in `resources/` or `codebases/<name>.md`?"
+   > "Did this review surface any pattern, anti-pattern, or convention not already documented in `resources/` or `codebases/<name>.md`?"
 
-   If yes, output:
-
-   ```markdown
-   **Learnings:**
-   - <pattern or anti-pattern discovered>
-   - <convention that should be documented>
-   ```
-
-   Then:
-   1. Check if relevant resource article exists in `resources/`.
-   2. If yes: add learning as fact.
-   3. If no: note as candidate for future resource creation.
+   If yes:
+   1. Check if relevant resource article exists in `resources/` (use `qmd query` if needed).
+   2. If yes: append learning as fact with source link.
+   3. If no: create stub (front matter + H1 + 1-sentence fact).
+   4. If nothing durable: note "no enrichment needed" in dev-log.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -180,7 +174,7 @@ HARD-GATE (Full): Present all findings before any addressed. User decides priori
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Summary written; dev-log entry appended; daily note updated; learnings addressed.</done_when>
+<done_when>Summary written; dev-log entry appended; daily note updated; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

@@ -58,6 +58,7 @@ Ask user:
 3. Complexity tier: Quick / Standard / Full?
 
 Also:
+- Run `qmd query "<review topic or disputed point>"` to surface relevant resource articles, architecture decisions, and prior context from the knowledge graph.
 - Search `resources/` and codebase for context on technically disputed points before forming position.
 - Search web for best practices if reviewer challenges technical approach.
 <done_when>Review comments obtained; pre-decided rejections noted; tier confirmed.</done_when>
@@ -133,7 +134,10 @@ HARD-GATE (Full): Present drafted responses for review before posting.
 4. Append work log to `## Day` zone of today's daily note.
 5. Mark matching task items done.
 6. If scope follow-on tasks created: add `- [ ]` pending tasks to daily note. If non-trivial: also append to `projects/<name>/plans/<slug>.md`.
-7. If architecture insights surfaced by review: enrich relevant `resources/` article.
+7. **Resource enrichment** — scan session for durable knowledge (architecture insights from review, design patterns validated or invalidated, coding conventions clarified). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -144,7 +148,7 @@ HARD-GATE (Full): Present drafted responses for review before posting.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Committed; dev-log entry appended; daily note updated; follow-on tasks filed.</done_when>
+<done_when>Committed; dev-log entry appended; daily note updated; follow-on tasks filed; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

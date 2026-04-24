@@ -86,7 +86,7 @@ Ask user:
 
 Load document type template per `<definitions>`.
 
-Search `resources/`, `projects/<name>/`, web proactively for relevant material before writing. Identify target audience: internal team, broader org, public?
+Run `qmd query "<document topic>"` to surface relevant resource articles, prior documents, and domain context from the knowledge graph. Search `resources/`, `projects/<name>/`, web proactively for relevant material before writing. Identify target audience: internal team, broader org, public?
 <done_when>Document type, mode, tier, template, audience confirmed.</done_when>
 </step>
 
@@ -146,7 +146,10 @@ Write each section in full:
 6. Append work log to `## Day` zone of today's daily note.
 7. Mark matching task items done.
 8. Commit: `Write <doc-type>: <slug>` OR `Publish <doc-type>: <slug>`.
-9. Enrich `resources/` with new knowledge extracted during writing.
+9. **Resource enrichment** — scan session for durable knowledge (concepts clarified, architecture patterns formalized, process decisions documented). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -157,7 +160,7 @@ Write each section in full:
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Document filed; dev-log entry appended; daily note updated; committed.</done_when>
+<done_when>Document filed; dev-log entry appended; daily note updated; committed; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

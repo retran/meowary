@@ -48,9 +48,10 @@ Severity:
 
 <step n="0" name="Load context">
 1. Read `context/context.md` for active projects and team context (understand code/spec domain).
-2. Read `projects/<name>/dev-log.md` last entry if review relates to active project.
-3. Check `projects/<name>/notes/` for prior review of same PR/spec (re-review after changes): if found, load as context.
-<done_when>Team context loaded; any prior review of this target surfaced.</done_when>
+2. Run `qmd query "<review subject>"` to surface relevant resource articles, architecture patterns, and conventions from the knowledge graph.
+3. Read `projects/<name>/dev-log.md` last entry if review relates to active project.
+4. Check `projects/<name>/notes/` for prior review of same PR/spec (re-review after changes): if found, load as context.
+<done_when>Team context loaded; KG search complete; any prior review of this target surfaced.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">
@@ -164,6 +165,11 @@ Body: full findings from Step 4 + review response from Step 5.
 **Next:** <suggested action for author or yourself>
 ```
 
+4. **Resource enrichment** — scan review for durable knowledge (architecture patterns, anti-patterns, coding conventions, design insights). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
+
 <self_review>
 - All `<done_when>` criteria met
 - All findings categorized by severity
@@ -173,7 +179,7 @@ Body: full findings from Step 4 + review response from Step 5.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Daily note updated; dev-log entry appended if applicable.</done_when>
+<done_when>Daily note updated; dev-log entry appended if applicable; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

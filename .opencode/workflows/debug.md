@@ -45,6 +45,7 @@ Ask user:
 3. Regression (was working before) or first-time failure?
 
 Also:
+- Run `qmd query "<error symptom or component>"` to surface relevant resource articles, prior debug sessions, and architecture context from the knowledge graph.
 - Search `resources/` for known issues, prior debug sessions, architecture context.
 - Search web for error message or symptom — BEFORE investigating internally.
 - Search `projects/<name>/notes/` for prior debug with similar symptoms.
@@ -135,7 +136,10 @@ Quick: state cause inline, proceed to fix.
 3. Append work log entry to `## Day` zone of today's daily note.
 4. Mark matching task items done.
 5. If root cause is systemic: suggest `plan replan` in closing summary.
-6. If root cause represents reusable knowledge (pattern, anti-pattern, library issue): enrich relevant `resources/` article.
+6. **Resource enrichment** — scan session for durable knowledge (root cause patterns, anti-patterns, library issues, failure modes). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 7. Commit per `context/context.md` commit format: `Fix: <description of root cause>`.
 
 <self_review>
@@ -147,7 +151,7 @@ Quick: state cause inline, proceed to fix.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Debug note written; dev-log entry appended; daily note updated; committed.</done_when>
+<done_when>Debug note written; dev-log entry appended; daily note updated; committed; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

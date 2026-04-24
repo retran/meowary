@@ -75,16 +75,28 @@ Evening zone APPENDS only. NEVER edit Morning or Day content. Mark MITs in `### 
 </step>
 
 <step n="4" name="Resource scan" gate="HARD-GATE">
-Scan today's Inbox/Events/work-log for durable knowledge:
-- Role changes, team updates, process decisions → update person/team article.
+Scan today's work output for durable knowledge:
+
+**Daily note sources:**
+- Inbox items, Events, work-log entries → role changes, team updates, process decisions.
+
+**Project sources (for each active project worked today):**
+- Dev-log entries from today's sessions → architecture insights, design decisions, root causes, testing patterns.
+- New project notes created today (debug notes, research briefs, test sessions, scout notes) → reusable knowledge not yet captured in `resources/`.
+- New project artifacts (specs, ADRs, plans) → concepts, patterns, or decisions worth surfacing as standalone resource articles.
+
+For each durable fact found:
+- Existing article in `resources/`? → append fact with source link.
+- No article? → create stub (front matter + H1 + 1-sentence fact) or add to `inbox/` for `resource-enrich`.
 - Architecture, ownership, tool decisions → update relevant article.
-- New concepts with no article → create stub (front matter + H1 + 1 sentence) or add to `inbox/` for `resource-enrich`.
+
+Run `qmd query` on today's key topics if unsure whether resource articles already exist.
 
 If nothing durable: WRITE `nothing to promote today.` in `### Insights → Resources`.
 
 MANDATORY. NEVER skip; "nothing" is valid, silence is not.
 
-<done_when>Durable facts routed or explicitly confirmed as none.</done_when>
+<done_when>All daily note sources and project sources reviewed; durable facts routed or explicitly confirmed as none.</done_when>
 </step>
 
 <step n="5" name="Friday weekly wrap-up" condition="Today is Friday AND user accepted in Step 0.5">

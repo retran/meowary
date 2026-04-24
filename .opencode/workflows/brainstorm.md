@@ -34,7 +34,7 @@ Structures divergent thinking using the Socratic method to produce a problem spe
 1. Read `projects/<name>/dev-log.md` last entry.
 2. Read research brief in `projects/<name>/research/` if exists.
 3. Read prior specs in `projects/<name>/specs/` if exist.
-4. Search `resources/` for related patterns, prior decisions, known pitfalls.
+4. Run `qmd query "<problem topic>"` to surface relevant resource articles, prior decisions, and known pitfalls from the knowledge graph. Also search `resources/` directly for matching tags.
 <done_when>Project context, research, prior specs, related resources loaded.</done_when>
 </step>
 
@@ -47,6 +47,8 @@ Ask user:
 <subagent_trigger agent="explore" condition="all tiers">
 Pass: repo root, problem description, relevant directories. Returns prior specs, related resources, codebase patterns. Launch in parallel with clarification.
 </subagent_trigger>
+
+Search web for prior art, alternative approaches, and known pitfalls if internal sources insufficient.
 
 <done_when>Problem statement, success criteria, tier confirmed; explore results reviewed.</done_when>
 </step>
@@ -106,6 +108,10 @@ Write spec to `projects/<name>/specs/<slug>.md` using template from `.opencode/s
 1. Run self-review checklist.
 2. Output checklist results as visible mini-report. Fix failures inline.
 3. Append dev-log entry. Append daily note entry.
+4. **Resource enrichment** — scan session for durable knowledge (architecture patterns, process decisions, design tradeoffs, domain concepts). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -118,7 +124,7 @@ Write spec to `projects/<name>/specs/<slug>.md` using template from `.opencode/s
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Checklist passed; spec presented; dev-log and daily note updated.</done_when>
+<done_when>Checklist passed; spec presented; dev-log and daily note updated; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

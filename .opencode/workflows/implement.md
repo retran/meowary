@@ -49,6 +49,7 @@ Pass: repo root, task description from plan, relevant directories from `codebase
 </subagent_trigger>
 
 Also:
+- Run `qmd query "<task topic>"` to surface relevant resource articles, architecture patterns, and prior implementations from the knowledge graph.
 - Search `resources/` for relevant architecture patterns, prior implementations, known pitfalls.
 - Search web for library docs, examples, known issues if task involves unfamiliar tooling.
 
@@ -112,7 +113,10 @@ HARD-GATE (Full): Present verification results for each milestone before proceed
 
 6. Append work log to `## Day` zone of today's daily note.
 7. Mark matching task items done.
-8. Enrich `resources/` with architecture insights or patterns discovered.
+8. **Resource enrichment** — scan session for durable knowledge (architecture insights, coding patterns, tool decisions, component boundaries). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -123,7 +127,7 @@ HARD-GATE (Full): Present verification results for each milestone before proceed
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Plan updated; dev-log entry appended; daily note updated; `self-review` direction given (Standard + Full).</done_when>
+<done_when>Plan updated; dev-log entry appended; daily note updated; resources enriched or explicitly noted as not needed; `self-review` direction given (Standard + Full).</done_when>
 </step>
 
 </steps>

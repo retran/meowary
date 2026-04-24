@@ -50,7 +50,7 @@ Ask user:
 2. Complexity tier: Quick / Standard / Full?
 3. Known sources to include OR open-ended search?
 
-Search `resources/` and web proactively. If question already answerable from existing knowledge: surface now and ask whether to continue.
+Run `qmd query "<research question>"` to surface relevant resource articles and prior research from the knowledge graph. Search `resources/` and web proactively. If question already answerable from existing knowledge: surface now and ask whether to continue.
 
 DO NOT proceed until question is concrete and tier declared.
 <done_when>Research question, done criteria, and tier confirmed.</done_when>

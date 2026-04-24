@@ -45,8 +45,10 @@ Ask user:
 3. Specific risk areas? (recently changed code, known fragility, external integrations)
 
 Also:
+- Run `qmd query "<feature or component under test>"` to surface relevant resource articles, testing patterns, and known issues from the knowledge graph.
 - Search `projects/<name>/notes/` for prior test session notes and known issues.
 - Search `resources/` for testing patterns applicable to codebase.
+- Search web for known issues or test strategies if testing unfamiliar components or libraries.
 
 DO NOT assume test strategy — read from plan and confirm with user.
 <done_when>Scope, manual testing requirement, risk areas confirmed.</done_when>
@@ -130,6 +132,10 @@ DO NOT report "unknown failure" without searching first.
 4. Append work log to `## Day` zone of today's daily note.
 5. Mark matching task items done.
 6. If new regressions found: add `- [ ]` pending tasks to daily note — one per regression.
+7. **Resource enrichment** — scan session for durable knowledge (testing patterns, failure modes, tool insights, coverage gaps). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -140,7 +146,7 @@ DO NOT report "unknown failure" without searching first.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Summary written; dev-log entry appended; daily note updated; regression tasks filed.</done_when>
+<done_when>Summary written; dev-log entry appended; daily note updated; regression tasks filed; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

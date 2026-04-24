@@ -138,7 +138,10 @@ When Open Tasks > ~8 items (incl. done), MOVE all `- [x]` to **Completed Tasks**
 3. **Update Overview if scope changed.** Reflect current reality.
 4. **Update `updated` front matter** to today.
 5. **Update daily note.** Log entry MUST link to README.
-6. **Update resources** if durable facts emerged.
+6. **Resource enrichment** — scan session for durable facts (architecture insights, patterns, tool decisions, process changes). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 </after_session>
 
 <status_transitions>

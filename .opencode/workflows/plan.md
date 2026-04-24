@@ -69,6 +69,8 @@ Ask user:
 Pass: planning topic and project name. Search `resources/`, `projects/<name>/plans/`, codebase for prior plans and related work. Returns: relevant resource paths, prior plan files, codebase patterns. Launch as soon as planning topic clear, in parallel with clarifying questions. Merge findings into Step 1 context.
 </subagent_trigger>
 
+Run `qmd query "<planning topic>"` to surface relevant resource articles, architecture context, and prior plans from the knowledge graph. Search web for best practices on similar scope/architecture if internal sources sparse.
+
 DO NOT proceed until scope intent and tier clear.
 <done_when>Scope, done criteria, tier, constraints confirmed; `explore` results merged.</done_when>
 </step>
@@ -168,6 +170,10 @@ Then:
 
 2. Append work log to `## Day` zone of today's daily note.
 3. Mark matching task items done.
+4. **Resource enrichment** — scan session for durable knowledge (architecture patterns, process decisions, risk insights, domain concepts). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - No article? → create stub (front matter + H1 + 1-sentence fact).
+   - Nothing durable? → note "no enrichment needed" in dev-log.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -180,7 +186,7 @@ Then:
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Plan file written; dev-log entry appended; daily note updated.</done_when>
+<done_when>Plan file written; dev-log entry appended; daily note updated; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 ## Replan Mode
@@ -223,6 +229,7 @@ Produce delta summary:
 2. Append dev-log entry noting trigger and changes.
 3. Append work log to `## Day` zone of today's daily note.
 4. Mark matching task items done.
+5. **Resource enrichment** — scan replan session for durable knowledge. Enrich or stub as needed.
 
 <self_review>
 - All `<done_when>` criteria met
@@ -233,7 +240,7 @@ Produce delta summary:
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Plan file updated; dev-log entry appended; daily note updated.</done_when>
+<done_when>Plan file updated; dev-log entry appended; daily note updated; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>

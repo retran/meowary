@@ -120,6 +120,9 @@ If a resource stub is clearly missing: write it now. DO NOT defer.
 
 3. Append work log entry to `## Day` zone of today's daily note.
 4. Mark matching task items done.
+5. **Resource enrichment** — beyond stubs created in Step 5, scan findings for facts that enrich *existing* resource articles (architecture updates, ownership changes, tool decisions). For each:
+   - Existing article in `resources/`? → append fact with source link.
+   - Nothing durable beyond stubs? → note "no additional enrichment needed."
 
 <self_review>
 - All `<done_when>` criteria met
@@ -129,7 +132,7 @@ If a resource stub is clearly missing: write it now. DO NOT defer.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Summary presented; dev-log appended; daily note updated.</done_when>
+<done_when>Summary presented; dev-log appended; daily note updated; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
