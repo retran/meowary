@@ -404,6 +404,22 @@ meowary/
 └── .env.example              # Credentials template
 ```
 
+## Updating
+
+To update Meowary's framework files (skills, workflows, AGENTS.md, scripts, etc.) to a newer release:
+
+```sh
+bash update.sh
+```
+
+`update.sh` downloads the latest release from GitHub, replaces all framework files, and re-runs `mise install`. It never modifies personal directories (`journal/`, `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `context/`, `codebases/`, `meta/`) or your `.env` file. Your optional tool selections in `mise.toml` are preserved automatically.
+
+```sh
+bash update.sh --check              # check if a newer release exists
+bash update.sh --version 0.1.3      # update to a specific version
+bash update.sh --non-interactive    # skip prompts (useful in CI)
+```
+
 ## Source Code Access
 
 The `external_directory` permission in `opencode.json` (in the root of your Meowary directory) controls which directories outside the journal the agent can read and modify. Set it to the path where your source code repositories live:

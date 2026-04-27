@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-04-27
+
+### Added
+
+- `update.sh` — framework update script: downloads a release tarball from GitHub, replaces all framework files, preserves `mise.toml` optional tool selections, runs `mise install` and `npm install` automatically; supports `--check`, `--version`, and `--non-interactive` flags
+- `VERSION` file — single-line semantic version used by `update.sh` to detect the installed release
+- Updating section in README with usage examples
+- Reference to `update.sh` in `setup.sh` post-setup summary
+
+### Changed
+
+- `.env.example` — consolidated to three core Atlassian variables (`ATLASSIAN_EMAIL`, `ATLASSIAN_API_TOKEN`, `ATLASSIAN_INSTANCE`); all tool groups derive from them via variable interpolation
+- `mise.toml` — added required tool declarations (`node`, `opencode`, `gum`, `qmd`, `repomix`); optional integrations documented as commented-out entries
+- `setup.sh` — rewritten as an interactive mise-first bootstrap; installs all required tools, prompts for optional integrations, configures `.env`, and handles `mise trust` and shell activation
+
 ## [0.1.2] - 2026-04-18
 
 ### Changed
@@ -51,7 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Helper scripts for health checks, backlink detection, resource planning, and Confluence sync
 - macOS and WSL installation paths documented
 
-[Unreleased]: https://github.com/retran/meowary/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/retran/meowary/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/retran/meowary/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/retran/meowary/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/retran/meowary/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/retran/meowary/releases/tag/v0.1.0
