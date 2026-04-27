@@ -1,6 +1,25 @@
 # mise configuration for the journal repo.
 # Autoloads .env when you cd into this directory (requires mise shell activation).
 # See .env.example for the required variables.
+#
+# Run `mise install` (or `bash setup.sh`) to install all tools.
 
+# ── Required tools ────────────────────────────────────────────────────────────
+[tools]
+node        = "lts"
+opencode    = "latest"
+gum         = "latest"
+"npm:@tobilu/qmd" = "latest"
+"npm:repomix"     = "latest"
+
+# ── Optional integrations ─────────────────────────────────────────────────────
+# setup.sh manages these interactively. To change manually: uncomment/comment
+# and run `mise install`. Re-running setup.sh also works.
+# gh = "latest"   # GitHub CLI
+# glab = "latest"   # GitLab CLI
+# "ubi:ankitpokhrel/jira-cli[exe=jira]" = "latest"   # Jira CLI
+# "npm:confluence-cli" = "latest"   # Confluence CLI
+
+# ── Environment ───────────────────────────────────────────────────────────────
 [env]
 _.file = { path = ".env", redact = true }

@@ -78,139 +78,59 @@ The agent ties these together through three layers of instructions: `AGENTS.md` 
 
 ## Quick Start
 
-### Prerequisites
-
-| Tool | Version | Install |
-|------|---------|---------|
-| [Node.js](https://nodejs.org) | >= 22 (required by OpenCode) | See platform instructions below |
-| [OpenCode](https://opencode.ai) | latest | `npm install -g opencode` or [opencode.ai](https://opencode.ai) |
-| [QMD](https://github.com/tobi/qmd) | latest | `npm install -g @tobilu/qmd` |
-| [repomix](https://github.com/yamadashy/repomix) | latest | `npm install -g repomix` |
-
-<details>
-<summary>macOS (Homebrew)</summary>
-
-```sh
-# Node.js — pick one method:
-brew install node@22          # Homebrew
-mise install node@22          # or mise
-nvm install 22                # or nvm
-
-# Required tools
-npm install -g opencode @tobilu/qmd repomix
-```
-
-</details>
-
-<details>
-<summary>WSL / Ubuntu</summary>
-
-```sh
-# Install nvm (recommended for WSL)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
-source ~/.bashrc
-nvm install 22
-
-# Required tools
-npm install -g opencode @tobilu/qmd repomix
-```
-
-</details>
-
-### Clone and configure
+### 1. Clone and run setup
 
 ```sh
 git clone https://github.com/retran/meowary my-journal
 cd my-journal
-cp .env.example .env   # edit with your credentials
+bash setup.sh
 ```
 
-The `.env` file has four sections. Here is the structure — fill in the values that match your setup:
+`setup.sh` installs [mise](https://mise.jdx.dev) if needed, then uses it to install all required tools (Node.js, OpenCode, QMD, repomix) declared in `mise.toml`. Works on macOS, Linux, and WSL. Safe to re-run.
+
+### 2. Configure credentials
+
+`setup.sh` creates `.env` from `.env.example` and prompts for your credentials interactively. You only need to provide three values — all tool groups derive from them:
 
 ```sh
-# Used by .opencode/scripts/ for direct Atlassian REST API calls
-ATLASSIAN_USERNAME=you@example.com
+ATLASSIAN_EMAIL=you@example.com
 ATLASSIAN_API_TOKEN=your-atlassian-api-token
-CONFLUENCE_URL=https://your-instance.atlassian.net/wiki
-JIRA_URL=https://your-instance.atlassian.net
-
-# confluence-cli — uses its own vars (same token value as above)
-CONFLUENCE_DOMAIN=your-instance.atlassian.net
-CONFLUENCE_EMAIL=you@example.com
-CONFLUENCE_API_TOKEN=your-atlassian-api-token
-
-# jira CLI — same Atlassian token again
-JIRA_API_TOKEN=your-atlassian-api-token
-
-# OpenCode built-ins
-OPENCODE_ENABLE_EXA=1              # web search
-OPENCODE_EXPERIMENTAL_LSP_TOOL=true # go-to-definition and hover in coding sessions
+ATLASSIAN_INSTANCE=your-instance.atlassian.net
 ```
 
 See `.env.example` for the full file with comments and optional keys (`CONTEXT7_API_KEY`, `CONFLUENCE_SPACES`, etc.).
 
-OpenCode reads credentials from the shell environment. Use [direnv](https://direnv.net) or [mise](https://mise.jdx.dev) to load `.env` automatically:
+mise loads `.env` automatically when you enter the directory (after `mise trust`, which `setup.sh` runs for you).
 
-- **direnv:** add `dotenv` to `.envrc` in the repo root, then run `direnv allow`
-- **mise:** `.env` loads automatically — no extra config
+### 3. Optional integrations
 
-### Install script dependencies
+`setup.sh` prompts you to select optional tools interactively. To change your selection later, re-run `setup.sh` or manually uncomment the tools you want in `mise.toml` and run `mise install`:
 
-```sh
-cd .opencode/scripts && npm install && cd ../..
+```toml
+# mise.toml — [tools] section
+# gh = "latest"   # GitHub CLI
+# glab = "latest"   # GitLab CLI
+# "ubi:ankitpokhrel/jira-cli[exe=jira]" = "latest"   # Jira CLI
+# "npm:confluence-cli" = "latest"   # Confluence CLI
 ```
 
-This installs `dotenv` (used by helper scripts) and `vitest` (for tests).
-
-### Optional integrations
-
-All integrations use CLI tools installed separately. Credentials go in `.env` (see `.env.example`). Every integration is optional — install what matches your workflow.
-
-| Integration | Tool | Install | What it gives you |
-|-------------|------|---------|-------------------|
-| Confluence | [`confluence-cli`](https://www.npmjs.com/package/confluence-cli) | `npm install -g confluence-cli` | Read Confluence pages into resource articles |
-| Jira | [`jira-cli`](https://github.com/ankitpokhrel/jira-cli) | `brew install jira-cli` | Query issues, sprints, and epics for daily notes and resources |
-| GitHub | [`gh`](https://cli.github.com) | `brew install gh` | PR lifecycle, Actions CI, code search |
-| GitLab | [`glab`](https://gitlab.com/gitlab-org/cli) | `brew install glab` | MR lifecycle, CI pipelines, issues |
-| Token optimization | [`rtk`](https://github.com/rtk-ai/rtk) | `brew install rtk` | Compress shell output before it reaches the LLM — 60-90% token savings |
-| Web search | Exa (built into OpenCode) | Set `OPENCODE_ENABLE_EXA=1` in `.env` | Real-time web search |
-| Library docs | [`ctx7`](https://github.com/upstash/context7) | `npm install -g ctx7` | Framework and library documentation lookup (optional `CONTEXT7_API_KEY` in `.env`) |
-
-<details>
-<summary>WSL / Ubuntu alternatives</summary>
+After installing, authenticate:
 
 ```sh
-# Jira CLI
-go install github.com/ankitpokhrel/jira-cli/cmd/jira@latest
-
-# GitHub CLI
-sudo apt install gh
-# or: https://github.com/cli/cli/blob/trunk/docs/install_linux.md
-
-# GitLab CLI
-sudo apt install glab
-# or: https://gitlab.com/gitlab-org/cli#installation
-
-# RTK
-# See https://github.com/rtk-ai/rtk#installation for Linux binaries
-
-# Confluence and npm-based tools work the same on WSL:
-npm install -g confluence-cli
+gh auth login      # GitHub — interactive browser flow
+glab auth login    # GitLab — interactive or token
+jira init          # Jira — prompts for server URL and token (reads JIRA_API_TOKEN from .env)
 ```
 
-</details>
+Other optional tools:
 
-After installing, authenticate each tool:
+| Tool | Purpose | Install |
+|------|---------|---------|
+| [`rtk`](https://github.com/rtk-ai/rtk) | Compress shell output before it reaches the LLM — 60-90% token savings | `brew install rtk` |
+| Exa (built into OpenCode) | Real-time web search | Set `OPENCODE_ENABLE_EXA=1` in `.env` (already set) |
+| [`ctx7`](https://github.com/upstash/context7) | Framework and library documentation lookup | `npm install -g ctx7` |
 
-```sh
-gh auth login                          # GitHub — interactive browser flow
-glab auth login                        # GitLab — interactive or token
-jira init                              # Jira — prompts for server URL and token
-```
-
-The Atlassian REST credentials (`ATLASSIAN_USERNAME`, `ATLASSIAN_API_TOKEN`, `JIRA_URL`, `CONFLUENCE_URL`) are also used by `.opencode/scripts/config.js` for direct API calls in automation scripts — set them even if you use the CLI tools.
-
-### First day
+### 4. First day
 
 Open your terminal, `cd` into your Meowary directory (e.g. `cd my-journal`), and run `opencode`. The agent must be started from the Meowary root so it finds `AGENTS.md` and `.opencode/`. Then:
 
