@@ -89,6 +89,18 @@ ui_confirm() {
 
 # ── Version helpers ───────────────────────────────────────────────────────────
 
+# Returns 0 if $1 > $2 (semver comparison, numeric segments only)
+version_gt() {
+  local IFS=.
+  local i a=($1) b=($2)
+  for (( i=0; i<${#a[@]} || i<${#b[@]}; i++ )); do
+    local av=${a[i]:-0} bv=${b[i]:-0}
+    (( av > bv )) && return 0
+    (( av < bv )) && return 1
+  done
+  return 1
+}
+
 current_version() {
   local ver_file="$SCRIPT_DIR/VERSION"
   if [[ -f "$ver_file" ]]; then
@@ -401,6 +413,13 @@ main() {
     echo ""
     ok "Already at v${TARGET_VERSION} — nothing to do"
     return
+  fi
+
+  if [[ "$from_version" != "unknown" ]] && version_gt "$from_version" "$TARGET_VERSION"; then
+    echo ""
+    warn "Latest release (v${TARGET_VERSION}) is older than current version (v${from_version})."
+    warn "To downgrade, run: bash update.sh --version ${TARGET_VERSION}"
+    exit 0
   fi
 
   if $CHECK_ONLY; then
