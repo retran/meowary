@@ -216,7 +216,7 @@ Examples:
 - Append-only changelog. NEVER remove entries.
 - Mandatory `updated`. Set every edit.
 - Bidirectional links. Every A → B requires B → A (except people → topic noise).
-- NO stubs. New article needs real Overview + ≥1 substantive section.
+- NO stubs in dedicated `/r` workflows. New article needs real Overview + ≥1 substantive section. Exception: inline enrichment during non-KG workflows (lifecycle Close steps, daily workflows) MAY create `status: stub` articles with front matter + H1 + ≥1 substantive sentence — these are acceptable placeholders pending future `/r enrich`.
 - Distill, never copy. Confluence/Jira are sources, not mirrors.
 - Read-only externals. NEVER write to Jira/Confluence. Codebase read-only.
 - Fix all inbound links after delete/merge/reclassify/split/rename: run `node .opencode/scripts/find-backlinks.js <old-path>`. Update or remove all matches. Broken links unacceptable.
@@ -228,7 +228,7 @@ Examples:
 - [ ] `## Changelog` entry appended with today's date?
 - [ ] Every outbound link has corresponding inbound link in target?
 - [ ] All tags in `meta/tags.md`?
-- [ ] No stubs: Overview and ≥1 substantive section?
+- [ ] No stubs (in `/r` workflows): Overview and ≥1 substantive section?
 - [ ] `## Sources` lists all contributing pages?
 - [ ] No verbatim Confluence content — distilled only?
 </self_review>

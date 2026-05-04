@@ -1,6 +1,6 @@
 ---
 type: reference
-updated: 2026-04-18
+updated: 2026-05-04
 tags: [p-meowary]
 ---
 
@@ -106,3 +106,29 @@ DO NOT include `## dev-log Update` section. Handle dev-log writes inside the Clo
 <output_rules>
 Output language: English. Headings, gate names, section labels remain literal.
 </output_rules>
+
+<kg_integration>
+## Knowledge Graph Integration
+
+Every workflow that produces or consumes knowledge MUST integrate with `resources/` via QMD.
+
+**Read (Step 0 or 0.5):**
+- Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel.
+- If QMD sparse, browse `resources/` directory tree.
+- Anchor durable web findings as resource stubs.
+
+**Write (Close step):**
+- Existing article? → append fact with source link.
+- No article? → create stub (`status: stub`, front matter + H1 + ≥1 sentence).
+- Nothing durable? → note "no enrichment needed" in dev-log.
+
+**Re-index:** Run `node .opencode/scripts/qmd-index.js --changed` if any resource files changed.
+
+**Retrieval hierarchy:**
+1. `qmd query` + `websearch` — always in parallel
+2. Read `resources/` articles QMD points to
+3. Follow references in returned articles until context sufficient
+4. Anchor durable web findings → create or enrich resource article
+
+Exempt: `standup.md` (read-only synthesis).
+</kg_integration>

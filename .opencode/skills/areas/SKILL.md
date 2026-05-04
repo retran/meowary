@@ -88,6 +88,14 @@ DO NOT confuse with pausing. Paused = `status: Paused`, stays in `areas/`. Archi
 
 </steps>
 
+<kg_integration>
+Areas generate durable knowledge — route it to `resources/`:
+
+- **Focus/task updates:** run `qmd query "<area topic>"`; enrich or create resource article if reusable knowledge emerges.
+- **Log entries:** extract durable facts to `resources/`. Architecture-governance → `resources/architecture/`; devex → `resources/tools/` or `resources/processes/`; mentoring → `resources/people/`.
+- **Archive:** scan log for un-extracted knowledge before archiving.
+</kg_integration>
+
 <health_rules>
 - `updated` MUST change every edit.
 - Inline `**Status:**` MUST match front matter `status`.

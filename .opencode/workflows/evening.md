@@ -99,6 +99,12 @@ MANDATORY. NEVER skip; "nothing" is valid, silence is not.
 <done_when>All daily note sources and project sources reviewed; durable facts routed or explicitly confirmed as none.</done_when>
 </step>
 
+<step n="4.5" name="Re-index KG" condition="Resource files were created or modified in Step 4">
+RUN `node .opencode/scripts/qmd-index.js --changed`.
+
+<done_when>QMD index updated or skipped (no resource changes).</done_when>
+</step>
+
 <step n="5" name="Friday weekly wrap-up" condition="Today is Friday AND user accepted in Step 0.5">
 1. OPEN or create `journal/weekly/<year>-W<nn>.md`.
 2. PERFORM Friday wrap-up per journal skill.

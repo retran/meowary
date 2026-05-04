@@ -58,8 +58,9 @@ SKIP if invocation contains routing context (e.g. "save this URL", "quick note")
 1. DETERMINE destination from routing table.
 2. ASSIGN exactly one type tag: `idea`, `task`, `reference`, `question`, `bug`.
 3. LINK to active project if clearly related. DO NOT force-tag ambiguous items.
+4. RUN `qmd query "<capture topic>"` and `websearch "<capture topic>"` in parallel. If a closely matching resource article exists, INFORM user: "Related article exists: `<path>` — add to existing article instead?" Proceed with capture regardless of answer (speed > perfection).
 
-<done_when>Destination and type tag determined.</done_when>
+<done_when>Destination and type tag determined; duplicate check done.</done_when>
 </step>
 
 <step n="2" name="Write">

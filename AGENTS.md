@@ -1,5 +1,5 @@
 <!--
-updated: 2026-04-18
+updated: 2026-05-04
 -->
 
 # AGENTS.md
@@ -27,7 +27,7 @@ Root entry point for all agents operating in this repository. Defines session-st
 - **PARA** — Projects, Areas, Resources, Archive. Top-level organization scheme.
 - **Progressive disclosure** — Load skills, workflows, and context files on demand, not upfront.
 - **Tier 0/1/2** — Session-start loading stages, scoped to task type.
-- **Stub** — Minimal placeholder resource article created when an entity is referenced but has no article yet.
+- **Stub** — Minimal resource article (`status: stub`) with front matter + H1 + ≥1 substantive sentence. Acceptable during inline enrichment (non-KG workflows). Dedicated `/r` workflows require full articles.
 
 </definitions>
 
@@ -36,10 +36,10 @@ Root entry point for all agents operating in this repository. Defines session-st
 **Tier 0 — every session**
 DO read `context/context.md` (author identity, team, active projects, tooling). Skip if already loaded this session.
 
-**Tier 1 — task involves writing, resources, people, teams, or projects**
-DO search `resources/` with `qmd query "<topic>"` or browse the directory tree to identify articles relevant by topic, team, person, or project tag. DO read specific resource articles that directly bear on the task. If an article should exist but doesn't, DO create a stub before proceeding.
+**Tier 1 — task involves writing, resources, people, teams, or projects** (includes Tier 0)
+DO run `qmd query "<topic>"` and `websearch "<topic>"` in parallel to surface both internal and external knowledge. DO also browse `resources/` directory tree when QMD results are sparse. DO read specific resource articles that directly bear on the task. If an article should exist but doesn't, DO create a stub before proceeding. ALWAYS prefer QMD semantic search over manual directory browsing. DO read related `projects/<slug>/` dashboards and `areas/<slug>.md` files when the task touches an active project or area — they contain current phase, open tasks, and dev-log context.
 
-**Tier 2 — coding work in external repos**
+**Tier 2 — coding work in external repos** (includes Tier 0 + Tier 1)
 DO read `context/context.md` `## Codebases` to identify the active codebase. DO read `codebases/<name>.md` — it contains architecture, tech stack, build commands, test commands, coding conventions, CI context, and key decisions. If no `codebases/<name>.md` exists, DO create one before proceeding. NEVER invent conventions. If the file is missing or a field is empty, ASK the user before assuming.
 
 </tiers>
@@ -90,6 +90,7 @@ Workflow prompts live in `.opencode/workflows/` (24 files). Commands live in `.o
 | User shares new project/role/team/tool fact | Update `context/context.md` or `codebases/<name>.md` immediately |
 | Person, team, process, or concept referenced without resource article | Create stub article immediately |
 | Learn new build command, architecture detail, convention, CI step, or decision while coding | Update `codebases/<name>.md` immediately (NEVER defer) |
+| Resource files created or modified during session | Run `node .opencode/scripts/qmd-index.js --changed` before session ends |
 | `context/context.md` empty or missing | Direct user to run `/bootstrap` before proceeding |
 
 </trigger_table>
@@ -97,15 +98,24 @@ Workflow prompts live in `.opencode/workflows/` (24 files). Commands live in `.o
 <steps>
 
 <step n="1" name="session_start_load" gate="HARD-GATE">
-DO execute Tier 0 (`context/context.md`). DO identify task type and execute Tier 1 / Tier 2 loads as applicable. DO NOT proceed to task work until required context is loaded.
+DO execute Tier 0 (`context/context.md`). DO identify task type and execute Tier 1 / Tier 2 loads as applicable. Before executing ANY workflow from `.opencode/workflows/`, DO load `.opencode/reference/workflow-conventions.md` — it contains KG integration requirements, gate vocabulary, and structural rules that apply to all workflows. DO NOT proceed to task work until required context is loaded.
 <done_when>Required tier context is in working memory or stub/codebase file has been created.</done_when>
 </step>
 
-<step n="2" name="proactive_enrichment" gate="SOFT-GATE">
+<step n="2" name="proactive_enrichment" gate="HARD-GATE">
 DURING every session, regardless of primary task:
 - DO scan for resource gaps. When you encounter a person, team, process, or concept that should have a resource article but doesn't, DO create a stub immediately.
 - DURING any coding session, DO update `codebases/<name>.md` immediately whenever you learn a build command, architecture component, coding convention, CI step, or key decision. NEVER defer these updates to the end of the session.
-<done_when>Gaps surfaced are filled inline; codebase facts are recorded as learned.</done_when>
+- If resource files were created or modified during the session, DO run `node .opencode/scripts/qmd-index.js --changed` before the session ends.
+
+**Retrieval hierarchy** — strict priority order for answering questions or gathering context:
+1. **QMD + Web search** — run `qmd query "<topic>"` and `websearch "<topic>"` in parallel.
+2. **Direct file read** — read `resources/` articles QMD points to.
+3. **Follow references** — traverse links in returned articles until context is sufficient.
+4. **Anchor findings** — web results with durable knowledge → create or enrich a resource article.
+
+NEVER leave web search findings unanchored.
+<done_when>Gaps surfaced are filled inline; codebase facts are recorded as learned; retrieval hierarchy followed for all lookups.</done_when>
 </step>
 
 <step n="3" name="enforce_editing_rules" gate="HARD-GATE">
