@@ -99,35 +99,48 @@ HARD-GATE (Full): Present verification results for each milestone before proceed
 2. If unexpected complexity changed scope: note explicitly and suggest `plan replan`.
 3. **Quick tier — inline review:** Run brief conventions check before closing: naming, formatting, obvious logic errors. This REPLACES (not supplements) `self-review` for Quick tier.
 4. **Standard and Full tier:** DO NOT close without directing user to run `self-review` next. State explicitly: "Before raising a PR, run `self-review`."
-5. Append dev-log entry:
+5. **Logging (per logging skill)** — append dev-log entry and daily note entry atomically:
 
-```markdown
-## <YYYY-MM-DD> — implement — <task or feature>
-**Phase:** implement
-**Duration:** <estimate>
-**Summary:** <what was implemented>
-**Key decisions:** <implementation choices made>
-**Deferred:** <tasks pushed out; reason>
-**Next:** test | self-review | plan replan (if scope changed)
-```
+   **Dev-log:** `projects/<name>/dev-log.md` (append to top, after heading comment)
 
-6. Append work log to `## Day` zone of today's daily note.
-7. Mark matching task items done.
-8. **Resource enrichment** — scan session for durable knowledge (architecture insights, coding patterns, tool decisions, component boundaries). For each:
+   ```markdown
+   ## YYYY-MM-DD — implement — <task or feature>
+   **Phase:** implement
+   **Duration:** ~<estimate>
+   **Summary:** <what was implemented>
+   **Key decisions:** <implementation choices made>
+   **Deferred:** <tasks pushed out; reason>
+   **Artifacts:** <file paths created/modified>
+   **Commit:** <hash> — "<message>" (if committed)
+   **Next:** test | self-review | plan replan (if scope changed)
+   ```
+
+   **Daily note:** `journal/daily/YYYY-MM-DD.md` in `## Day` zone
+
+   ```markdown
+   - /implement <project> — <one-line summary>
+   ```
+
+6. Mark matching task items done in project README or daily note.
+7. **Resource enrichment** — scan session for durable knowledge (architecture insights, coding patterns, tool decisions, component boundaries). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
-   - Nothing durable? → note "no enrichment needed" in dev-log.
+   - Nothing durable? → note "no enrichment needed" in dev-log entry.
 
 <self_review>
-- All `<done_when>` criteria met
-- All plan tasks addressed or explicitly deferred
-- Tests pass
-- No files modified outside plan scope
-- No placeholders (TBD, TODO, FIXME) in outputs
-- All output file paths correct, targets exist
+- [ ] All `<done_when>` criteria met
+- [ ] All plan tasks addressed or explicitly deferred
+- [ ] Tests pass
+- [ ] No files modified outside plan scope
+- [ ] **Dev-log entry appended to `projects/<name>/dev-log.md`**
+- [ ] **Work log appended to today's daily note `## Day` zone**
+- [ ] Task items marked done (if applicable)
+- [ ] Resources enriched or explicitly noted as not needed
+- [ ] No placeholders (TBD, TODO, FIXME) in outputs
+- [ ] All output file paths correct, targets exist
 </self_review>
 
-<done_when>Plan updated; dev-log entry appended; daily note updated; resources enriched or explicitly noted as not needed; `self-review` direction given (Standard + Full).</done_when>
+<done_when>Plan updated; **dev-log entry appended**; **daily note updated**; resources enriched or explicitly noted as not needed; `self-review` direction given (Standard + Full).</done_when>
 </step>
 
 </steps>
