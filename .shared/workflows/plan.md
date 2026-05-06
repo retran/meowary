@@ -156,37 +156,49 @@ Write plan to `projects/<name>/plans/<slug>.md`:
 ```
 
 Then:
-1. Append dev-log entry:
+1. **Logging (per logging skill)** — append dev-log entry and daily note entry atomically:
 
-```markdown
-## <YYYY-MM-DD> — plan — <name>
-**Phase:** planning [initial]
-**Duration:** <estimate>
-**Summary:** <what was scoped, what decisions made>
-**Key decisions:** <bullet list>
-**Deferred:** <items and reasons>
-**Next:** <first task or next workflow>
-```
+   **Dev-log:** `projects/<name>/dev-log.md` (append to top, after heading comment)
 
-2. Append work log to `## Day` zone of today's daily note.
-3. Mark matching task items done.
-4. **Resource enrichment** — scan session for durable knowledge (architecture patterns, process decisions, risk insights, domain concepts). For each:
+   ```markdown
+   ## YYYY-MM-DD — plan — <name>
+   **Phase:** planning [initial]
+   **Duration:** ~<estimate>
+   **Summary:** <what was scoped, what decisions made>
+   **Key decisions:** <bullet list>
+   **Deferred:** <items and reasons>
+   **Artifacts:** <file paths created>
+   **Next:** <first task or next workflow>
+   ```
+
+   **Daily note:** `journal/daily/YYYY-MM-DD.md` in `## Day` zone
+
+   ```markdown
+   - /plan <project> — <one-line summary>
+   ```
+
+2. Mark matching task items done in project README or daily note.
+3. **Resource enrichment** — scan session for durable knowledge (architecture patterns, process decisions, risk insights, domain concepts). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
-   - Nothing durable? → note "no enrichment needed" in dev-log.
+   - Nothing durable? → note "no enrichment needed" in dev-log entry.
 
 <self_review>
-- All `<done_when>` criteria met
-- Every spec requirement maps to ≥1 task
-- No task depends on a task that depends on it (no circular chains)
-- Every task has effort estimate and risk tag (Standard + Full)
-- Risk mitigations actionable, not vague
-- Deferred items have explicit reasons
-- No placeholders (TBD, TODO, FIXME) in outputs
-- All output file paths correct, targets exist
+- [ ] All `<done_when>` criteria met
+- [ ] Every spec requirement maps to ≥1 task
+- [ ] No task depends on a task that depends on it (no circular chains)
+- [ ] Every task has effort estimate and risk tag (Standard + Full)
+- [ ] Risk mitigations actionable, not vague
+- [ ] Deferred items have explicit reasons
+- [ ] **Dev-log entry appended to `projects/<name>/dev-log.md`**
+- [ ] **Work log appended to today's daily note `## Day` zone**
+- [ ] Task items marked done (if applicable)
+- [ ] Resources enriched or explicitly noted as not needed
+- [ ] No placeholders (TBD, TODO, FIXME) in outputs
+- [ ] All output file paths correct, targets exist
 </self_review>
 
-<done_when>Plan file written; dev-log entry appended; daily note updated; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Plan file written; **dev-log entry appended**; **daily note updated**; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 ## Replan Mode
