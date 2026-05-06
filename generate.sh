@@ -57,7 +57,7 @@ generate_opencode() {
 
   # Clean previous
   rm -rf "$target"
-  mkdir -p "$target"
+  mkdir -p "$target" || error "Failed to create target directory $target"
 
   # Copy shared content
   cp -R "$SHARED_DIR/workflows" "$target/workflows" || error "Failed to copy workflows"
@@ -235,7 +235,7 @@ generate_claude() {
 
   # Clean previous
   rm -rf "$target"
-  mkdir -p "$target"
+  mkdir -p "$target" || error "Failed to create target directory $target"
 
   # Claude Code settings
   if [[ -d "$SHARED_DIR/claude" ]]; then
@@ -274,7 +274,7 @@ generate_claude() {
 
   # Transform agents (OpenCode permission format → Claude Code tools format)
   if [[ -d "$SHARED_DIR/agents" ]]; then
-    mkdir -p "$target/agents"
+    mkdir -p "$target/agents" || error "Failed to create agents directory"
     for agent_file in "$SHARED_DIR/agents"/*.md; do
       [[ -e "$agent_file" ]] || continue
       local dest_file="$target/agents/$(basename "$agent_file")"
