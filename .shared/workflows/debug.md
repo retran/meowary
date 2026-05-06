@@ -120,21 +120,9 @@ Quick: state cause inline, proceed to fix.
 
 <step n="7" name="Close" gate="END-GATE">
 1. Write debug findings to `projects/<name>/notes/debug-<YYYY-MM-DD>-<topic>.md` using `{{AGENT_DIR}}/skills/projects/debug-log.md` as base. Required sections: Observed Failure, Recent Changes, Hypotheses table, Investigation Log, Root Cause, Fix Applied, Regression Test Added.
-2. Append dev-log entry:
+2. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 
-```markdown
-## <YYYY-MM-DD> — debug — <symptom>
-**Phase:** debug
-**Duration:** <estimate>
-**Summary:** <what was failing; what was found>
-**Root cause:** <one sentence>
-**Fix applied:** <what was changed>
-**Systemic issue:** yes / no — <if yes: what replan is needed>
-**Next:** test (verify fix) | plan replan (if systemic)
-```
-
-3. Append work log entry to `## Day` zone of today's daily note.
-4. Mark matching task items done.
+2. Mark matching task items done.
 5. If root cause is systemic: suggest `plan replan` in closing summary.
 6. **Resource enrichment** — scan session for durable knowledge (root cause patterns, anti-patterns, library issues, failure modes). For each:
    - Existing article in `resources/`? → append fact with source link.

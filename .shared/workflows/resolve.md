@@ -117,22 +117,9 @@ HARD-GATE (Full): Present drafted responses for review before posting.
 <step n="7" name="Close" gate="END-GATE">
 1. Commit all code changes per `context/context.md` commit format: `Address review: <description>`.
 2. Mark resolve tasks done in `projects/<name>/plans/<slug>.md`.
-3. Append dev-log entry:
+3. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 
-```markdown
-## <YYYY-MM-DD> — resolve — <PR or doc title>
-**Phase:** resolve
-**Duration:** <estimate>
-**Summary:** <what comments were addressed>
-**Accepted:** <N comments fixed>
-**Rejected:** <N comments; reasons>
-**Design changes:** <any ADR updates triggered, or "none">
-**Follow-on tasks:** <out-of-scope items deferred, or "none">
-**Next:** re-request review | merge | implement (if new scope added)
-```
-
-4. Append work log to `## Day` zone of today's daily note.
-5. Mark matching task items done.
+2. Mark matching task items done.
 6. If scope follow-on tasks created: add `- [ ]` pending tasks to daily note. If non-trivial: also append to `projects/<name>/plans/<slug>.md`.
 7. **Resource enrichment** — scan session for durable knowledge (architecture insights from review, design patterns validated or invalidated, coding conventions clarified). For each:
    - Existing article in `resources/`? → append fact with source link.

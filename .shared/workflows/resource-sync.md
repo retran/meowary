@@ -115,18 +115,15 @@ git commit -m "Confluence sync: N pages ingested; resources: D deleted, G merged
 </step>
 
 <step n="7" name="Close" gate="END-GATE">
-1. APPEND to `meta/resources-log.md`:
-   ```
-   - **YYYY-MM-DD:** Confluence sync — N pages ingested; D deleted, G merged, C created, U actualized
-   ```
-2. APPEND work log to today's daily note `## Day`.
-3. MARK matching tasks done.
+1. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+2. MARK matching tasks done.
 
 <self_review>
 - [ ] All `Done when` met
 - [ ] All stale ingested; registry dates updated
 - [ ] Health passed (no critical remaining)
 - [ ] Commit counts match operations
+- [ ] **Logging completed per logging skill** (resources-log + daily note)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>

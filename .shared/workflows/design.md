@@ -164,27 +164,10 @@ tags: [adr, <topic>]
 ```
 
 Then:
-1. **Logging (per logging skill)** — append dev-log entry and daily note entry atomically:
-
-   **Dev-log:** `projects/<name>/dev-log.md` (append to top, after heading comment)
-
-   ```markdown
-   ## YYYY-MM-DD — design — <topic>
-   **Phase:** design
-   **Duration:** ~<estimate>
-   **Summary:** <what decision was made>
-   **Key decisions:** <chosen option + one-line rationale>
-   **Artifacts:** <file paths created/modified>
-   **Next:** write (ADR) | implement | plan (replan)
-   ```
-
-   **Daily note:** `journal/daily/YYYY-MM-DD.md` in `## Day` zone
-
-   ```markdown
-   - /design <project> — <one-line summary>
-   ```
+1. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 
 2. Mark matching task items done in project README or daily note.
+
 3. **Resource enrichment** — scan session for durable knowledge (architecture patterns, design tradeoffs, evaluation criteria, component boundaries). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
@@ -195,8 +178,7 @@ Then:
 - [ ] Decision record has clear rationale
 - [ ] All considered options documented with tradeoffs
 - [ ] Cross-references to related resources added
-- [ ] **Dev-log entry appended to `projects/<name>/dev-log.md`**
-- [ ] **Work log appended to today's daily note `## Day` zone**
+- [ ] **Logging completed per logging skill** (dev-log + daily note)
 - [ ] Task items marked done (if applicable)
 - [ ] Resources enriched or explicitly noted as not needed
 - [ ] No placeholders (TBD, TODO, FIXME) in outputs

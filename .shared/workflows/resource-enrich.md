@@ -140,10 +140,9 @@ If two newly linked articles suggest insight neither contains alone: append synt
 1. STAGE: article, back-linked articles, new articles, `meta/tags.md`, `meta/confluence-sync.json`.
 2. COMMIT: `Enrich resources: <subfolder>/<article-name>`
 3. If staleness found neighbors: append paths to commit body.
-4. APPEND to `meta/resources-log.md`: `- **YYYY-MM-DD:** enrich | <path> — <one-line summary>`
-5. APPEND work log to today's daily note `## Day`.
-6. MARK matching tasks done.
-7. **STOP.** Report completion. NEVER auto-continue.
+4. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+5. MARK matching tasks done.
+6. **STOP.** Report completion. NEVER auto-continue.
 
 <self_review>
 - [ ] All `Done when` met
@@ -151,6 +150,7 @@ If two newly linked articles suggest insight neither contains alone: append synt
 - [ ] All outbound links target existing files
 - [ ] Back-links added for every new link
 - [ ] Tag consistency verified
+- [ ] **Logging completed per logging skill** (resources-log + daily note)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>

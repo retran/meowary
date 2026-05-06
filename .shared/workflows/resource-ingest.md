@@ -115,16 +115,16 @@ For each confirmed:
 <step n="8" name="Close" gate="END-GATE">
 1. STAGE: modified/created articles, `meta/tags.md`, `meta/confluence-sync.json`.
 2. COMMIT: `Ingest resources: <source-title> → <N articles affected>`
-3. APPEND to `meta/resources-log.md`: `- **YYYY-MM-DD:** ingest | <source-type>: <source-title> → <N articles>`
+3. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 4. RUN `node {{AGENT_DIR}}/scripts/qmd-index.js`
-5. APPEND work log to today's daily note `## Day`.
-6. MARK matching tasks done.
+5. MARK matching tasks done.
 
 <self_review>
 - [ ] All `Done when` met
 - [ ] Source notes have proper front matter
 - [ ] Articles created/updated from source
 - [ ] Links between sources and resources established
+- [ ] **Logging completed per logging skill** (resources-log + daily note)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>

@@ -156,28 +156,9 @@ Write plan to `projects/<name>/plans/<slug>.md`:
 ```
 
 Then:
-1. **Logging (per logging skill)** — append dev-log entry and daily note entry atomically:
+1. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 
-   **Dev-log:** `projects/<name>/dev-log.md` (append to top, after heading comment)
-
-   ```markdown
-   ## YYYY-MM-DD — plan — <name>
-   **Phase:** planning [initial]
-   **Duration:** ~<estimate>
-   **Summary:** <what was scoped, what decisions made>
-   **Key decisions:** <bullet list>
-   **Deferred:** <items and reasons>
-   **Artifacts:** <file paths created>
-   **Next:** <first task or next workflow>
-   ```
-
-   **Daily note:** `journal/daily/YYYY-MM-DD.md` in `## Day` zone
-
-   ```markdown
-   - /plan <project> — <one-line summary>
-   ```
-
-2. Mark matching task items done in project README or daily note.
+1. Mark matching task items done in project README or daily note.
 3. **Resource enrichment** — scan session for durable knowledge (architecture patterns, process decisions, risk insights, domain concepts). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
@@ -190,8 +171,7 @@ Then:
 - [ ] Every task has effort estimate and risk tag (Standard + Full)
 - [ ] Risk mitigations actionable, not vague
 - [ ] Deferred items have explicit reasons
-- [ ] **Dev-log entry appended to `projects/<name>/dev-log.md`**
-- [ ] **Work log appended to today's daily note `## Day` zone**
+- [ ] **Logging completed per logging skill** (dev-log + daily note)
 - [ ] Task items marked done (if applicable)
 - [ ] Resources enriched or explicitly noted as not needed
 - [ ] No placeholders (TBD, TODO, FIXME) in outputs
@@ -238,16 +218,16 @@ Produce delta summary:
 
 <step n="R4" name="Close (replan)" gate="END-GATE">
 1. Update `projects/<name>/plans/<slug>.md`.
-2. Append dev-log entry noting trigger and changes.
-3. Append work log to `## Day` zone of today's daily note.
-4. Mark matching task items done.
-5. **Resource enrichment** — scan replan session for durable knowledge. Enrich or stub as needed.
+2. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+3. Mark matching task items done.
+4. **Resource enrichment** — scan replan session for durable knowledge. Enrich or stub as needed.
 
 <self_review>
 - All `<done_when>` criteria met
 - Delta summary covers all changes
 - Deprecated items preserved with explanation
 - No silent scope reductions
+- **Logging completed per logging skill** (dev-log + daily note)
 - No placeholders (TBD, TODO, FIXME) in outputs
 - All output file paths correct, targets exist
 </self_review>

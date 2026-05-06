@@ -117,15 +117,15 @@ WRITE `projects/<name>/notes/discover-<date>.md` (or inline if no project):
 <step n="7" name="Close" gate="END-GATE">
 1. STAGE: gap report, new stubs, `meta/tags.md`.
 2. COMMIT: `Discover knowledge gaps: N candidates, M stubs created`
-3. APPEND to `meta/resources-log.md`: `- **YYYY-MM-DD:** r-discover | N candidates, M stubs`
-4. APPEND work log to `## Day` of today's daily note.
-5. MARK matching tasks done.
+3. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+4. MARK matching tasks done.
 
 <self_review>
 - [ ] All `Done when` met
 - [ ] Findings documented
 - [ ] Stubs created for gaps
 - [ ] Cross-references added
+- [ ] **Logging completed per logging skill** (resources-log + daily note)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>

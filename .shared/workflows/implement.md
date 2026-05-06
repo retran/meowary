@@ -99,29 +99,10 @@ HARD-GATE (Full): Present verification results for each milestone before proceed
 2. If unexpected complexity changed scope: note explicitly and suggest `plan replan`.
 3. **Quick tier — inline review:** Run brief conventions check before closing: naming, formatting, obvious logic errors. This REPLACES (not supplements) `self-review` for Quick tier.
 4. **Standard and Full tier:** DO NOT close without directing user to run `self-review` next. State explicitly: "Before raising a PR, run `self-review`."
-5. **Logging (per logging skill)** — append dev-log entry and daily note entry atomically:
-
-   **Dev-log:** `projects/<name>/dev-log.md` (append to top, after heading comment)
-
-   ```markdown
-   ## YYYY-MM-DD — implement — <task or feature>
-   **Phase:** implement
-   **Duration:** ~<estimate>
-   **Summary:** <what was implemented>
-   **Key decisions:** <implementation choices made>
-   **Deferred:** <tasks pushed out; reason>
-   **Artifacts:** <file paths created/modified>
-   **Commit:** <hash> — "<message>" (if committed)
-   **Next:** test | self-review | plan replan (if scope changed)
-   ```
-
-   **Daily note:** `journal/daily/YYYY-MM-DD.md` in `## Day` zone
-
-   ```markdown
-   - /implement <project> — <one-line summary>
-   ```
+5. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 
 6. Mark matching task items done in project README or daily note.
+
 7. **Resource enrichment** — scan session for durable knowledge (architecture insights, coding patterns, tool decisions, component boundaries). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
@@ -132,8 +113,7 @@ HARD-GATE (Full): Present verification results for each milestone before proceed
 - [ ] All plan tasks addressed or explicitly deferred
 - [ ] Tests pass
 - [ ] No files modified outside plan scope
-- [ ] **Dev-log entry appended to `projects/<name>/dev-log.md`**
-- [ ] **Work log appended to today's daily note `## Day` zone**
+- [ ] **Logging completed per logging skill** (dev-log + daily note)
 - [ ] Task items marked done (if applicable)
 - [ ] Resources enriched or explicitly noted as not needed
 - [ ] No placeholders (TBD, TODO, FIXME) in outputs

@@ -131,20 +131,9 @@ Write each section in full:
 2. Publish mode: write to `projects/<name>/docs/<slug>.md`.
 3. For ADRs being published: also write to `projects/<name>/design/adr-<slug>.md` if not already there.
 4. Update `status:` front matter (draft → accepted/published as appropriate).
-5. Append dev-log entry:
+5. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 
-```markdown
-## <YYYY-MM-DD> — write — <doc-type>: <title>
-**Phase:** write [draft | publish]
-**Duration:** <estimate>
-**Summary:** <what was written>
-**Key decisions:** <structural choices made>
-**Deferred:** <sections left as [DRAFT — needs input]>
-**Next:** <review, publish, or share>
-```
-
-6. Append work log to `## Day` zone of today's daily note.
-7. Mark matching task items done.
+2. Mark matching task items done.
 8. Commit: `Write <doc-type>: <slug>` OR `Publish <doc-type>: <slug>`.
 9. **Resource enrichment** — scan session for durable knowledge (concepts clarified, architecture patterns formalized, process decisions documented). For each:
    - Existing article in `resources/`? → append fact with source link.

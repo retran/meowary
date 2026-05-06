@@ -118,6 +118,27 @@ NEVER leave web search findings unanchored.
 <done_when>Gaps surfaced are filled inline; codebase facts are recorded as learned; retrieval hierarchy followed for all lookups.</done_when>
 </step>
 
+<step n="2.5" name="enforce_workflow_patterns" gate="HARD-GATE">
+**Logging** — atomic dev-log + daily note updates:
+- All work workflows (lifecycle + KG) MUST log. See `.claude/skills/logging/` for canonical contracts and formats.
+- Atomic logging: dev-log entry AND daily note entry written together (both or neither).
+- Logging is BLOCKING — workflows MUST NOT close without both entries written.
+- Self-review checklists MUST verify logging completion.
+
+**Context gathering** — QMD + web search before work:
+- ALWAYS run `qmd query "<topic>"` and `websearch "<topic>"` in parallel at workflow Step 0.5 (Clarify).
+- Surface internal + external knowledge before generating solutions.
+- Anchor durable web findings in resource articles.
+- See `.claude/skills/qmd/` and workflow Step 0.5 for patterns.
+
+**Writing artifacts** — delegate to writing skill:
+- For formal documents (ADRs, RFCs, proposals, postmortems, specs), use `/write` workflow.
+- For inline drafts and notes, follow Markdown conventions in `context/context.md`.
+- NEVER write multi-paragraph docstrings or planning documents inline — use appropriate workflow or skill.
+
+<done_when>Logging verified atomic; context gathering follows retrieval hierarchy; writing delegated appropriately.</done_when>
+</step>
+
 <step n="3" name="enforce_editing_rules" gate="HARD-GATE">
 Non-negotiable constraints on every edit:
 1. NEVER delete or overwrite past daily notes. Append-only.

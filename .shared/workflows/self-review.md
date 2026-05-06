@@ -140,21 +140,9 @@ HARD-GATE (Full): Present all findings before any addressed. User decides priori
 
 <step n="8" name="Close" gate="END-GATE">
 1. After user addresses Blockers and Majors: write summary of what was fixed.
-2. Append dev-log entry:
+2. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 
-```markdown
-## <YYYY-MM-DD> — self-review — <feature or PR description>
-**Phase:** self-review
-**Duration:** <estimate>
-**Summary:** <what was reviewed; overall assessment>
-**Findings:** <N blockers, N majors, N minors, N nits>
-**Resolved:** <which findings were fixed>
-**Deferred:** <findings deferred to PR review>
-**Next:** raise PR | implement (fix blockers first)
-```
-
-3. Append work log to `## Day` zone of today's daily note.
-4. Mark matching task items done.
+2. Mark matching task items done.
 5. **Resource enrichment** — after dev-log entry, actively reflect:
 
    > "Did this review surface any pattern, anti-pattern, or convention not already documented in `resources/` or `codebases/<name>.md`?"

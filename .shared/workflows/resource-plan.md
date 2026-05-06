@@ -133,15 +133,15 @@ git commit -m "Generate resources actualize plan: N operations"
 </step>
 
 <step n="6" name="Close" gate="END-GATE">
-1. APPEND to `meta/resources-log.md`: `- **YYYY-MM-DD:** r-plan | N operations planned`
-2. APPEND work log to today's daily note `## Day`.
-3. MARK matching tasks done.
+1. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+2. MARK matching tasks done.
 
 <self_review>
 - [ ] All `Done when` met
 - [ ] Plan covers identified gaps
 - [ ] Priority order justified
 - [ ] Health metrics baseline documented
+- [ ] **Logging completed per logging skill** (resources-log + daily note)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>

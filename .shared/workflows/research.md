@@ -173,20 +173,9 @@ HARD-GATE (Standard + Full): Present brief; confirm before enriching resources.
 </step>
 
 <step n="8" name="Close" gate="END-GATE">
-1. Append dev-log entry:
+1. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 
-```markdown
-## <YYYY-MM-DD> — research — <topic>
-**Phase:** research
-**Duration:** <estimate>
-**Summary:** <what was researched, what was found>
-**Key findings:** <bullet list>
-**Gaps remaining:** <open questions>
-**Next:** <suggested workflow>
-```
-
-2. Append work log to `## Day` zone of today's daily note.
-3. Mark matching task items done.
+2. Mark matching task items done.
 
 <self_review>
 - All `<done_when>` criteria met
