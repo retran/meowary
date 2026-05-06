@@ -34,7 +34,7 @@ Structures divergent thinking using the Socratic method to produce a problem spe
 1. Read `projects/<name>/dev-log.md` last entry.
 2. Read research brief in `projects/<name>/research/` if exists.
 3. Read prior specs in `projects/<name>/specs/` if exist.
-4. Run `qmd query "<problem topic>"` to surface relevant resource articles, prior decisions, and known pitfalls from the knowledge graph. Also search `resources/` directly for matching tags.
+4. Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction. Also search `resources/` directly for matching tags.
 <done_when>Project context, research, prior specs, related resources loaded.</done_when>
 </step>
 

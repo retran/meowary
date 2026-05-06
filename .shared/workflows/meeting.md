@@ -33,7 +33,7 @@ Meeting note-taker and action item router. Creates file, populates per type-spec
 2. CHECK today's daily note exists.
 3. SEARCH `resources/people/` for attendee matches.
 4. **If type=`1-1`:** READ `resources/people/<other-person-slug>.md` if exists — surface role, team, recent context, open follow-ups.
-5. RUN `qmd query "<meeting topic or agenda>"` and `websearch "<meeting topic>"` in parallel to surface relevant resource articles and external context. Follow references in returned articles for additional context.
+5. RUN `qmd query "<meeting topic or agenda>"` and `websearch "<meeting topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` and `{{AGENT_DIR}}/skills/qmd/` for patterns. Follow references in returned articles until context sufficient.
 
 <done_when>Projects/people loaded; attendee articles located; topic context surfaced; daily note checked.</done_when>
 </step>

@@ -45,7 +45,7 @@ Ask user:
 3. Specific risk areas? (recently changed code, known fragility, external integrations)
 
 Also:
-- Run `qmd query "<feature or component under test>"` to surface relevant resource articles, testing patterns, and known issues from the knowledge graph.
+- Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
 - Search `projects/<name>/notes/` for prior test session notes and known issues.
 - Search `resources/` for testing patterns applicable to codebase.
 - Search web for known issues or test strategies if testing unfamiliar components or libraries.

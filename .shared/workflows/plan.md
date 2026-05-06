@@ -69,7 +69,7 @@ Ask user:
 Pass: planning topic and project name. Search `resources/`, `projects/<name>/plans/`, codebase for prior plans and related work. Returns: relevant resource paths, prior plan files, codebase patterns. Launch as soon as planning topic clear, in parallel with clarifying questions. Merge findings into Step 1 context.
 </subagent_trigger>
 
-Run `qmd query "<planning topic>"` to surface relevant resource articles, architecture context, and prior plans from the knowledge graph. Search web for best practices on similar scope/architecture if internal sources sparse.
+Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
 
 DO NOT proceed until scope intent and tier clear.
 <done_when>Scope, done criteria, tier, constraints confirmed; `explore` results merged.</done_when>

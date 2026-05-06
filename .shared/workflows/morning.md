@@ -59,7 +59,7 @@ For each active project:
 1. READ `projects/<slug>/dev-log.md` last entry. Extract phase + next action.
 2. SUMMARIZE: `<Project>: <phase> — <next action>`.
 3. FLAG projects with last entry > 3 working days old as "potentially stalled".
-4. RUN `qmd query "<primary focus project or topic>"` and `websearch "<primary focus topic>"` in parallel once for today's main focus area (not per-project). Note any stale articles (updated > 30 days ago) related to today's work.
+4. RUN `qmd query "<primary focus topic>"` and `websearch "<primary focus topic>"` in parallel for today's main focus area (not per-project) — see `{{AGENT_DIR}}/skills/context-gathering/` and `{{AGENT_DIR}}/skills/qmd/` for patterns. Note any stale articles (updated > 30 days ago) related to today's work.
 
 <done_when>One-liner per project; stalled flagged; KG context surfaced.</done_when>
 </step>

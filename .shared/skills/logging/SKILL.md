@@ -70,7 +70,6 @@ tags: []
 ## YYYY-MM-DD — <workflow> — <topic>
 
 **Phase:** <workflow-name>
-**Duration:** ~<estimate>
 **Summary:** <1-3 sentences describing what was done>
 **Next:** <suggested-next-workflow | monitor | none>
 ```
@@ -91,7 +90,6 @@ tags: []
 ## 2026-05-06 — implement — OAuth callback server
 
 **Phase:** implement
-**Duration:** ~2 hr
 **Summary:** Implemented OAuth callback server with port-range support (5 fixed ports). Created IMcpOAuthCallbackServer interface, MonolithicOAuthCallbackServer class, integrated with handler. Tests pass 100%.
 **Key decisions:** Monolithic server class following McpDedicatedHttpServer precedent. Interface for testability.
 **Deferred:** C# unit tests (defer to follow-up PR)

@@ -86,7 +86,7 @@ Ask user:
 
 Load document type template per `<definitions>`.
 
-Run `qmd query "<document topic>"` to surface relevant resource articles, prior documents, and domain context from the knowledge graph. Search `resources/`, `projects/<name>/`, web proactively for relevant material before writing. Identify target audience: internal team, broader org, public?
+Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction. Search `resources/`, `projects/<name>/`, web proactively for relevant material before writing. Identify target audience: internal team, broader org, public?
 <done_when>Document type, mode, tier, template, audience confirmed.</done_when>
 </step>
 

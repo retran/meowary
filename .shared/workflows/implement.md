@@ -49,7 +49,7 @@ Pass: repo root, task description from plan, relevant directories from `codebase
 </subagent_trigger>
 
 Also:
-- Run `qmd query "<task topic>"` to surface relevant resource articles, architecture patterns, and prior implementations from the knowledge graph.
+- Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
 - Search `resources/` for relevant architecture patterns, prior implementations, known pitfalls.
 - Search web for library docs, examples, known issues if task involves unfamiliar tooling.
 

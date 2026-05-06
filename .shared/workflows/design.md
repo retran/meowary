@@ -50,7 +50,7 @@ Ask user:
 Pass: design topic and project name. Search `resources/` for prior ADRs and architecture patterns; scan codebase for existing implementations and precedents. Merge results before Step 2.
 </subagent_trigger>
 
-Run `qmd query "<design topic>"` to surface relevant resource articles, prior ADRs, and architecture context from the knowledge graph.
+Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
 
 Search web for best practices on this design problem if internal sources sparse.
 

@@ -129,7 +129,7 @@ NEVER leave web search findings unanchored.
 - ALWAYS run `qmd query "<topic>"` and `websearch "<topic>"` in parallel at workflow Step 0.5 (Clarify).
 - Surface internal + external knowledge before generating solutions.
 - Anchor durable web findings in resource articles.
-- See `.opencode/skills/qmd/` and workflow Step 0.5 for patterns.
+- See `.opencode/skills/context-gathering/` for patterns, `.opencode/skills/qmd/` for query construction, `.opencode/skills/query/` for multi-source retrieval hierarchy.
 
 **Writing artifacts** — delegate to writing skill:
 - For formal documents (ADRs, RFCs, proposals, postmortems, specs), use `/write` workflow.

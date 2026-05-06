@@ -45,7 +45,7 @@ Ask user:
 3. Regression (was working before) or first-time failure?
 
 Also:
-- Run `qmd query "<error symptom or component>"` to surface relevant resource articles, prior debug sessions, and architecture context from the knowledge graph.
+- Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
 - Search `resources/` for known issues, prior debug sessions, architecture context.
 - Search web for error message or symptom — BEFORE investigating internally.
 - Search `projects/<name>/notes/` for prior debug with similar symptoms.

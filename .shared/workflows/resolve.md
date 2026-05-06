@@ -58,7 +58,7 @@ Ask user:
 3. Complexity tier: Quick / Standard / Full?
 
 Also:
-- Run `qmd query "<review topic or disputed point>"` to surface relevant resource articles, architecture decisions, and prior context from the knowledge graph.
+- Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
 - Search `resources/` and codebase for context on technically disputed points before forming position.
 - Search web for best practices if reviewer challenges technical approach.
 <done_when>Review comments obtained; pre-decided rejections noted; tier confirmed.</done_when>
