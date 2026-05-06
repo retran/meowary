@@ -18,6 +18,7 @@ SHARED_DIR="$SCRIPT_DIR/.shared"
 
 info()  { echo "  · $*"; }
 ok()    { echo "  ✓ $*"; }
+warn()  { echo "  ⚠ $*" >&2; }
 error() { echo "  ✗ $*" >&2; exit 1; }
 have()  { command -v "$1" &>/dev/null; }
 
@@ -67,8 +68,12 @@ generate_opencode() {
   cp -R "$SHARED_DIR/agents" "$target/agents" || error "Failed to copy agents"
 
   # Copy templates if they exist
-  [[ -d "$SHARED_DIR/context-templates" ]] && cp -R "$SHARED_DIR/context-templates" "$target/context-templates"
-  [[ -d "$SHARED_DIR/meta-templates" ]] && cp -R "$SHARED_DIR/meta-templates" "$target/meta-templates"
+  if [[ -d "$SHARED_DIR/context-templates" ]]; then
+    cp -R "$SHARED_DIR/context-templates" "$target/context-templates" || warn "Failed to copy context-templates"
+  fi
+  if [[ -d "$SHARED_DIR/meta-templates" ]]; then
+    cp -R "$SHARED_DIR/meta-templates" "$target/meta-templates" || warn "Failed to copy meta-templates"
+  fi
 
   # Resolve {{AGENT_DIR}} → .opencode in all copied markdown
   resolve_templates "$target" ".opencode"
@@ -101,7 +106,7 @@ generate_opencode() {
     fi
     # Copy node_modules into target if not already there
     if [[ -d "$SHARED_DIR/scripts/node_modules" && ! -d "$target/scripts/node_modules" ]]; then
-      cp -R "$SHARED_DIR/scripts/node_modules" "$target/scripts/node_modules"
+      cp -R "$SHARED_DIR/scripts/node_modules" "$target/scripts/node_modules" || warn "Failed to copy node_modules"
     fi
   fi
 

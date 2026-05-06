@@ -359,7 +359,7 @@ select_optional_tools() {
       local marker=" "
       { [[ ${#preselected[@]} -gt 0 ]] && printf '%s\n' "${preselected[@]}"; } | grep -qF "$choice" && marker="*"
       printf "    [%d][%s] %s\n" "$i" "$marker" "$choice"
-      (( i++ ))
+      (( i++ )) || true
     done
     echo ""
     local reply
