@@ -33,10 +33,10 @@ Structured morning planner. Surfaces project state from multiple sources, triage
 <step n="0" name="Load context">
 1. READ `context/context.md`. If missing/empty: STOP and direct user to `/bootstrap`.
 2. FIND `## Active Projects`. If absent/empty: ask which project to focus on.
-3. EXTRACT active projects (slug, phase, priority) per projects skill.
+3. EXTRACT active projects (slug, phase, priority) — see `projects` skill for dashboard structure.
 4. CHECK today's daily note exists.
    - Yes: READ — Morning may be partially filled.
-   - No: CREATE from `{{AGENT_DIR}}/skills/journal/daily-template.md`.
+   - No: CREATE from `{{AGENT_DIR}}/skills/journal/daily-template.md` — see `journal` skill for format.
 5. READ `journal/waiting-for.md`; note items with follow-up date ≤ today.
 
 <done_when>Active projects established; daily note exists.</done_when>

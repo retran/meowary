@@ -29,8 +29,9 @@ Rigorous knowledge graph planner. Reviews full graph — structural decisions ne
 <step n="0" name="Load context">
 1. READ today's daily note for matching tasks.
 2. CHECK `resources-actualize-plan.md` — note completed and remaining.
+3. Load `resources` skill for graph philosophy, health metrics, and operation types.
 
-<done_when>Daily note checked; previous plan state noted.</done_when>
+<done_when>Daily note checked; previous plan state noted; resources skill loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

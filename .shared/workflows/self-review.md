@@ -61,7 +61,8 @@ Ask user:
 Also:
 - Run `git diff` or read changed files to understand scope.
 - Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
-- Search `resources/` and `codebases/<name>.md` for patterns that should apply.
+- Load `codebases/<name>.md` for conventions, architecture, CI rules — see `codebases` skill. This is the source of truth for what to check.
+- Search `resources/` for patterns that should apply.
 - Search web for known anti-patterns in the approach if applicable.
 <done_when>Scope of changes, focus areas, tier confirmed.</done_when>
 </step>

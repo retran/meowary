@@ -28,8 +28,9 @@ Disciplined knowledge distiller. Reads source fully before mapping to articles. 
 1. READ active project's dev-log if invoked in project context.
 2. SEARCH `resources/` with `qmd query "<source topic>"` before fetching.
 3. READ today's daily note for matching tasks.
+4. Load `resources` skill for graph philosophy and article format. Load `inbox` skill for source-note format.
 
-<done_when>Related articles identified; daily note checked.</done_when>
+<done_when>Related articles identified; daily note checked; skills loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify" gate="SOFT-GATE">

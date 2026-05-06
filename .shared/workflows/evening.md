@@ -30,8 +30,9 @@ Structured end-of-day closer. Reviews work, routes delegated items, surfaces dur
 1. READ today's daily note in full. If missing: create from `{{AGENT_DIR}}/skills/journal/daily-template.md`, note Morning zone skipped.
 2. READ last entry of `dev-log.md` for each active project worked today.
 3. READ `journal/waiting-for.md`; note items with follow-up date ≤ today.
+4. Load `journal` skill for evening format and resource enrichment patterns.
 
-<done_when>Daily note loaded; dev-log entries surfaced; overdue waiting items identified.</done_when>
+<done_when>Daily note loaded; dev-log entries surfaced; overdue waiting items identified; journal skill loaded.</done_when>
 </step>
 
 <step n="0.5" name="Habits and clarify">

@@ -30,8 +30,9 @@ Proactive knowledge graph scout. Scans what's been written to find recurring con
 <step n="0" name="Load context">
 1. READ today's daily note for matching tasks.
 2. CHECK `meta/resources-log.md` for last `r-discover` entry.
+3. Load `resources` skill for graph philosophy and stub format. Load `query` skill for gap analysis methods.
 
-<done_when>Daily note checked; last discover date noted.</done_when>
+<done_when>Daily note checked; last discover date noted; skills loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

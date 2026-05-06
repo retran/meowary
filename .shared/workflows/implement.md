@@ -50,6 +50,8 @@ Pass: repo root, task description from plan, relevant directories from `codebase
 
 Also:
 - Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
+- Load `codebases/<name>.md` for architecture, conventions, build commands, test setup — see `codebases` skill. If missing, create it before proceeding.
+- For commit format and PR/MR lifecycle, also load `scm` skill.
 - Search `resources/` for relevant architecture patterns, prior implementations, known pitfalls.
 - Search web for library docs, examples, known issues if task involves unfamiliar tooling.
 

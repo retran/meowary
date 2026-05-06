@@ -28,8 +28,9 @@ Systematic Confluence sync operator. Reads pages; NEVER writes to them. Extracts
 <step n="0" name="Load context">
 1. READ today's daily note for matching tasks.
 2. CHECK `meta/confluence-sync.json` for last sync date (Step 2).
+3. Load `resources` skill for graph philosophy and article format. Load `confluence` skill for Confluence mechanics.
 
-<done_when>Daily note checked; last sync date noted.</done_when>
+<done_when>Daily note checked; last sync date noted; skills loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">
