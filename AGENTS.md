@@ -123,7 +123,13 @@ Non-negotiable constraints on every edit:
 1. NEVER delete or overwrite past daily notes. Append-only.
 2. MAINTAIN links. Every link MUST point to an existing target. UPDATE all inbound links when renaming, moving, or deleting files.
 3. NEVER write to Jira or Confluence without explicit user approval.
-<done_when>All edits in the session satisfy these three rules.</done_when>
+4. **Obsidian/Typora compatibility:**
+   - USE standard Markdown links (`[text](relative/path.md)`). NEVER use wikilinks (`[[...]]`).
+   - USE relative paths in links. Include `.md` extension.
+   - PUT tags in front matter `tags:` list only. NEVER use inline `#tags` in body text.
+   - Front matter `tags` MUST be a YAML list (not comma-separated string).
+   - Front matter values: dates as `YYYY-MM-DD`, booleans as `true`/`false`.
+<done_when>All edits in the session satisfy these rules.</done_when>
 </step>
 
 <step n="4" name="enforce_security_gdpr" gate="HARD-GATE">

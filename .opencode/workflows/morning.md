@@ -1,5 +1,5 @@
 ---
-updated: 2026-04-18
+updated: 2026-05-06
 tags: []
 ---
 
@@ -42,10 +42,16 @@ Structured morning planner. Surfaces project state from multiple sources, triage
 <done_when>Active projects established; daily note exists.</done_when>
 </step>
 
-<step n="0.5" name="Clarify">
-ASK: "Any specific focus or constraint for today?" SKIP if provided.
+<step n="0.5" name="Habits and clarify">
+READ `context/habits.md § Daily — Morning`. For each habit row in the table:
+- Check if its **Trigger** condition applies today (e.g. "Wednesday", "After weekend/holiday work", "Every day").
+- If applicable: surface the **Prompt** text as a question to the user.
 
-<done_when>User responded or context clear.</done_when>
+Then ASK: "Any specific focus or constraint for today?"
+
+Present all applicable prompts together. Wait for response before proceeding.
+
+<done_when>User responded to habit prompts.</done_when>
 </step>
 
 <step n="1" name="Surface project state">

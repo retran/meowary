@@ -468,6 +468,24 @@ run_auth() {
   fi
 }
 
+# ── Obsidian settings ─────────────────────────────────────────────────────────
+
+setup_obsidian() {
+  $NON_INTERACTIVE && return 0
+
+  step "Obsidian vault settings"
+
+  if [[ -d "$SCRIPT_DIR/.obsidian" ]]; then
+    ok ".obsidian/ already exists — skipping"
+    return
+  fi
+
+  if ui_confirm "Set up Obsidian-compatible vault settings? (copies .obsidian.example/ → .obsidian/)"; then
+    cp -r "$SCRIPT_DIR/.obsidian.example" "$SCRIPT_DIR/.obsidian"
+    ok "Obsidian settings installed (Markdown links, relative paths, auto-update links)"
+  fi
+}
+
 # ── Shell rc hint ─────────────────────────────────────────────────────────────
 
 print_shell_hint() {
@@ -571,6 +589,7 @@ main() {
   ensure_mise_trust
   setup_env
   run_auth
+  setup_obsidian
   print_shell_hint
   print_summary
 }

@@ -420,6 +420,30 @@ bash update.sh --version 0.1.3      # update to a specific version
 bash update.sh --non-interactive    # skip prompts (useful in CI)
 ```
 
+## Using with Obsidian
+
+Open the repository folder as an Obsidian vault. All notes, links, tags, and front matter work immediately — no migration needed.
+
+For full compatibility with Typora and GitHub (standard Markdown links instead of wikilinks), apply these settings:
+
+| Setting path | Value | Why |
+|---|---|---|
+| **Files & Links → Use [[Wikilinks]]** | Off | Standard Markdown links render in all editors |
+| **Files & Links → New link format** | Relative path to file | Portable across machines |
+| **Files & Links → Automatically update internal links** | On | Keeps links valid on rename |
+| **Files & Links → Excluded files** | `node_modules` | Hides `.opencode/scripts/` dependencies |
+| **Editor → Properties in document** | Visible or Source | Shows front matter in-editor |
+
+Meowary's front matter (`tags`, `type`, `status`, `updated`, `aliases`) maps directly to Obsidian's Properties system. The `.opencode/` directory stays hidden — Obsidian excludes dot-prefixed folders from search and graph by default.
+
+**Complementary plugins:**
+
+| Plugin | Use |
+|---|---|
+| Dataview or Bases | Query notes by property (e.g., all `status: stub` resources) |
+| Calendar | Navigate daily notes by date |
+| Periodic Notes | Auto-create daily/weekly templates (alternative to `/morning`) |
+
 ## Source Code Access
 
 The `external_directory` permission in `opencode.json` (in the root of your Meowary directory) controls which directories outside the journal the agent can read and modify. Set it to the path where your source code repositories live:

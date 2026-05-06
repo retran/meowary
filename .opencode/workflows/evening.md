@@ -1,5 +1,5 @@
 ---
-updated: 2026-04-18
+updated: 2026-05-06
 tags: []
 ---
 
@@ -34,12 +34,14 @@ Structured end-of-day closer. Reviews work, routes delegated items, surfaces dur
 <done_when>Daily note loaded; dev-log entries surfaced; overdue waiting items identified.</done_when>
 </step>
 
-<step n="0.5" name="Clarify">
-ASK at most two questions:
-1. "Notable events or decisions today not in the work log?"
-2. If Friday: "Run weekly wrap-up after evening close-out?"
+<step n="0.5" name="Habits and clarify">
+READ `context/habits.md § Daily — Evening`. For each habit row in the table:
+- Check if its **Trigger** condition applies today.
+- If applicable: surface the **Prompt** text as a question to the user.
 
-SKIP if context clear or if not Friday (Q2).
+Then ASK (if Friday): "Run weekly wrap-up after evening close-out?"
+
+Present all applicable prompts together. Wait for response before proceeding.
 
 <done_when>User responded or N/A.</done_when>
 </step>
@@ -67,7 +69,12 @@ WRITE `## Evening` with four sub-sections:
 1. `### Completed` — tick MITs and done tasks.
 2. `### Carried / Dropped` — each unfinished MIT: decision (carried to `<date>` | dropped) + reason.
 3. `### Insights → Resources` — durable facts, each linked to resource article (Step 4).
-4. `### Day Summary` — 1–2 sentences + task stats + end-of-day scan per journal skill.
+4. `### Day Summary` — 1–2 sentences + task stats + end-of-day scan + enabling interactions.
+
+**Day Summary must include:**
+- Task stats: `Done: N | Carried: N | Dropped: N`
+- End-of-day scan: `End-of-day scan: [items actioned / nothing pending].` Check `waiting-for.md` for items > 2 working days without response — list them or note "nothing pending."
+- Enabling interactions (if any): one-liner per interaction from Step 0.5.
 
 Evening zone APPENDS only. NEVER edit Morning or Day content. Mark MITs in `### Completed` — DO NOT edit Morning in-place.
 

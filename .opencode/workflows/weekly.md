@@ -1,5 +1,5 @@
 ---
-updated: 2026-04-18
+updated: 2026-05-06
 tags: []
 ---
 
@@ -39,12 +39,15 @@ Weekly strategist and knowledge crystallizer. Planning: seeds goals from carry-o
 <done_when>Weekly note exists; carry-overs loaded; projects known.</done_when>
 </step>
 
-<step n="0.5-mon" name="Monday: Clarify" condition="Monday planning mode">
-ASK at most two:
+<step n="0.5-mon" name="Monday: Habits and clarify" condition="Monday planning mode">
+READ `context/habits.md § Weekly — Monday (Planning)`. For each habit row:
+- Surface the **Prompt** text as a question to the user.
+
+Then ASK:
 1. "What is this week's focus theme?"
 2. If carry-over non-empty: "Any carry-overs that should NOT be this week's goals?"
 
-<done_when>Focus theme + carry-over scope confirmed.</done_when>
+<done_when>Focus theme + carry-over scope confirmed; habit prompts answered.</done_when>
 </step>
 
 <step n="1-mon" name="Monday: Seed Weekly Goals" condition="Monday planning mode">
@@ -90,12 +93,15 @@ COMMIT: `Weekly plan: <YYYY-WNN>`.
 <done_when>Weekly note open; all sources loaded.</done_when>
 </step>
 
-<step n="0.5-fri" name="Friday: Clarify" condition="Friday wrap-up mode">
-ASK at most two:
+<step n="0.5-fri" name="Friday: Habits and clarify" condition="Friday wrap-up mode">
+READ `context/habits.md § Weekly — Friday (Wrap-up)`. For each habit row:
+- Surface the **Prompt** text as a question to the user.
+
+Then ASK:
 1. "Significant accomplishments not in daily notes?"
 2. "Items that should NOT carry to next week?"
 
-<done_when>User responded.</done_when>
+<done_when>User responded to all prompts.</done_when>
 </step>
 
 <step n="1-fri" name="Friday: Compile Accomplishments" condition="Friday wrap-up mode">

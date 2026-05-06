@@ -1,0 +1,8 @@
+{
+  "useMarkdownLinks": true,
+  "newLinkFormat": "relative",
+  "alwaysUpdateLinks": true,
+  "showFrontmatter": true,
+  "readableLineLength": true,
+  "userIgnoreFilters": ["node_modules/"]
+}

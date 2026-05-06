@@ -1,11 +1,11 @@
 ---
 description: First-time setup or update personal context and coding environment
-updated: 2026-04-18
+updated: 2026-05-06
 tags: [bootstrap, setup]
 ---
 
 <role>
-Bootstrap agent. Set up or revise `context/context.md`, `context/safety.md`, and `codebases/<name>.md` files. Idempotent — safe to re-run.
+Bootstrap agent. Set up or revise `context/context.md`, `context/safety.md`, `context/habits.md`, and `codebases/<name>.md` files. Idempotent — safe to re-run.
 </role>
 
 <arguments>
@@ -16,6 +16,7 @@ Bootstrap agent. Set up or revise `context/context.md`, `context/safety.md`, and
 Templates:
 - `.opencode/context-templates/context.md`
 - `.opencode/context-templates/safety.md`
+- `.opencode/context-templates/habits.md`
 - `.opencode/skills/codebases/codebase-template.md`
 - `.opencode/meta-templates/*` (tags, confluence-sync, resources-log, recurring-events)
 
@@ -30,7 +31,11 @@ Read `context/context.md`. Branch: has content → Step 2a. Empty/missing → St
 </step>
 
 <step n="2a" name="Revision flow" condition="existing context">
-Display current context as readable summary. Ask: "Is this still accurate? What would you like to update?" Scan `projects/` and `areas/` (excluding `archive/`) to refresh Active lists. Apply updates. Skip to Step 5.
+Display current context as readable summary. Ask: "Is this still accurate? What would you like to update?" Scan `projects/` and `areas/` (excluding `archive/`) to refresh Active lists. Apply updates.
+
+Check `context/habits.md`. If exists: ask "Want to review your daily/weekly habits?" If yes: display current habits, accept edits. If missing: offer to create from template (Step 7b logic).
+
+Skip to Step 5.
 <done_when>Revisions applied.</done_when>
 </step>
 
@@ -195,11 +200,42 @@ Read `journal/recurring-events.md`. If missing, copy from `.opencode/meta-templa
 <done_when>Recurring events recorded.</done_when>
 </step>
 
-<step n="8" name="Author resource entry" condition="fresh only">
+<step n="7b" name="Habits" condition="fresh only">
+Check `context/habits.md`. If missing, copy from `.opencode/context-templates/habits.md`.
+
+Present the default habits table to the user:
+- "Here are suggested daily and weekly habits. They'll be surfaced by `/morning`, `/evening`, and `/weekly` at the relevant trigger points."
+- Show: `## Daily — Morning`, `## Daily — Evening`, `## Weekly — Monday`, `## Weekly — Friday` sections.
+
+ASK: "Would you like to customize these habits? You can add, remove, or modify any row. These are personal — adapt them to your role and goals."
+
+If user wants changes: apply them. If user accepts defaults: leave as-is.
+
+<done_when>Habits file exists and user has reviewed it.</done_when>
+</step>
 Offer to create `resources/people/<slug>.md` for author. If accepted: fill name, role, team. Register `#person-<slug>` in `meta/tags.md`.
 
 Pre-check: `meta/tags.md` exists; if not, copy from `.opencode/meta-templates/tags-template.md`.
 <done_when>Author resource created or declined.</done_when>
+</step>
+
+<step n="8b" name="Obsidian setup" condition="fresh only">
+ASK: "Will you use Obsidian to browse or edit your journal?"
+
+If yes, display recommended settings:
+
+| Setting | Value |
+|---|---|
+| Files & Links → Use [[Wikilinks]] | Off |
+| Files & Links → New link format | Relative path to file |
+| Files & Links → Automatically update internal links | On |
+| Files & Links → Excluded files | `node_modules` |
+| Editor → Properties in document | Visible or Source |
+
+Note: these keep links compatible with Typora, GitHub, and other Markdown editors. No file changes needed — Obsidian reads the vault as-is.
+
+If no, skip.
+<done_when>Obsidian guidance delivered or skipped.</done_when>
 </step>
 
 <step n="9" name="Orientation" condition="fresh only">
