@@ -163,9 +163,9 @@ ui_choose() {
     return
   fi
 
-  local choice
+  local _ui_result=""
   if have gum; then
-    choice=$(printf '%s\n' "${options[@]}" | gum choose --header "  $header")
+    _ui_result=$(printf '%s\n' "${options[@]}" | gum choose --header "  $header") || true
   else
     echo "  $header"
     local i=1
@@ -176,12 +176,12 @@ ui_choose() {
     local reply
     read -r -p "  Choice [1-${#options[@]}]: " reply
     if [[ "$reply" =~ ^[0-9]+$ ]] && (( reply >= 1 && reply <= ${#options[@]} )); then
-      choice="${options[$(( reply - 1 ))]}"
+      _ui_result="${options[$(( reply - 1 ))]}"
     else
-      choice="${options[0]}"
+      _ui_result="${options[0]}"
     fi
   fi
-  printf -v "$var" '%s' "$choice"
+  printf -v "$var" '%s' "$_ui_result"
 }
 
 # ── Agent system selection ────────────────────────────────────────────────────
@@ -212,7 +212,7 @@ select_agent_system() {
   echo "  Agents are installed via mise (same as other tools)."
   echo ""
 
-  local choice
+  local choice=""
   ui_choose choice "Which AI coding agent do you want to use?" \
     "OpenCode only (CLI-based, actively maintained)" \
     "Claude Code only (Anthropic's official agent)" \
@@ -404,7 +404,7 @@ select_optional_tools() {
         ok "Disabled $tool_name in mise.toml"
       fi
     fi
-    (( i++ ))
+    (( i++ )) || true
   done
 
   # Also flag NEEDS_ATLASSIAN if a previously-enabled Atlassian tool remains active
@@ -425,10 +425,11 @@ mise_install() {
   step "Tools (via mise install + upgrade)"
   if have gum; then
     MISE_DIR="$SCRIPT_DIR" gum spin --spinner dot --title "Installing/upgrading tools…" -- \
-      bash -c 'mise install --cd "$MISE_DIR" && mise upgrade --cd "$MISE_DIR"'
+      bash -c 'mise install --cd "$MISE_DIR" && mise upgrade --cd "$MISE_DIR"' \
+      || { warn "mise install/upgrade failed — continuing anyway"; }
   else
-    mise install --cd "$SCRIPT_DIR"
-    mise upgrade --cd "$SCRIPT_DIR"
+    mise install --cd "$SCRIPT_DIR" || warn "mise install failed"
+    mise upgrade --cd "$SCRIPT_DIR" || warn "mise upgrade failed"
   fi
   mise reshim 2>/dev/null || true
   ok "All tools installed and up to date"
@@ -438,7 +439,8 @@ mise_install() {
 
 generate_agent_config() {
   step "Agent configuration (generate.sh)"
-  bash "$SCRIPT_DIR/generate.sh" $(tr '\n' ' ' < "$SCRIPT_DIR/.agent-config")
+  bash "$SCRIPT_DIR/generate.sh" $(tr '\n' ' ' < "$SCRIPT_DIR/.agent-config") \
+    || warn "generate.sh failed"
 }
 
 # ── Script dependencies ───────────────────────────────────────────────────────
