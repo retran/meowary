@@ -86,16 +86,16 @@ generate_opencode() {
       base="$(basename "$f")"
       if [[ "$base" == "opencode.json" || "$base" == "opencode.jsonc" ]]; then
         # opencode.json goes to repo root
-        cp "$f" "$SCRIPT_DIR/$base"
+        cp "$f" "$SCRIPT_DIR/$base" || error "Failed to copy $base to repo root"
       else
-        cp "$f" "$target/$base"
+        cp "$f" "$target/$base" || error "Failed to copy $base"
       fi
     done
   fi
 
   # Generate AGENTS.md from template
   if [[ -f "$SHARED_DIR/AGENTS.md.template" ]]; then
-    cp "$SHARED_DIR/AGENTS.md.template" "$SCRIPT_DIR/AGENTS.md"
+    cp "$SHARED_DIR/AGENTS.md.template" "$SCRIPT_DIR/AGENTS.md" || error "Failed to copy AGENTS.md.template"
   fi
 
   # Install script dependencies (in .shared/scripts — copied into target)
@@ -245,9 +245,9 @@ generate_claude() {
       base="$(basename "$f")"
       if [[ "$base" == "mcp.json" ]]; then
         # MCP servers go at repo root as .mcp.json (per Claude Code docs)
-        cp "$f" "$SCRIPT_DIR/.mcp.json"
+        cp "$f" "$SCRIPT_DIR/.mcp.json" || error "Failed to copy .mcp.json to repo root"
       else
-        cp "$f" "$target/$base"
+        cp "$f" "$target/$base" || error "Failed to copy $base"
       fi
     done
   fi
@@ -294,10 +294,10 @@ generate_claude() {
 
   # Generate CLAUDE.md from template
   if [[ -f "$SHARED_DIR/CLAUDE.md.template" ]]; then
-    cp "$SHARED_DIR/CLAUDE.md.template" "$SCRIPT_DIR/CLAUDE.md"
+    cp "$SHARED_DIR/CLAUDE.md.template" "$SCRIPT_DIR/CLAUDE.md" || error "Failed to copy CLAUDE.md.template"
   elif [[ -f "$SHARED_DIR/AGENTS.md.template" ]]; then
     # Fallback: use OpenCode memory as base (user can create claude-specific later)
-    cp "$SHARED_DIR/AGENTS.md.template" "$SCRIPT_DIR/CLAUDE.md"
+    cp "$SHARED_DIR/AGENTS.md.template" "$SCRIPT_DIR/CLAUDE.md" || error "Failed to copy AGENTS.md.template as CLAUDE.md"
   fi
 
   # Install script dependencies (Claude Code also needs scripts for shell commands)
