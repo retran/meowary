@@ -9,6 +9,9 @@
 #   bash setup.sh                   # interactive
 #   bash setup.sh --non-interactive # CI / unattended (skips all prompts)
 #
+# To switch agents or regenerate config after setup:
+#   bash generate.sh <opencode|claude>
+#
 # Idempotent — safe to re-run. Each step checks before acting.
 #
 # Supported platforms: macOS, Linux (Debian/Ubuntu), WSL
@@ -171,7 +174,7 @@ ui_choose() {
     local i=1
     for opt in "${options[@]}"; do
       echo "    $i) $opt"
-      (( i++ ))
+      (( i++ )) || true
     done
     local reply
     read -r -p "  Choice [1-${#options[@]}]: " reply

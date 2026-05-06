@@ -21,7 +21,10 @@ ok()    { echo "  ✓ $*"; }
 error() { echo "  ✗ $*" >&2; exit 1; }
 have()  { command -v "$1" &>/dev/null; }
 
-# Replace {{AGENT_DIR}} placeholder with the actual agent directory name
+# Replace {{AGENT_DIR}} placeholder with the actual agent directory name.
+# Template files in .shared/ can use {{AGENT_DIR}} to reference the agent
+# directory (.opencode or .claude) in paths. This function resolves it during
+# generation so each agent gets the correct path.
 resolve_templates() {
   local dir="$1" agent_dir="$2"
   if [[ "$OSTYPE" == darwin* ]]; then
@@ -56,12 +59,12 @@ generate_opencode() {
   mkdir -p "$target"
 
   # Copy shared content
-  cp -R "$SHARED_DIR/workflows" "$target/workflows"
-  cp -R "$SHARED_DIR/scripts" "$target/scripts"
-  cp -R "$SHARED_DIR/reference" "$target/reference"
-  cp -R "$SHARED_DIR/skills" "$target/skills"
-  cp -R "$SHARED_DIR/commands" "$target/commands"
-  cp -R "$SHARED_DIR/agents" "$target/agents"
+  cp -R "$SHARED_DIR/workflows" "$target/workflows" || error "Failed to copy workflows"
+  cp -R "$SHARED_DIR/scripts" "$target/scripts" || error "Failed to copy scripts"
+  cp -R "$SHARED_DIR/reference" "$target/reference" || error "Failed to copy reference"
+  cp -R "$SHARED_DIR/skills" "$target/skills" || error "Failed to copy skills"
+  cp -R "$SHARED_DIR/commands" "$target/commands" || error "Failed to copy commands"
+  cp -R "$SHARED_DIR/agents" "$target/agents" || error "Failed to copy agents"
 
   # Copy templates if they exist
   [[ -d "$SHARED_DIR/context-templates" ]] && cp -R "$SHARED_DIR/context-templates" "$target/context-templates"
@@ -108,10 +111,13 @@ generate_opencode() {
 # ── Agent Transformation (OpenCode → Claude Code) ────────────────────────────
 
 # Convert OpenCode agent frontmatter to Claude Code format.
-# - Adds `name:` from filename
+# OpenCode and Claude Code use different agent frontmatter schemas. This function
+# transforms .shared/agents/*.md files (OpenCode format) into Claude Code format:
+# - Adds `name:` from filename (Claude requires it)
 # - Converts `permission:` → `tools:` / `disallowedTools:`
 # - Converts `steps:` → `maxTurns:`
-# - Removes `mode:`, `hidden:` (not applicable)
+# - Removes `mode:`, `hidden:`, `temperature:` (not applicable in Claude Code)
+# - Maps OpenCode tool names to Claude Code equivalents (e.g., task → Agent)
 transform_agent_for_claude() {
   local src="$1"
   local dest="$2"
@@ -242,16 +248,24 @@ generate_claude() {
   fi
 
   # Claude Code uses commands/ directly (format is compatible)
-  [[ -d "$SHARED_DIR/commands" ]] && cp -R "$SHARED_DIR/commands" "$target/commands"
+  if [[ -d "$SHARED_DIR/commands" ]]; then
+    cp -R "$SHARED_DIR/commands" "$target/commands" || error "Failed to copy commands"
+  fi
 
   # Copy skills — Claude Code loads SKILL.md files the same way
-  [[ -d "$SHARED_DIR/skills" ]] && cp -R "$SHARED_DIR/skills" "$target/skills"
+  if [[ -d "$SHARED_DIR/skills" ]]; then
+    cp -R "$SHARED_DIR/skills" "$target/skills" || error "Failed to copy skills"
+  fi
 
   # Copy scripts (for bash tool invocations from commands/workflows)
-  [[ -d "$SHARED_DIR/scripts" ]] && cp -R "$SHARED_DIR/scripts" "$target/scripts"
+  if [[ -d "$SHARED_DIR/scripts" ]]; then
+    cp -R "$SHARED_DIR/scripts" "$target/scripts" || error "Failed to copy scripts"
+  fi
 
   # Copy workflows — commands reference these
-  [[ -d "$SHARED_DIR/workflows" ]] && cp -R "$SHARED_DIR/workflows" "$target/workflows"
+  if [[ -d "$SHARED_DIR/workflows" ]]; then
+    cp -R "$SHARED_DIR/workflows" "$target/workflows" || error "Failed to copy workflows"
+  fi
 
   # Transform agents (OpenCode permission format → Claude Code tools format)
   if [[ -d "$SHARED_DIR/agents" ]]; then
@@ -266,7 +280,9 @@ generate_claude() {
   fi
 
   # Reference docs — just files the agent reads on demand (NOT auto-loaded rules)
-  [[ -d "$SHARED_DIR/reference" ]] && cp -R "$SHARED_DIR/reference" "$target/reference"
+  if [[ -d "$SHARED_DIR/reference" ]]; then
+    cp -R "$SHARED_DIR/reference" "$target/reference" || error "Failed to copy reference"
+  fi
 
   # Resolve {{AGENT_DIR}} → .claude in all copied markdown
   resolve_templates "$target" ".claude"
