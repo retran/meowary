@@ -46,6 +46,7 @@ Ask user:
 
 Also:
 - Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
+- Load `codebases/<name>.md` for architecture, error patterns, debugging approaches — see `codebases` skill.
 - Search `resources/` for known issues, prior debug sessions, architecture context.
 - Search web for error message or symptom — BEFORE investigating internally.
 - Search `projects/<name>/notes/` for prior debug with similar symptoms.

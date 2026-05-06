@@ -49,9 +49,10 @@ Severity:
 <step n="0" name="Load context">
 1. Read `context/context.md` for active projects and team context (understand code/spec domain).
 2. Run `qmd query "<review subject>"` to surface relevant resource articles, architecture patterns, and conventions — see `{{AGENT_DIR}}/skills/qmd/` for query construction.
-3. Read `projects/<name>/dev-log.md` last entry if review relates to active project.
-4. Check `projects/<name>/notes/` for prior review of same PR/spec (re-review after changes): if found, load as context.
-<done_when>Team context loaded; KG search complete; any prior review of this target surfaced.</done_when>
+3. Load `codebases/<name>.md` for conventions and architecture — see `codebases` skill. Load `scm` skill for PR/MR mechanics.
+4. Read `projects/<name>/dev-log.md` last entry if review relates to active project.
+5. Check `projects/<name>/notes/` for prior review of same PR/spec (re-review after changes): if found, load as context.
+<done_when>Team context loaded; KG search complete; skills loaded; any prior review of this target surfaced.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

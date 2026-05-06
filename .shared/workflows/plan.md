@@ -123,7 +123,7 @@ HARD-GATE (Full): Present breakdown; confirm before writing plan artifact.
 </step>
 
 <step n="6" name="Close" gate="END-GATE">
-Write plan to `projects/<name>/plans/<slug>.md`:
+Write plan to `projects/<name>/plans/<slug>.md` using format from `projects` skill:
 
 ```markdown
 ## Plan: <name>

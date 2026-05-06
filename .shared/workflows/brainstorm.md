@@ -100,7 +100,7 @@ SOFT-GATE (Standard + Full): Output matrix and recommendation. Continue.
 </step>
 
 <step n="5" name="Write spec">
-Write spec to `projects/<name>/specs/<slug>.md` using template from `{{AGENT_DIR}}/skills/projects/spec-template.md`. Spec captures problem, constraints, chosen approach, alternatives considered, open questions. NEVER implementation details — those belong in plan.
+Write spec to `projects/<name>/specs/<slug>.md` using template from `{{AGENT_DIR}}/skills/projects/spec-template.md`. For prose quality (active voice, concision), apply `writing` skill rules. Spec captures problem, constraints, chosen approach, alternatives considered, open questions. NEVER implementation details — those belong in plan.
 <done_when>Spec written to `projects/<name>/specs/<slug>.md`.</done_when>
 </step>
 

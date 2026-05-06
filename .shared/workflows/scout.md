@@ -41,7 +41,7 @@ If clear, skip both and proceed.
 </step>
 
 <step n="1" name="QMD semantic search">
-1. Run `qmd query "<topic>"` against journal and resources index.
+1. Run `qmd query "<topic>"` against journal and resources index — see `qmd` skill for query construction and `query` skill for multi-source retrieval hierarchy.
 2. Surface top relevant resource articles and daily notes.
 3. If sparse (< 2 meaningful hits): scan `resources/` directly for matching filenames and tags.
 <done_when>Search complete; relevant articles surfaced or sparse result noted.</done_when>

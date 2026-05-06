@@ -46,6 +46,7 @@ Ask user:
 
 Also:
 - Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
+- Load `codebases/<name>.md` for test commands, test patterns, CI rules — see `codebases` skill.
 - Search `projects/<name>/notes/` for prior test session notes and known issues.
 - Search `resources/` for testing patterns applicable to codebase.
 - Search web for known issues or test strategies if testing unfamiliar components or libraries.

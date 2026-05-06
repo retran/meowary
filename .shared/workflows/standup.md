@@ -28,10 +28,10 @@ Standup synthesizer. Reads dev-logs, daily note MITs, waiting-for; produces clea
 
 <step n="0" name="Load context">
 1. READ `context/context.md` for active projects. If absent or empty: glob `projects/*/dev-log.md` and use those. DO NOT stop — standup is read-only.
-2. READ today's daily note if exists — Morning MITs and Day zone.
+2. READ today's daily note if exists — Morning MITs and Day zone. Load `journal` skill for daily note format.
 3. READ last entry of `dev-log.md` per active project.
 
-<done_when>Active projects + recent dev-log entries loaded; today's MITs loaded if available.</done_when>
+<done_when>Active projects + recent dev-log entries loaded; today's MITs loaded if available; journal skill loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

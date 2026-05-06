@@ -124,8 +124,8 @@ HARD-GATE (Full): Present decision + rationale; confirm before writing ADR.
 </step>
 
 <step n="6" name="Close" gate="END-GATE">
-- **Quick:** write inline decision note to `projects/<name>/notes/design-<topic>.md` using abbreviated ADR format.
-- **Standard + Full:** write ADR draft to `projects/<name>/design/adr-<slug>.md` using format below. Full tier: suggest chaining to `write` to finalize.
+- **Quick:** write inline decision note to `projects/<name>/notes/design-<topic>.md` using abbreviated ADR format. Apply `writing` skill for prose quality.
+- **Standard + Full:** write ADR draft to `projects/<name>/design/adr-<slug>.md` using format below. Apply `writing` skill for prose quality. Full tier: suggest chaining to `write` to finalize.
 
 ADR format:
 

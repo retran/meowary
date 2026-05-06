@@ -59,6 +59,7 @@ Ask user:
 
 Also:
 - Run `qmd query "<topic>"` and `websearch "<topic>"` in parallel per context-gathering skill — see `{{AGENT_DIR}}/skills/context-gathering/` for patterns and query construction.
+- Load `codebases/<name>.md` for conventions and architecture — see `codebases` skill. Load `scm` skill for PR/MR context.
 - Search `resources/` and codebase for context on technically disputed points before forming position.
 - Search web for best practices if reviewer challenges technical approach.
 <done_when>Review comments obtained; pre-decided rejections noted; tier confirmed.</done_when>

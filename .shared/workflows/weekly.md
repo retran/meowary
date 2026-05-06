@@ -32,11 +32,11 @@ Weekly strategist and knowledge crystallizer. Planning: seeds goals from carry-o
 
 <step n="0-mon" name="Monday: Load context" condition="Monday planning mode">
 1. CONFIRM mode: Monday planning.
-2. CHECK `journal/weekly/<year>-W<nn>.md` exists; if not, create from template.
+2. CHECK `journal/weekly/<year>-W<nn>.md` exists; if not, create from template — load `journal` skill for weekly note format.
 3. READ last week's note for Carry-Over items.
 4. READ `context/context.md` for active projects.
 
-<done_when>Weekly note exists; carry-overs loaded; projects known.</done_when>
+<done_when>Weekly note exists; carry-overs loaded; projects known; journal skill loaded.</done_when>
 </step>
 
 <step n="0.5-mon" name="Monday: Habits and clarify" condition="Monday planning mode">
