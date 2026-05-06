@@ -28,7 +28,7 @@ Systematic knowledge graph curator. Enriches from all sources — NEVER stops af
 1. READ today's daily note for matching tasks.
 2. If `resources-actualize-plan.md` exists: READ `actualize` row for this article — note `Details`, `Missing Cross-References`, `Notes`.
 3. If article does not exist: ASK user to run `resource-ops create` first, then return.
-4. Load `resources` skill for graph philosophy, tag conventions, article format — this is the source of truth for resource structure.
+4. Load `resources` skill for graph philosophy, tag conventions, article format. For article prose quality, also load `writing` skill — this is the source of truth for resource structure.
 
 <done_when>Daily note checked; plan row read; article existence confirmed; resources skill loaded.</done_when>
 </step>
