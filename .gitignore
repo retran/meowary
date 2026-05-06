@@ -24,6 +24,15 @@ env-snapshot.md
 # Repomix output files (ephemeral artifacts)
 repomix-output.*
 
-# OpenCode internal lock files
-.opencode/package-lock.json
-.opencode/bun.lock
+# Generated agent directories (regenerated via `bash generate.sh`)
+.opencode/
+.claude/
+AGENTS.md
+CLAUDE.md
+opencode.json
+.mcp.json
+.agent-config
+
+# Shared scripts lock file and deps
+.shared/scripts/package-lock.json
+.shared/scripts/node_modules/

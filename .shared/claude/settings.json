@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node .claude/scripts/*)",
+      "Bash(git *)",
+      "Bash(qmd *)",
+      "Bash(mise *)",
+      "Bash(context-mode *)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "mcp__context-mode__*",
+      "mcp__exa__*"
+    ],
+    "deny": []
+  },
+  "env": {}
+}

@@ -235,13 +235,12 @@ download_and_extract() {
 
 # Verbatim copies — mise.toml is handled separately after optional state restore
 FRAMEWORK_FILES=(
-  AGENTS.md
   CHANGELOG.md
   CONTRIBUTING.md
   LICENSE
   README.md
   VERSION
-  opencode.json
+  generate.sh
   qmd.yml
   setup.sh
   update.sh
@@ -268,26 +267,22 @@ copy_framework_files() {
     ok "mise.toml (optional tools will be restored)"
   fi
 
-  # .opencode/: replace entirely, preserve node_modules and package-lock.json
-  local opencode_src="$src/.opencode"
-  if [[ -d "$opencode_src" ]]; then
+  # .shared/: replace entirely, preserve node_modules
+  local shared_src="$src/.shared"
+  if [[ -d "$shared_src" ]]; then
     local nm_backup=""
-    local lock_backup=""
-    if [[ -d "$SCRIPT_DIR/.opencode/node_modules" ]]; then
-      nm_backup="$TMPDIR_WORK/.opencode_nm_backup"
-      mv "$SCRIPT_DIR/.opencode/node_modules" "$nm_backup"
-    fi
-    if [[ -f "$SCRIPT_DIR/.opencode/package-lock.json" ]]; then
-      lock_backup="$TMPDIR_WORK/.opencode_lock_backup"
-      cp "$SCRIPT_DIR/.opencode/package-lock.json" "$lock_backup"
+    if [[ -d "$SCRIPT_DIR/.shared/scripts/node_modules" ]]; then
+      nm_backup="$TMPDIR_WORK/.shared_nm_backup"
+      mv "$SCRIPT_DIR/.shared/scripts/node_modules" "$nm_backup"
     fi
 
-    rm -rf "$SCRIPT_DIR/.opencode"
-    cp -r "$opencode_src" "$SCRIPT_DIR/.opencode"
+    rm -rf "$SCRIPT_DIR/.shared"
+    cp -r "$shared_src" "$SCRIPT_DIR/.shared"
 
-    [[ -n "$nm_backup"   && -d "$nm_backup"   ]] && mv "$nm_backup" "$SCRIPT_DIR/.opencode/node_modules"
-    [[ -n "$lock_backup" && -f "$lock_backup" ]] && cp "$lock_backup" "$SCRIPT_DIR/.opencode/package-lock.json"
-    ok ".opencode/"
+    if [[ -n "$nm_backup" && -d "$nm_backup" ]]; then
+      mv "$nm_backup" "$SCRIPT_DIR/.shared/scripts/node_modules"
+    fi
+    ok ".shared/"
   fi
 }
 
@@ -306,14 +301,26 @@ run_mise_install() {
 
 run_npm_install() {
   step "Updating script dependencies"
-  local scripts_dir="$SCRIPT_DIR/.opencode/scripts"
+  local scripts_dir="$SCRIPT_DIR/.shared/scripts"
   [[ -d "$scripts_dir" ]] || return
   if have npm; then
     npm install --prefix "$scripts_dir" --silent 2>/dev/null \
-      || warn "npm install failed — run it manually in .opencode/scripts"
+      || warn "npm install failed — run it manually in .shared/scripts"
     ok "Script dependencies up to date"
   else
-    warn "npm not found — script dependencies may need a manual 'npm install' in .opencode/scripts"
+    warn "npm not found — script dependencies may need a manual 'npm install' in .shared/scripts"
+  fi
+}
+
+run_generate() {
+  step "Regenerating agent configuration"
+  local config_file="$SCRIPT_DIR/.agent-config"
+  if [[ -f "$config_file" ]]; then
+    local agents
+    agents=$(tr '\n' ' ' < "$config_file")
+    bash "$SCRIPT_DIR/generate.sh" $agents
+  else
+    info "No .agent-config found — skipping generate (run setup.sh to configure)"
   fi
 }
 
@@ -466,6 +473,7 @@ main() {
 
   run_mise_install
   run_npm_install
+  run_generate
 
   show_changelog_excerpt "$from_version" "$TARGET_VERSION"
   print_summary "$TARGET_VERSION"

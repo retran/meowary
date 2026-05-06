@@ -3,7 +3,7 @@
 #
 # Installs mise (if needed), then uses it to install all tools declared in
 # mise.toml. Configures .env and gets you to the point where you can open
-# OpenCode and run /bootstrap.
+# your chosen AI coding agent and run /bootstrap.
 #
 # Usage:
 #   bash setup.sh                   # interactive
@@ -20,6 +20,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NON_INTERACTIVE=false
 ERRORS=()
+AGENT_SYSTEM=""  # Will be set to: opencode, claude, or both
 
 # Detect non-interactive mode: explicit flag or stdin not a terminal
 if [[ "${1:-}" == "--non-interactive" ]] || ! [ -t 0 ]; then
@@ -149,6 +150,118 @@ ui_confirm() {
     read -r -p "  $1 [y/N]: " reply
     [[ "$reply" =~ ^[Yy]$ ]]
   fi
+}
+
+ui_choose() {
+  # ui_choose <var_name> <header> <option1> <option2> ...
+  local var="$1"; shift
+  local header="$1"; shift
+  local options=("$@")
+
+  if $NON_INTERACTIVE; then
+    printf -v "$var" '%s' "${options[0]}"  # Default to first option
+    return
+  fi
+
+  local choice
+  if have gum; then
+    choice=$(printf '%s\n' "${options[@]}" | gum choose --header "  $header")
+  else
+    echo "  $header"
+    local i=1
+    for opt in "${options[@]}"; do
+      echo "    $i) $opt"
+      (( i++ ))
+    done
+    local reply
+    read -r -p "  Choice [1-${#options[@]}]: " reply
+    if [[ "$reply" =~ ^[0-9]+$ ]] && (( reply >= 1 && reply <= ${#options[@]} )); then
+      choice="${options[$(( reply - 1 ))]}"
+    else
+      choice="${options[0]}"
+    fi
+  fi
+  printf -v "$var" '%s' "$choice"
+}
+
+# ── Agent system selection ────────────────────────────────────────────────────
+
+select_agent_system() {
+  if $NON_INTERACTIVE; then
+    # In non-interactive mode, read from .agent-config or default
+    if [[ -f "$SCRIPT_DIR/.agent-config" ]]; then
+      local contents
+      contents=$(tr '\n' ' ' < "$SCRIPT_DIR/.agent-config" | xargs)
+      if [[ "$contents" == *opencode* && "$contents" == *claude* ]]; then
+        AGENT_SYSTEM="both"
+      elif [[ "$contents" == *claude* ]]; then
+        AGENT_SYSTEM="claude"
+      else
+        AGENT_SYSTEM="opencode"
+      fi
+    else
+      AGENT_SYSTEM="opencode"
+    fi
+    info "Agent system: $AGENT_SYSTEM (from .agent-config)"
+    return
+  fi
+
+  step "AI coding agent selection"
+  echo ""
+  echo "  Meowary works with both OpenCode and Claude Code."
+  echo "  Agents are installed via mise (same as other tools)."
+  echo ""
+
+  local choice
+  ui_choose choice "Which AI coding agent do you want to use?" \
+    "OpenCode only (CLI-based, actively maintained)" \
+    "Claude Code only (Anthropic's official agent)" \
+    "Both (recommended for flexibility)"
+
+  case "$choice" in
+    *"OpenCode only"*)
+      AGENT_SYSTEM="opencode"
+      ;;
+    *"Claude Code only"*)
+      AGENT_SYSTEM="claude"
+      ;;
+    *"Both"*)
+      AGENT_SYSTEM="both"
+      ;;
+  esac
+
+  info "Selected: $AGENT_SYSTEM"
+
+  # Enable/disable agent lines in mise.toml
+  local oc_line='opencode    = "latest"   # CLI-based agent (https://opencode.ai/)'
+  local oc_commented='# opencode    = "latest"   # CLI-based agent (https://opencode.ai/)'
+  local cc_line='claude = "latest"     # Claude Code (https://claude.ai/code)'
+  local cc_commented='# claude = "latest"     # Claude Code (https://claude.ai/code)'
+
+  case "$AGENT_SYSTEM" in
+    opencode)
+      sed_i "s|^# opencode.*|${oc_line}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^claude = .*|${cc_commented}|" "$SCRIPT_DIR/mise.toml"
+      ;;
+    claude)
+      sed_i "s|^opencode.*|${oc_commented}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^# claude.*|${cc_line}|" "$SCRIPT_DIR/mise.toml"
+      ;;
+    both)
+      sed_i "s|^# opencode.*|${oc_line}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^# claude.*|${cc_line}|" "$SCRIPT_DIR/mise.toml"
+      ;;
+  esac
+
+  # Save selection (one agent per line, matching generate.sh format)
+  case "$AGENT_SYSTEM" in
+    both)
+      printf '%s\n' "opencode" "claude" > "$SCRIPT_DIR/.agent-config"
+      ;;
+    *)
+      echo "$AGENT_SYSTEM" > "$SCRIPT_DIR/.agent-config"
+      ;;
+  esac
 }
 
 # ── Optional tool selection ───────────────────────────────────────────────────
@@ -321,13 +434,20 @@ mise_install() {
   ok "All tools installed and up to date"
 }
 
+# ── Generate agent configuration ──────────────────────────────────────────────
+
+generate_agent_config() {
+  step "Agent configuration (generate.sh)"
+  bash "$SCRIPT_DIR/generate.sh" $(tr '\n' ' ' < "$SCRIPT_DIR/.agent-config")
+}
+
 # ── Script dependencies ───────────────────────────────────────────────────────
 
 ensure_script_deps() {
-  step ".opencode/scripts dependencies"
-  local scripts_dir="$SCRIPT_DIR/.opencode/scripts"
+  step "Script dependencies"
+  local scripts_dir="$SCRIPT_DIR/.shared/scripts"
   if [[ ! -d "$scripts_dir" ]]; then
-    warn ".opencode/scripts not found — skipping"
+    warn ".shared/scripts not found — skipping"
     return
   fi
   if [[ -d "$scripts_dir/node_modules" ]]; then
@@ -335,10 +455,10 @@ ensure_script_deps() {
     return
   fi
   if have gum; then
-    gum spin --spinner dot --title "npm install in .opencode/scripts…" -- \
+    gum spin --spinner dot --title "npm install in .shared/scripts…" -- \
       npm install --prefix "$scripts_dir"
   else
-    info "npm install in .opencode/scripts…"
+    info "npm install in .shared/scripts…"
     npm install --prefix "$scripts_dir"
   fi
   ok "script dependencies installed"
@@ -548,9 +668,27 @@ print_summary() {
   echo ""
   echo "   1. Review .env — confirm your credentials are correct"
   echo "   2. Open a new terminal so mise activates and .env loads"
-  echo "   3. cd into this directory and run: opencode"
-  echo "   4. Inside OpenCode, run:  /bootstrap"
-  echo "   5. Then run:              /morning"
+
+  case "$AGENT_SYSTEM" in
+    opencode)
+      echo "   3. cd into this directory and run: opencode"
+      echo "   4. Inside OpenCode, run:  /bootstrap"
+      echo "   5. Then run:              /morning"
+      ;;
+    claude)
+      echo "   3. cd into this directory and run: claude code"
+      echo "   4. Inside Claude Code, run:  /bootstrap"
+      echo "   5. Then run:                 /morning"
+      ;;
+    both)
+      echo "   3. cd into this directory and run:"
+      echo "      - For OpenCode:    opencode"
+      echo "      - For Claude Code: claude code"
+      echo "   4. Inside your chosen agent, run:  /bootstrap"
+      echo "   5. Then run:                       /morning"
+      ;;
+  esac
+
   echo ""
   echo " To add more optional tools later: re-run setup.sh or edit mise.toml"
   echo " and run 'mise install'."
@@ -561,6 +699,12 @@ print_summary() {
   echo " /bootstrap sets up your identity, context file, and QMD search"
   echo " collections. Run it once. After that, /morning starts every day."
   echo ""
+
+  if [[ "$AGENT_SYSTEM" == "both" ]]; then
+    echo " Note: Both OpenCode and Claude Code are installed. You can use either"
+    echo " or switch between them. Both systems share the same data directories."
+    echo ""
+  fi
 }
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -583,8 +727,10 @@ main() {
 
   ensure_mise
   ensure_gum
+  select_agent_system
   select_optional_tools
   mise_install
+  generate_agent_config
   ensure_script_deps
   ensure_mise_trust
   setup_env
