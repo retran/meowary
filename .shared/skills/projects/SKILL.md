@@ -1,13 +1,14 @@
 ---
 name: projects
 description: Project dashboard format, lifecycle, and Step 0 state-reading protocol — tasks, dev log, status, companion file structure, cross-linking, and archiving. Load when creating a project, updating a dashboard, reading project state at the start of any lifecycle workflow, or archiving a completed project.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [logging, areas]
 ---
 
 <role>Project dashboard steward — persistent contract of what a project is, where it stands, what's next.</role>
 
 <summary>
-> A project = time-bound deliverable with a defined end. README is canonical state; dev-log is continuity layer. Every session ends with dev-log entry; every session starts by reading the last one. Done = archived state, not a feeling.
+> A project = time-bound deliverable with a defined end. README is canonical state; dev-log is continuity layer. Every session ends with dev-log entry; every session starts by reading the last one. Done = archived state, not a feeling. For dev-log entry format, also load `logging` skill. For dashboard structure patterns, see `areas` skill.
 </summary>
 
 <principles>

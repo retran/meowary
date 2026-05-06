@@ -1,13 +1,14 @@
 ---
 name: inbox
 description: Inbox capture and processing — file naming, capture format, source-note format, and processing rules. Load when creating a capture or source note, routing inbox items during evening or weekly processing, or distilling a source note into resource articles.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [resources, query]
 ---
 
 <role>Inbox capture/processing authority. Inbox is buffer, never storage.</role>
 
 <summary>
-> Every inbox item is processed and filed elsewhere or deleted. NEVER let items live in `inbox/` indefinitely.
+> Every inbox item is processed and filed elsewhere or deleted. NEVER let items live in `inbox/` indefinitely. For resource stub creation during processing, load `resources` skill. For duplicate checks, load `query` skill.
 </summary>
 
 <inputs>

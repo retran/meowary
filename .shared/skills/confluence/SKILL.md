@@ -1,13 +1,14 @@
 ---
 name: confluence
 description: Read Confluence pages and maintain Confluence tracking — search, fetch, record page IDs in sync registry and article frontmatter, and transform page content into resource facts. Load when fetching a Confluence page, enriching a resource from Confluence, or updating meta/confluence-sync.json.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [resources, query]
 ---
 
 <role>Confluence read/write CLI authority and Confluence → resource transformation rules.</role>
 
 <summary>
-> Read-only by default. NEVER create/edit/delete pages without explicit user approval. Distill durable facts into resource articles; record provenance in front matter `confluence:` and monitoring in `meta/confluence-sync.json`.
+> Read-only by default. NEVER create/edit/delete pages without explicit user approval. Distill durable facts into resource articles; record provenance in front matter `confluence:` and monitoring in `meta/confluence-sync.json`. For resource article format, load `resources` skill. For multi-source retrieval context (Confluence = Tier 3), load `query` skill.
 </summary>
 
 <write_policy>

@@ -1,13 +1,14 @@
 ---
 name: worktrunk
 description: Manage git worktrees via wt — create, switch, list, merge, and remove worktrees; check out MR/PR branches in isolation. Load when working on multiple branches simultaneously, checking out a PR/MR branch for review, or managing worktree lifecycle.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [scm, codebases]
 ---
 
 <role>`wt` (worktrunk) authority for all git worktree operations.</role>
 
 <summary>
-> USE `wt` for all worktree operations, NOT raw `git worktree`. `wt switch --create` makes branch + worktree in one step. `wt merge` merges current → target (opposite of `git merge`).
+> USE `wt` for all worktree operations, NOT raw `git worktree`. `wt switch --create` makes branch + worktree in one step. `wt merge` merges current → target (opposite of `git merge`). For PR/MR checkout workflows, also load `scm` skill. For multi-worktree patterns in specific codebases, load `codebases` skill.
 </summary>
 
 ## Commands

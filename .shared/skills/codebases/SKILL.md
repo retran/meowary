@@ -1,13 +1,14 @@
 ---
 name: codebases
 description: Codebase context file format, lifecycle, and enrichment rules — architecture, tech stack, build commands, test setup, coding conventions, CI, and key decisions. Load when working in any external codebase, reading or writing a codebases/<name>.md file, or when codebase-specific conventions, build commands, or architecture context are needed.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [scm, worktrunk, writing]
 ---
 
 <role>Codebase context file authority — one file per external codebase at `codebases/<slug>.md`.</role>
 
 <summary>
-> One authoritative file per codebase. Replaces separate architecture/style/test context files. Living document: thin on first contact, enrich continuously. NEVER invent values — record only confirmed facts.
+> One authoritative file per codebase. Replaces separate architecture/style/test context files. Living document: thin on first contact, enrich continuously. NEVER invent values — record only confirmed facts. For PR/MR conventions, load `scm` skill. For worktree patterns, load `worktrunk` skill. For documentation quality, load `writing` skill.
 </summary>
 
 <triggers>

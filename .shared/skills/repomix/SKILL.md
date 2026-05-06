@@ -1,14 +1,15 @@
 ---
 name: repomix
 description: Pack a repository or file subset into a single AI-friendly file using repomix. Load when preparing an external codebase for analysis, review, or planning — before scout, research, or peer-review workflows on large external repos.
-updated: 2026-04-18
+updated: 2026-05-07
 tags: []
+related: [codebases, scm]
 ---
 
 <role>`repomix` packing authority for codebase analysis preparation.</role>
 
 <summary>
-> Pack repository or file subset into single AI-friendly file. Use when target repo is too large for file-by-file loading. Grep before reading. Use `/tmp` for remote repos.
+> Pack repository or file subset into single AI-friendly file. Use when target repo is too large for file-by-file loading. Grep before reading. Use `/tmp` for remote repos. For codebase context before packing, load `codebases` skill. For repository detection and metadata, load `scm` skill.
 </summary>
 
 <workflow>

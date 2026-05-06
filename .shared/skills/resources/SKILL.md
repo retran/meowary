@@ -1,13 +1,14 @@
 ---
 name: resources
 description: Knowledge graph philosophy, tag conventions, health scripts, operation log, and maintenance rules for resource articles. Load when creating, enriching, merging, splitting, or deleting a resource article, or at the start of any /r workflow.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [writing, query, confluence, jira]
 ---
 
 <role>Knowledge graph authority — philosophy, tags, health scripts, operation log, maintenance rules.</role>
 
 <summary>
-> `resources/` is the permanent knowledge graph. Articles = nodes; cross-references = edges. Concept-driven structure (NOT source-driven). One concept per article. Split/merge/restructure freely. Confluence is raw material; resources are refined output.
+> `resources/` is the permanent knowledge graph. Articles = nodes; cross-references = edges. Concept-driven structure (NOT source-driven). One concept per article. Split/merge/restructure freely. Confluence is raw material; resources are refined output. For prose quality, also load `writing` skill. For gap checks and multi-source retrieval, load `query` skill. For source integrations, load `confluence` and `jira` skills.
 </summary>
 
 <philosophy>

@@ -1,13 +1,14 @@
 ---
 name: scm
 description: PR/MR lifecycle, CI monitoring, and issue management via gh/glab CLIs — title and commit conventions, authentication, and platform-specific subskill routing. Load when creating or reviewing a PR/MR, monitoring CI, managing issues, or pushing code changes; then also load the platform-specific subskill.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [worktrunk, codebases]
 ---
 
 <role>SCM router — directs to platform-specific CLI (gh/glab) and enforces commit/PR conventions.</role>
 
 <summary>
-> `gh` (GitHub CLI) and `glab` (GitLab CLI) handle pull requests, merge requests, CI pipelines, issues, and repo operations. LOAD platform sub-skill alongside this one for specific commands.
+> `gh` (GitHub CLI) and `glab` (GitLab CLI) handle pull requests, merge requests, CI pipelines, issues, and repo operations. LOAD platform sub-skill alongside this one for specific commands. For worktree operations (PR/MR branch isolation), load `worktrunk` skill. For repository-specific conventions, load `codebases` skill.
 </summary>
 
 <sub_skills>

@@ -1,13 +1,14 @@
 ---
 name: query
 description: Multi-source retrieval strategy — 5-tier source priority (QMD → direct read → Confluence → Jira → web), citation format, confidence tags, staleness rules, and gap reporting. Load when answering any question that requires searching the knowledge base, citing sources, or reporting what is unknown.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [qmd, confluence, jira]
 ---
 
 <role>Multi-source retrieval and citation authority. Owns *how* to search, cite, and report confidence.</role>
 
 <summary>
-> 5-tier source priority. Tag every claim with citation + confidence. Surface conflicts, NEVER silently resolve. Read-only — querying never writes. For QMD CLI mechanics, also load `qmd` skill.
+> 5-tier source priority. Tag every claim with citation + confidence. Surface conflicts, NEVER silently resolve. Read-only — querying never writes. For QMD CLI mechanics, load `qmd` skill. For Confluence/Jira mechanics, load `confluence` and `jira` skills.
 </summary>
 
 <source_priority>

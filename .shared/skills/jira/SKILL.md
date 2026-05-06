@@ -1,13 +1,14 @@
 ---
 name: jira
 description: Read Jira issues — query assigned issues, sprint boards, and epics; extract facts for daily notes and resource articles. Load when pulling Jira context for a standup, daily note, or resource enrichment, or when looking up a Jira issue key.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [resources, query]
 ---
 
 <role>Jira read CLI authority. Read-only by default; writes require explicit approval.</role>
 
 <summary>
-> Use `--plain` for list output, `--no-input` for create/edit, `PAGER=cat` before `jira issue view`. NEVER write without explicit user approval.
+> Use `--plain` for list output, `--no-input` for create/edit, `PAGER=cat` before `jira issue view`. NEVER write without explicit user approval. For resource article format, load `resources` skill. For multi-source retrieval context (Jira = Tier 4), load `query` skill.
 </summary>
 
 <agent_flags>

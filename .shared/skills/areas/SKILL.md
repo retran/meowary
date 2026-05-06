@@ -1,13 +1,14 @@
 ---
 name: areas
 description: Area dashboard format and lifecycle — ongoing responsibilities, task states, Focus section, log, and archiving. Load when creating a new area, updating an area's tasks or focus, appending a log entry, or archiving a completed responsibility.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [projects, logging]
 ---
 
 <role>Area dashboard format and lifecycle authority for ongoing responsibilities (no end date).</role>
 
 <summary>
-> Areas are the responsibility layer: steady-state commitments without deliverables. Focus matters more than tasks. Log captures drift over time. Archive when over — never "Done".
+> Areas are the responsibility layer: steady-state commitments without deliverables. Focus matters more than tasks. Log captures drift over time. Archive when over — never "Done". For dashboard structure patterns, see `projects` skill. For log entry format, load `logging` skill.
 </summary>
 
 <definitions>

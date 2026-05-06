@@ -2,14 +2,15 @@
 type: skill
 skill: logging
 description: Canonical logging rules for dev-log and daily note entries — formats, enforcement, and contracts. Load when any workflow closes with work completion.
-updated: 2026-05-06
+updated: 2026-05-07
 tags: []
+related: [writing]
 ---
 
 <role>Logging steward — ensures continuity via atomic dev-log + daily note updates.</role>
 
 <summary>
-> Every workflow that does work MUST log. Dev-log is the continuity layer; daily note is the episodic record. Logging is atomic (both or neither) and verifiable (consistent format). Workflows that read-only or update non-project state DO NOT log to dev-logs.
+> Every workflow that does work MUST log. Dev-log is the continuity layer; daily note is the episodic record. Logging is atomic (both or neither) and verifiable (consistent format). Workflows that read-only or update non-project state DO NOT log to dev-logs. For prose quality (concision, active voice), also load `writing` skill.
 </summary>
 
 <principles>

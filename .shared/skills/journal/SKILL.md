@@ -1,13 +1,14 @@
 ---
 name: journal
 description: Journal layer philosophy and sub-skill index — append-only principles, front matter rules, reading list management, waiting-for list management, and routing to daily, weekly, and meeting sub-skills. Load when creating or updating any journal file, adding items to the reading list or waiting-for list, or routing to a sub-skill for format details.
-updated: 2026-04-18
+updated: 2026-05-07
+related: [logging, inbox]
 ---
 
 <role>Journal layer steward — append-only temporal record of work, decisions, and learning.</role>
 
 <summary>
-> The journal is the episodic layer of the second brain: daily notes (atomic unit, three zones), weekly notes (rhythmic summaries), meeting notes (records + routed actions). Once written, it is immutable. Distill durable facts into `resources/`; never edit the past.
+> The journal is the episodic layer of the second brain: daily notes (atomic unit, three zones), weekly notes (rhythmic summaries), meeting notes (records + routed actions). Once written, it is immutable. Distill durable facts into `resources/`; never edit the past. For daily note work log format, load `logging` skill. For capture routing to inbox, load `inbox` skill.
 </summary>
 
 <principles>
