@@ -137,7 +137,7 @@ transform_agent_for_claude() {
   local in_frontmatter=false
   local frontmatter_done=false
   local has_name=false
-  local permissions=""
+  local -a permissions=()
   local in_permission_block=false
   local steps_value=""
   local description=""
@@ -170,7 +170,7 @@ transform_agent_for_claude() {
       elif [[ "$line" == "permission:" ]]; then
         in_permission_block=true
       elif [[ "$in_permission_block" == "true" && "$line" =~ ^[[:space:]]+([a-z]+):\ (.*) ]]; then
-        permissions+="${BASH_REMATCH[1]}=${BASH_REMATCH[2]} "
+        permissions+=("${BASH_REMATCH[1]}=${BASH_REMATCH[2]}")
       elif [[ "$line" =~ ^(mode|hidden): ]]; then
         : # skip these
       elif [[ "$line" =~ ^name:\ (.*) ]]; then
@@ -184,7 +184,8 @@ transform_agent_for_claude() {
   local tools_list=""
   local disallowed_list=""
 
-  for pair in $permissions; do
+  if [[ ${#permissions[@]} -gt 0 ]]; then
+  for pair in "${permissions[@]}"; do
     local key="${pair%%=*}"
     local val="${pair##*=}"
     local claude_tools=""
@@ -205,6 +206,7 @@ transform_agent_for_claude() {
       disallowed_list+="$claude_tools "
     fi
   done
+  fi
 
   # Write transformed file
   local body
@@ -212,8 +214,8 @@ transform_agent_for_claude() {
 
   {
     echo "---"
-    echo "name: $name"
-    echo "description: $description"
+    echo "name: ${name}"
+    echo "description: ${description}"
     [[ -n "$steps_value" ]] && echo "maxTurns: $steps_value"
     if [[ -n "$tools_list" ]]; then
       echo "tools: $(echo "$tools_list" | xargs | sed 's/ /, /g')"
@@ -328,7 +330,7 @@ for arg in "$@"; do
   case "$arg" in
     opencode) AGENTS+=("opencode") ;;
     claude)   AGENTS+=("claude") ;;
-    *)        error "Unknown agent: $arg. Use 'opencode' or 'claude'." ;;
+    *)        error "Unknown agent: '$arg'. Use 'opencode' or 'claude'." ;;
   esac
 done
 

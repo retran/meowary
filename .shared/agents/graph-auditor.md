@@ -61,7 +61,7 @@ Articles with zero inbound links.
 </step>
 
 <step n="7" name="Find missing stubs">
-Scan all repo Markdown for links to `resources/<name>` (or `[[name]]` wikilinks) where target file does not exist. These = missing stubs.
+Scan all repo Markdown for links to `resources/<name>` (or wikilinks like `[[name]]`) where target file does not exist. These = missing stubs.
 <done_when>Missing stub list built.</done_when>
 </step>
 
