@@ -41,7 +41,8 @@ Provenance tags:
 1. Read `projects/<name>/dev-log.md` last entry.
 2. Check `projects/<name>/research/` for prior research on topic.
 3. Read today's daily note — find tasks matching topic.
-<done_when>Project state loaded; prior research identified.</done_when>
+4. For prose quality in source notes, also load `writing` skill.
+<done_when>Project state loaded; prior research identified; writing skill loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

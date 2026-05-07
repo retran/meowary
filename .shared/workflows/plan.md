@@ -56,7 +56,8 @@ Three levels only. Catastrophic risk (data loss, security breaches) handled by `
 3. Load research brief if available: `projects/<name>/research/brief-<topic>.md`.
 4. Load existing spec or problem statement.
 5. Read today's daily note — find tasks matching plan.
-<done_when>Project scaffold confirmed; dev-log, brief, spec loaded.</done_when>
+6. For prose quality in plan documents, also load `writing` skill.
+<done_when>Project scaffold confirmed; dev-log, brief, spec loaded; writing skill loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

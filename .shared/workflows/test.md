@@ -35,7 +35,8 @@ First-class testing workflow covering automated and manual/exploratory testing. 
 2. Read `projects/<name>/plans/<slug>.md` — identify success criteria and test strategy.
 3. Load `codebases/<name>.md` for test framework, file structure, coverage policy, codebase context.
 4. Read today's daily note — find tasks matching testing work.
-<done_when>Implemented scope, success criteria, test framework, codebase context loaded.</done_when>
+5. For prose quality in test session notes, also load `writing` skill.
+<done_when>Implemented scope, success criteria, test framework, codebase context loaded; writing skill loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify">
