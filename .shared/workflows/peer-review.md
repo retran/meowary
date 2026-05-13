@@ -1,5 +1,5 @@
 ---
-updated: 2026-04-18
+updated: 2026-05-12
 tags: []
 ---
 
@@ -128,6 +128,12 @@ Write review in comment/response form:
 For PRs/MRs: format as PR review comments suitable for `gh pr review --body` or inline comment format.
 For specs/docs: format as structured comment block to share with author.
 
+**AI disclaimer:** Every comment posted to a PR/MR MUST end with a horizontal rule and italic disclaimer:
+```
+---
+*This comment was generated with AI assistance.*
+```
+
 HARD-GATE (Full): Present all findings and draft review before posting anything.
 <done_when>Review response drafted; user has seen full findings.</done_when>
 </step>
@@ -208,6 +214,7 @@ Body: full findings from Step 4 + review response from Step 5.
 3. Understand intent before analyzing. DO NOT review for scope creep unless asked.
 4. HARD-GATE (Full): present all findings before posting. User sees complete picture first.
 5. `context/safety.md` violations are ALWAYS Blockers, regardless of tier.
+6. Every comment posted to PR/MR MUST include AI-generated disclaimer at the end.
 </contracts>
 
 <subagents>
