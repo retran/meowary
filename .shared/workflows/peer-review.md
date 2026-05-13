@@ -1,5 +1,5 @@
 ---
-updated: 2026-05-12
+updated: 2026-05-13
 tags: []
 ---
 
@@ -8,7 +8,7 @@ Rigorous, constructive peer reviewer. Understand intent before analyzing for iss
 </role>
 
 <summary>
-Structured review of external work — PRs, MRs, specs, RFCs, ADRs. Produces findings organized by severity (Blocker / Major / Minor / Nit), written review response for Standard and Full tiers, persisted review file for Full tier. Invoke when asked to review someone else's work.
+Structured review of external work — PRs, MRs, specs, RFCs, ADRs. Produces findings organized by severity (Blocker / Major / Minor / Nit), written review response for Standard and Full tiers, persisted review file for Full tier. Re-reads and re-analyzes in multiple passes to maximize thoroughness before posting. Invoke when asked to review someone else's work.
 </summary>
 
 <inputs>
@@ -138,6 +138,24 @@ HARD-GATE (Full): Present all findings and draft review before posting anything.
 <done_when>Review response drafted; user has seen full findings.</done_when>
 </step>
 
+<step n="5.5" name="Re-review loop" condition="Standard + Full" skip_if="Quick">
+After producing findings, re-read the code and re-analyze to catch anything missed on the first pass. The goal is thoroughness — a single review that surfaces everything.
+
+**Loop protocol:**
+1. Re-read changed files in full. Re-run Steps 3–4 (analyze, produce findings) on the same code.
+2. Treat each iteration independently — review the code fresh, not anchored to prior findings.
+3. If the re-review surfaces new findings not already in the report: add them and repeat from step 1.
+4. If the re-review surfaces no new findings: finalize the report and proceed.
+
+**Guard rails:**
+- Maximum 5 iterations. After 5 passes, finalize the report as-is.
+- Log iteration count in the review output: "Review depth: N passes."
+
+The final report is a single consolidated list of all findings across all passes.
+
+<done_when>Re-review surfaces no new findings, OR maximum iterations reached. Single consolidated report ready.</done_when>
+</step>
+
 <step n="6" name="Persist review file" condition="Full" skip_if="Quick OR Standard">
 Write findings to `projects/<name>/notes/review-<date>-<slug>.md`:
 
@@ -215,6 +233,7 @@ Body: full findings from Step 4 + review response from Step 5.
 4. HARD-GATE (Full): present all findings before posting. User sees complete picture first.
 5. `context/safety.md` violations are ALWAYS Blockers, regardless of tier.
 6. Every comment posted to PR/MR MUST include AI-generated disclaimer at the end.
+7. Re-read and re-analyze in a loop (max 5 passes) to maximize thoroughness. Final output is a single consolidated report.
 </contracts>
 
 <subagents>
@@ -226,8 +245,9 @@ Body: full findings from Step 4 + review response from Step 5.
 <next_steps>
 | Condition | Suggested workflow |
 |-----------|--------------------|
+| Review loop clean (zero findings) | Approve and merge |
 | Review has Blockers | Author needs `resolve` before re-review |
-| Review is Approve or Approve with nits | Merge or proceed |
+| Max iterations reached with remaining findings | Post final findings, proceed |
 | Review surfaces architectural questions | `design` or `research` to dig deeper |
 | Review uncovered bug outside PR scope | `debug` to investigate |
 </next_steps>

@@ -1,5 +1,5 @@
 ---
-updated: 2026-04-18
+updated: 2026-05-13
 tags: []
 ---
 
@@ -8,7 +8,7 @@ Rigorous internal code reviewer. Read changed files in full, NOT just diffs — 
 </role>
 
 <summary>
-Structured pre-PR code review. Reads plan's success criteria, applies codebase style and patterns conventions, checks for common anti-patterns, produces structured review report with severity-classified findings. Catches issues author missed — NOT a rubber-stamp, but honest check against same standards external reviewer would apply. Invoke after `implement` (Standard or Full tier) before raising PR.
+Structured pre-PR code review with iterative fix loop. Reads plan's success criteria, applies codebase style and patterns conventions, checks for common anti-patterns, produces structured review report with severity-classified findings. Fixes ALL findings (including Minors and Nits), then re-reviews — repeating until no new findings emerge. Catches issues author missed — NOT a rubber-stamp, but honest check against same standards external reviewer would apply. Invoke after `implement` (Standard or Full tier) before raising PR.
 </summary>
 
 <inputs>
@@ -139,12 +139,29 @@ HARD-GATE (Full): Present all findings before any addressed. User decides priori
 <done_when>All findings categorized and presented; user has reviewed complete report.</done_when>
 </step>
 
-<step n="8" name="Close" gate="END-GATE">
-1. After user addresses Blockers and Majors: write summary of what was fixed.
-2. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+<step n="7.5" name="Fix all findings and re-review loop">
+After producing the review report, fix ALL findings — Blockers, Majors, Minors, AND Nits. Do not skip any severity level.
 
-2. Mark matching task items done.
-5. **Resource enrichment** — after dev-log entry, actively reflect:
+**Loop protocol:**
+1. Fix every finding from the current review report.
+2. Verify fixes: run tests, lint, build as applicable.
+3. Re-run Steps 2–7 (full review pass on the updated code).
+4. If the re-review produces new findings: fix them and repeat from step 1.
+5. If the re-review produces zero findings: exit loop, proceed to Close.
+
+**Guard rails:**
+- Maximum 5 iterations. If findings persist after 5 loops, report remaining findings and proceed to Close.
+- Each iteration's findings are independent — do not carry forward "already reported" status from prior iterations. Review the code as-is.
+- Log each iteration count in the review output: "Review pass N: X findings."
+
+<done_when>Re-review produces zero findings, OR maximum iterations reached.</done_when>
+</step>
+
+<step n="8" name="Close" gate="END-GATE">
+1. After all findings are resolved (via fix loop): write summary of what was fixed across iterations.
+2. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+3. Mark matching task items done.
+4. **Resource enrichment** — after dev-log entry, actively reflect:
 
    > "Did this review surface any pattern, anti-pattern, or convention not already documented in `resources/` or `codebases/<name>.md`?"
 
@@ -190,6 +207,7 @@ HARD-GATE (Full): Present all findings before any addressed. User decides priori
 3. Read changed files in full, NOT just diffs.
 4. `context/safety.md` violations ALWAYS Blockers, regardless of tier.
 5. Full tier writes review report to `projects/<name>/notes/review-<date>.md`. Quick/Standard: in-session only.
+6. Fix ALL severity levels (including Minors and Nits), then re-review. Loop until clean or max 5 iterations.
 </contracts>
 
 <subagents>
@@ -201,8 +219,8 @@ HARD-GATE (Full): Present all findings before any addressed. User decides priori
 <next_steps>
 | Condition | Suggested workflow |
 |-----------|--------------------|
-| All Blockers resolved | Raise PR |
-| Blockers require code changes | `implement` to fix, then re-review |
+| Review loop clean (zero findings) | Raise PR |
+| Max iterations reached with remaining findings | Raise PR, note remaining items |
 | Logic failures discovered | `debug` |
 | Review reveals fundamental approach issues | `brainstorm` |
 | Review reveals missing test cases | `test` |
