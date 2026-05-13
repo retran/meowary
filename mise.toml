@@ -24,6 +24,7 @@ opencode    = "latest"   # CLI-based agent (https://opencode.ai/)
 # glab = "latest"   # GitLab CLI
 # "ubi:ankitpokhrel/jira-cli[exe=jira]" = "latest"   # Jira CLI
 # "npm:confluence-cli" = "latest"   # Confluence CLI
+# "ubi:avivsinai/jenkins-cli[exe=jk]" = "latest"   # Jenkins CLI (jk)
 
 # ── Environment ───────────────────────────────────────────────────────────────
 [env]

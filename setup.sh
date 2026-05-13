@@ -285,6 +285,7 @@ OPTIONAL_TOOLS=(
   "glab|GitLab CLI — MR lifecycle, CI pipelines, issues|glab|0"
   "jira-cli|Jira CLI — query issues, sprints, and epics|\"ubi:ankitpokhrel/jira-cli[exe=jira]\"|1"
   "confluence-cli|Confluence CLI — read pages into resource articles|\"npm:confluence-cli\"|1"
+  "jk|Jenkins CLI — query jobs, trigger builds, view logs|\"ubi:avivsinai/jenkins-cli[exe=jk]\"|0"
 )
 
 # Maps mise_key → the comment suffix used in mise.toml
@@ -293,6 +294,7 @@ declare -A TOOL_COMMENT=(
   ["glab"]="# GitLab CLI"
   ['"ubi:ankitpokhrel/jira-cli[exe=jira]"']="# Jira CLI"
   ['"npm:confluence-cli"']="# Confluence CLI"
+  ['"ubi:avivsinai/jenkins-cli[exe=jk]"']="# Jenkins CLI (jk)"
 )
 
 # Populated by select_optional_tools; read by setup_env
@@ -574,6 +576,17 @@ run_auth() {
       ok "glab already authenticated"
     elif ui_confirm "Authenticate GitLab CLI now?"; then
       glab auth login
+    fi
+  fi
+
+  if have jk; then
+    if jk auth status &>/dev/null 2>&1; then
+      ok "jk already authenticated"
+    elif ui_confirm "Authenticate Jenkins CLI now? (requires Jenkins URL + API token)"; then
+      ui_input jenkins_url "Jenkins URL" "https://jenkins.example.com"
+      if [[ -n "$jenkins_url" ]]; then
+        jk auth login "$jenkins_url"
+      fi
     fi
   fi
 

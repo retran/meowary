@@ -59,6 +59,7 @@ const tools = [
   checkTool("qmd", "qmd", "qmd --version"),
   checkTool("ctx7", "ctx7", "ctx7 --version"),
   checkTool("repomix", "repomix", "repomix --version"),
+  checkTool("jk", "jk", "jk --version"),
 ];
 
 // Build the snapshot file

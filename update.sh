@@ -134,6 +134,7 @@ OPTIONAL_TOOLS=(
   "glab|GitLab CLI|glab|0"
   "jira-cli|Jira CLI|\"ubi:ankitpokhrel/jira-cli[exe=jira]\"|1"
   "confluence-cli|Confluence CLI|\"npm:confluence-cli\"|1"
+  "jk|Jenkins CLI|\"ubi:avivsinai/jenkins-cli[exe=jk]\"|0"
 )
 
 declare -A TOOL_COMMENT=(
@@ -141,6 +142,7 @@ declare -A TOOL_COMMENT=(
   ["glab"]="# GitLab CLI"
   ['"ubi:ankitpokhrel/jira-cli[exe=jira]"']="# Jira CLI"
   ['"npm:confluence-cli"']="# Confluence CLI"
+  ['"ubi:avivsinai/jenkins-cli[exe=jk]"']="# Jenkins CLI (jk)"
 )
 
 tool_line() {
