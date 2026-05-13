@@ -40,6 +40,9 @@ error() { echo "  ✗ $*" >&2; ERRORS+=("$*"); }
 
 have() { command -v "$1" &>/dev/null; }
 
+# Increment a variable safely under set -e (avoids (( i++ )) returning 1 when i==0)
+incr() { (( $1++ )) || true; }
+
 # sed in-place, portably
 sed_i() {
   if [[ "$OS" == macos ]]; then
@@ -174,7 +177,7 @@ ui_choose() {
     local i=1
     for opt in "${options[@]}"; do
       echo "    $i) $opt"
-      (( i++ )) || true
+      incr i
     done
     local reply
     read -r -p "  Choice [1-${#options[@]}]: " reply
@@ -243,16 +246,16 @@ select_agent_system() {
 
   case "$AGENT_SYSTEM" in
     opencode)
-      sed_i "s|^# opencode.*|${oc_line}|" "$SCRIPT_DIR/mise.toml"
-      sed_i "s|^claude = .*|${cc_commented}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^[[:space:]]*# opencode.*|${oc_line}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^[[:space:]]*claude = .*|${cc_commented}|" "$SCRIPT_DIR/mise.toml"
       ;;
     claude)
-      sed_i "s|^opencode.*|${oc_commented}|" "$SCRIPT_DIR/mise.toml"
-      sed_i "s|^# claude.*|${cc_line}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^[[:space:]]*opencode.*|${oc_commented}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^[[:space:]]*# claude.*|${cc_line}|" "$SCRIPT_DIR/mise.toml"
       ;;
     both)
-      sed_i "s|^# opencode.*|${oc_line}|" "$SCRIPT_DIR/mise.toml"
-      sed_i "s|^# claude.*|${cc_line}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^[[:space:]]*# opencode.*|${oc_line}|" "$SCRIPT_DIR/mise.toml"
+      sed_i "s|^[[:space:]]*# claude.*|${cc_line}|" "$SCRIPT_DIR/mise.toml"
       ;;
   esac
 
@@ -361,13 +364,17 @@ select_optional_tools() {
       local marker=" "
       { [[ ${#preselected[@]} -gt 0 ]] && printf '%s\n' "${preselected[@]}"; } | grep -qF "$choice" && marker="*"
       printf "    [%d][%s] %s\n" "$i" "$marker" "$choice"
-      (( i++ )) || true
+      incr i
     done
     echo ""
     local reply
     read -r -p "  Your choice: " reply
     if [[ -z "$reply" ]]; then
-      selected_lines=$( [[ ${#preselected[@]} -gt 0 ]] && printf '%s\n' "${preselected[@]}" || true )
+      if [[ ${#preselected[@]} -gt 0 ]]; then
+        selected_lines=$(printf '%s\n' "${preselected[@]}")
+      else
+        selected_lines=""
+      fi
     elif [[ "$reply" =~ ^[Aa]$ ]]; then
       selected_lines=$(printf '%s\n' "${choices[@]}")
     else
@@ -409,7 +416,7 @@ select_optional_tools() {
         ok "Disabled $tool_name in mise.toml"
       fi
     fi
-    (( i++ )) || true
+    incr i
   done
 
   # Also flag NEEDS_ATLASSIAN if a previously-enabled Atlassian tool remains active
@@ -564,7 +571,7 @@ run_auth() {
   step "Authentication"
 
   if have gh; then
-    if gh auth status &>/dev/null 2>&1; then
+    if gh auth status &>/dev/null; then
       ok "gh already authenticated"
     elif ui_confirm "Authenticate GitHub CLI now (opens browser)?"; then
       gh auth login

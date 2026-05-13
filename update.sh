@@ -130,11 +130,11 @@ latest_version() {
 
 # Each entry: "name|description|mise_key|needs_atlassian"
 OPTIONAL_TOOLS=(
-  "gh|GitHub CLI|gh|0"
-  "glab|GitLab CLI|glab|0"
-  "jira-cli|Jira CLI|\"ubi:ankitpokhrel/jira-cli[exe=jira]\"|1"
-  "confluence-cli|Confluence CLI|\"npm:confluence-cli\"|1"
-  "jk|Jenkins CLI|\"ubi:avivsinai/jenkins-cli[exe=jk]\"|0"
+  "gh|GitHub CLI — PR lifecycle, Actions CI, code search|gh|0"
+  "glab|GitLab CLI — MR lifecycle, CI pipelines, issues|glab|0"
+  "jira-cli|Jira CLI — query issues, sprints, and epics|\"ubi:ankitpokhrel/jira-cli[exe=jira]\"|1"
+  "confluence-cli|Confluence CLI — read pages into resource articles|\"npm:confluence-cli\"|1"
+  "jk|Jenkins CLI — query jobs, trigger builds, view logs|\"ubi:avivsinai/jenkins-cli[exe=jk]\"|0"
 )
 
 declare -A TOOL_COMMENT=(
@@ -182,9 +182,11 @@ restore_optional_state() {
     escaped_comment=$(sed_escape "$comment_line")
 
     local should_enable=false
-    for ek in "${enabled_keys[@]:-}"; do
-      [[ "$ek" == "$key" ]] && should_enable=true && break
-    done
+    if [[ ${#enabled_keys[@]} -gt 0 ]]; then
+      for ek in "${enabled_keys[@]}"; do
+        [[ "$ek" == "$key" ]] && should_enable=true && break
+      done
+    fi
 
     if $should_enable; then
       if ! tool_is_enabled "$key"; then
@@ -348,8 +350,8 @@ show_changelog_excerpt() {
       found=true
     fi
     if $printing; then
-      # Stop at the previous version heading (or [Unreleased])
-      if [[ "$found" == true && "$line" =~ ^\#\#[[:space:]]\[(${from_pat}|Unreleased)\] && "$line" != *"${to}"* ]]; then
+      # Stop at the previous version heading (or [Unreleased]), but not the target version
+      if $found && [[ "$line" =~ ^\#\#[[:space:]]\[(${from_pat}|Unreleased)\] ]] && [[ "$line" != *"${to}"* ]]; then
         break
       fi
       echo "  $line"
@@ -443,7 +445,8 @@ main() {
   fi
 
   echo ""
-  info "This will update all framework files: AGENTS.md, mise.toml, .opencode/, setup.sh, and more."
+  info "This will update all framework files: mise.toml, .opencode/, setup.sh, and more."
+  info "AGENTS.md is regenerated from your agent config after update."
   info "Personal directories (journal/, projects/, areas/, resources/, archive/,"
   info "  inbox/, context/, codebases/, meta/) and .env are never modified."
   echo ""
@@ -471,7 +474,11 @@ main() {
   copy_framework_files "$EXTRACT_DIR"
 
   step "Restoring optional tool selections in mise.toml"
-  restore_optional_state "${enabled_tools[@]:-}"
+  if [[ ${#enabled_tools[@]} -gt 0 ]]; then
+    restore_optional_state "${enabled_tools[@]}"
+  else
+    restore_optional_state
+  fi
 
   run_mise_install
   run_npm_install
