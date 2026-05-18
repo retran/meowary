@@ -310,11 +310,9 @@ generate_claude() {
     fi
   fi
 
-  # Install Claude Code plugins (context-mode for context optimization, playwright for browser automation)
+  # Install Claude Code plugins (playwright for browser automation)
   if have claude; then
     info "Installing Claude Code plugins..."
-    claude plugin marketplace add mksglu/context-mode 2>/dev/null || true
-    claude plugin install context-mode@context-mode --scope project 2>/dev/null || true
     claude plugin install playwright@claude-plugins-official --scope project 2>/dev/null || true
   fi
 

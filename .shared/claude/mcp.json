@@ -1,9 +1,5 @@
 {
   "mcpServers": {
-    "context-mode": {
-      "command": "context-mode",
-      "args": []
-    },
     "exa": {
       "type": "url",
       "url": "https://mcp.exa.ai/mcp"
