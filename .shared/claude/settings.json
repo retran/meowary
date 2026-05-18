@@ -12,9 +12,14 @@
       "Glob",
       "Grep",
       "mcp__context-mode__*",
-      "mcp__exa__*"
+      "mcp__exa__*",
+      "mcp__playwright__*"
     ],
     "deny": []
+  },
+  "enabledPlugins": {
+    "context-mode@context-mode": true,
+    "playwright@claude-plugins-official": true
   },
   "env": {}
 }

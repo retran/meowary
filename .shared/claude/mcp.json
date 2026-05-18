@@ -7,6 +7,10 @@
     "exa": {
       "type": "url",
       "url": "https://mcp.exa.ai/mcp"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
     }
   }
 }
