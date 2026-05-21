@@ -27,7 +27,6 @@ Rigorous knowledge graph planner. Reviews full graph — structural decisions ne
 <steps>
 
 <step n="0" name="Load context">
-1. READ today's daily note for matching tasks.
 2. CHECK `resources-actualize-plan.md` — note completed and remaining.
 3. Load `resources` skill for graph philosophy, health metrics, and operation types.
 
@@ -71,7 +70,7 @@ Check all six problem types:
 
 **b Splits** — articles covering distinct concepts. Symptoms: > 80 lines, sections on unrelated subtopics, linked only for one section.
 
-**c New nodes** — concepts mentioned in multiple articles but no dedicated article. Search `journal/daily/`, `journal/weekly/`, `projects/` for recurring. QMD-query to check. List concepts in ≥ 2 sources or substantial enough.
+**c New nodes** — concepts mentioned in multiple articles but no dedicated article. Search `projects/` for recurring. QMD-query to check. List concepts in ≥ 2 sources or substantial enough.
 
 **d Deletions/archiving** — content-less stubs, duplicates fully covered elsewhere, irrelevant topics.
 
@@ -134,7 +133,6 @@ git commit -m "Generate resources actualize plan: N operations"
 </step>
 
 <step n="6" name="Close" gate="END-GATE">
-1. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 2. MARK matching tasks done.
 
 <self_review>
@@ -142,12 +140,12 @@ git commit -m "Generate resources actualize plan: N operations"
 - [ ] Plan covers identified gaps
 - [ ] Priority order justified
 - [ ] Health metrics baseline documented
-- [ ] **Logging completed per logging skill** (resources-log + daily note)
+- [ ] **Logging completed per logging skill** (resources-log)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>
 
-<done_when>Log appended; daily note updated.</done_when>
+<done_when>Log appended.</done_when>
 </step>
 
 </steps>
@@ -157,7 +155,6 @@ git commit -m "Generate resources actualize plan: N operations"
 |--------|----------|--------|
 | Plan | `resources-actualize-plan.md` | Markdown |
 | Log entry | `meta/resources-log.md` | Append |
-| Work log | `journal/daily/<date>.md` Day zone | Append |
 | Commit | Git | Commit |
 </outputs>
 

@@ -5,7 +5,7 @@ tags: [bootstrap, setup]
 ---
 
 <role>
-Bootstrap agent. Set up or revise `context/context.md`, `context/safety.md`, and `codebases/<name>.md` files. Idempotent — safe to re-run.
+Bootstrap agent. Set up or revise `context/context.md`, `context/safety.md`, `context/habits.md`, and `codebases/<name>.md` files. Idempotent — safe to re-run.
 </role>
 
 <arguments>
@@ -16,8 +16,9 @@ Bootstrap agent. Set up or revise `context/context.md`, `context/safety.md`, and
 Templates:
 - `{{AGENT_DIR}}/context-templates/context.md`
 - `{{AGENT_DIR}}/context-templates/safety.md`
+- `{{AGENT_DIR}}/context-templates/habits.md`
 - `{{AGENT_DIR}}/skills/codebases/codebase-template.md`
-- `{{AGENT_DIR}}/meta-templates/*` (tags, confluence-sync, resources-log)
+- `{{AGENT_DIR}}/meta-templates/*` (tags, confluence-sync, resources-log, recurring-events)
 
 Branching: existing `context/context.md` with non-empty Author section → revision flow (Step 2a). Empty/missing → fresh setup (Step 2b onward).
 </context>
@@ -31,6 +32,8 @@ Read `context/context.md`. Branch: has content → Step 2a. Empty/missing → St
 
 <step n="2a" name="Revision flow" condition="existing context">
 Display current context as readable summary. Ask: "Is this still accurate? What would you like to update?" Scan `projects/` and `areas/` (excluding `archive/`) to refresh Active lists. Apply updates.
+
+Check `context/habits.md`. If exists: ask "Want to review your daily/weekly habits?" If yes: display current habits, accept edits. If missing: offer to create from template (Step 7b logic).
 
 Skip to Step 5.
 <done_when>Revisions applied.</done_when>
@@ -99,7 +102,7 @@ tags: []
 - **Week numbering:** ISO 8601
 - **Jira project key:** <key> or n/a
 - **Commit format (code repos):** <e.g. `[PROJ-123] description`>
-- **Commit format (journal):** n/a
+- **Commit format (journal):** description only (no key, no type prefix)
 
 ## Active Projects
 <scan projects/ excluding archive/>
@@ -170,6 +173,7 @@ qmd collection add context ./context
 qmd collection add codebases ./codebases
 qmd collection add resources ./resources
 qmd collection add skills ./{{AGENT_DIR}}/skills
+qmd collection add journal ./journal
 qmd collection add inbox ./inbox
 qmd collection add projects ./projects
 qmd collection add areas ./areas
@@ -191,15 +195,34 @@ Check `.env` at repo root. If missing, check `.env.example` and instruct user to
 <done_when>Env state assessed.</done_when>
 </step>
 
-<step n="7" name="Author resource" condition="fresh only">
+<step n="7" name="Recurring events" condition="fresh only">
+Read `journal/recurring-events.md`. If missing, copy from `{{AGENT_DIR}}/meta-templates/recurring-events-template.md`. If empty, ask for recurring events (standups, 1-on-1s, ceremonies) with day and time. Write organized by weekday.
+<done_when>Recurring events recorded.</done_when>
+</step>
+
+<step n="7b" name="Habits" condition="fresh only">
+Check `context/habits.md`. If missing, copy from `{{AGENT_DIR}}/context-templates/habits.md`.
+
+Present the default habits table to the user:
+- "Here are suggested daily and weekly habits. They'll be surfaced by `/morning`, `/evening`, and `/weekly` at the relevant trigger points."
+- Show: `## Daily — Morning`, `## Daily — Evening`, `## Weekly — Monday`, `## Weekly — Friday` sections.
+
+ASK: "Would you like to customize these habits? You can add, remove, or modify any row. These are personal — adapt them to your role and goals."
+
+If user wants changes: apply them. If user accepts defaults: leave as-is.
+
+<done_when>Habits file exists and user has reviewed it.</done_when>
+</step>
+
+<step n="8a" name="Author resource" condition="fresh only">
 Offer to create `resources/people/<slug>.md` for author. If accepted: fill name, role, team. Register `#person-<slug>` in `meta/tags.md`.
 
 Pre-check: `meta/tags.md` exists; if not, copy from `{{AGENT_DIR}}/meta-templates/tags-template.md`.
 <done_when>Author resource created or declined.</done_when>
 </step>
 
-<step n="8" name="Obsidian setup" condition="fresh only">
-ASK: "Will you use Obsidian to browse or edit your vault?"
+<step n="8b" name="Obsidian setup" condition="fresh only">
+ASK: "Will you use Obsidian to browse or edit your journal?"
 
 If yes, display recommended settings:
 
@@ -219,9 +242,11 @@ If no, skip.
 
 <step n="9" name="Orientation" condition="fresh only">
 Explain command set:
+- **Daily rhythm:** `/morning`, `/evening`, `/standup`, `/weekly`
 - **Lifecycle work:** `/do <phase>` — phases: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
 - **Knowledge graph:** `/r <operation>` — operations: `enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`
-- **Quick capture:** `/capture <note>` — timestamped note into inbox
+- **Quick capture:** `/capture <note>` — timestamped note into today's daily Inbox
+- **Meeting notes:** `/meeting`
 <done_when>Orientation delivered.</done_when>
 </step>
 

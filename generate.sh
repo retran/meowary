@@ -58,6 +58,67 @@ resolve_file() {
   fi
 }
 
+# ── Journal mode ──────────────────────────────────────────────────────────────
+
+ENABLE_JOURNAL=true
+if [[ -f "$SCRIPT_DIR/.journal-config" ]]; then
+  journal_config=""
+  journal_config=$(tr '\n' ' ' < "$SCRIPT_DIR/.journal-config" | xargs)
+  if [[ "$journal_config" == *"disabled"* ]]; then
+    ENABLE_JOURNAL=false
+  fi
+fi
+
+# Handle journal files in a generated directory.
+# Call after all copying is done.
+# When journal is disabled: removes all journal-specific files.
+# When journal is enabled: swaps bootstrap.md for the journal variant.
+handle_journal_files() {
+  local target="$1"
+
+  if $ENABLE_JOURNAL; then
+    # Use journal variant of bootstrap command
+    if [[ -f "$target/commands/bootstrap.journal.md" ]]; then
+      cp "$target/commands/bootstrap.journal.md" "$target/commands/bootstrap.md"
+    fi
+  else
+    info "Excluding journal files …"
+
+    # Commands
+    rm -f "$target/commands/morning.md"
+    rm -f "$target/commands/evening.md"
+    rm -f "$target/commands/standup.md"
+    rm -f "$target/commands/weekly.md"
+    rm -f "$target/commands/meeting.md"
+    rm -f "$target/commands/bootstrap.journal.md"
+
+    # Workflows
+    rm -f "$target/workflows/morning.md"
+    rm -f "$target/workflows/evening.md"
+    rm -f "$target/workflows/standup.md"
+    rm -f "$target/workflows/weekly.md"
+    rm -f "$target/workflows/meeting.md"
+
+    # Skills (journal sub-directory)
+    if [[ -d "$target/skills/journal" ]]; then
+      rm -rf "$target/skills/journal"
+    fi
+
+    # Context templates
+    rm -f "$target/context-templates/habits.md"
+
+    # Meta templates
+    rm -f "$target/meta-templates/recurring-events-template.md"
+    rm -f "$target/meta-templates/reading-list-template.md"
+    rm -f "$target/meta-templates/waiting-for-template.md"
+
+    ok "Journal files excluded"
+  fi
+
+  # Always remove the journal variant file once resolved
+  rm -f "$target/commands/bootstrap.journal.md"
+}
+
 # ── Validation ────────────────────────────────────────────────────────────────
 
 if [[ $# -eq 0 ]]; then
@@ -101,6 +162,9 @@ generate_opencode() {
   # Resolve {{AGENT_DIR}} → .opencode in all copied markdown
   resolve_templates "$target" ".opencode"
 
+  # Conditionally include or exclude journal files
+  handle_journal_files "$target"
+
   # Copy OpenCode-specific config (package.json, opencode.json)
   if [[ -d "$SHARED_DIR/opencode" ]]; then
     for f in "$SHARED_DIR/opencode"/*; do
@@ -117,8 +181,12 @@ generate_opencode() {
   fi
 
   # Generate AGENTS.md from template — resolve placeholders for .opencode
-  if [[ -f "$SHARED_DIR/AGENTS.md.template" ]]; then
-    cp "$SHARED_DIR/AGENTS.md.template" "$SCRIPT_DIR/AGENTS.md" || error "Failed to copy AGENTS.md.template"
+  local agents_template="$SHARED_DIR/AGENTS.md.template"
+  if $ENABLE_JOURNAL && [[ -f "$SHARED_DIR/AGENTS.md.journal.template" ]]; then
+    agents_template="$SHARED_DIR/AGENTS.md.journal.template"
+  fi
+  if [[ -f "$agents_template" ]]; then
+    cp "$agents_template" "$SCRIPT_DIR/AGENTS.md" || error "Failed to copy AGENTS.md.template"
     resolve_file "$SCRIPT_DIR/AGENTS.md" ".opencode" "AGENTS.md"
   fi
 
@@ -318,6 +386,9 @@ generate_claude() {
   # Resolve {{AGENT_DIR}} → .claude in all copied markdown
   resolve_templates "$target" ".claude"
 
+  # Conditionally include or exclude journal files
+  handle_journal_files "$target"
+
   # Generate CLAUDE.md from template — resolve placeholders for .claude
   # Both CLAUDE.md.template and AGENTS.md.template are identical (parameterized);
   # either can serve as the Claude source.
@@ -326,6 +397,10 @@ generate_claude() {
     claude_src="$SHARED_DIR/CLAUDE.md.template"
   elif [[ -f "$SHARED_DIR/AGENTS.md.template" ]]; then
     claude_src="$SHARED_DIR/AGENTS.md.template"
+  fi
+  # Use journal variant if journal is enabled
+  if $ENABLE_JOURNAL && [[ -f "$SHARED_DIR/AGENTS.md.journal.template" ]]; then
+    claude_src="$SHARED_DIR/AGENTS.md.journal.template"
   fi
   if [[ -n "$claude_src" ]]; then
     cp "$claude_src" "$SCRIPT_DIR/CLAUDE.md" || error "Failed to generate CLAUDE.md"

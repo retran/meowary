@@ -177,7 +177,7 @@ Body: full findings from Step 4 + review response from Step 5.
 </step>
 
 <step n="7" name="Close" gate="END-GATE">
-1. Append work log to `## Day` zone of today's daily note.
+1. 
 2. Mark any matching task items done.
 3. NO dev-log entry required unless this review is part of active project's lifecycle.
    - If dev-log entry warranted:
@@ -216,7 +216,6 @@ Body: full findings from Step 4 + review response from Step 5.
 | In-session findings summary | Inline | Text |
 | Written review comments | PR/MR or inline in document | Markdown |
 | Persisted review file | `projects/<name>/notes/review-<date>-<slug>.md` | Markdown |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 </outputs>
 
 <error_handling>

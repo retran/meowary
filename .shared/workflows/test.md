@@ -34,7 +34,6 @@ First-class testing workflow covering automated and manual/exploratory testing. 
 1. Read `projects/<name>/dev-log.md` last entry — what was implemented?
 2. Read `projects/<name>/plans/<slug>.md` — identify success criteria and test strategy.
 3. Load `codebases/<name>.md` for test framework, file structure, coverage policy, codebase context.
-4. Read today's daily note — find tasks matching testing work.
 5. For prose quality in test session notes, also load `writing` skill.
 <done_when>Implemented scope, success criteria, test framework, codebase context loaded; writing skill loaded.</done_when>
 </step>
@@ -118,10 +117,10 @@ DO NOT report "unknown failure" without searching first.
 <step n="7" name="Close" gate="END-GATE">
 1. Produce test summary: total tests run, pass/fail/blocked, new regressions, open issues.
 2. Write summary to `projects/<name>/notes/test-session-<YYYY-MM-DD>.md`.
-3. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+3. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 
 2. Mark matching task items done.
-6. If new regressions found: add `- [ ]` pending tasks to daily note — one per regression.
+6. If new regressions found: add `- [ ]` pending tasks to project Open Tasks — one per regression.
 7. **Resource enrichment** — scan session for durable knowledge (testing patterns, failure modes, tool insights, coverage gaps). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
@@ -136,7 +135,7 @@ DO NOT report "unknown failure" without searching first.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Summary written; dev-log entry appended; daily note updated; regression tasks filed; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Summary written; dev-log entry appended; regression tasks filed; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
@@ -147,7 +146,6 @@ DO NOT report "unknown failure" without searching first.
 | Test session notes | `projects/<name>/notes/test-session-<date>.md` | Markdown |
 | Test summary | Inline + appended to session file | Text |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 </outputs>
 
 <error_handling>

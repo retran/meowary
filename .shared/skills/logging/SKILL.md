@@ -1,60 +1,53 @@
 ---
 type: skill
 skill: logging
-description: Canonical logging rules for dev-log and daily note entries — formats, enforcement, and contracts. Load when any workflow closes with work completion.
+description: Canonical logging rules for dev-log entries — formats, enforcement, and contracts. Load when any workflow closes with work completion.
 updated: 2026-05-07
 tags: []
 related: [writing]
 ---
 
-<role>Logging steward — ensures continuity via atomic dev-log + daily note updates.</role>
+<role>Logging steward — ensures continuity via dev-log updates.</role>
 
 <summary>
-> Every workflow that does work MUST log. Dev-log is the continuity layer; daily note is the episodic record. Logging is atomic (both or neither) and verifiable (consistent format). Workflows that read-only or update non-project state DO NOT log to dev-logs. For prose quality (concision, active voice), also load `writing` skill.
+> Every workflow that does work MUST log. Dev-log is the continuity layer; logging is verifiable (consistent format). Workflows that read-only or update non-project state DO NOT log to dev-logs. For prose quality (concision, active voice), also load `writing` skill.
 </summary>
 
 <principles>
-1. **Work = log.** If a workflow changes project state (code, docs, plans, specs), it MUST append dev-log + daily note.
-2. **Atomic.** Dev-log entry and daily note entry are written together or not at all.
-3. **Format consistency.** Machine-parseable structure enables tooling, search, and continuity checks.
-4. **Append-only.** NEVER edit past dev-log entries. Add new entry if correction needed.
+1. **Work = log.** If a workflow changes project state (code, docs, plans, specs), it MUST append dev-log.
+2. **Format consistency.** Machine-parseable structure enables tooling, search, and continuity checks.
+3. **Append-only.** NEVER edit past dev-log entries. Add new entry if correction needed.
 </principles>
 
 <contracts>
 
 ## Workflows that MUST log
 
-| Workflow | Dev-log | Daily note | Reason |
-|----------|---------|------------|--------|
-| `implement` | ✅ | ✅ | Changes code/artifacts |
-| `design` | ✅ | ✅ | Creates design artifacts |
-| `plan` | ✅ | ✅ | Creates/updates plan |
-| `research` | ✅ | ✅ | Creates research artifacts |
-| `brainstorm` | ✅ | ✅ | Creates spec |
-| `self-review` | ✅ | ✅ | Creates review report |
-| `resolve` | ✅ | ✅ | Applies changes |
-| `debug` | ✅ | ✅ | Creates debug notes/fixes |
-| `test` | ✅ | ✅ | Creates test artifacts |
-| `write` | ✅ | ✅ | Creates documents |
-| `resource-enrich` | ✅ | ✅ | Modifies knowledge graph |
-| `resource-sync` | ✅ | ✅ | Syncs external sources |
-| `resource-ingest` | ✅ | ✅ | Creates resource articles |
-| `resource-discover` | ✅ | ✅ | Maps knowledge graph |
-| `resource-plan` | ✅ | ✅ | Creates KG operation plan |
+| Workflow | Dev-log | Reason |
+|----------|---------|--------|
+| `implement` | ✅ | Changes code/artifacts |
+| `design` | ✅ | Creates design artifacts |
+| `plan` | ✅ | Creates/updates plan |
+| `research` | ✅ | Creates research artifacts |
+| `brainstorm` | ✅ | Creates spec |
+| `self-review` | ✅ | Creates review report |
+| `resolve` | ✅ | Applies changes |
+| `debug` | ✅ | Creates debug notes/fixes |
+| `test` | ✅ | Creates test artifacts |
+| `write` | ✅ | Creates documents |
+| `resource-enrich` | ✅ | Modifies knowledge graph |
+| `resource-sync` | ✅ | Syncs external sources |
+| `resource-ingest` | ✅ | Creates resource articles |
+| `resource-discover` | ✅ | Maps knowledge graph |
+| `resource-plan` | ✅ | Creates KG operation plan |
 
 ## Workflows that MUST NOT log to dev-logs
 
-| Workflow | Dev-log | Daily note | Reason |
-|----------|---------|------------|--------|
-| `morning` | ❌ | ✅ (creates) | Reads dev-logs, creates daily note |
-| `evening` | ❌ | ✅ (updates) | Processes daily note, updates context.md |
-| `standup` | ❌ | ❌ | Read-only summary |
-| `weekly` | ❌ | ✅ (creates) | Wrapper, creates weekly note |
-| `capture` | ❌ | ✅ (appends Inbox) | Fast capture, no project work |
-| `scout` | ❌ | ❌ (optional) | Read-only navigation |
-| `peer-review` | ❌ | ✅ (optional) | External PR, may comment but not internal dev-log |
-| `meeting` | ❌ | ✅ (links) | Creates meeting note, cross-links to daily |
-| `resource-ops` | ❌ | ❌ | Meta-workflow, dispatches to others |
+| Workflow | Dev-log | Reason |
+|----------|---------|--------|
+| `scout` | ❌ (optional) | Read-only navigation |
+| `peer-review` | ❌ | External PR, may comment but not internal dev-log |
+| `resource-ops` | ❌ | Meta-workflow, dispatches to others |
 
 </contracts>
 
@@ -99,28 +92,6 @@ related: [writing]
 **Next:** self-review
 ```
 
-## Daily note entry format
-
-**Location:** `journal/daily/YYYY-MM-DD.md` in `## Day` zone
-
-**Action:** Append one-liner (not in a sub-section unless specified)
-
-**Format:**
-```markdown
-- /<workflow> <project> — <one-line summary>
-```
-
-**Example:**
-```markdown
-- /implement mcp-client — OAuth callback server with 5-port range, tests pass
-```
-
-**Special cases:**
-- `/capture` → appends to `## Day > ### Inbox` with just content (no workflow prefix)
-- `/morning` → creates `## Morning` section with MITs and calendar
-- `/evening` → updates `## Evening` section with completed/carried/dropped
-- `/meeting` → creates meeting note, appends cross-link to `## Day > ### Events`
-
 </formats>
 
 <enforcement>
@@ -133,7 +104,6 @@ Every workflow that logs MUST include this checklist in Close step's `<self_revi
 <self_review>
 - [ ] All `<done_when>` criteria met
 - [ ] Dev-log entry appended to `projects/<name>/dev-log.md`
-- [ ] Work log appended to today's daily note `## Day` zone
 - [ ] Task items marked done (if applicable)
 - [ ] Resources enriched or explicitly noted as not needed
 - [ ] No placeholders (TBD, TODO, FIXME) in outputs
@@ -157,30 +127,23 @@ Every workflow that logs MUST include this checklist in Close step's `<self_revi
    **Next:** <suggested-next>
    ```
 
-2. Append work log to `## Day` zone of today's daily note: `journal/daily/YYYY-MM-DD.md`
+2. Mark matching task items done in project README.
 
-   ```markdown
-   - /<workflow> <project> — <one-line summary>
-   ```
-
-3. Mark matching task items done in project README or daily note.
-
-4. **Resource enrichment** — scan session for durable knowledge. For each:
-   - Existing article in `resources/`? → append fact with source link.
-   - No article? → create stub (front matter + H1 + 1-sentence fact).
-   - Nothing durable? → note "no enrichment needed" in dev-log entry.
+3. **Resource enrichment** — scan session for durable knowledge. For each:
+    - Existing article in `resources/`? → append fact with source link.
+    - No article? → create stub (front matter + H1 + 1-sentence fact).
+    - Nothing durable? → note "no enrichment needed" in dev-log entry.
 
 <self_review>
 - [ ] All `<done_when>` criteria met
 - [ ] Dev-log entry appended to `projects/<name>/dev-log.md`
-- [ ] Work log appended to today's daily note `## Day` zone
 - [ ] Task items marked done (if applicable)
 - [ ] Resources enriched or explicitly noted as not needed
 - [ ] No placeholders (TBD, TODO, FIXME) in outputs
 - [ ] All output file paths correct, targets exist
 </self_review>
 
-<done_when>Dev-log entry appended; daily note updated; tasks marked done; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Dev-log entry appended; tasks marked done; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 ```
 
@@ -190,9 +153,6 @@ Every workflow that logs MUST include this checklist in Close step's `<self_revi
 
 **Missing dev-log file:**
 - If `projects/<name>/dev-log.md` missing: create from template at `{{AGENT_DIR}}/skills/projects/dev-log-template.md` before appending
-
-**Missing daily note:**
-- If today's daily note missing: create from template at `{{AGENT_DIR}}/skills/journal/daily-template.md` before appending
 
 **Duplicate entries:**
 - NEVER append duplicate dev-log entries (same date + workflow + topic)
@@ -216,13 +176,11 @@ node {{AGENT_DIR}}/scripts/validate-logs.js
 Checks:
 - Every active project in `context/context.md` has dev-log
 - Last dev-log entry date ≤ today
-- Today's daily note exists
-- Daily note `## Day` zone has ≥1 entry (or Inbox populated)
 
 </validation>
 
 <output_rules>
-- Language: English (dev-log and daily note entries)
+- Language: English (dev-log entries)
 - Date format: `YYYY-MM-DD`
 - Duration format: `~N min` or `~N hr` (approximate, human-readable)
 - Commit format: `<hash> — "<message>"` (if applicable)

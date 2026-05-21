@@ -48,7 +48,6 @@ Severity:
 1. Read `projects/<name>/dev-log.md` last entry — what was implemented?
 2. Read `projects/<name>/plans/<slug>.md` — success criteria?
 3. Load `codebases/<name>.md` and `context/safety.md`.
-4. Read today's daily note — find tasks matching review.
 5. **External-repo preflight (Standard + Full):** From `codebases/<name>.md`, determine the repo root path. Check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it now — these carry highest authority over general conventions. If neither exists, proceed.
 <done_when>Implementation scope, success criteria, all convention files loaded. External-repo instruction files read (Standard+).</done_when>
 </step>
@@ -160,7 +159,7 @@ After producing the review report, fix ALL findings — Blockers, Majors, Minors
 
 <step n="8" name="Close" gate="END-GATE">
 1. After all findings are resolved (via fix loop): write summary of what was fixed across iterations.
-2. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+2. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 3. Mark matching task items done.
 4. **Resource enrichment** — after dev-log entry, actively reflect:
 
@@ -181,7 +180,7 @@ After producing the review report, fix ALL findings — Blockers, Majors, Minors
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Summary written; dev-log entry appended; daily note updated; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Summary written; dev-log entry appended; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
@@ -192,7 +191,6 @@ After producing the review report, fix ALL findings — Blockers, Majors, Minors
 | Review report (Quick + Standard) | In-session only | Structured text |
 | Review report (Full) | `projects/<name>/notes/review-<date>.md` | Markdown |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 </outputs>
 
 <error_handling>

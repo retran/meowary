@@ -36,7 +36,7 @@ Every session — regardless of primary task — scan for gaps and fill immediat
 | Concept/tool/process/system mentioned with no article | Create article (real content, NOT stub) |
 | Confluence page referenced not in `meta/confluence-sync.json` | Add to sync registry; fetch and extract durable facts |
 | Jira issue contradicts article | Update article with current facts |
-| Daily/weekly log contains durable facts | Extract to relevant article |
+| Dev-log contains durable facts | Extract to relevant article |
 
 </proactive_enrichment>
 
@@ -73,14 +73,14 @@ Every session — regardless of primary task — scan for gaps and fill immediat
 - [PROJ-123](<jira-url>/browse/PROJ-123) — reason (e.g. decision recorded, deadline set)
 ```
 
-**Journal (daily/weekly/project):**
+**Dev-log:**
 ```
-- [daily/2026-03-15.md](../journal/daily/2026-03-15.md) — reason
+- [projects/<slug>/dev-log.md](../projects/<slug>/dev-log.md) — reason
 ```
 
 Rules:
 - Always state why source was used.
-- Journal: relative path from article location.
+- Dev-log: relative path from article location.
 - Remove entry when article no longer contains any fact from it.
 
 </sources_format>

@@ -18,7 +18,6 @@ Standup synthesizer. Reads dev-logs, daily note MITs, waiting-for; produces clea
 |-------|--------|----------|
 | Active projects | `context/context.md § Active Projects` | Yes |
 | Project dev-logs | `projects/<name>/dev-log.md` | Yes |
-| Today's daily note | `journal/daily/<date>.md` | Optional |
 | Waiting-for list | `journal/waiting-for.md` | Optional |
 </inputs>
 
@@ -28,7 +27,6 @@ Standup synthesizer. Reads dev-logs, daily note MITs, waiting-for; produces clea
 
 <step n="0" name="Load context">
 1. READ `context/context.md` for active projects. If absent or empty: glob `projects/*/dev-log.md` and use those. DO NOT stop — standup is read-only.
-2. READ today's daily note if exists — Morning MITs and Day zone. Load `journal` skill for daily note format.
 3. READ last entry of `dev-log.md` per active project.
 
 <done_when>Active projects + recent dev-log entries loaded; today's MITs loaded if available; journal skill loaded.</done_when>
@@ -47,14 +45,14 @@ If standup is for specific audience: incorporate into summary level.
 
 <step n="1" name="Extract Yesterday">
 1. From each project's dev-log last entry: extract `**Summary:**` and `**Key decisions:**`.
-2. From yesterday's daily note `## Evening > ### Completed` if accessible.
+2. 
 3. CONDENSE to 1–3 bullets. Remove project-internal detail.
 
 <done_when>Yesterday drafted (1–3 bullets).</done_when>
 </step>
 
 <step n="2" name="Extract Today">
-1. From today's daily note `## Morning` MITs if `/morning` ran.
+1. 
 2. From each dev-log most recent `**Next:**`.
 3. CONDENSE to 1–3 bullets. Prioritize ★ primary MIT.
 
@@ -63,7 +61,7 @@ If standup is for specific audience: incorporate into summary level.
 
 <step n="3" name="Extract Blockers">
 1. From dev-log: `**Deferred:**` items with external dependency.
-2. From today's daily note `## Day > ### Waiting`: items waiting on others.
+2. 
 3. From `journal/waiting-for.md`: overdue follow-ups.
 4. If none: "No blockers."
 
@@ -117,7 +115,7 @@ Final output. No writes. No commits.
 
 <contracts>
 1. Write nothing.
-2. NEVER create/update daily note.
+2. 
 3. NEVER commit.
 4. NEVER write dev-log entries.
 5. One clarifying question max — time-sensitive.

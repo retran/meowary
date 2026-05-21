@@ -73,7 +73,6 @@ tags: [postmortem, <incident>]
 1. Read `projects/<name>/dev-log.md` last entry.
 2. Load research brief if available: `projects/<name>/research/brief-<topic>.md`.
 3. Load prior design records if writing ADR: `projects/<name>/design/`.
-4. Read today's daily note — find tasks matching writing work.
 <done_when>Project context, existing source material, relevant design records loaded.</done_when>
 </step>
 
@@ -131,7 +130,7 @@ Write each section in full:
 2. Publish mode: write to `projects/<name>/docs/<slug>.md`.
 3. For ADRs being published: also write to `projects/<name>/design/adr-<slug>.md` if not already there.
 4. Update `status:` front matter (draft → accepted/published as appropriate).
-5. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+5. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 
 2. Mark matching task items done.
 8. Commit: `Write <doc-type>: <slug>` OR `Publish <doc-type>: <slug>`.
@@ -149,7 +148,7 @@ Write each section in full:
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Document filed; dev-log entry appended; daily note updated; committed; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Document filed; dev-log entry appended; committed; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
@@ -160,7 +159,6 @@ Write each section in full:
 | Document (draft) | `projects/<name>/drafts/<slug>.md` | Markdown |
 | Document (published) | `projects/<name>/docs/<slug>.md` | Markdown |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 | Commit | Git history | `Write <doc-type>: <slug>` OR `Publish <doc-type>: <slug>` |
 </outputs>
 

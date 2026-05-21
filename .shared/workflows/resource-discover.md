@@ -17,7 +17,7 @@ Proactive knowledge graph scout. Scans what's been written to find recurring con
 | Input | Source | Required |
 |-------|--------|----------|
 | Date range | User / last discover date | Yes |
-| `journal/daily/`, `journal/weekly/` | Repo | Yes |
+
 | `projects/` | Repo | Optional |
 | `codebases/<name>.md` | If active codebase | Optional |
 | `meta/resources-log.md` | `meta/` | For last-run date |
@@ -28,7 +28,6 @@ Proactive knowledge graph scout. Scans what's been written to find recurring con
 <steps>
 
 <step n="0" name="Load context">
-1. READ today's daily note for matching tasks.
 2. CHECK `meta/resources-log.md` for last `r-discover` entry.
 3. Load `resources` skill for graph philosophy and stub format. Load `query` skill for gap analysis methods.
 
@@ -47,13 +46,13 @@ DEFAULT if no preferences stated.
 </step>
 
 <step n="1" name="Extract from journal">
-1. SCAN `journal/daily/` in target range.
-2. SCAN `journal/weekly/` same range.
+
+
 3. EXTRACT recurring proper nouns, technical terms, team/tool/project/process names.
 4. FLAG entities ≥ 3 mentions as high-priority (heuristic; promote significant low-frequency by judgment).
 5. QMD-query extracted terms to check existing articles.
 
-<subagent_trigger>Date range > 14 days OR journal > ~200 files: spawn `explore` for Steps 1–3. Pass: scan range, paths (`journal/daily/`, `journal/weekly/`, `projects/*/notes/`, `projects/*/dev-log.md`, optionally `codebases/<name>.md`), `resources/` for cross-reference. Returns: candidate names, mention counts, source files+lines, article-exists flag. Inline if range ≤ 14 days or journal ≤ ~200 files.</subagent_trigger>
+<subagent_trigger>Date range > 14 days OR projects > ~200 files: spawn `explore` for Steps 1–3. Pass: scan range, paths (`projects/*/notes/`, `projects/*/dev-log.md`, optionally `codebases/<name>.md`), `resources/` for cross-reference. Returns: candidate names, mention counts, source files+lines, article-exists flag. Inline if range ≤ 14 days or projects ≤ ~200 files.</subagent_trigger>
 
 <done_when>Recurring entities extracted; confirmed against `resources/`.</done_when>
 </step>
@@ -118,7 +117,6 @@ WRITE `projects/<name>/notes/discover-<date>.md` (or inline if no project):
 <step n="7" name="Close" gate="END-GATE">
 1. STAGE: gap report, new stubs, `meta/tags.md`.
 2. COMMIT: `Discover knowledge gaps: N candidates, M stubs created`
-3. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 4. MARK matching tasks done.
 
 <self_review>
@@ -126,12 +124,12 @@ WRITE `projects/<name>/notes/discover-<date>.md` (or inline if no project):
 - [ ] Findings documented
 - [ ] Stubs created for gaps
 - [ ] Cross-references added
-- [ ] **Logging completed per logging skill** (resources-log + daily note)
+- [ ] **Logging completed per logging skill** (resources-log)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>
 
-<done_when>Committed; log appended; daily note updated.</done_when>
+<done_when>Committed; log appended.</done_when>
 </step>
 
 </steps>
@@ -142,7 +140,6 @@ WRITE `projects/<name>/notes/discover-<date>.md` (or inline if no project):
 | Gap report | `projects/<name>/notes/discover-<date>.md` | Markdown |
 | Stubs | `resources/<subfolder>/<slug>.md` | Markdown |
 | Log entry | `meta/resources-log.md` | Append |
-| Work log | `journal/daily/<date>.md` Day zone | Append |
 | Commit | Git | Commit |
 </outputs>
 

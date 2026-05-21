@@ -97,7 +97,7 @@ Example:
 
 <rules>
 - LINK to spec/ADR this plan implements. Plans without linked decision are harder to review.
-- KEEP phases coarse — 3–7 tasks per phase. Granular detail goes in project README or daily notes.
+- KEEP phases coarse — 3–7 tasks per phase. Granular detail goes in project README or dev-log.
 - UPDATE `status` as plan progresses. Stale status misleads.
 - NEVER delete completed tasks — mark `- [x]` in place.
 </rules>

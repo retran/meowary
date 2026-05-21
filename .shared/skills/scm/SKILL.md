@@ -38,7 +38,7 @@ If you don't have the Jira key, CHECK branch name OR load `jira` skill to find i
 - PR/MR titles and commits MUST follow `[PROJ-123] description` format. NO Conventional Commits prefix. Read `context/context.md` for project key.
 - NEVER force-push to `main` or `master` without explicit user approval.
 - NEVER delete remote branches with open MRs/PRs.
-- USE `pr view` / `mr view` and `issue view` to pull context into daily notes — summarize and link, DO NOT copy verbatim.
+- USE `pr view` / `mr view` and `issue view` to pull context — summarize and link, DO NOT copy verbatim.
 - Both CLIs require authentication. RUN `gh auth status` / `glab auth status` before any operation.
 </rules>
 

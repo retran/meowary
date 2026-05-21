@@ -34,7 +34,6 @@ Executes planned, scoped coding work. Reads plan and codebase context, clarifies
 1. Read `projects/<name>/dev-log.md` last entry.
 2. Read `projects/<name>/plans/<slug>.md` — identify current task.
 3. Load `codebases/<name>.md` — conventions, patterns, architecture.
-4. Read today's daily note — find tasks matching implementation.
 5. **External-repo preflight (Standard + Full):** From `codebases/<name>.md`, determine the repo root path. Check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it now — these carry highest authority over general conventions. If neither exists, proceed.
 <done_when>Plan, codebase conventions, current task identified. External-repo instruction files read (Standard+).</done_when>
 </step>
@@ -102,9 +101,9 @@ HARD-GATE (Full): Present verification results for each milestone before proceed
 2. If unexpected complexity changed scope: note explicitly and suggest `plan replan`.
 3. **Quick tier — inline review:** Run brief conventions check before closing: naming, formatting, obvious logic errors. This REPLACES (not supplements) `self-review` for Quick tier.
 4. **Standard and Full tier:** DO NOT close without directing user to run `self-review` next. State explicitly: "Before raising a PR, run `self-review`."
-5. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+5. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 
-6. Mark matching task items done in project README or daily note.
+6. Mark matching task items done in project README.
 
 7. **Resource enrichment** — scan session for durable knowledge (architecture insights, coding patterns, tool decisions, component boundaries). For each:
    - Existing article in `resources/`? → append fact with source link.
@@ -116,14 +115,14 @@ HARD-GATE (Full): Present verification results for each milestone before proceed
 - [ ] All plan tasks addressed or explicitly deferred
 - [ ] Tests pass
 - [ ] No files modified outside plan scope
-- [ ] **Logging completed per logging skill** (dev-log + daily note)
+- [ ] **Logging completed per logging skill** (dev-log)
 - [ ] Task items marked done (if applicable)
 - [ ] Resources enriched or explicitly noted as not needed
 - [ ] No placeholders (TBD, TODO, FIXME) in outputs
 - [ ] All output file paths correct, targets exist
 </self_review>
 
-<done_when>Plan updated; **dev-log entry appended**; **daily note updated**; resources enriched or explicitly noted as not needed; `self-review` direction given (Standard + Full).</done_when>
+<done_when>Plan updated; **dev-log entry appended**; resources enriched or explicitly noted as not needed; `self-review` direction given (Standard + Full).</done_when>
 </step>
 
 </steps>
@@ -133,7 +132,6 @@ HARD-GATE (Full): Present verification results for each milestone before proceed
 |--------|----------|--------|
 | Code changes | Codebase | Source files |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 | Commits | Git history | Per `context/context.md` commit format |
 </outputs>
 

@@ -124,7 +124,7 @@ See `{{AGENT_DIR}}/skills/qmd/` for query type details (lex/vec/hyde).
 
 If neither QMD nor web search yields sufficient context:
 - **State explicitly:** "No prior work found on X. Proceeding without internal precedent."
-- **Flag for later:** Add to workflow's Deferred section or daily note Inbox.
+- **Flag for later:** Add to workflow's Deferred section.
 
 </result_handling>
 

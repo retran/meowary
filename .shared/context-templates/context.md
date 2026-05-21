@@ -35,7 +35,7 @@ tags: []
 
 ## Active Projects
 
-<!-- Filled in by /bootstrap and updated by /evening -->
+<!-- Filled in by /bootstrap and updated as projects change -->
 
 ## Active Areas
 

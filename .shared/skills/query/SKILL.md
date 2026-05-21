@@ -46,8 +46,6 @@ Tag every claim with source.
 | Source | Citation |
 |--------|----------|
 | Resource | `[resource: resources/<path>.md]` |
-| Daily note | `[journal: journal/daily/<date>.md]` |
-| Weekly note | `[journal: journal/weekly/<date>.md]` |
 | Project / dev-log | `[project: projects/<slug>/<path>.md]` |
 | Confluence | `[confluence: <page-title> (<page-id>)]` |
 | Jira | `[jira: <KEY-123>]` |
@@ -74,7 +72,6 @@ DO NOT suppress low-confidence answers. Surface with `[ASSUMED]` and state why.
 | Source | Threshold | Action |
 |--------|-----------|--------|
 | Resource (`actualized`) | >3 months | Warn `⚠ stale`; still present |
-| Journal entry | >6 months | Flag as historical context only |
 | Confluence page | Modified after article's `actualized` | Flag; suggest `resource-enrich` |
 
 Conflicting sources: surface conflict explicitly, note which is more recent. NEVER silently pick one.
@@ -91,7 +88,7 @@ External source fills gap during search? Note it; suggest `resource-ingest` to a
 </steps>
 
 <read_only_rule>
-Querying NEVER modifies files. No commits, no dev-log entries, no daily note writes during query.
+Querying NEVER modifies files. No commits, no dev-log entries during query.
 
 **Exception:** critical gap warranting immediate enrichment — surface suggestion, ask user whether to proceed with `resource-ingest` or `resource-enrich`.
 </read_only_rule>

@@ -25,7 +25,6 @@ Systematic knowledge graph curator. Enriches from all sources — NEVER stops af
 <steps>
 
 <step n="0" name="Load context">
-1. READ today's daily note for matching tasks.
 2. If `resources-actualize-plan.md` exists: READ `actualize` row for this article — note `Details`, `Missing Cross-References`, `Notes`.
 3. If article does not exist: ASK user to run `resource-ops create` first, then return.
 4. Load `resources` skill for graph philosophy, tag conventions, article format. For article prose quality, also load `writing` skill — this is the source of truth for resource structure.
@@ -64,7 +63,7 @@ Run all sub-steps. NEVER stop after first hit.
 
 **2d Codebase:** Verify file paths, components, architecture against current code; correct stale technical details.
 
-**2e Journal:** Search key terms across `journal/daily/`, `journal/weekly/`, `projects/`; extract durable facts; discard transient.
+**2e Journal:** Search key terms across `projects/`; extract durable facts; discard transient.
 
 **2f Web:** Proactively search for recent developments, official docs, external references. NEVER skip if topic has external dimension. Durable facts only.
 
@@ -141,7 +140,6 @@ If two newly linked articles suggest insight neither contains alone: append synt
 1. STAGE: article, back-linked articles, new articles, `meta/tags.md`, `meta/confluence-sync.json`.
 2. COMMIT: `Enrich resources: <subfolder>/<article-name>`
 3. If staleness found neighbors: append paths to commit body.
-4. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 5. MARK matching tasks done.
 6. **STOP.** Report completion. NEVER auto-continue.
 
@@ -151,12 +149,12 @@ If two newly linked articles suggest insight neither contains alone: append synt
 - [ ] All outbound links target existing files
 - [ ] Back-links added for every new link
 - [ ] Tag consistency verified
-- [ ] **Logging completed per logging skill** (resources-log + daily note)
+- [ ] **Logging completed per logging skill** (resources-log)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>
 
-<done_when>Committed; log appended; daily note updated; stopped.</done_when>
+<done_when>Committed; log appended; stopped.</done_when>
 </step>
 
 </steps>
@@ -169,7 +167,6 @@ If two newly linked articles suggest insight neither contains alone: append synt
 | Tag updates | `meta/tags.md` | Markdown |
 | Sync registry | `meta/confluence-sync.json` | JSON |
 | Log entry | `meta/resources-log.md` | Append |
-| Work log | `journal/daily/<date>.md` Day zone | Append |
 | Commit | Git | Commit |
 </outputs>
 

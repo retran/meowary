@@ -27,10 +27,9 @@ Disciplined knowledge distiller. Reads source fully before mapping to articles. 
 <step n="0" name="Load context">
 1. READ active project's dev-log if invoked in project context.
 2. SEARCH `resources/` with `qmd query "<source topic>"` before fetching.
-3. READ today's daily note for matching tasks.
 4. Load `resources` skill for graph philosophy and article format. Load `inbox` skill for source-note format.
 
-<done_when>Related articles identified; daily note checked; skills loaded.</done_when>
+<done_when>Related articles identified skills loaded.</done_when>
 </step>
 
 <step n="0.5" name="Clarify" gate="SOFT-GATE">
@@ -116,7 +115,6 @@ For each confirmed:
 <step n="8" name="Close" gate="END-GATE">
 1. STAGE: modified/created articles, `meta/tags.md`, `meta/confluence-sync.json`.
 2. COMMIT: `Ingest resources: <source-title> → <N articles affected>`
-3. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 4. RUN `node {{AGENT_DIR}}/scripts/qmd-index.js`
 5. MARK matching tasks done.
 
@@ -125,12 +123,12 @@ For each confirmed:
 - [ ] Source notes have proper front matter
 - [ ] Articles created/updated from source
 - [ ] Links between sources and resources established
-- [ ] **Logging completed per logging skill** (resources-log + daily note)
+- [ ] **Logging completed per logging skill** (resources-log)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>
 
-<done_when>Committed; log appended; QMD re-indexed; daily note updated.</done_when>
+<done_when>Committed; log appended; QMD re-indexed.</done_when>
 </step>
 
 </steps>
@@ -143,7 +141,6 @@ For each confirmed:
 | Sync registry | `meta/confluence-sync.json` | JSON |
 | Tag updates | `meta/tags.md` | Markdown |
 | Log entry | `meta/resources-log.md` | Append |
-| Work log | `journal/daily/<date>.md` Day zone | Append |
 | Commit | Git | Commit |
 </outputs>
 

@@ -47,7 +47,6 @@ Comment classification:
 1. Read `projects/<name>/dev-log.md` last entry — what was submitted for review?
 2. Read `projects/<name>/plans/<slug>.md` — recall original scope and success criteria.
 3. Read `projects/<name>/design/` for relevant ADRs — design decisions may be challenged in review.
-4. Read today's daily note — find tasks matching resolve work.
 5. **External-repo preflight (Standard + Full):** From `codebases/<name>.md`, determine the repo root path. Check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it now — these carry highest authority over general conventions. If neither exists, proceed.
 <done_when>Project state, original scope, relevant ADRs loaded. External-repo instruction files read (Standard+).</done_when>
 </step>
@@ -119,10 +118,10 @@ HARD-GATE (Full): Present drafted responses for review before posting.
 <step n="7" name="Close" gate="END-GATE">
 1. Commit all code changes per `context/context.md` commit format: `Address review: <description>`.
 2. Mark resolve tasks done in `projects/<name>/plans/<slug>.md`.
-3. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+3. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 
 2. Mark matching task items done.
-6. If scope follow-on tasks created: add `- [ ]` pending tasks to daily note. If non-trivial: also append to `projects/<name>/plans/<slug>.md`.
+6. If scope follow-on tasks created: add `- [ ]` pending tasks to project Open Tasks. If non-trivial: also append to `projects/<name>/plans/<slug>.md`.
 7. **Resource enrichment** — scan session for durable knowledge (architecture insights from review, design patterns validated or invalidated, coding conventions clarified). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
@@ -137,7 +136,7 @@ HARD-GATE (Full): Present drafted responses for review before posting.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Committed; dev-log entry appended; daily note updated; follow-on tasks filed; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Committed; dev-log entry appended; follow-on tasks filed; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
@@ -151,7 +150,6 @@ HARD-GATE (Full): Present drafted responses for review before posting.
 | Follow-on tasks | Daily note Day zone | `- [ ]` tasks |
 | Project plan update | `projects/<name>/plans/<slug>.md` | Appended (if non-trivial) |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 | Commit | Git history | Per `context/context.md` commit format |
 </outputs>
 

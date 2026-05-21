@@ -20,7 +20,6 @@ Meeting note-taker and action item router. Creates file, populates per type-spec
 | Meeting content | User-provided | Yes |
 | Active projects | `context.md § Active Projects` | Optional |
 | Attendee articles | `resources/people/` | Optional |
-| Today's daily note | `journal/daily/<date>.md` | Yes (cross-link) |
 | Waiting-for list | `journal/waiting-for.md` | Yes (routing) |
 </inputs>
 

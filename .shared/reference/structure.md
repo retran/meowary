@@ -7,7 +7,7 @@ tags: []
 <role>Repository structure reference — canonical directory tree and content placement table.</role>
 
 <summary>
-> Canonical directory tree of the repository (PARA + journal + automation) and what content goes where. Used for routing, structure validation, and onboarding.
+> Canonical directory tree of the repository (PARA + automation) and what content goes where. Used for routing, structure validation, and onboarding.
 </summary>
 
 # Repository Structure
@@ -15,13 +15,6 @@ tags: []
 <directory_tree>
 ```
 <root>/
-├── journal/                   # Time-based notes
-│   ├── daily/                 # One file per day, named YYYY-MM-DD.md
-│   ├── weekly/                # One file per week, named YYYY-WNN.md
-│   ├── meetings/              # One file per meeting, named YYYY-MM-DD-<slug>.md
-│   ├── recurring-events.md    # Standing meetings and recurring events
-│   ├── waiting-for.md         # Items delegated or blocked; tracked until resolved
-│   └── reading-list.md        # Articles, papers, books to read
 ├── projects/                  # Active microprojects with a defined end
 │   └── <name>/
 │       ├── README.md          # Project dashboard (status, tasks)
@@ -74,9 +67,6 @@ tags: []
 │   │   ├── tags-template.md
 │   │   ├── confluence-sync-template.json
 │   │   ├── resources-log-template.md
-│   │   ├── waiting-for-template.md
-│   │   ├── reading-list-template.md
-│   │   ├── recurring-events-template.md
 │   │   └── env-snapshot-template.md
 └── AGENTS.md                  # Agent instructions
 ```
@@ -85,11 +75,6 @@ tags: []
 <what_goes_where>
 | Content type | Where it lives |
 |---|---|
-| What I did today, task outcomes, reflections | `journal/daily/` |
-| Standing meeting notes | `journal/meetings/` |
-| Meeting action items (own tasks) | Today's `### Inbox` in daily note |
-| Meeting action items (waiting on someone) | `journal/waiting-for.md` |
-| Meeting action items (project tasks) | `projects/<name>/README.md` Open Tasks |
 | Persistent facts: person roles, team structure, process, architecture | `resources/` |
 | Notes about specific source before promoting concepts to resources | `inbox/` (source note, `type: source-note`) |
 | Project tasks, status, dev log | `projects/<name>/README.md` |
@@ -97,13 +82,11 @@ tags: []
 | Unprocessed captures and raw notes | `inbox/` |
 | Quick links, ideas, snippets (not yet promoted) | `inbox/scratch.md` |
 | Content for external audiences (blog posts, Confluence drafts, proposals) | `projects/<name>/drafts/` |
-| Jira issue details | Jira (link from daily note; don't duplicate) |
+| Jira issue details | Jira (link from dev-log; don't duplicate) |
 | Codebase-specific context (architecture, tech stack, build, test, conventions) | `codebases/<name>.md` |
 | Tag registry | `meta/tags.md` |
 | Confluence sync tracking | `meta/confluence-sync.json` |
 | Resource operation log | `meta/resources-log.md` |
-| Recurring meetings/events | `journal/recurring-events.md` |
-| Reading queue | `journal/reading-list.md` |
 | CLI environment snapshot | `context/env-snapshot.md` |
 | Workflow formatting conventions | `{{AGENT_DIR}}/reference/workflow-conventions.md` |
 | Security and GDPR rules | `{{AGENT_DIR}}/reference/security-rules.md` |

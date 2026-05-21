@@ -67,7 +67,7 @@ Set `processed: true` after distillation.
 <steps>
 
 <step n="1" name="process_capture" condition="item type = capture">
-- Task? → Add to project's Open Tasks or today's daily note.
+- Task? → Add to project's Open Tasks.
 - Resource fact? → Create or update resource article.
 - Project idea? → Stub in `projects/` or log in relevant project.
 - Noise? → Delete.

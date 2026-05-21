@@ -9,7 +9,7 @@ Root entry point for all agents operating in this repository. Defines session-st
 </role>
 
 <summary>
-> Personal work system organized as Markdown files under **PARA** (Projects, Areas, Resources, Archive) with supporting shell scripts. Operates on **progressive disclosure**: AGENTS.md carries the rules, skills carry workflows, context files carry project-specific detail. Load only what the current task requires.
+> Personal work journal organized as Markdown files under **PARA** (Projects, Areas, Resources, Archive) with supporting shell scripts. Operates on **progressive disclosure**: AGENTS.md carries the rules, skills carry workflows, context files carry project-specific detail. Load only what the current task requires.
 </summary>
 
 <inputs>
@@ -58,7 +58,7 @@ DO read `context/context.md` `## Codebases` to identify the active codebase. DO 
 
 Full directory tree and "What Goes Where" table: [`{{AGENT_DIR}}/reference/structure.md`]({{AGENT_DIR}}/reference/structure.md).
 
-Top-level directories: `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `context/`, `codebases/`, `{{AGENT_DIR}}/`.
+Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `context/`, `codebases/`, `{{AGENT_DIR}}/`.
 
 Workflow prompts live in `{{AGENT_DIR}}/workflows/` (24 files). Commands live in `{{AGENT_DIR}}/commands/`. Sub-agent definitions live in `{{AGENT_DIR}}/agents/`. Reference files (conventions, structure, security rules) live in `{{AGENT_DIR}}/reference/`.
 
@@ -68,7 +68,7 @@ Workflow prompts live in `{{AGENT_DIR}}/workflows/` (24 files). Commands live in
 
 - **Lifecycle workflows** — `/do <phase>` dispatches to `{{AGENT_DIR}}/workflows/`: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
 - **Knowledge graph workflows** — `/r <operation>` dispatches to `{{AGENT_DIR}}/workflows/`: `enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`
-- **Quick capture** — `/capture <note>` — timestamped note into inbox
+- **Daily workflows** — direct dispatch: `/morning`, `/evening`, `/standup`, `/weekly`, `/capture`, `/meeting`
 - **Utility commands** — `/bootstrap`
 
 ### QMD — Semantic Search
@@ -119,9 +119,10 @@ NEVER leave web search findings unanchored.
 </step>
 
 <step n="2.5" name="enforce_workflow_patterns" gate="HARD-GATE">
-**Logging** — dev-log updates:
+**Logging** — atomic dev-log + daily note updates:
 - All work workflows (lifecycle + KG) MUST log. See `{{AGENT_DIR}}/skills/logging/` for canonical contracts and formats.
-- Logging is BLOCKING — workflows MUST NOT close without a dev-log entry.
+- Atomic logging: dev-log entry AND daily note entry written together (both or neither).
+- Logging is BLOCKING — workflows MUST NOT close without both entries written.
 - Self-review checklists MUST verify logging completion.
 - **Dev-log format** (prepend entry in `projects/<slug>/dev-log.md`):
   ```
@@ -130,6 +131,10 @@ NEVER leave web search findings unanchored.
   **Summary:** <what was done this session>
   **Artifacts:** <files created or modified>
   **Next:** <suggested next step>
+  ```
+- **Daily note format** (append to `## Work log` in `journal/daily/YYYY-MM-DD.md`):
+  ```
+  - `/<workflow>` `<project-slug>` — <one-line summary of work done>
   ```
 
 **Context gathering** — QMD + web search before work:
@@ -148,7 +153,7 @@ NEVER leave web search findings unanchored.
 
 <step n="3" name="enforce_editing_rules" gate="HARD-GATE">
 Non-negotiable constraints on every edit:
-1. NEVER delete or overwrite past notes. Append-only.
+1. NEVER delete or overwrite past daily notes. Append-only.
 2. MAINTAIN links. Every link MUST point to an existing target. UPDATE all inbound links when renaming, moving, or deleting files.
 3. NEVER write to Jira or Confluence without explicit user approval.
 4. **Obsidian/Typora compatibility:**
@@ -194,7 +199,7 @@ Full detail: [`{{AGENT_DIR}}/reference/security-rules.md`]({{AGENT_DIR}}/referen
 
 <contracts>
 
-- Append-only for notes.
+- Append-only for daily notes.
 - Every link resolves to an existing target.
 - No writes to Jira or Confluence without explicit user approval.
 - No secrets in source, commits, logs, or inline shell arguments.
@@ -212,7 +217,7 @@ Sub-agent definitions live in `{{AGENT_DIR}}/agents/`. Invoke via the `task` too
 <next_steps>
 
 - Load required skill(s) via the `skill` tool when a task matches an available skill's description.
-- Dispatch lifecycle work through `/do <phase>`; knowledge-graph work through `/r <operation>`.
+- Dispatch lifecycle work through `/do <phase>`; knowledge-graph work through `/r <operation>`; daily work through direct commands.
 - Consult `{{AGENT_DIR}}/reference/` for structure, conventions, and security detail on demand.
 
 </next_steps>

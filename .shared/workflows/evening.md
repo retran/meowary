@@ -16,7 +16,6 @@ Structured end-of-day closer. Reviews work, routes delegated items, surfaces dur
 <inputs>
 | Input | Source | Required |
 |-------|--------|----------|
-| Today's daily note | `journal/daily/<date>.md` | Yes |
 | Project dev-logs | `projects/<name>/dev-log.md` | Optional |
 | Waiting-for list | `journal/waiting-for.md` | Yes |
 | Resource articles | `resources/` | Optional |
@@ -27,7 +26,6 @@ Structured end-of-day closer. Reviews work, routes delegated items, surfaces dur
 <steps>
 
 <step n="0" name="Load context">
-1. READ today's daily note in full. If missing: create from `{{AGENT_DIR}}/skills/journal/daily-template.md`, note Morning zone skipped.
 2. READ last entry of `dev-log.md` for each active project worked today.
 3. READ `journal/waiting-for.md`; note items with follow-up date ≤ today.
 4. Load `journal` skill for evening format and resource enrichment patterns.

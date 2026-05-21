@@ -27,7 +27,6 @@ Fixed: Quick.
 
 <step n="0" name="Load context" skip_if="no active project">
 1. Read `projects/<name>/dev-log.md` last entry — note current phase and prior scout findings.
-2. Read today's daily note (`journal/daily/<YYYY-MM-DD>.md`) — identify related tasks.
 <done_when>Project state loaded; related daily tasks identified.</done_when>
 </step>
 
@@ -42,7 +41,7 @@ If clear, skip both and proceed.
 
 <step n="1" name="QMD semantic search">
 1. Run `qmd query "<topic>"` against journal and resources index — see `qmd` skill for query construction and `query` skill for multi-source retrieval hierarchy.
-2. Surface top relevant resource articles and daily notes.
+2. Surface top relevant resource articles.
 3. If sparse (< 2 meaningful hits): scan `resources/` directly for matching filenames and tags.
 <done_when>Search complete; relevant articles surfaced or sparse result noted.</done_when>
 </step>
@@ -118,7 +117,7 @@ If a resource stub is clearly missing: write it now. DO NOT defer.
 **Next:** <recommended workflow>
 ```
 
-3. Append work log entry to `## Day` zone of today's daily note.
+3. 
 4. Mark matching task items done.
 5. **Resource enrichment** — beyond stubs created in Step 5, scan findings for facts that enrich *existing* resource articles (architecture updates, ownership changes, tool decisions). For each:
    - Existing article in `resources/`? → append fact with source link.
@@ -132,7 +131,7 @@ If a resource stub is clearly missing: write it now. DO NOT defer.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Summary presented; dev-log appended; daily note updated; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Summary presented; dev-log appended; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
@@ -143,7 +142,6 @@ If a resource stub is clearly missing: write it now. DO NOT defer.
 | Scout findings | `projects/<name>/notes/scout-<topic>.md` | Markdown |
 | In-session summary | Inline | Text |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 </outputs>
 
 <error_handling>

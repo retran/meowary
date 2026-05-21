@@ -215,7 +215,7 @@ UPDATE QMD index if new articles: `node {{AGENT_DIR}}/scripts/qmd-index.js --cha
 |------|-------|------|-----------|---------|--------|
 | Step 6-fri Resources scan | `general` | built-in | No | > 2 active projects with dev-log entries this week | Structured list: durable facts, article paths, stub candidates |
 
-`general` receives: all daily note paths for week, all meeting note paths, dev-log excerpts from week, `resources/` directory listing.
+`general` receives: all dev-log excerpts from week, `resources/` directory listing.
 
 Inline (no agent) when ≤ 2 active projects had activity.
 </subagents>

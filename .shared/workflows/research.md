@@ -40,7 +40,6 @@ Provenance tags:
 <step n="0" name="Load context" skip_if="no active project">
 1. Read `projects/<name>/dev-log.md` last entry.
 2. Check `projects/<name>/research/` for prior research on topic.
-3. Read today's daily note — find tasks matching topic.
 4. For prose quality in source notes, also load `writing` skill.
 <done_when>Project state loaded; prior research identified; writing skill loaded.</done_when>
 </step>
@@ -174,7 +173,7 @@ HARD-GATE (Standard + Full): Present brief; confirm before enriching resources.
 </step>
 
 <step n="8" name="Close" gate="END-GATE">
-1. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+1. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 
 2. Mark matching task items done.
 
@@ -187,7 +186,7 @@ HARD-GATE (Standard + Full): Present brief; confirm before enriching resources.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>dev-log entry appended; daily note updated.</done_when>
+<done_when>dev-log entry appended.</done_when>
 </step>
 
 </steps>
@@ -199,7 +198,6 @@ HARD-GATE (Standard + Full): Present brief; confirm before enriching resources.
 | Research brief | `projects/<name>/research/brief-<topic>.md` | Markdown |
 | Updated resources | `resources/` | Markdown |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 </outputs>
 
 <error_handling>

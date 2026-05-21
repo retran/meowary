@@ -51,7 +51,7 @@ Read `meta/tags.md`. Build registered tag list.
 </step>
 
 <step n="5" name="Build inbound link index">
-Scan all `journal/`, `projects/`, `areas/` `.md` files for Markdown links into `resources/`. Build: `{ "resources/foo.md": ["journal/daily/2026-01-01.md", ...] }`.
+Scan all `projects/`, `areas/` `.md` files for Markdown links into `resources/`. Build: `{ "resources/foo.md": ["projects/<slug>/dev-log.md", ...] }`.
 <done_when>Inbound link index built.</done_when>
 </step>
 

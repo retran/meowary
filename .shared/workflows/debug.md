@@ -34,7 +34,6 @@ Structured failure investigation. Form hypotheses, design tests, observe results
 1. Read `projects/<name>/dev-log.md` last entry — current state?
 2. Check `projects/<name>/notes/` for prior debug sessions on related issues.
 3. Load `codebases/<name>.md` for relevant architecture context.
-4. Read today's daily note — find tasks matching debug work.
 5. **External-repo preflight (Standard + Full):** From `codebases/<name>.md`, determine the repo root path. Check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it now — these carry highest authority over general conventions. If neither exists, proceed.
 <done_when>Project state loaded; prior related debug sessions identified. External-repo instruction files read (Standard+).</done_when>
 </step>
@@ -122,7 +121,7 @@ Quick: state cause inline, proceed to fix.
 
 <step n="7" name="Close" gate="END-GATE">
 1. Write debug findings to `projects/<name>/notes/debug-<YYYY-MM-DD>-<topic>.md` using `{{AGENT_DIR}}/skills/projects/debug-log.md` as base. Required sections: Observed Failure, Recent Changes, Hypotheses table, Investigation Log, Root Cause, Fix Applied, Regression Test Added.
-2. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+2. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 
 2. Mark matching task items done.
 5. If root cause is systemic: suggest `plan replan` in closing summary.
@@ -141,7 +140,7 @@ Quick: state cause inline, proceed to fix.
 - All output file paths correct, targets exist
 </self_review>
 
-<done_when>Debug note written; dev-log entry appended; daily note updated; committed; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Debug note written; dev-log entry appended; committed; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
@@ -152,7 +151,6 @@ Quick: state cause inline, proceed to fix.
 | Debug note | `projects/<name>/notes/debug-<date>-<topic>.md` | Markdown |
 | Code fix | Codebase | Source files |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 | Commit | Git history | Per `context/context.md` commit format |
 </outputs>
 

@@ -98,11 +98,11 @@ The agent runs checklist and outputs results as visible mini-report. FAILED chec
 - Code blocks with language identifiers
 </formatting>
 
-<dev_log_daily_note>
-Lifecycle workflows (those with `## Complexity Tiers` table declaring Quick/Standard/Full) write dev-log and daily note entries at Close. All other workflows (fixed-procedure, daily) DO NOT write dev-log entries.
+<dev_log>
+Lifecycle workflows (those with `## Complexity Tiers` table declaring Quick/Standard/Full) write dev-log entries at Close. All other workflows (fixed-procedure) DO NOT write dev-log entries.
 
 DO NOT include `## dev-log Update` section. Handle dev-log writes inside the Close step.
-</dev_log_daily_note>
+</dev_log>
 
 <output_rules>
 Output language: English. Headings, gate names, section labels remain literal.

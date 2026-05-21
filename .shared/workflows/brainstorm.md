@@ -109,7 +109,7 @@ Write spec to `projects/<name>/specs/<slug>.md` using template from `{{AGENT_DIR
 <step n="6" name="Close" gate="END-GATE">
 1. Run self-review checklist.
 2. Output checklist results as visible mini-report. Fix failures inline.
-3. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+3. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 4. **Resource enrichment** — scan session for durable knowledge (architecture patterns, process decisions, design tradeoffs, domain concepts). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
@@ -123,11 +123,11 @@ Write spec to `projects/<name>/specs/<slug>.md` using template from `{{AGENT_DIR
 - [ ] **Scope focus:** Spec addressable by single plan? If not, split.
 - [ ] **Ambiguity check:** No requirement readable two ways
 - [ ] Alternatives documented with rejection rationale
-- [ ] **Logging completed per logging skill** (dev-log + daily note)
+- [ ] **Logging completed per logging skill** (dev-log)
 - [ ] All output file paths correct, targets exist
 </self_review>
 
-<done_when>Checklist passed; spec presented; dev-log and daily note updated; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Checklist passed; spec presented; dev-log and resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
@@ -137,7 +137,6 @@ Write spec to `projects/<name>/specs/<slug>.md` using template from `{{AGENT_DIR
 |--------|----------|--------|
 | Problem spec | `projects/<name>/specs/<slug>.md` | Spec template |
 | Dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note entry | `journal/daily/<date>.md` Day zone | Appended |
 </outputs>
 
 <error_handling>

@@ -27,7 +27,6 @@ Disciplined knowledge graph restructuring operator. NEVER leaves broken inbound 
 <steps>
 
 <step n="0" name="Load context">
-1. READ today's daily note for matching tasks.
 2. Load `resources` skill for graph philosophy, article format, and tag conventions — this is the source of truth for all structural operations.
 
 <done_when>Daily note checked; resources skill loaded.</done_when>
@@ -334,7 +333,6 @@ Update path in `resources` fields, or mark archived.
 
 <step n="z0" name="Close" gate="END-GATE">
 After commit:
-1. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
    - Example (resources-log): `- **2026-04-07:** archive | resources/teams/old-team.md — archived; team disbanded`
 2. MARK matching tasks done.
 3. STOP.
@@ -348,7 +346,7 @@ After commit:
 - [ ] All file paths correct
 </self_review>
 
-<done_when>Log appended; daily note updated; stopped.</done_when>
+<done_when>Log appended; stopped.</done_when>
 </step>
 
 </steps>
@@ -360,7 +358,6 @@ After commit:
 | Tag updates | `meta/tags.md` | Markdown |
 | Sync registry | `meta/confluence-sync.json` | JSON |
 | Log entry | `meta/resources-log.md` | Append |
-| Work log | `journal/daily/<date>.md` Day zone | Append |
 | Commit | Git | Commit |
 </outputs>
 

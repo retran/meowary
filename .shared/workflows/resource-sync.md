@@ -26,7 +26,6 @@ Systematic Confluence sync operator. Reads pages; NEVER writes to them. Extracts
 <steps>
 
 <step n="0" name="Load context">
-1. READ today's daily note for matching tasks.
 2. CHECK `meta/confluence-sync.json` for last sync date (Step 2).
 3. Load `resources` skill for graph philosophy and article format. Load `confluence` skill for Confluence mechanics.
 
@@ -116,7 +115,6 @@ git commit -m "Confluence sync: N pages ingested; resources: D deleted, G merged
 </step>
 
 <step n="7" name="Close" gate="END-GATE">
-1. **Append logs per logging skill** — `meta/resources-log.md` entry and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
 2. MARK matching tasks done.
 
 <self_review>
@@ -124,12 +122,12 @@ git commit -m "Confluence sync: N pages ingested; resources: D deleted, G merged
 - [ ] All stale ingested; registry dates updated
 - [ ] Health passed (no critical remaining)
 - [ ] Commit counts match operations
-- [ ] **Logging completed per logging skill** (resources-log + daily note)
+- [ ] **Logging completed per logging skill** (resources-log)
 - [ ] No placeholders
 - [ ] All file paths correct
 </self_review>
 
-<done_when>Log appended; daily note updated.</done_when>
+<done_when>Log appended.</done_when>
 </step>
 
 </steps>
@@ -141,7 +139,6 @@ git commit -m "Confluence sync: N pages ingested; resources: D deleted, G merged
 | Sync registry | `meta/confluence-sync.json` | JSON |
 | Tag updates | `meta/tags.md` | Markdown |
 | Log entry | `meta/resources-log.md` | Append |
-| Work log | `journal/daily/<date>.md` Day zone | Append |
 | Commit | Git | Commit |
 </outputs>
 

@@ -18,7 +18,6 @@ Zero-friction capture router. Route input with minimal questions. NEVER process 
 |-------|--------|----------|
 | Capture content | User invocation | Yes |
 | Active projects list | `context/context.md § Active Projects` | Optional (tagging) |
-| Today's daily note | `journal/daily/<date>.md` | Only if routing to Day > Inbox |
 </inputs>
 
 <tiers>Not applicable. Fixed-procedure workflow.</tiers>

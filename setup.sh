@@ -270,6 +270,49 @@ select_agent_system() {
   esac
 }
 
+# ── Journal mode selection ────────────────────────────────────────────────────
+
+ENABLE_JOURNAL=true
+
+select_journal_mode() {
+  if $NON_INTERACTIVE; then
+    # In non-interactive mode, read from .journal-config or default to enabled
+    if [[ -f "$SCRIPT_DIR/.journal-config" ]]; then
+      local contents
+      contents=$(tr '\n' ' ' < "$SCRIPT_DIR/.journal-config" | xargs)
+      if [[ "$contents" == *"disabled"* ]]; then
+        ENABLE_JOURNAL=false
+      else
+        ENABLE_JOURNAL=true
+      fi
+    else
+      ENABLE_JOURNAL=true
+    fi
+    info "Journal mode: $( $ENABLE_JOURNAL && echo "enabled" || echo "disabled" ) (from .journal-config)"
+    return
+  fi
+
+  step "Daily journal workflows"
+  echo ""
+  echo "  Meowary can include daily/weekly journal workflows:"
+  echo "    /morning, /evening, /standup, /weekly, /meeting"
+  echo "    habits, recurring events, waiting-for, reading-list"
+  echo ""
+  echo "  If you only need project dev-logs and knowledge graph"
+  echo "  (no daily notes), disable this. You can re-enable later."
+  echo ""
+
+  if ui_confirm "Enable daily/weekly journal workflows?"; then
+    ENABLE_JOURNAL=true
+    echo "enabled" > "$SCRIPT_DIR/.journal-config"
+    info "Journal workflows enabled"
+  else
+    ENABLE_JOURNAL=false
+    echo "disabled" > "$SCRIPT_DIR/.journal-config"
+    info "Journal workflows disabled"
+  fi
+}
+
 # ── Optional tool selection ───────────────────────────────────────────────────
 #
 # Each entry: "name|description|mise_key|needs_atlassian"
@@ -698,21 +741,23 @@ print_summary() {
     opencode)
       echo "   3. cd into this directory and run: opencode"
       echo "   4. Inside OpenCode, run:  /bootstrap"
-      echo "   5. Then run:              /morning"
       ;;
     claude)
       echo "   3. cd into this directory and run: claude code"
       echo "   4. Inside Claude Code, run:  /bootstrap"
-      echo "   5. Then run:                 /morning"
       ;;
     both)
       echo "   3. cd into this directory and run:"
       echo "      - For OpenCode:    opencode"
       echo "      - For Claude Code: claude code"
       echo "   4. Inside your chosen agent, run:  /bootstrap"
-      echo "   5. Then run:                       /morning"
       ;;
   esac
+
+  if $ENABLE_JOURNAL; then
+    echo ""
+    echo "   5. Then run:  /morning  (starts your daily rhythm)"
+  fi
 
   echo ""
   echo " To add more optional tools later: re-run setup.sh or edit mise.toml"
@@ -722,8 +767,7 @@ print_summary() {
   echo "   bash update.sh"
   echo ""
   echo " /bootstrap sets up your identity, context file, and QMD search"
-  echo " collections. Run it once. After that, /morning starts every day."
-  echo ""
+  echo " collections. Run it once."
 
   if [[ "$AGENT_SYSTEM" == "both" ]]; then
     echo " Note: Both OpenCode and Claude Code are installed. You can use either"
@@ -753,6 +797,7 @@ main() {
   ensure_mise
   ensure_gum
   select_agent_system
+  select_journal_mode
   select_optional_tools
   mise_install
   generate_agent_config

@@ -201,7 +201,7 @@ jk plugin ls
 - Use `--jq` to extract specific fields from JSON output.
 - Use job full path (folder/name) in references — not search URLs.
 - Search before creating new jobs.
-- Log build numbers and outcomes in daily notes when monitoring CI.
+- Log build numbers and outcomes in dev-logs when monitoring CI.
 </rules>
 
 <self_review>

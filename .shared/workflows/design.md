@@ -36,7 +36,6 @@ Architecture decision workflow. Produces structured options exploration, tradeof
 2. Read `projects/<name>/plans/charter.md` for constraints and non-negotiables.
 3. Check `projects/<name>/design/` for prior ADRs on topic.
 4. Load `codebases/<name>.md` for relevant architecture patterns.
-5. Read today's daily note — find tasks matching design work.
 <done_when>Project state, charter, prior ADRs, architecture context loaded.</done_when>
 </step>
 
@@ -166,9 +165,9 @@ tags: [adr, <topic>]
 ```
 
 Then:
-1. **Append logs per logging skill** — dev-log entry to `projects/<name>/dev-log.md` (top) and daily note entry to `journal/daily/YYYY-MM-DD.md` (`## Day` zone). See `{{AGENT_DIR}}/skills/logging/` for format.
+1. **Append logs per logging skill** — dev-log entry per logging skill. See `{{AGENT_DIR}}/skills/logging/` for format.
 
-2. Mark matching task items done in project README or daily note.
+2. Mark matching task items done in project README.
 
 3. **Resource enrichment** — scan session for durable knowledge (architecture patterns, design tradeoffs, evaluation criteria, component boundaries). For each:
    - Existing article in `resources/`? → append fact with source link.
@@ -180,14 +179,14 @@ Then:
 - [ ] Decision record has clear rationale
 - [ ] All considered options documented with tradeoffs
 - [ ] Cross-references to related resources added
-- [ ] **Logging completed per logging skill** (dev-log + daily note)
+- [ ] **Logging completed per logging skill** (dev-log)
 - [ ] Task items marked done (if applicable)
 - [ ] Resources enriched or explicitly noted as not needed
 - [ ] No placeholders (TBD, TODO, FIXME) in outputs
 - [ ] All output file paths correct, targets exist
 </self_review>
 
-<done_when>Decision record written; **dev-log entry appended**; **daily note updated**; resources enriched or explicitly noted as not needed.</done_when>
+<done_when>Decision record written; **dev-log entry appended**; resources enriched or explicitly noted as not needed.</done_when>
 </step>
 
 </steps>
@@ -198,7 +197,6 @@ Then:
 | Options exploration and ADR | `projects/<name>/design/adr-<slug>.md` | Markdown (Standard + Full) |
 | Inline decision note | `projects/<name>/notes/design-<topic>.md` | Markdown (Quick) |
 | dev-log entry | `projects/<name>/dev-log.md` | Appended |
-| Daily note work log | `journal/daily/<date>.md` Day zone | Appended |
 </outputs>
 
 <error_handling>

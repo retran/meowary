@@ -1,6 +1,6 @@
 ---
 name: jira
-description: Read Jira issues — query assigned issues, sprint boards, and epics; extract facts for daily notes and resource articles. Load when pulling Jira context for a standup, daily note, or resource enrichment, or when looking up a Jira issue key.
+description: Read Jira issues — query assigned issues, sprint boards, and epics; extract facts for resource articles. Load when pulling Jira context for resource enrichment or when looking up a Jira issue key.
 updated: 2026-05-07
 related: [resources, query]
 ---
@@ -79,7 +79,7 @@ jira sprint list SPRINT_ID --plain                 # Specific sprint
 ```
 </step>
 
-<step n="4" name="extract_facts" condition="building daily notes or resources">
+<step n="4" name="extract_facts" condition="building resources">
 
 **Extract (durable):**
 - Decisions in descriptions/comments
@@ -94,11 +94,6 @@ jira sprint list SPRINT_ID --plain                 # Specific sprint
 - Speculative discussion
 - Verbatim descriptions
 
-**Daily note format:**
-```markdown
-- Investigated PROJ-456 (short description) — decision or outcome. #p-project-tag
-```
-
 **Resource `## Sources`:**
 ```
 - [PROJ-456](<jira-url>/browse/PROJ-456) — decision or outcome
@@ -107,7 +102,7 @@ jira sprint list SPRINT_ID --plain                 # Specific sprint
 `<jira-url>` from `context/context.md → Tooling → Jira URL`.
 </step>
 
-<step n="5" name="morning_planning" condition="/morning or /week-plan">
+<step n="5" name="sprint_review" condition="planning or sprint review">
 ```bash
 jira issue list -q "assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC" --plain
 jira sprint list --current -a$(jira me) --plain
@@ -124,7 +119,7 @@ Skip silently if `jira` not installed or config error.
 - **Create:** `jira issue create -tStory -s"Summary" -yHigh -b"Description" --no-input` — confirm project/type/summary/description.
 - **Assign:** `jira issue assign PROJ-123 $(jira me)`
 
-After write: note issue key in daily note log.
+After write: note issue key in dev-log.
 </step>
 
 </steps>

@@ -98,16 +98,11 @@ Extract:
 
 If `dev-log.md` missing/empty: treat as fresh start; note this; ASK user for context.
 
-### 4. Read today's daily note (if exists)
-
-Open `journal/daily/<date>.md` if exists. Scan for relevant tasks/notes. DO NOT create the daily note — that is `/morning`'s job.
-
-### 5. Surface context before clarification
+### 4. Surface context before clarification
 
 Before any clarification, present:
 - Active project: `<slug>` — Phase: `<phase>` — Last: `<summary>`
 - Suggested next from dev-log: `<next>`
-- Relevant daily note tasks
 - Whether `dev-log.md` was missing (fresh start)
 
 DO NOT ask questions yet — present context first.
@@ -120,13 +115,13 @@ DO NOT ask questions yet — present context first.
 |-------|--------|---------|
 | Open | `- [ ] text` | `- [ ] Write spike doc` |
 | Done | `- [x] text` | `- [x] Fix build failures` |
-| Moved | `- [ ] ~~text~~ → [YYYY-MM-DD](../../journal/daily/YYYY-MM-DD.md)` | `- [ ] ~~Write ADR~~ → [2026-03-25](../../journal/daily/2026-03-25.md)` |
+| Moved | `- [ ] ~~text~~ → YYYY-MM-DD` | `- [ ] ~~Write ADR~~ → 2026-03-25` |
 | Dropped | `- [ ] ~~text~~ *(dropped: reason)*` | `- [ ] ~~Upgrade libs~~ *(dropped: superseded)*` |
 | Blocked | `- [ ] text *(blocked: reason)*` | `- [ ] Deploy *(blocked: waiting on infra)*` |
 
 Rules:
 - NEVER delete to change state — mark in place.
-- Moved tasks MUST link to target daily note + add task there.
+- Moved tasks note the target date.
 - Dropped/blocked require short reason in italics.
 
 When Open Tasks > ~8 items (incl. done), MOVE all `- [x]` to **Completed Tasks** section after Open Tasks.
@@ -137,8 +132,7 @@ When Open Tasks > ~8 items (incl. done), MOVE all `- [x]` to **Completed Tasks**
 2. **Update Open Tasks.** Mark complete; add new; mark blocked.
 3. **Update Overview if scope changed.** Reflect current reality.
 4. **Update `updated` front matter** to today.
-5. **Update daily note.** Log entry MUST link to README.
-6. **Resource enrichment** — scan session for durable facts (architecture insights, patterns, tool decisions, process changes). For each:
+5. **Resource enrichment** — scan session for durable facts (architecture insights, patterns, tool decisions, process changes). For each:
    - Existing article in `resources/`? → append fact with source link.
    - No article? → create stub (front matter + H1 + 1-sentence fact).
    - Nothing durable? → note "no enrichment needed" in dev-log.
@@ -157,16 +151,13 @@ When Open Tasks > ~8 items (incl. done), MOVE all `- [x]` to **Completed Tasks**
 2. Set `deadline` to actual completion date if not set.
 3. Add final dev-log entry: `**Phase:** done`, `**Summary:** <what completed>`, `**Next:** project archived`.
 4. Move folder: `git mv projects/<slug> archive/projects/<slug>`.
-5. Update inbound links (daily, weekly, resources).
+5. Update inbound links (resources).
 </archiving>
 
 <cross_linking>
 | Direction | Where | What |
 |-----------|-------|------|
-| Daily → project | Daily Log & Notes | `[Project Name](../projects/<slug>/README.md)` |
-| Project → daily | Dev Log entry | `[2026-03-25](../../journal/daily/2026-03-25.md)` |
 | Project → resource | Overview/Dev Log | Link when referencing durable concept |
-| Weekly → project | Goals/Accomplishments | `#p-<slug>` tag on line |
 | Meeting → project | Action Items | Add action to project Open Tasks |
 </cross_linking>
 
