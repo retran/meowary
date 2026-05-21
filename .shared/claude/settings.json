@@ -1,19 +1,92 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "Bash(rm *)"
+    ],
     "allow": [
       "Bash(node .claude/scripts/*)",
+      "Bash(node .opencode/scripts/*)",
+      "Bash(node .shared/scripts/*)",
       "Bash(git *)",
       "Bash(qmd *)",
       "Bash(mise *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(gh *)",
+      "Bash(glab *)",
+      "Bash(jira *)",
+      "Bash(confluence *)",
+      "Bash(jk *)",
+      "Bash(repomix *)",
       "Read",
       "Write",
       "Edit",
       "Glob",
       "Grep",
+      "Agent",
+      "Skill",
       "mcp__exa__*",
       "mcp__playwright__*"
-    ],
-    "deny": []
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/scripts/hook-pretool-enforcer.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/scripts/hook-pretool-enforcer.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/scripts/hook-pretool-enforcer.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/scripts/hook-pretool-enforcer.js"
+          }
+        ]
+      },
+      {
+        "matcher": "MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/scripts/hook-pretool-enforcer.js"
+          }
+        ]
+      }
+    ]
   },
   "enabledPlugins": {
     "playwright@claude-plugins-official": true

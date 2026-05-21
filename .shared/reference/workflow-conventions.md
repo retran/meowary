@@ -1,6 +1,6 @@
 ---
 type: reference
-updated: 2026-05-04
+updated: 2026-05-21
 tags: [p-meowary]
 ---
 
@@ -13,11 +13,12 @@ tags: [p-meowary]
 # Workflow Conventions
 
 <step_numbering>
-- Format: `### Step N — Name`
-- Step 0 ALWAYS `### Step 0 — Load context`
-- Step 0.5 ALWAYS `### Step 0.5 — Clarify`
-- Final step ALWAYS named `Close`: `### Step N — Close`
-- Every step ENDS with `Done when:` line
+- Format: `<step n="N" name="Name">...</step>` XML element — this is the canonical step format used by all workflow files.
+- Step 0 ALWAYS `<step n="0" name="Load context">`
+- Step 0.5 ALWAYS `<step n="0.5" name="Clarify">`
+- Final step ALWAYS named `Close`: `<step n="N" name="Close">`
+- Every step ENDS with `<done_when>` element: `<done_when>Criteria here.</done_when>`
+- Optional attributes: `condition="Standard + Full"`, `skip_if="Quick"`, `gate="HARD-GATE (Full)"`
 - Sub-steps: see §5 for decimal vs letter-suffix formats
 </step_numbering>
 
@@ -44,7 +45,7 @@ Every workflow file MUST include these sections in this order:
 4. `## Role` — who the agent acts as
 5. `## Inputs` — table: `Input | Source | Required`
 6. `## Complexity Tiers` — table or `Not applicable. Fixed-procedure workflow.`
-7. `## Steps` — all steps as `### Step N — Name`
+  7. `<steps>` — all steps as `<step n="N" name="Name">` XML elements inside a `<steps>` container
 8. `## Outputs` — table: `Output | Location | Format`
 9. `## Error Handling` — bullet list of failure scenarios and responses
 10. `## Contracts` — numbered list of non-negotiable rules
@@ -62,8 +63,8 @@ When workflow has multiple discrete operation types sharing contracts but differ
 <sub_step_numbering>
 Two valid formats:
 
-- **Decimal:** `### Step 3.1 — Name` — for sub-steps that are separate procedural steps with own `Done when:` line.
-- **Letter-suffix:** `**2a. Name**` / `**2b. Name**` — for parallel or grouped sub-activities within single step sharing one `Done when:` line.
+- **Decimal:** `<step n="3.1" name="Name">` — for sub-steps that are separate procedural steps with own `<done_when>` element.
+- **Letter-suffix:** `<step n="2a" name="Name">` / `<step n="2b" name="Name">` — for parallel or grouped sub-activities within single step, each with their own `<done_when>`.
 
 DO NOT mix formats within same step.
 </sub_step_numbering>
@@ -74,7 +75,7 @@ Every workflow MUST include self-review checklist as **second-to-last sub-step o
 ```markdown
 **Self-review checklist:**
 
-- [ ] All `Done when` criteria met for every step
+- [ ] All `<done_when>` criteria met for every step
 - [ ] <workflow-specific check 1>
 - [ ] <workflow-specific check 2>
 - [ ] No placeholders (TBD, TODO, FIXME) in output artifacts

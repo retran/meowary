@@ -35,7 +35,8 @@ Structured failure investigation. Form hypotheses, design tests, observe results
 2. Check `projects/<name>/notes/` for prior debug sessions on related issues.
 3. Load `codebases/<name>.md` for relevant architecture context.
 4. Read today's daily note — find tasks matching debug work.
-<done_when>Project state loaded; prior related debug sessions identified.</done_when>
+5. **External-repo preflight (Standard + Full):** From `codebases/<name>.md`, determine the repo root path. Check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it now — these carry highest authority over general conventions. If neither exists, proceed.
+<done_when>Project state loaded; prior related debug sessions identified. External-repo instruction files read (Standard+).</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

@@ -48,7 +48,8 @@ Comment classification:
 2. Read `projects/<name>/plans/<slug>.md` — recall original scope and success criteria.
 3. Read `projects/<name>/design/` for relevant ADRs — design decisions may be challenged in review.
 4. Read today's daily note — find tasks matching resolve work.
-<done_when>Project state, original scope, relevant ADRs loaded.</done_when>
+5. **External-repo preflight (Standard + Full):** From `codebases/<name>.md`, determine the repo root path. Check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it now — these carry highest authority over general conventions. If neither exists, proceed.
+<done_when>Project state, original scope, relevant ADRs loaded. External-repo instruction files read (Standard+).</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

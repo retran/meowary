@@ -2,7 +2,7 @@
 updated: 2026-05-04
 -->
 
-# AGENTS.md
+# {{AGENT_APP}}
 
 <role>
 Root entry point for all agents operating in this repository. Defines session-start loading protocol, repository layout, automation surface, non-negotiable editing rules, and security/GDPR constraints. Read on every session before any other instruction.
@@ -56,24 +56,24 @@ DO read `context/context.md` `## Codebases` to identify the active codebase. DO 
 
 ## Repository Structure
 
-Full directory tree and "What Goes Where" table: [`.opencode/reference/structure.md`](.opencode/reference/structure.md).
+Full directory tree and "What Goes Where" table: [`{{AGENT_DIR}}/reference/structure.md`]({{AGENT_DIR}}/reference/structure.md).
 
-Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `context/`, `codebases/`, `.opencode/`.
+Top-level directories: `journal/`, `projects/`, `areas/`, `resources/`, `archive/`, `inbox/`, `context/`, `codebases/`, `{{AGENT_DIR}}/`.
 
-Workflow prompts live in `.opencode/workflows/` (24 files). Commands live in `.opencode/commands/`. Sub-agent definitions live in `.opencode/agents/`. Reference files (conventions, structure, security rules) live in `.opencode/reference/`.
+Workflow prompts live in `{{AGENT_DIR}}/workflows/` (24 files). Commands live in `{{AGENT_DIR}}/commands/`. Sub-agent definitions live in `{{AGENT_DIR}}/agents/`. Reference files (conventions, structure, security rules) live in `{{AGENT_DIR}}/reference/`.
 
 ## Automation Surface
 
 ### Slash Commands
 
-- **Lifecycle workflows** — `/do <phase>` dispatches to `.opencode/workflows/`: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
-- **Knowledge graph workflows** — `/r <operation>` dispatches to `.opencode/workflows/`: `enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`
+- **Lifecycle workflows** — `/do <phase>` dispatches to `{{AGENT_DIR}}/workflows/`: `scout`, `research`, `brainstorm`, `plan`, `design`, `write`, `implement`, `test`, `self-review`, `resolve`, `debug`, `peer-review`
+- **Knowledge graph workflows** — `/r <operation>` dispatches to `{{AGENT_DIR}}/workflows/`: `enrich`, `sync`, `plan`, `discover`, `ops`, `ingest`
 - **Daily workflows** — direct dispatch: `/morning`, `/evening`, `/standup`, `/weekly`, `/capture`, `/meeting`
 - **Utility commands** — `/bootstrap`
 
 ### QMD — Semantic Search
 
-- Index: `node .opencode/scripts/qmd-index.js` (`--changed` for fast early-exit, `--full` to force re-embed)
+- Index: `node {{AGENT_DIR}}/scripts/qmd-index.js` (`--changed` for fast early-exit, `--full` to force re-embed)
 - Query: `qmd query "<question>"`
 - Re-index after any bulk create/actualize, `/r ingest`, or `/r sync` run.
 - Collections are registered in `~/.cache/qmd/index.sqlite` via `qmd collection add`. The `/bootstrap` command registers all standard collections on first setup.
@@ -90,7 +90,7 @@ Workflow prompts live in `.opencode/workflows/` (24 files). Commands live in `.o
 | User shares new project/role/team/tool fact | Update `context/context.md` or `codebases/<name>.md` immediately |
 | Person, team, process, or concept referenced without resource article | Create stub article immediately |
 | Learn new build command, architecture detail, convention, CI step, or decision while coding | Update `codebases/<name>.md` immediately (NEVER defer) |
-| Resource files created or modified during session | Run `node .opencode/scripts/qmd-index.js --changed` before session ends |
+| Resource files created or modified during session | Run `node {{AGENT_DIR}}/scripts/qmd-index.js --changed` before session ends |
 | `context/context.md` empty or missing | Direct user to run `/bootstrap` before proceeding |
 
 </trigger_table>
@@ -98,7 +98,7 @@ Workflow prompts live in `.opencode/workflows/` (24 files). Commands live in `.o
 <steps>
 
 <step n="1" name="session_start_load" gate="HARD-GATE">
-DO execute Tier 0 (`context/context.md`). DO identify task type and execute Tier 1 / Tier 2 loads as applicable. Before executing ANY workflow from `.opencode/workflows/`, DO load `.opencode/reference/workflow-conventions.md` — it contains KG integration requirements, gate vocabulary, and structural rules that apply to all workflows. DO NOT proceed to task work until required context is loaded.
+DO execute Tier 0 (`context/context.md`). DO identify task type and execute Tier 1 / Tier 2 loads as applicable. Before executing ANY workflow from `{{AGENT_DIR}}/workflows/`, DO load `{{AGENT_DIR}}/reference/workflow-conventions.md` — it contains KG integration requirements, gate vocabulary, and structural rules that apply to all workflows. DO NOT proceed to task work until required context is loaded.
 <done_when>Required tier context is in working memory or stub/codebase file has been created.</done_when>
 </step>
 
@@ -106,7 +106,7 @@ DO execute Tier 0 (`context/context.md`). DO identify task type and execute Tier
 DURING every session, regardless of primary task:
 - DO scan for resource gaps. When you encounter a person, team, process, or concept that should have a resource article but doesn't, DO create a stub immediately.
 - DURING any coding session, DO update `codebases/<name>.md` immediately whenever you learn a build command, architecture component, coding convention, CI step, or key decision. NEVER defer these updates to the end of the session.
-- If resource files were created or modified during the session, DO run `node .opencode/scripts/qmd-index.js --changed` before the session ends.
+- If resource files were created or modified during the session, DO run `node {{AGENT_DIR}}/scripts/qmd-index.js --changed` before the session ends.
 
 **Retrieval hierarchy** — strict priority order for answering questions or gathering context:
 1. **QMD + Web search** — run `qmd query "<topic>"` and `websearch "<topic>"` in parallel.
@@ -120,16 +120,28 @@ NEVER leave web search findings unanchored.
 
 <step n="2.5" name="enforce_workflow_patterns" gate="HARD-GATE">
 **Logging** — atomic dev-log + daily note updates:
-- All work workflows (lifecycle + KG) MUST log. See `.opencode/skills/logging/` for canonical contracts and formats.
+- All work workflows (lifecycle + KG) MUST log. See `{{AGENT_DIR}}/skills/logging/` for canonical contracts and formats.
 - Atomic logging: dev-log entry AND daily note entry written together (both or neither).
 - Logging is BLOCKING — workflows MUST NOT close without both entries written.
 - Self-review checklists MUST verify logging completion.
+- **Dev-log format** (prepend entry in `projects/<slug>/dev-log.md`):
+  ```
+  ## YYYY-MM-DD — /<workflow> <tier> — <short title>
+  **Phase:** <current phase>
+  **Summary:** <what was done this session>
+  **Artifacts:** <files created or modified>
+  **Next:** <suggested next step>
+  ```
+- **Daily note format** (append to `## Work log` in `journal/daily/YYYY-MM-DD.md`):
+  ```
+  - `/<workflow>` `<project-slug>` — <one-line summary of work done>
+  ```
 
 **Context gathering** — QMD + web search before work:
 - ALWAYS run `qmd query "<topic>"` and `websearch "<topic>"` in parallel at workflow Step 0.5 (Clarify).
 - Surface internal + external knowledge before generating solutions.
 - Anchor durable web findings in resource articles.
-- See `.opencode/skills/context-gathering/` for patterns, `.opencode/skills/qmd/` for query construction, `.opencode/skills/query/` for multi-source retrieval hierarchy.
+- See `{{AGENT_DIR}}/skills/context-gathering/` for patterns, `{{AGENT_DIR}}/skills/qmd/` for query construction, `{{AGENT_DIR}}/skills/query/` for multi-source retrieval hierarchy.
 
 **Writing artifacts** — delegate to writing skill:
 - For formal documents (ADRs, RFCs, proposals, postmortems, specs), use `/write` workflow.
@@ -154,7 +166,7 @@ Non-negotiable constraints on every edit:
 </step>
 
 <step n="4" name="enforce_security_gdpr" gate="HARD-GATE">
-Full detail: [`.opencode/reference/security-rules.md`](.opencode/reference/security-rules.md). Non-negotiable in all sessions.
+Full detail: [`{{AGENT_DIR}}/reference/security-rules.md`]({{AGENT_DIR}}/reference/security-rules.md). Non-negotiable in all sessions.
 
 **Security:**
 - NEVER mutate production systems without explicit user approval.
@@ -198,7 +210,7 @@ Full detail: [`.opencode/reference/security-rules.md`](.opencode/reference/secur
 
 <subagents>
 
-Sub-agent definitions live in `.opencode/agents/`. Invoke via the `task` tool with a specialized `subagent_type`. Current agents: `code-reviewer`, `confluence-fetcher`, `explore`, `general`, `graph-auditor`, `url-fetcher`.
+Sub-agent definitions live in `{{AGENT_DIR}}/agents/`. Invoke via the `task` tool with a specialized `subagent_type`. Current agents: `code-reviewer`, `confluence-fetcher`, `explore`, `general`, `graph-auditor`, `url-fetcher`.
 
 </subagents>
 
@@ -206,7 +218,7 @@ Sub-agent definitions live in `.opencode/agents/`. Invoke via the `task` tool wi
 
 - Load required skill(s) via the `skill` tool when a task matches an available skill's description.
 - Dispatch lifecycle work through `/do <phase>`; knowledge-graph work through `/r <operation>`; daily work through direct commands.
-- Consult `.opencode/reference/` for structure, conventions, and security detail on demand.
+- Consult `{{AGENT_DIR}}/reference/` for structure, conventions, and security detail on demand.
 
 </next_steps>
 

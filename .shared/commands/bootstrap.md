@@ -213,6 +213,8 @@ If user wants changes: apply them. If user accepts defaults: leave as-is.
 
 <done_when>Habits file exists and user has reviewed it.</done_when>
 </step>
+
+<step n="8a" name="Author resource" condition="fresh only">
 Offer to create `resources/people/<slug>.md` for author. If accepted: fill name, role, team. Register `#person-<slug>` in `meta/tags.md`.
 
 Pre-check: `meta/tags.md` exists; if not, copy from `{{AGENT_DIR}}/meta-templates/tags-template.md`.

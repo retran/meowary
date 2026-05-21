@@ -29,7 +29,6 @@ repomix-output.*
 .claude/
 AGENTS.md
 CLAUDE.md
-opencode.json
 .mcp.json
 .agent-config
 

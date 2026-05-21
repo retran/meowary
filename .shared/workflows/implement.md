@@ -35,7 +35,8 @@ Executes planned, scoped coding work. Reads plan and codebase context, clarifies
 2. Read `projects/<name>/plans/<slug>.md` — identify current task.
 3. Load `codebases/<name>.md` — conventions, patterns, architecture.
 4. Read today's daily note — find tasks matching implementation.
-<done_when>Plan, codebase conventions, current task identified.</done_when>
+5. **External-repo preflight (Standard + Full):** From `codebases/<name>.md`, determine the repo root path. Check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it now — these carry highest authority over general conventions. If neither exists, proceed.
+<done_when>Plan, codebase conventions, current task identified. External-repo instruction files read (Standard+).</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

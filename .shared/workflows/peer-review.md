@@ -52,7 +52,8 @@ Severity:
 3. Load `codebases/<name>.md` for conventions and architecture — see `codebases` skill. Load `scm` skill for PR/MR mechanics.
 4. Read `projects/<name>/dev-log.md` last entry if review relates to active project.
 5. Check `projects/<name>/notes/` for prior review of same PR/spec (re-review after changes): if found, load as context.
-<done_when>Team context loaded; KG search complete; skills loaded; any prior review of this target surfaced.</done_when>
+6. **External-repo preflight (Full):** If reviewing code in an external repo and `codebases/<name>.md` identifies a repo root path, check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it — repo-specific conventions inform review standards.
+<done_when>Team context loaded; KG search complete; skills loaded; any prior review of this target surfaced. External-repo instructions read (Full).</done_when>
 </step>
 
 <step n="0.5" name="Clarify">

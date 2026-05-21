@@ -22,16 +22,39 @@ warn()  { echo "  ⚠ $*" >&2; }
 error() { echo "  ✗ $*" >&2; exit 1; }
 have()  { command -v "$1" &>/dev/null; }
 
-# Replace {{AGENT_DIR}} placeholder with the actual agent directory name.
-# Template files in .shared/ can use {{AGENT_DIR}} to reference the agent
-# directory (.opencode or .claude) in paths. This function resolves it during
-# generation so each agent gets the correct path.
+# Replace template placeholders in Markdown files under a directory.
+# Supports:
+#   {{AGENT_DIR}}  — agent config directory name (.opencode or .claude)
+#   {{AGENT_APP}}  — root instructions filename (AGENTS.md or CLAUDE.md)
+# Template files in .shared/ use these to produce agent-specific output.
 resolve_templates() {
-  local dir="$1" agent_dir="$2"
+  local dir="$1" agent_dir="$2" agent_app="${3:-}"
   if [[ "$OSTYPE" == darwin* ]]; then
     find "$dir" -name '*.md' -exec sed -i '' "s|{{AGENT_DIR}}|${agent_dir}|g" {} +
+    if [[ -n "$agent_app" ]]; then
+      find "$dir" -name '*.md' -exec sed -i '' "s|{{AGENT_APP}}|${agent_app}|g" {} +
+    fi
   else
     find "$dir" -name '*.md' -exec sed -i "s|{{AGENT_DIR}}|${agent_dir}|g" {} +
+    if [[ -n "$agent_app" ]]; then
+      find "$dir" -name '*.md' -exec sed -i "s|{{AGENT_APP}}|${agent_app}|g" {} +
+    fi
+  fi
+}
+
+# Apply template substitutions to a single file.
+resolve_file() {
+  local file="$1" agent_dir="$2" agent_app="${3:-}"
+  if [[ "$OSTYPE" == darwin* ]]; then
+    sed -i '' "s|{{AGENT_DIR}}|${agent_dir}|g" "$file"
+    if [[ -n "$agent_app" ]]; then
+      sed -i '' "s|{{AGENT_APP}}|${agent_app}|g" "$file"
+    fi
+  else
+    sed -i "s|{{AGENT_DIR}}|${agent_dir}|g" "$file"
+    if [[ -n "$agent_app" ]]; then
+      sed -i "s|{{AGENT_APP}}|${agent_app}|g" "$file"
+    fi
   fi
 }
 
@@ -93,9 +116,10 @@ generate_opencode() {
     done
   fi
 
-  # Generate AGENTS.md from template
+  # Generate AGENTS.md from template — resolve placeholders for .opencode
   if [[ -f "$SHARED_DIR/AGENTS.md.template" ]]; then
     cp "$SHARED_DIR/AGENTS.md.template" "$SCRIPT_DIR/AGENTS.md" || error "Failed to copy AGENTS.md.template"
+    resolve_file "$SCRIPT_DIR/AGENTS.md" ".opencode" "AGENTS.md"
   fi
 
   # Install script dependencies (in .shared/scripts — copied into target)
@@ -294,12 +318,18 @@ generate_claude() {
   # Resolve {{AGENT_DIR}} → .claude in all copied markdown
   resolve_templates "$target" ".claude"
 
-  # Generate CLAUDE.md from template
+  # Generate CLAUDE.md from template — resolve placeholders for .claude
+  # Both CLAUDE.md.template and AGENTS.md.template are identical (parameterized);
+  # either can serve as the Claude source.
+  local claude_src=""
   if [[ -f "$SHARED_DIR/CLAUDE.md.template" ]]; then
-    cp "$SHARED_DIR/CLAUDE.md.template" "$SCRIPT_DIR/CLAUDE.md" || error "Failed to copy CLAUDE.md.template"
+    claude_src="$SHARED_DIR/CLAUDE.md.template"
   elif [[ -f "$SHARED_DIR/AGENTS.md.template" ]]; then
-    # Fallback: use OpenCode memory as base (user can create claude-specific later)
-    cp "$SHARED_DIR/AGENTS.md.template" "$SCRIPT_DIR/CLAUDE.md" || error "Failed to copy AGENTS.md.template as CLAUDE.md"
+    claude_src="$SHARED_DIR/AGENTS.md.template"
+  fi
+  if [[ -n "$claude_src" ]]; then
+    cp "$claude_src" "$SCRIPT_DIR/CLAUDE.md" || error "Failed to generate CLAUDE.md"
+    resolve_file "$SCRIPT_DIR/CLAUDE.md" ".claude" "CLAUDE.md"
   fi
 
   # Install script dependencies (Claude Code also needs scripts for shell commands)

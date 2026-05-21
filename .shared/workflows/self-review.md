@@ -49,7 +49,8 @@ Severity:
 2. Read `projects/<name>/plans/<slug>.md` — success criteria?
 3. Load `codebases/<name>.md` and `context/safety.md`.
 4. Read today's daily note — find tasks matching review.
-<done_when>Implementation scope, success criteria, all convention files loaded.</done_when>
+5. **External-repo preflight (Standard + Full):** From `codebases/<name>.md`, determine the repo root path. Check for repo-local `AGENTS.md` and `CLAUDE.md` at that root. If either exists, READ it now — these carry highest authority over general conventions. If neither exists, proceed.
+<done_when>Implementation scope, success criteria, all convention files loaded. External-repo instruction files read (Standard+).</done_when>
 </step>
 
 <step n="0.5" name="Clarify">
